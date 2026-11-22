@@ -1,6 +1,8 @@
 import { useProjectStore } from '../store/projectStore';
 import { SPEED_PRESETS } from '../lib/timeline';
 import { findClip } from '../lib/timeline';
+import KeyframesPanel from './KeyframesPanel';
+import MaskPanel from './MaskPanel';
 
 /** Right contextual properties panel (Phase 1): selected-clip controls for video/audio/speed/transform. */
 export default function PropertiesPanel() {
@@ -49,7 +51,7 @@ export default function PropertiesPanel() {
               Preserve pitch
             </label>
             <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">
-              Pitch preservation is a flag in the project JSON. The Web Audio pitch-preserving playback path is Phase 2 work (Phase 4 audio engine); playback here uses the browser rate control.
+              Pitch preservation is a flag in the project JSON. The Web Audio pitch-preserving playback path is Phase 4 audio-engine work; playback here uses the browser rate control.
             </p>
           </section>
 
@@ -107,8 +109,11 @@ export default function PropertiesPanel() {
             {clip.type === 'audio' && num('Volume', clip.volume, 0, 2, 0.05, (v) => updateSelectedClip({ volume: v }))}
           </section>
 
+          <KeyframesPanel />
+          <MaskPanel />
+
           <p className="border-t border-zinc-800 pt-3 text-[11px] leading-relaxed text-zinc-500">
-            Keyframes, effects, filters, masks and colour controls arrive in Phase 2. Text, stickers and captions arrive in Phase 3; the audio mixer in Phase 4.
+            Effects, transitions, LUTs and colour live in the left tabs (Effects / Transitions / Filters / Adjustment). Text, stickers and captions arrive in Phase 3; the audio mixer in Phase 4.
           </p>
         </div>
       ) : (

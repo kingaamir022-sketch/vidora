@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 import Dashboard from './components/Dashboard';
+import ColorPanel from './components/ColorPanel';
+import EffectsPanel from './components/EffectsPanel';
 import ExportPanel from './components/ExportPanel';
+import TransitionsPanel from './components/TransitionsPanel';
 import LeftTabs from './components/LeftTabs';
 import MediaBrowser from './components/MediaBrowser';
 import PreviewArea from './components/PreviewArea';
@@ -62,6 +65,10 @@ export default function App() {
       <div className="flex min-h-0 flex-1">
         <LeftTabs />
         {activeTab === 'Media' && <MediaBrowser />}
+        {activeTab === 'Effects' && <EffectsPanel />}
+        {activeTab === 'Filters' && <EffectsPanel lutFocus />}
+        {activeTab === 'Transitions' && <TransitionsPanel />}
+        {activeTab === 'Adjustment' && <ColorPanel />}
         <PreviewArea />
         <PropertiesPanel />
       </div>

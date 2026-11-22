@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { migrateProject, parseProject, resolutionForRatio, SAMPLE_PROJECT, validateProject } from '../schema/project';
 
-describe('project JSON schema (v0.2.0)', () => {
+describe('project JSON schema (v0.3.0)', () => {
   it('accepts the shipped sample project', () => {
     const result = validateProject(SAMPLE_PROJECT);
     expect(result.success).toBe(true);
     expect(parseProject(SAMPLE_PROJECT).name).toBe('Sunset Coast — Sample Project');
-    expect(parseProject(SAMPLE_PROJECT).version).toBe('0.2.0');
+    expect(parseProject(SAMPLE_PROJECT).version).toBe('0.3.0');
   });
 
   it('accepts a minimal valid project', () => {
@@ -18,16 +18,53 @@ describe('project JSON schema (v0.2.0)', () => {
       name: 'Minimal',
       resolution: { height: 1920, width: 1080 },
       updatedAt: '2026-11-22T00:00:00.000Z',
-      version: '0.2.0',
+      version: '0.3.0',
     };
     expect(validateProject(minimal).success).toBe(true);
   });
 
-  it('still accepts a v0.1.0 document and migrates it to 0.2.0', () => {
+  it('still accepts a v0.1.0 document and migrates it to 0.3.0', () => {
     const old = { ...SAMPLE_PROJECT, version: '0.1.0' as const };
     expect(validateProject(old).success).toBe(true);
-    expect(migrateProject(old).version).toBe('0.2.0');
+    expect(migrateProject(old).version).toBe('0.3.0');
     expect(migrateProject(old).media).toEqual([]);
+  });
+
+  it('migrates a v0.2.0 document: keyframes gain ids, adjustment defaults appear', () => {
+    const old = structuredClone(SAMPLE_PROJECT);
+    old.version = '0.2.0';
+    const clip = old.tracks[0].clips[0] as unknown as Record<string, unknown>;
+    delete clip.adjustment;
+    delete clip.animationIn;
+    clip.keyframes = [{ easing: 'linear', property: 'opacity', time: 0, value: 1 }];
+    const migrated = migrateProject(old);
+    expect(migrated.version).toBe('0.3.0');
+    const mclip = migrated.tracks[0].clips[0];
+    expect(mclip.adjustment.brightness).toBe(0);
+    expect(mclip.keyframes[0].id).toMatch(/^kf-/);
+    expect(validateProject(migrated).success).toBe(true);
+  });
+
+  it('accepts Phase 2 clip fields: keyframes, animation, transition, LUT, mask, chroma, layout, adjustment', () => {
+    const project = structuredClone(SAMPLE_PROJECT);
+    const clip = project.tracks[0].clips[0];
+    clip.keyframes = [{ bezier: undefined, easing: 'bezier', id: 'kf-1', property: 'opacity', time: 1, value: 0.5 }];
+    clip.animationIn = { duration: 0.5, kind: 'fade' };
+    clip.animationOut = { duration: 0.5, kind: 'zoom-out' };
+    clip.transitionIn = { direction: 'right', duration: 0.5, type: 'fade' };
+    clip.lut = { data: new Array(24).fill(0.5), intensity: 0.5, name: 'Test', size: 2, source: 'imported' };
+    clip.mask = { feather: 0.2, invert: false, points: [], shape: 'circle' };
+    clip.chromaKey = { color: '#00FF00', enabled: true, smoothness: 0.2, tolerance: 0.3 };
+    clip.layoutMode = 'pip';
+    clip.adjustment.brightness = 0.2;
+    clip.adjustment.curves.r = [{ x: 0, y: 0 }, { x: 0.5, y: 0.6 }, { x: 1, y: 1 }];
+    expect(validateProject(project).success).toBe(true);
+  });
+
+  it('rejects a LUT with the wrong data length for its size', () => {
+    const project = structuredClone(SAMPLE_PROJECT);
+    project.tracks[0].clips[0].lut = { data: [0, 0, 0], intensity: 1, name: 'Bad', size: 2, source: 'imported' };
+    expect(validateProject(project).success).toBe(false);
   });
 
   it('rejects an unknown aspect ratio', () => {

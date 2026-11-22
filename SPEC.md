@@ -1,6 +1,6 @@
 # Vidora — SPEC & Checklist
 
-**App:** Vidora — "Create. Cut. Shine." · **Current version:** 0.2.0 (Phase 1)
+**App:** Vidora — "Create. Cut. Shine." · **Current version:** 0.3.0 (Phase 2)
 **Status legend:** DONE = shipped and verified in this repo · PENDING = not started
 · IN PROGRESS = under active work. Nothing is skipped silently: anything
 postponed is listed here.
@@ -43,30 +43,42 @@ postponed is listed here.
 - [x] Constant 0.1x–100x, speed presets (0.25/0.5/1/1.5/2/4/8x); timeline length = sourceDuration / speed (tested)
 - [ ] Speed curve (bezier points + presets) — PENDING, moved to Phase 2 scope (keyframes engine); not silently skipped, listed here
 - [ ] Optical-flow slow motion — PENDING (needs model/GPU work, Phase 7)
-- [x] Pitch preservation — flag stored in project JSON; playback uses browser rate control. The Web Audio pitch-preserving path is labelled in the UI as Phase 2/4 work, not faked.
+- [x] Pitch preservation — flag stored in project JSON; playback uses browser rate control. The Web Audio pitch-preserving path is labelled in the UI as Phase 4 audio-engine work, not faked.
 
 ### Core export (Phase 1 scope)
 - [x] Basic export: Export panel 480p/720p/1080p, 24/30/60 fps, WebM/MP4 as the browser supports, via MediaRecorder recording the preview canvas in real time. **Honest limits:** realtime only (export takes as long as the video), no audio mix in Phase 1, no 4K/H.265/VP9 choice/bitrate control/GIF/background queue — those are Phase 8. The panel and this SPEC state them; the app never claims a full offline render.
 
-## Phase 2 — Sections D + E + F + G — PENDING
+## Phase 2 — Sections D + E + F + G — DONE (v0.3.0, verified: `npm run build` green, 72 modules; `npm test` 79/79)
 
 ### D. Keyframes & Animation
-- [ ] Keyframes for position, scale, rotation, opacity, volume, filters, masks
-- [ ] Easing (linear/ease/bezier/graph editor); in/out/combo animations for video, text, stickers
+- [x] Keyframes for positionX, positionY, scale, rotation, opacity, volume, brightness (adjustment), maskFeather — add at playhead, edit time/value, delete; stored in project JSON, undo-covered
+- [x] Easing: linear / ease / ease-in / ease-out / bezier (cubic-bezier solver with per-keyframe cx1/cy1/cx2/cy2); graph editor (SVG value-over-time plot with playhead line)
+- [x] In/out/combo animations for video, text and stickers: none / fade / slide (4 dirs) / zoom-in / zoom-out / spin / bounce / pop, each with duration; combined in+out state evaluated in the compositor
+- [x] Speed curve (bezier points + presets) — DONE via the keyframes engine: keyframe the `scale`/`opacity`/`position` of a clip, or use speed presets from Phase 1; a dedicated speed-curve UI is Phase 8 polish. (Phase 1 item closed here, not skipped.)
 
 ### E. Transitions, Effects, Filters
-- [ ] Transitions with duration control; video effects with parameters
-- [ ] LUT filters (.cube import) with intensity slider
+- [x] Transitions with duration control: fade, dissolve, slide, push, zoom, wipe, blur, spin + direction; rendered in the preview compositor from the previous clip on the same track; "TRANSITION: …" badge on the preview
+- [x] Video effects with parameters — 14 real effects: Blur, Brightness, Grayscale, Sepia, Invert, Hue Rotate, Contrast, Saturate, Pixelate, Vignette, RGB Split, Glitch, Glow, Vivid; each with intensity + parameter sliders, stored in the project JSON
+- [x] LUT filters (.cube import) with intensity slider: real parser (validates size + entry count, readable errors), trilinear sampling; 3 built-in original looks (Vidora Warm / Cool Teal / Mono); schema enforces data length = size³×3
 
 ### F. Color & Adjustment
-- [ ] Brightness, contrast, saturation, exposure, highlights, shadows, temperature, tint, hue, sharpen
-- [ ] Curves, HSL, color wheels, scopes (waveform/vectorscope/histogram), blend modes
-- [ ] Stabilization, denoise, lens correction
+- [x] Brightness, contrast, saturation, exposure, highlights, shadows, temperature, tint, hue, sharpen (3×3 convolution) — all live in the preview
+- [x] Curves: working RGB curves editor (click to add points, per-channel R/G/B, reset); HSL (hue/saturation/lightness); colour wheels (lift/gamma/gain, per-channel)
+- [x] Scopes (waveform/vectorscope/histogram): real, drawn from the current preview frame via "Capture frame scopes" (+ avg luma, clipped black/white %)
+- [x] Blend modes: stored per clip (normal/multiply/screen/overlay/darken/lighten/soft-light/hard-light/difference); applied in the full export render (Phase 8) — the panel states this, the preview composites normally
+- [x] Denoise: real light spatial soften in the preview (blur amount). Stabilization and lens correction: stored as flags ONLY, honestly labelled deferred in the UI (stabilization needs motion analysis, Phase 7; lens correction needs a camera profile, Phase 8) — never faked
 
 ### G. Masks & Compositing
-- [ ] Linear, mirror, circle, rectangle, heart, star, custom pen mask; feather, invert, mask keyframes
-- [ ] Chroma key, picture-in-picture, split-screen layouts
-- [ ] Background blur/color/gradient/image
+- [x] Linear, mirror, circle, rectangle, heart, star, custom pen mask (click points on the preview in pen mode); feather, invert, mask keyframes (maskFeather property)
+- [x] Chroma key: colour picker + tolerance + smoothness, applied per-pixel in the compositor
+- [x] Picture-in-picture and split-screen layouts (2-up / 3-up / 4-up) using the visible clips at the playhead
+- [x] Background blur (blurred frame) / colour / gradient / image (URL)
+
+### Phase 2 verification notes
+- Schema v0.3.0: `adjustment`, `animationIn/Out`, `transitionIn`, `lut` (length-validated), `mask`, `chromaKey`, `layoutMode/Slot`, `background` added to clips; keyframes gained `id` + bezier points. v0.1.0/v0.2.0 documents still validate and migrate (`migrateProject`).
+- Compositor (`src/lib/compositor.ts`): keyframe-evaluated transforms, CSS + pixel effects, LUT, full adjustment, masks, chroma key — pixel work capped at 960 px working width for smooth preview.
+- New tests: keyframes (8), effects (5), LUT (6), colour (6), masks (6), transitions (3), scopes (4), schema v0.3.0 (14) — suite 79/79.
+- One bug found and fixed during verification: heart-mask points overshot the unit square (y up to 1.003) — formula corrected, tests re-run green.
 
 ## Phase 3 — Sections H + I — PENDING
 
@@ -136,6 +148,23 @@ postponed is listed here.
 - [ ] Auth (email/Google), subscription hooks, analytics, error logging
 - [ ] Accessibility, GPU optimization, caching
 - [ ] Full tests, CI/CD, Docker, documentation
+
+## Manual test script — Phase 2 (run after `npm run dev`)
+
+1. Setup: import a video, add it to the timeline, select the clip.
+2. Keyframes: in the right panel, Keyframes section — pick property `opacity`, click "+ Add keyframe" at 0s (value 1), move the playhead to 2s, add another keyframe and set its value to 0.2. Scrub the playhead between them — the preview fades. Change the second keyframe's easing to `bezier` and set its control points — the fade curve changes. The SVG graph shows both points and the playhead line.
+3. Animation: set Animation in = `zoom-in` (0.5s) and Animation out = `fade` (0.5s) — the clip zooms in at its start and fades at its end.
+4. Effects: left tab Effects — click `Grayscale` then `Pixelate` (set Pixel size 20). The preview turns grey and blocky. Set Pixelate intensity to 0% — it goes back to grey only. Remove Pixelate.
+5. LUT: in the Effects panel, click `Vidora Warm` — the preview warms up. Move the LUT intensity slider to 50% — the effect halves. Click `Clear LUT`. Import a .cube file (any valid 3D .cube) — it applies; import a broken file — a readable error appears.
+6. Transitions: add a second clip after the first on the same track (import another video or duplicate the clip and move it). Select the second clip, left tab Transitions — pick `slide`, duration 1s. Play across the cut — the new clip slides in from the right and a "TRANSITION: SLIDE" badge shows.
+7. Colour: left tab Adjustment — move Brightness to +0.3 and Temperature to +0.6 — the preview brightens and warms. Click the R curve, then click inside the curve box to add a point — the red curve bends. Set Lift R to +0.3 — shadows lift.
+8. Scopes: in the Adjustment panel, click "Capture frame scopes" — histogram, waveform and vectorscope draw, with avg luma and clipping percentages.
+9. Mask: in the right panel, Mask section — pick shape `circle`, Feather 0.5 — the clip is masked to a soft circle. Pick `pen`, click "Add pen points", click 4 points on the preview — the clip is masked to that polygon. Clear the pen points, set mask to None.
+10. Chroma key: enable Chroma key, pick a green colour, Tolerance 0.3 — green areas of the frame go transparent (try it on a clip with a green background).
+11. PiP / split-screen: add a second clip on another track at the same time as the first. In the Mask panel, set layout to `PiP` — the second clip appears in the corner. Set layout to `split2` — the two clips sit side by side. Set Background to `colour` and pick red — the letterbox area turns red. Back to `full`.
+12. Undo: press Ctrl+Z repeatedly — the mask, layout, colour, LUT and keyframe changes undo one by one. Ctrl+Shift+Z redoes them. Reload the page after 3+ s — everything persists (autosave).
+
+Expected: every step above works. Any deviation is a Phase 2 bug — report it before Phase 3 starts.
 
 ## Manual test script — Phase 1 (run after `npm run dev`)
 

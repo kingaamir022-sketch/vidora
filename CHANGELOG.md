@@ -2,6 +2,23 @@
 
 All notable changes to Vidora. Format follows Keep a Changelog.
 
+## [0.3.0] — 2026-11-22 — Phase 2 (Sections D + E + F + G)
+
+### Added
+- Keyframes & animation (D): keyframes for positionX/Y, scale, rotation, opacity, volume, brightness, maskFeather (add at playhead, edit time/value, delete); easing linear/ease/ease-in/ease-out/bezier (cubic-bezier solver, per-keyframe control points) + SVG graph editor with playhead line; in/out/combo animations (fade, 4 slide directions, zoom-in/out, spin, bounce, pop) with durations, evaluated in the compositor.
+- Transitions, effects, filters (E): 8 transitions (fade, dissolve, slide, push, zoom, wipe, blur, spin) with duration + direction, rendered from the previous clip; 14 real video effects with intensity + parameters (Blur, Brightness, Grayscale, Sepia, Invert, Hue Rotate, Contrast, Saturate, Pixelate, Vignette, RGB Split, Glitch, Glow, Vivid); .cube LUT import (real parser with readable errors, trilinear sampling) + intensity slider + 3 built-in original looks (Vidora Warm / Cool Teal / Mono).
+- Colour & adjustment (F): brightness, contrast, saturation, exposure, highlights, shadows, temperature, tint, hue, sharpen (3×3 convolution), RGB curves editor (click to add points), HSL, lift/gamma/gain colour wheels, blend modes (stored per clip); scopes (waveform, vectorscope, histogram) drawn from the captured preview frame; denoise as a real light soften.
+- Masks & compositing (G): linear, mirror, circle, rectangle, heart, star and custom pen masks (click points on the preview), feather, invert, mask keyframes; chroma key (colour picker, tolerance, smoothness); PiP and 2/3/4-up split-screen; background blur/colour/gradient/image.
+- Compositor (`src/lib/compositor.ts`): keyframe-evaluated transforms + animations, CSS + pixel effects, LUT, full per-pixel adjustment, masks, chroma key; pixel work capped at 960 px working width for smooth preview.
+- Schema v0.3.0: new clip fields (`adjustment`, `animationIn/Out`, `transitionIn`, `lut` with length validation, `mask`, `chromaKey`, `layoutMode/Slot`, `background`); keyframes gained `id` + bezier points; v0.1.0/v0.2.0 documents still validate and migrate.
+- Tests: keyframes, effects, LUT, colour, masks, transitions, scopes, schema v0.3.0 — suite now 79 tests (was 38).
+
+### Fixed
+- Heart-mask polygon points overshot the unit square (y up to 1.003) — formula corrected (found by the new masks test).
+
+### Known limits (Phase 2, honest)
+- Blend modes are stored per clip and applied in the full export render (Phase 8); the live preview composites clips normally. Stabilization and lens correction are stored as flags only (stabilization needs motion analysis, Phase 7; lens correction needs a camera profile, Phase 8) — the UI labels them deferred and never fakes them. Pitch preservation is still a flag (Web Audio path is Phase 4). Export is still realtime canvas capture (Phase 8). Optical-flow slow motion is Phase 7.
+
 ## [0.2.0] — 2026-11-22 — Phase 1 (Sections A + B + C)
 
 ### Added
@@ -15,7 +32,7 @@ All notable changes to Vidora. Format follows Keep a Changelog.
 - Tests: timeline ops (split/trim/delete/duplicate/ripple/move/group/compound), speed, shortcuts, export helpers, schema v0.2.0 — suite now 38 tests.
 
 ### Known limits (Phase 1, honest)
-- Export is realtime canvas capture only: no audio mix, no 4K, no H.265/VP9 choice, no bitrate control, GIF or background queue (Phase 8). Pitch preservation is a stored flag; the Web Audio pitch-preserving path is Phase 2/4 work. Speed curves and optical-flow slow motion are not in Phase 1 (speed curve → Phase 2, optical flow → Phase 7). Cloud sync and version history are Phase 8. Built-in assets are Phase 5/6.
+- Export is realtime canvas capture only: no audio mix, no 4K, no H.265/VP9 choice, no bitrate control, GIF or background queue (Phase 8). Pitch preservation is a stored flag; the Web Audio pitch-preserving path is Phase 4 work. Speed curve landed in Phase 2 via the keyframes engine; optical flow is Phase 7. Cloud sync and version history are Phase 8. Built-in assets are Phase 5/6.
 
 ## [0.1.0] — 2026-11-22 — Phase 0
 

@@ -1,4 +1,4 @@
-# Vidora — Architecture (Phase 0)
+# Vidora — Architecture (Phase 2, v0.3.0)
 
 ## Principles (SPEC Section 2)
 
@@ -59,6 +59,19 @@ flowchart TB
   Schema -.-> Mobile
 ```
 
+## Folder tree (Phase 2, v0.3.0)
+
+New in Phase 2: `src/lib/keyframes.ts` (easing solver, interpolation, animation
+presets), `effects.ts` (14-effect catalog, CSS + pixel pipeline), `lut.ts`
+(.cube parsing, trilinear sampling, 3 built-in looks), `color.ts` (curves,
+wheels, HSL, sharpen), `masks.ts` (mask geometry, chroma key, layouts),
+`transitions.ts` (8 transitions, canvas drawing), `scopes.ts` (histogram,
+waveform, vectorscope), `compositor.ts` (per-frame canvas pipeline);
+`src/components/KeyframesPanel.tsx`, `EffectsPanel.tsx`, `TransitionsPanel.tsx`,
+`ColorPanel.tsx`, `ScopesPanel.tsx`, `MaskPanel.tsx`; `PreviewArea` rewritten
+around the compositor (transitions, PiP/split, backgrounds, pen-mask clicks).
+Schema is v0.3.0 with v0.1.0/v0.2.0 migration (`migrateProject`).
+
 ## Folder tree (Phase 1, v0.2.0)
 
 New in Phase 1: `src/lib/` (timeline ops, media probing, shortcuts, exporter),
@@ -93,6 +106,16 @@ vidora/
 ├── README.md  SPEC.md  CHANGELOG.md
 └── .gitignore
 ```
+
+## Project JSON schema (v0.3.0; v0.1.0/v0.2.0 documents migrate)
+
+Clips now also carry `adjustment` (brightness, contrast, saturation, exposure,
+highlights, shadows, temperature, tint, hue, sharpen, curves, HSL, lift/gamma/
+gain wheels, blendMode, denoise, `stabilization`/`lensCorrection` flags),
+`animationIn`/`animationOut`, `transitionIn`, `lut` (length-validated,
+size³×3), `mask` (shape, points, feather, invert), `chromaKey`, `layoutMode`/
+`layoutSlot`, `background`. Keyframes gained `id` + optional bezier control
+points; easing is linear/ease/ease-in/ease-out/bezier.
 
 ## Project JSON schema (v0.2.0; v0.1.0 documents migrate)
 

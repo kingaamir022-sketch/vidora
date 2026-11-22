@@ -1,6 +1,6 @@
 # Vidora — Create. Cut. Shine.
 
-A professional video editor. **Phase 1 is complete** (v0.2.0): core editor — projects & media import, timeline editing, speed, basic export — on top of the Phase 0 branding, architecture, project JSON schema and app shell. Effects, audio, captions, AI tools and full export arrive in Phases 2–9 (see [SPEC.md](SPEC.md)).
+A professional video editor. **Phase 2 is complete** (v0.3.0): keyframes & animation, transitions, 14 video effects, .cube LUTs, colour & adjustment with curves/wheels/scopes, masks & compositing — on top of the Phase 1 core editor and the Phase 0 branding, architecture, project JSON schema and app shell. Text, audio, captions, AI tools and full export arrive in Phases 3–9 (see [SPEC.md](SPEC.md)).
 
 ## Quick start
 
@@ -14,6 +14,14 @@ npm run build:assets  # regenerate logo icon-size variants from public/logo.svg
 ```
 
 Requires **Node.js ≥ 20**.
+
+## What works in Phase 2
+
+- **Keyframes & animation**: keyframes for position/scale/rotation/opacity/volume/brightness/mask feather, easing (linear/ease/ease-in/ease-out/bezier + graph editor), in/out/combo animations (fade, slides, zooms, spin, bounce, pop).
+- **Effects & filters**: 14 video effects with intensity + parameters; 8 transitions with duration + direction; .cube LUT import with intensity + 3 built-in Vidora looks.
+- **Colour & adjustment**: brightness/contrast/saturation/exposure/highlights/shadows/temperature/tint/hue/sharpen, RGB curves editor, HSL, lift/gamma/gain wheels, blend modes (stored), scopes (waveform/vectorscope/histogram from the preview frame), denoise. Stabilization and lens correction are stored flags only, honestly labelled deferred.
+- **Masks & compositing**: linear/mirror/circle/rectangle/heart/star/pen masks, feather, invert, mask keyframes, chroma key, PiP and 2/3/4-up split-screen, background blur/colour/gradient/image.
+- **Preview compositor**: `src/lib/compositor.ts` applies keyframes, effects, LUT, colour, masks and chroma key per frame (pixel work capped at 960 px working width).
 
 ## What works in Phase 1
 
@@ -52,6 +60,11 @@ vidora/
 ├── src/
 │   ├── components/           # TopBar, LeftTabs, PreviewArea, PropertiesPanel,
 │   │                         # TimelineShell, Dashboard, icons (original SVG set)
+│   │                         # KeyframesPanel, EffectsPanel, TransitionsPanel,
+│   │                         # ColorPanel, ScopesPanel, MaskPanel (Phase 2)
+│   ├── lib/                  # timeline, media, shortcuts, exporter (Phase 1)
+│   │                         # keyframes, effects, lut, color, masks,
+│   │                         # transitions, scopes, compositor (Phase 2)
 │   ├── design/tokens.ts      # typed access to design/tokens.json
 │   ├── schema/project.ts     # Zod project schema + sample project
 │   ├── store/projectStore.ts # Zustand store (undo/redo stacks, view, theme)

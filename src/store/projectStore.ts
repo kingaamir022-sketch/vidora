@@ -1,17 +1,29 @@
 import { create } from 'zustand';
 import {
+  defaultAdjustment,
   migrateProject,
   newId,
   parseProject,
   resolutionForRatio,
   SAMPLE_PROJECT,
+  type Adjustment,
+  type AnimationKind,
   type AspectRatio,
   type Clip,
+  type ClipBackground,
+  type ClipMask,
+  type ClipTransition,
+  type Keyframe,
+  type LayoutMode,
+  type Lut,
   type MediaItem,
   type TrackKind,
   type VidoraProject,
 } from '../schema/project';
 import { importFile } from '../lib/media';
+import { addKeyframe, removeKeyframe, updateKeyframe } from '../lib/keyframes';
+import { defaultEffectParams, effectDef } from '../lib/effects';
+import { BUILTIN_LUTS, parseCube } from '../lib/lut';
 import { DEFAULT_SHORTCUTS, loadShortcuts, saveShortcuts, type ShortcutAction } from '../lib/shortcuts';
 import {
   deleteClip,
@@ -114,6 +126,7 @@ interface ProjectState {
   exportOpen: boolean;
   lastSavedAt: string | null;
   magnetic: boolean;
+  maskEditing: boolean;
   playhead: number;
   playing: boolean;
   project: VidoraProject | null;
@@ -165,6 +178,30 @@ interface ProjectState {
   trimSelected: (edge: 'start' | 'end', delta: number) => void;
   ungroupSelected: () => void;
   updateSelectedClip: (patch: Partial<Clip>) => void;
+  // Phase 2 — keyframes & animation
+  addKeyframeAtPlayhead: (property: string) => void;
+  updateKeyframe: (id: string, patch: Partial<Keyframe>) => void;
+  removeKeyframe: (id: string) => void;
+  setAnimation: (phase: 'in' | 'out', kind: AnimationKind, duration: number) => void;
+  // Phase 2 — effects / transitions / LUT
+  addEffect: (name: string) => void;
+  removeEffect: (id: string) => void;
+  updateEffect: (id: string, patch: Partial<{ intensity: number; params: Record<string, number | string | boolean> }>) => void;
+  setTransition: (transition: ClipTransition | null) => void;
+  setLut: (lut: Lut | null) => void;
+  setBuiltinLut: (name: string) => void;
+  importLutFile: (file: File) => Promise<string | null>;
+  // Phase 2 — colour & adjustment
+  updateAdjustment: (patch: Partial<Adjustment>) => void;
+  // Phase 2 — masks / chroma / layout / background
+  setMask: (mask: ClipMask | null) => void;
+  updateMask: (patch: Partial<ClipMask>) => void;
+  updateChromaKey: (patch: Partial<{ color: string; enabled: boolean; smoothness: number; tolerance: number }>) => void;
+  setLayout: (mode: LayoutMode, slot?: number) => void;
+  setBackground: (patch: Partial<ClipBackground>) => void;
+  setMaskEditing: (v: boolean) => void;
+  addPenPoint: (x: number, y: number) => void;
+  clearPenPoints: () => void;
   // media library
   addFolder: (name: string) => void;
   // view / misc
@@ -209,6 +246,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     exportOpen: false,
     lastSavedAt: null,
     magnetic: true,
+    maskEditing: false,
     playhead: 0,
     playing: false,
     project: null,
@@ -326,6 +364,11 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const duration = media.kind === 'image' || media.kind === 'gif' ? 5 : media.duration && media.duration > 0 ? media.duration : 5;
       const start = Math.max(0, ...track.clips.map((c) => c.start + c.duration));
       const clip: Clip = {
+        adjustment: defaultAdjustment(),
+        animationIn: { duration: 0.5, kind: 'none' },
+        animationOut: { duration: 0.5, kind: 'none' },
+        background: { color: '#000000', gradient: 'linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%)', type: 'blur' },
+        chromaKey: { color: '#00FF00', enabled: false, smoothness: 0.2, tolerance: 0.3 },
         duration,
         effects: [],
         fit: 'fit',
@@ -335,6 +378,8 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
         id: newId('clip'),
         isCompound: false,
         keyframes: [],
+        layoutMode: 'full',
+        layoutSlot: 0,
         mediaId: media.id,
         name: media.name,
         opacity: 1,
@@ -503,6 +548,183 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const s = get();
       if (!s.project || s.selectedClipIds.length === 0) return;
       commit((p) => updateClip(p, s.selectedClipIds[0], patch));
+    },
+
+    // ---- Phase 2: keyframes & animation (all undo-covered via commit) ----
+    addKeyframeAtPlayhead: (property) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip) return;
+      const local = Math.max(0, Math.min(clip.duration, s.playhead - clip.start));
+      const fallback =
+        property === 'positionX' ? clip.positionX
+        : property === 'positionY' ? clip.positionY
+        : property === 'scale' ? clip.scale
+        : property === 'rotation' ? clip.rotation
+        : property === 'opacity' ? clip.opacity
+        : property === 'volume' ? clip.volume
+        : property === 'brightness' ? clip.adjustment.brightness
+        : property === 'maskFeather' ? clip.mask?.feather ?? 0
+        : 0;
+      commit((p) => updateClip(p, id, { keyframes: addKeyframe(clip.keyframes, property, local, fallback) }));
+    },
+    updateKeyframe: (kfId, patch) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip) return;
+      commit((p) => updateClip(p, id, { keyframes: updateKeyframe(clip.keyframes, kfId, patch) }));
+    },
+    removeKeyframe: (kfId) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip) return;
+      commit((p) => updateClip(p, id, { keyframes: removeKeyframe(clip.keyframes, kfId) }));
+    },
+    setAnimation: (phase, kind, duration) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      commit((p) => updateClip(p, id, phase === 'in' ? { animationIn: { duration, kind } } : { animationOut: { duration, kind } }));
+    },
+
+    // ---- Phase 2: effects / transitions / LUT ----
+    addEffect: (name) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const def = effectDef(name);
+      if (!def) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip || clip.effects.some((e) => e.name === name)) return;
+      const effect = { id: newId('fx'), intensity: 1, name, params: defaultEffectParams(def) };
+      commit((p) => updateClip(p, id, { effects: [...clip.effects, effect] }));
+    },
+    removeEffect: (fxId) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip) return;
+      commit((p) => updateClip(p, id, { effects: clip.effects.filter((e) => e.id !== fxId) }));
+    },
+    updateEffect: (fxId, patch) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip) return;
+      commit((p) =>
+        updateClip(p, id, {
+          effects: clip.effects.map((e) => (e.id === fxId ? { ...e, ...patch, params: { ...e.params, ...(patch.params ?? {}) } } : e)),
+        }),
+      );
+    },
+    setTransition: (transition) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      commit((p) => updateClip(p, id, transition ? { transitionIn: transition } : { transitionIn: undefined }));
+    },
+    setLut: (lut) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      commit((p) => updateClip(p, id, lut ? { lut } : { lut: undefined }));
+    },
+    setBuiltinLut: (name) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const found = BUILTIN_LUTS.find((l) => l.name === name);
+      if (!found) return;
+      const id = s.selectedClipIds[0];
+      commit((p) => updateClip(p, id, { lut: { data: found.data, intensity: 1, name: found.name, size: found.size, source: 'builtin' } }));
+    },
+    importLutFile: async (file) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return 'Select a clip first.';
+      let parsed;
+      try {
+        parsed = parseCube(await file.text());
+      } catch (err) {
+        return err instanceof Error ? err.message : 'Could not parse this .cube file.';
+      }
+      const id = s.selectedClipIds[0];
+      commit((p) =>
+        updateClip(p, id, { lut: { data: parsed.data, intensity: 1, name: parsed.title, size: parsed.size, source: 'imported' } }),
+      );
+      return null;
+    },
+
+    // ---- Phase 2: colour & adjustment ----
+    updateAdjustment: (patch) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip) return;
+      const adjustment = { ...clip.adjustment, ...patch };
+      commit((p) => updateClip(p, id, { adjustment }));
+    },
+
+    // ---- Phase 2: masks / chroma / layout / background ----
+    setMask: (mask) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      commit((p) => updateClip(p, id, mask ? { mask } : { mask: undefined }));
+    },
+    updateMask: (patch) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip?.mask) return;
+      commit((p) => updateClip(p, id, { mask: { ...clip.mask!, ...patch } }));
+    },
+    updateChromaKey: (patch) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip) return;
+      commit((p) => updateClip(p, id, { chromaKey: { ...clip.chromaKey, ...patch } }));
+    },
+    setLayout: (mode, slot = 0) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      commit((p) => updateClip(p, id, { layoutMode: mode, layoutSlot: slot }));
+    },
+    setBackground: (patch) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip) return;
+      commit((p) => updateClip(p, id, { background: { ...clip.background, ...patch } }));
+    },
+    setMaskEditing: (v) => set({ maskEditing: v }),
+    addPenPoint: (x, y) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip?.mask || clip.mask.shape !== 'pen') return;
+      commit((p) => updateClip(p, id, { mask: { ...clip.mask!, points: [...clip.mask!.points, { x, y }] } }));
+    },
+    clearPenPoints: () => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip?.mask) return;
+      commit((p) => updateClip(p, id, { mask: { ...clip.mask!, points: [] } }));
     },
 
     addFolder: (name) => {

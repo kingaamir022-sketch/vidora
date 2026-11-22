@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { projectDuration } from '../lib/timeline';
+import { renderClipFrame, rectsForLayout } from '../lib/compositor';
+import { drawTransition, transitionProgress } from '../lib/transitions';
+import { layoutRects } from '../lib/masks';
 import { IconPause, IconPlay } from './icons';
+import type { Clip } from '../schema/project';
 
 export function formatTimecode(t: number, fps: number): string {
   const f = Math.floor((t % 1) * fps);
@@ -12,7 +16,8 @@ export function formatTimecode(t: number, fps: number): string {
   return `${pad(h)}:${pad(m)}:${pad(s)}:${pad(f)}`;
 }
 
-/** Center preview (Phase 1): real playback of imported video/image/audio clips on a canvas compositor. */
+/** Center preview (Phase 2): canvas compositor with keyframes, effects,
+ * LUT, colour, masks, transitions, PiP / split-screen and backgrounds. */
 export default function PreviewArea() {
   const project = useProjectStore((s) => s.project);
   const aspectRatio = useProjectStore((s) => s.aspectRatio);
@@ -20,27 +25,33 @@ export default function PreviewArea() {
   const playing = useProjectStore((s) => s.playing);
   const setPlaying = useProjectStore((s) => s.setPlaying);
   const setPlayhead = useProjectStore((s) => s.setPlayhead);
+  const maskEditing = useProjectStore((s) => s.maskEditing);
+  const addPenPoint = useProjectStore((s) => s.addPenPoint);
+  const selectedClipIds = useProjectStore((s) => s.selectedClipIds);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const imageRef = useRef<HTMLImageElement | null>(null);
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const videoPoolRef = useRef(new Map<string, HTMLVideoElement>());
+  const imageCacheRef = useRef(new Map<string, HTMLImageElement>());
+  const bgImageRef = useRef<HTMLImageElement | null>(null);
   const [videoReady, setVideoReady] = useState(false);
 
   const duration = project ? projectDuration(project) : 0;
   const fps = project?.fps ?? 30;
 
-  // Active clip at the playhead: topmost (last) video/image track wins.
-  const activeClip = (() => {
-    if (!project) return null;
-    for (let i = project.tracks.length - 1; i >= 0; i -= 1) {
-      const track = project.tracks[i];
-      if (track.hidden) continue;
-      const clip = track.clips.find((c) => playhead >= c.start && playhead < c.start + c.duration);
-      if (clip) return clip;
+  // All visible clips under the playhead (video/image/text), track order.
+  const visibleClips: Clip[] = (() => {
+    if (!project) return [];
+    const out: Clip[] = [];
+    for (const track of project.tracks) {
+      if (track.hidden || track.kind === 'audio') continue;
+      for (const clip of track.clips) {
+        if (playhead >= clip.start && playhead < clip.start + clip.duration) out.push(clip);
+      }
     }
-    return null;
+    return out;
   })();
+  const primaryClip = visibleClips.length > 0 ? visibleClips[visibleClips.length - 1] : null;
+  const secondaryClips = visibleClips.filter((c) => c.id !== primaryClip?.id);
+
   const activeAudio = (() => {
     if (!project) return null;
     for (const track of project.tracks) {
@@ -51,49 +62,61 @@ export default function PreviewArea() {
     return null;
   })();
 
-  // Load image source for image clips.
-  useEffect(() => {
-    if (activeClip?.type === 'image' && activeClip.src) {
-      const img = new Image();
-      img.onload = () => {
-        imageRef.current = img;
-        setImageSrc(activeClip.src ?? null);
-      };
-      img.src = activeClip.src;
-    } else {
-      setImageSrc(null);
+  // Video element pool: one hidden <video> per video clip, synced to the playhead.
+  const getVideoEl = (clip: Clip): HTMLVideoElement | null => {
+    if (clip.type !== 'video' || !clip.src) return null;
+    let el = videoPoolRef.current.get(clip.id);
+    if (!el) {
+      el = document.createElement('video');
+      el.muted = false;
+      el.playsInline = true;
+      el.preload = 'auto';
+      el.addEventListener('canplay', () => setVideoReady(true));
+      videoPoolRef.current.set(clip.id, el);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeClip?.id, activeClip?.src]);
-
-  // Sync the hidden video element to the active clip.
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (activeClip?.type === 'video' && activeClip.src) {
-      if (video.getAttribute('data-clip') !== activeClip.id) {
-        video.setAttribute('data-clip', activeClip.id);
-        video.src = activeClip.src;
-        video.load();
-      }
-      const local = Math.max(0, playhead - activeClip.start);
-      const target = activeClip.frozen
-        ? activeClip.sourceStart
-        : activeClip.reversed
-          ? activeClip.sourceStart + Math.max(0, (activeClip.sourceDuration ?? activeClip.duration) - local * activeClip.speed)
-          : activeClip.sourceStart + local * activeClip.speed;
-      if (Math.abs(video.currentTime - target) > 0.3) video.currentTime = target;
-      video.playbackRate = activeClip.speed;
-      video.volume = activeClip.volume;
-      if (playing && !activeClip.frozen) void video.play().catch(() => undefined);
-      else video.pause();
-    } else {
-      video.pause();
+    if (el.getAttribute('data-clip') !== clip.id || el.src !== clip.src) {
+      el.setAttribute('data-clip', clip.id);
+      el.src = clip.src;
+      el.load();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeClip?.id, activeClip?.src, playing]);
+    return el;
+  };
 
-  // Sync audio element.
+  const getImageEl = (clip: Clip): HTMLImageElement | null => {
+    if ((clip.type !== 'image' && clip.type !== 'sticker') || !clip.src) return null;
+    let img = imageCacheRef.current.get(clip.id);
+    if (!img) {
+      img = new Image();
+      img.src = clip.src;
+      imageCacheRef.current.set(clip.id, img);
+    }
+    return img.complete && img.naturalWidth > 0 ? img : null;
+  };
+
+  const syncVideo = (clip: Clip) => {
+    const el = getVideoEl(clip);
+    if (!el) return;
+    const local = Math.max(0, playhead - clip.start);
+    const target = clip.frozen
+      ? clip.sourceStart
+      : clip.reversed
+        ? clip.sourceStart + Math.max(0, (clip.sourceDuration ?? clip.duration) - local * clip.speed)
+        : clip.sourceStart + local * clip.speed;
+    if (Math.abs(el.currentTime - target) > 0.3) el.currentTime = target;
+    el.playbackRate = clip.speed;
+    el.volume = clip.volume;
+    if (playing && !clip.frozen) void el.play().catch(() => undefined);
+    else el.pause();
+  };
+
+  // Sync every visible video clip.
+  useEffect(() => {
+    for (const clip of visibleClips) syncVideo(clip);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibleClips.map((c) => c.id).join(','), playing, Math.round(playhead * 4)]);
+
+  // Audio element (single, as in Phase 1) — kept via a dedicated element.
+  const audioRef = useRef<HTMLAudioElement>(null);
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -112,7 +135,7 @@ export default function PreviewArea() {
     }
   }, [activeAudio?.id, activeAudio?.src, playing]);
 
-  // Playhead driver: advance while playing; stop at the end.
+  // Playhead driver.
   useEffect(() => {
     if (!playing || !project) return;
     let raf = 0;
@@ -133,7 +156,21 @@ export default function PreviewArea() {
     return () => cancelAnimationFrame(raf);
   }, [playing, project, duration]);
 
-  // Canvas compositor: draw the active frame with clip transforms.
+  // Background image for the primary clip.
+  useEffect(() => {
+    const src = primaryClip?.background.imageSrc;
+    if (primaryClip?.background.type === 'image' && src) {
+      const img = new Image();
+      img.onload = () => {
+        bgImageRef.current = img;
+      };
+      img.src = src;
+    } else {
+      bgImageRef.current = null;
+    }
+  }, [primaryClip?.background.type, primaryClip?.background.imageSrc]);
+
+  // Main compositor draw.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !project) return;
@@ -141,9 +178,12 @@ export default function PreviewArea() {
     if (!ctx) return;
     const W = canvas.width;
     const H = canvas.height;
+    const frameIndex = Math.floor(playhead * fps);
+    ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, W, H);
-    if (!activeClip) {
+
+    if (!primaryClip) {
       ctx.fillStyle = '#71717a';
       ctx.font = '16px sans-serif';
       ctx.textAlign = 'center';
@@ -152,60 +192,147 @@ export default function PreviewArea() {
       ctx.fillText('Import media and add it to the timeline to preview it here.', W / 2, H / 2 + 16);
       return;
     }
-    ctx.save();
-    ctx.globalAlpha = activeClip.opacity;
-    const cx = W / 2 + (activeClip.positionX / 100) * W;
-    const cy = H / 2 + (activeClip.positionY / 100) * H;
-    ctx.translate(cx, cy);
-    ctx.rotate((activeClip.rotation * Math.PI) / 180);
-    ctx.scale((activeClip.flipH ? -1 : 1) * activeClip.scale, (activeClip.flipV ? -1 : 1) * activeClip.scale);
-    // Draw a video/image source honouring crop (source rect), then fit/fill.
-    const drawSource = (source: CanvasImageSource, sw: number, sh: number) => {
-      const crop = activeClip.crop ?? { height: 1, width: 1, x: 0, y: 0 };
-      const sx = sw * crop.x;
-      const sy = sh * crop.y;
-      const sW = Math.max(1, sw * crop.width);
-      const sH = Math.max(1, sh * crop.height);
-      let dw = W;
-      let dh = (W * sH) / sW;
-      if (activeClip.fit === 'fit' ? dh > H : dh < H) {
-        dh = H;
-        dw = (H * sW) / sH;
+
+    const localTime = Math.max(0, playhead - primaryClip.start);
+
+    const frameFor = (clip: Clip): HTMLCanvasElement | null => {
+      const local = Math.max(0, playhead - clip.start);
+      if (clip.type === 'video') {
+        const el = getVideoEl(clip);
+        if (!el || el.videoWidth === 0) return null;
+        return renderClipFrame(el, el.videoWidth, el.videoHeight, clip, local, frameIndex, W, H);
       }
-      ctx.drawImage(source, sx, sy, sW, sH, -dw / 2, -dh / 2, dw, dh);
+      if (clip.type === 'image' || clip.type === 'sticker') {
+        const img = getImageEl(clip);
+        if (!img) return null;
+        return renderClipFrame(img, img.naturalWidth, img.naturalHeight, clip, local, frameIndex, W, H);
+      }
+      if (clip.type === 'text') {
+        const c = document.createElement('canvas');
+        c.width = W;
+        c.height = H;
+        const cctx = c.getContext('2d');
+        if (cctx) {
+          cctx.fillStyle = '#fff';
+          cctx.font = 'bold 64px sans-serif';
+          cctx.textAlign = 'center';
+          cctx.fillText(clip.name, W / 2, H / 2);
+        }
+        return c;
+      }
+      return null;
     };
-    if (activeClip.type === 'video' && videoRef.current && videoReady && videoRef.current.videoWidth > 0) {
-      const v = videoRef.current;
-      drawSource(v, v.videoWidth, v.videoHeight);
-    } else if (activeClip.type === 'image' && imageRef.current) {
-      const img = imageRef.current;
-      drawSource(img, img.naturalWidth, img.naturalHeight);
-    } else if (activeClip.type === 'audio') {
-      ctx.fillStyle = '#a78bfa';
-      ctx.font = '16px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(`♪ ${activeClip.name}`, 0, 0);
+
+    const primaryFrame = frameFor(primaryClip);
+
+    // Background behind the primary frame.
+    const bg = primaryClip.background;
+    if (bg.type === 'color') {
+      ctx.fillStyle = bg.color;
+      ctx.fillRect(0, 0, W, H);
+    } else if (bg.type === 'gradient') {
+      const stops = [...bg.gradient.matchAll(/#[0-9A-Fa-f]{6}/g)].map((m) => m[0]);
+      const grad = ctx.createLinearGradient(0, 0, W, H);
+      if (stops.length >= 2) {
+        grad.addColorStop(0, stops[0]);
+        grad.addColorStop(1, stops[1]);
+      } else {
+        grad.addColorStop(0, '#7C3AED');
+        grad.addColorStop(1, '#06B6D4');
+      }
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+    } else if (bg.type === 'image' && bgImageRef.current) {
+      ctx.drawImage(bgImageRef.current, 0, 0, W, H);
+    } else if (primaryFrame) {
+      ctx.save();
+      ctx.filter = 'blur(24px) brightness(0.6)';
+      ctx.drawImage(primaryFrame, 0, 0, W, H);
+      ctx.restore();
+    }
+
+    const mode = primaryClip.layoutMode;
+    const isSplit = mode === 'split2' || mode === 'split3' || mode === 'split4';
+    const isPip = mode === 'pip';
+
+    if (isSplit) {
+      const all = [primaryClip, ...secondaryClips];
+      const rects = layoutRects(mode, W, H);
+      all.slice(0, rects.length).forEach((clip, i) => {
+        const f = clip === primaryClip ? primaryFrame : frameFor(clip);
+        if (!f) return;
+        const r = rects[i];
+        ctx.drawImage(f, r.x, r.y, r.width, r.height);
+      });
+    } else if (isPip) {
+      if (primaryFrame) ctx.drawImage(primaryFrame, 0, 0, W, H);
+      const rects = rectsForLayout('pip', W, H);
+      const pipClip = secondaryClips[0];
+      if (pipClip) {
+        const f = frameFor(pipClip);
+        if (f) {
+          const r = rects[0];
+          ctx.drawImage(f, r.x, r.y, r.width, r.height);
+        }
+      }
+    } else if (primaryFrame) {
+      // Transition-in: blend from the previous clip on the same track.
+      const tr = primaryClip.transitionIn;
+      if (tr && localTime < tr.duration) {
+        const prev = project.tracks
+          .find((t) => t.id === primaryClip.trackId)
+          ?.clips.filter((c) => c.id !== primaryClip.id && c.start + c.duration <= primaryClip.start + 0.01)
+          .sort((a, b) => b.start + b.duration - (a.start + a.duration))[0];
+        if (prev) {
+          const prevFrame = frameFor({ ...prev, start: prev.start, duration: prev.duration });
+          drawTransition(ctx, prevFrame, primaryFrame, tr.type, transitionProgress(localTime, tr.duration), tr.direction, W, H);
+        } else {
+          ctx.drawImage(primaryFrame, 0, 0, W, H);
+        }
+      } else {
+        ctx.drawImage(primaryFrame, 0, 0, W, H);
+      }
     } else {
       ctx.fillStyle = '#71717a';
       ctx.font = '15px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(activeClip.name, 0, 0);
+      ctx.fillText(primaryClip.name, W / 2, H / 2);
     }
-    ctx.restore();
-    if (activeClip.reversed) {
+
+    if (primaryClip.reversed) {
       ctx.fillStyle = 'rgba(124,58,237,0.85)';
       ctx.font = '12px sans-serif';
       ctx.textAlign = 'left';
       ctx.fillText('REVERSED', 10, 20);
     }
-    if (activeClip.frozen) {
+    if (primaryClip.frozen) {
       ctx.fillStyle = 'rgba(6,182,212,0.9)';
       ctx.font = '12px sans-serif';
       ctx.textAlign = 'left';
       ctx.fillText('FREEZE FRAME', 10, 38);
     }
-    void imageSrc;
+    if (primaryClip.transitionIn && localTime < primaryClip.transitionIn.duration) {
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(`TRANSITION: ${primaryClip.transitionIn.type.toUpperCase()}`, 10, 56);
+    }
+    if (primaryClip.mask) {
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(`MASK: ${primaryClip.mask.shape.toUpperCase()}${maskEditing ? ' — click to add pen points' : ''}`, 10, 74);
+    }
+    void videoReady;
   });
+
+  const onCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!maskEditing || !primaryClip?.mask || primaryClip.mask.shape !== 'pen') return;
+    const rect = (e.target as HTMLCanvasElement).getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    addPenPoint(Math.min(1, Math.max(0, x)), Math.min(1, Math.max(0, y)));
+  };
 
   const aspectClass =
     aspectRatio === '9:16'
@@ -227,11 +354,11 @@ export default function PreviewArea() {
             ref={canvasRef}
             width={project?.resolution.width ?? 1920}
             height={project?.resolution.height ?? 1080}
-            className="h-full w-full"
+            className={`h-full w-full ${maskEditing ? 'cursor-crosshair' : ''}`}
             aria-label="Preview canvas"
+            onClick={onCanvasClick}
           />
         </div>
-        <video ref={videoRef} className="hidden" muted={false} playsInline onCanPlay={() => setVideoReady(true)} onError={() => setVideoReady(false)} />
         <audio ref={audioRef} className="hidden" />
       </div>
       <div className="flex h-12 shrink-0 items-center justify-center gap-3 border-t border-zinc-800 bg-zinc-950">
@@ -251,9 +378,10 @@ export default function PreviewArea() {
         <span className="font-mono text-xs text-zinc-400" aria-label="Timecode">
           {formatTimecode(playhead, fps)} / {formatTimecode(duration, fps)}
         </span>
-        {activeClip && (
-          <span className="max-w-48 truncate text-xs text-zinc-400" title={activeClip.name}>
-            {activeClip.name} · {activeClip.speed}×
+        {primaryClip && (
+          <span className="max-w-48 truncate text-xs text-zinc-400" title={primaryClip.name}>
+            {primaryClip.name} · {primaryClip.speed}×
+            {selectedClipIds.length > 0 && maskEditing ? ' · pen-mask editing' : ''}
           </span>
         )}
       </div>
