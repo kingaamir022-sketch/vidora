@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="96" viewBox="0 0 360 96" role="img" aria-label="Vidora wordmark">
+  <title>Vidora wordmark</title>
+  <defs>
+    <linearGradient id="vidora-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7C3AED"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="92" height="92" rx="24" fill="url(#vidora-grad)"/>
+  <path d="M38 26 L70 48 L38 70 Z" fill="#FFFFFF"/>
+  <line x1="56" y1="27" x2="45" y2="69" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
+  <line x1="56" y1="27" x2="45" y2="69" stroke="#7C3AED" stroke-width="3.5" stroke-linecap="round"/>
+  <text x="112" y="63" font-family="Inter, system-ui, sans-serif" font-size="52" font-weight="700" fill="url(#vidora-grad)" letter-spacing="-1">Vidora</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Vidora splash screen">
+  <title>Vidora splash screen</title>
+  <defs>
+    <linearGradient id="vidora-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7C3AED"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#7C3AED" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#7C3AED" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="720" fill="#0B0B12"/>
+  <circle cx="640" cy="330" r="320" fill="url(#glow)"/>
+  <g transform="translate(544, 210)">
+    <rect x="2" y="2" width="188" height="188" rx="48" fill="url(#vidora-grad)"/>
+    <path d="M78 53 L143 98 L78 143 Z" fill="#FFFFFF"/>
+    <line x1="114" y1="55" x2="92" y2="141" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round"/>
+    <line x1="114" y1="55" x2="92" y2="141" stroke="#7C3AED" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <text x="640" y="500" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="72" font-weight="700" fill="#F4F4F8" letter-spacing="-2">Vidora</text>
+  <text x="640" y="548" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="400" fill="#A7A7BC" letter-spacing="4">CREATE. CUT. SHINE.</text>
+</svg>

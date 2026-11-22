@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/* Vidora design tokens (Phase 0) — see design/tokens.json for the source of truth.
+   Dark theme is the default; light-theme variables are applied when
+   data-theme="light" is set on the app root (full light styling: Phase 9). */
+
+@theme {
+  --color-vidora-violet: #7c3aed;
+  --color-vidora-cyan: #06b6d4;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #0b0b12;
+  color: #f4f4f8;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
