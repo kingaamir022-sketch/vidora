@@ -59,6 +59,14 @@ flowchart TB
   Schema -.-> Mobile
 ```
 
+## Folder tree (Phase 1, v0.2.0)
+
+New in Phase 1: `src/lib/` (timeline ops, media probing, shortcuts, exporter),
+`src/components/MediaBrowser.tsx`, `ExportPanel.tsx`, `ShortcutsPanel.tsx`;
+`TimelineShell`, `PreviewArea`, `PropertiesPanel`, `Dashboard`, `TopBar` and
+`App` are now real editing surfaces (see README). Schema is v0.2.0 with
+v0.1.0 migration (`migrateProject`).
+
 ## Folder tree (Phase 0)
 
 ```
@@ -85,6 +93,14 @@ vidora/
 ├── README.md  SPEC.md  CHANGELOG.md
 └── .gitignore
 ```
+
+## Project JSON schema (v0.2.0; v0.1.0 documents migrate)
+
+Clips now carry `mediaId`, `sourceStart`, `sourceDuration`, `speed` (0.1–100),
+`reversed`, `frozen`, `rotation`, `flipH`/`flipV`, `scale`, `positionX`/`positionY`,
+`fit`, `crop`, `groupId`, `compoundId`, `isCompound`, `pitchPreserved`, `volume`.
+Projects carry `media[]` (MediaItem: kind, mime, size, duration, dimensions,
+thumbnail, folderId, src) and `folders[]`, plus optional `customRatio`.
 
 ## Project JSON schema (v0.1.0)
 

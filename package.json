@@ -1,1 +1,36 @@
-{"dependencies":{"react":"^19.1.0","react-dom":"^19.1.0","zod":"^3.25.0","zustand":"^5.0.3"},"description":"Vidora — Create. Cut. Shine. A professional video editor. Phase 0: branding, architecture and runnable shell.","devDependencies":{"@tailwindcss/vite":"^4.1.11","@types/react":"^19.1.0","@types/react-dom":"^19.1.0","@vitejs/plugin-react":"^4.4.1","tailwindcss":"^4.1.11","typescript":"^5.8.3","vite":"^6.3.5","vitest":"^3.1.3"},"engines":{"node":">=20"},"license":"MIT","name":"vidora","private":true,"scripts":{"build":"tsc -b && vite build","build:assets":"node scripts/build-assets.mjs","dev":"vite","lint":"tsc -b --noEmit","preview":"vite preview","test":"vitest run","test:watch":"vitest"},"type":"module","version":"0.1.0"}
+{
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.25.0",
+    "zustand": "^5.0.3"
+  },
+  "description": "Vidora \u2014 Create. Cut. Shine. A professional video editor. Phase 1: core editor \u2014 projects, media, timeline, speed, basic export.",
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.11",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^4.4.1",
+    "tailwindcss": "^4.1.11",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.1.3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "name": "vidora",
+  "private": true,
+  "scripts": {
+    "build": "tsc -b && vite build",
+    "build:assets": "node scripts/build-assets.mjs",
+    "dev": "vite",
+    "lint": "tsc -b --noEmit",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "type": "module",
+  "version": "0.2.0"
+}

@@ -1,18 +1,59 @@
+import { useEffect } from 'react';
 import Dashboard from './components/Dashboard';
+import ExportPanel from './components/ExportPanel';
 import LeftTabs from './components/LeftTabs';
+import MediaBrowser from './components/MediaBrowser';
 import PreviewArea from './components/PreviewArea';
 import PropertiesPanel from './components/PropertiesPanel';
+import ShortcutsPanel from './components/ShortcutsPanel';
 import TimelineShell from './components/TimelineShell';
 import TopBar from './components/TopBar';
-import { useProjectStore } from './store/projectStore';
+import { startAutosave, useProjectStore } from './store/projectStore';
+import { actionForCombo, eventToCombo } from './lib/shortcuts';
 
-/** Vidora Phase 0 app shell: dashboard <-> editor layout (SPEC Section 3). */
+/** Vidora Phase 1 app: dashboard <-> editor layout (SPEC Section 3) with real editing. */
 export default function App() {
   const view = useProjectStore((s) => s.view);
   const theme = useProjectStore((s) => s.theme);
+  const activeTab = useProjectStore((s) => s.activeTab);
+
+  useEffect(() => startAutosave(), []);
+
+  // Global keyboard shortcuts (Phase 1, SPEC B). Ignored while typing in a field.
+  useEffect(() => {
+    if (view !== 'editor') return;
+    const handler = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable)) return;
+      const s = useProjectStore.getState();
+      const action = actionForCombo(s.shortcuts, eventToCombo(e));
+      if (!action) return;
+      e.preventDefault();
+      if (action === 'togglePlay') s.setPlaying(!s.playing);
+      else if (action === 'split') s.splitAtPlayhead();
+      else if (action === 'delete') s.deleteSelected();
+      else if (action === 'duplicate') s.duplicateSelected();
+      else if (action === 'copy') s.copySelected();
+      else if (action === 'paste') s.pasteClipboard();
+      else if (action === 'undo') s.undo();
+      else if (action === 'redo') s.redo();
+      else if (action === 'addMarker') s.addMarker();
+      else if (action === 'rippleDelete') s.rippleDeleteSelected();
+      else if (action === 'selectAll') {
+        const track = s.project?.tracks.find((t) => t.id === s.selectedTrackId) ?? s.project?.tracks[0];
+        if (track) s.selectClip(track.clips[0]?.id ?? null);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [view]);
 
   if (view === 'dashboard') {
-    return <Dashboard />;
+    return (
+      <div data-theme={theme}>
+        <Dashboard />
+      </div>
+    );
   }
 
   return (
@@ -20,10 +61,13 @@ export default function App() {
       <TopBar />
       <div className="flex min-h-0 flex-1">
         <LeftTabs />
+        {activeTab === 'Media' && <MediaBrowser />}
         <PreviewArea />
         <PropertiesPanel />
       </div>
       <TimelineShell />
+      <ExportPanel />
+      <ShortcutsPanel />
     </div>
   );
 }

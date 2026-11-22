@@ -177,6 +177,7 @@ interface ProjectState {
   resetShortcuts: () => void;
   setTheme: (theme: 'dark' | 'light') => void;
   dismissRecovery: () => void;
+  snapshot: () => void;
   saveNow: () => void;
   undo: () => void;
   redo: () => void;
@@ -539,6 +540,11 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     },
     setTheme: (theme) => set({ theme }),
     dismissRecovery: () => set({ recoveredNotice: null }),
+    snapshot: () => {
+      const s = get();
+      if (!s.project) return;
+      set({ redoStack: [], undoStack: [...s.undoStack, JSON.stringify(s.project)].slice(-100) });
+    },
     saveNow: () => {
       const s = get();
       if (!s.project) return;

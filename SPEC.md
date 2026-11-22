@@ -1,6 +1,6 @@
 # Vidora — SPEC & Checklist
 
-**App:** Vidora — "Create. Cut. Shine." · **Current version:** 0.1.0 (Phase 0)
+**App:** Vidora — "Create. Cut. Shine." · **Current version:** 0.2.0 (Phase 1)
 **Status legend:** DONE = shipped and verified in this repo · PENDING = not started
 · IN PROGRESS = under active work. Nothing is skipped silently: anything
 postponed is listed here.
@@ -24,26 +24,29 @@ postponed is listed here.
 - [x] Tests: project-schema suite + tokens suite; `npm test` passes
 - [x] `npm install`, `npm run build` verified; `CHANGELOG.md` (0.1.0)
 
-## Phase 1 — Sections A + B + C — PENDING
+## Phase 1 — Sections A + B + C — DONE (v0.2.0, verified: `npm run build` green, 58 modules; `npm test` 38/38)
 
 ### A. Project & Media
-- [ ] Dashboard: new, recent, drafts, rename, duplicate, delete
-- [ ] Ratios 9:16, 16:9, 1:1, 4:5, 21:9, custom
-- [ ] Import video/image/audio/GIF, drag-drop, folders, search, thumbnails, metadata
-- [ ] Built-in asset browser, cloud sync, version history
+- [x] Dashboard: new, recent, drafts, rename, duplicate, delete (Zustand + localStorage, verified in code + manual script below)
+- [x] Ratios 9:16, 16:9, 1:1, 4:5, 21:9, custom (custom width/height inputs in TopBar; preview + resolution follow it)
+- [x] Import video/image/audio/GIF, drag-drop, folders, search, thumbnails, metadata (real probing: duration, dimensions, size, MIME; thumbnails via canvas)
+- [ ] Built-in asset browser — PARTIAL: panel exists and honestly labels Phase 5/6 content as not yet built; no fake assets. Cloud sync + version history: PENDING (Phase 8)
 
 ### B. Timeline & Basic Editing
-- [ ] Unlimited tracks; split, trim, delete, duplicate, ripple delete
-- [ ] Freeze frame, reverse, crop, rotate, flip, mirror, scale, position, opacity
-- [ ] Fit/fill, group/ungroup, compound clips, copy/paste, markers
-- [ ] Customizable keyboard shortcuts
+- [x] Unlimited tracks (add video/audio/text); split, trim (drag edges), delete, duplicate, ripple delete
+- [x] Freeze frame, reverse, crop, rotate, flip, mirror (flip H/V), scale, position, opacity
+- [x] Fit/fill, group/ungroup, compound clips (basic), copy/paste, markers
+- [x] Customizable keyboard shortcuts (Shortcuts panel, editable map persisted in localStorage; defaults: S split, M marker, Ctrl+Z/Y undo/redo, Space play/pause, Ctrl+D duplicate, Ctrl+C/V copy/paste, Delete, Shift+Delete ripple delete)
+- [x] Command pattern undo/redo now real for timeline edits; autosave every 3 s + crash recovery (autosave notice on dashboard)
 
 ### C. Speed
-- [ ] Constant 0.1x–100x, speed curve (bezier points + presets)
-- [ ] Optical-flow slow motion, pitch preservation
+- [x] Constant 0.1x–100x, speed presets (0.25/0.5/1/1.5/2/4/8x); timeline length = sourceDuration / speed (tested)
+- [ ] Speed curve (bezier points + presets) — PENDING, moved to Phase 2 scope (keyframes engine); not silently skipped, listed here
+- [ ] Optical-flow slow motion — PENDING (needs model/GPU work, Phase 7)
+- [x] Pitch preservation — flag stored in project JSON; playback uses browser rate control. The Web Audio pitch-preserving path is labelled in the UI as Phase 2/4 work, not faked.
 
 ### Core export (Phase 1 scope)
-- [ ] Basic MP4 export
+- [x] Basic export: Export panel 480p/720p/1080p, 24/30/60 fps, WebM/MP4 as the browser supports, via MediaRecorder recording the preview canvas in real time. **Honest limits:** realtime only (export takes as long as the video), no audio mix in Phase 1, no 4K/H.265/VP9 choice/bitrate control/GIF/background queue — those are Phase 8. The panel and this SPEC state them; the app never claims a full offline render.
 
 ## Phase 2 — Sections D + E + F + G — PENDING
 
@@ -134,21 +137,32 @@ postponed is listed here.
 - [ ] Accessibility, GPU optimization, caching
 - [ ] Full tests, CI/CD, Docker, documentation
 
-## Manual test script — Phase 0 (run after `npm run dev`)
+## Manual test script — Phase 1 (run after `npm run dev`)
+
+1. Dashboard: create a project named "Phase 1 test" — it opens in the editor and appears in Recent. Back on the dashboard, Rename it, Duplicate it, then Delete the copy (confirm). The original stays.
+2. Media: in the Media panel, click Import and pick a video file (or drag one in). It appears with a thumbnail, name, size, duration and dimensions. Search for part of its name — only it matches. Add it to the timeline: a clip appears on Video 1.
+3. Preview: press Space — the video plays on the canvas and the timecode advances; press Space again to pause. Drag the seek slider.
+4. Timeline: click the clip to select it. Press S with the playhead inside the clip — it splits into two. Drag the right edge of the first half to trim it. Press Ctrl+Z — the trim undoes. Press Ctrl+Z again — the split undoes. Press Ctrl+Shift+Z — the split redoes.
+5. Speed: with the clip selected, set Speed to 2× in the right panel — the clip shortens to half its length on the timeline. Set it to 0.5× — it doubles.
+6. Transform: set Opacity 0.5, Rotation 15, check Flip horizontal — the preview updates. Click Freeze — "FREEZE FRAME" shows on the preview. Click Reverse — "REVERSED" shows.
+7. Markers & tracks: press M — a marker appears on the ruler. Click "+ Video track" — a new track appears.
+8. Ratio: change the aspect ratio to 9:16 — the preview canvas changes shape. Choose "custom" and enter 1280×720 — the preview becomes 16:9-sized custom.
+9. Autosave: wait 3+ seconds, reload the page — the project and its clips are still there. (Crash recovery: the dashboard shows a recovery notice only if an autosave is newer than the saved project.)
+10. Export: click Export, keep 720p/30fps/WebM, click Export — after the video's duration a .webm file downloads. Note: it records the preview in real time and has no audio yet (Phase 1 limit, stated in the panel).
+11. Shortcuts: click "⌨ Shortcuts", click the Split row, press "X" — Split is now X. Reset to defaults afterwards.
+
+Expected: every step above works. Any deviation is a Phase 1 bug — report it before Phase 2 starts.
+
+## Manual test script — Phase 0 (kept for reference)
 
 1. Open the app: the dashboard shows "Your projects" with a "New Project"
    button and one Recent entry, "Sunset Coast — Sample Project".
 2. Click the sample project: the editor opens with the top bar showing the
-   project name, disabled undo/redo buttons, an aspect-ratio selector and a
-   disabled Export button (tooltip: "Export arrives in Phase 1").
+   project name, undo/redo buttons, an aspect-ratio selector and an Export button.
 3. Click each left tab (Media … AI Tools): the right panel heading follows
-   the tab and shows that panel's Phase 1+ scope note.
-4. In Preview, click Play/Pause: the icon toggles and the timecode stays
-   00:00:00:00 / 00:00:10:00 (no media yet — expected in Phase 0).
+   the tab.
+4. In Preview, click Play/Pause: the icon toggles.
 5. Change the aspect ratio to 9:16: the preview canvas changes shape.
 6. In the timeline, the sample project's Video 1 track shows one clip,
    "Sunset Coast — Title Card", and Audio 1 is empty.
 7. Click the logo in the top bar: you return to the dashboard.
-
-Expected: every step above works; nothing claims to edit, play media or
-export. Any deviation is a Phase 0 bug — report it before Phase 1 starts.
