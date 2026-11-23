@@ -3,9 +3,12 @@ import {
   applyAdjustmentToPixels,
   applyWheel,
   buildCurveLookup,
+  canvasBlendMode,
   cssFilterForAdjustment,
+  curvePreset,
   evalCurve,
   isAdjustmentIdentity,
+  moveCurvePoint,
   sharpenPixels,
 } from '../lib/color';
 import { defaultAdjustment } from '../schema/project';
@@ -56,5 +59,39 @@ describe('colour & adjustment', () => {
     expect(px).toEqual(before);
     sharpenPixels(px, 3, 3, 0.5);
     expect(px).toEqual(before);
+  });
+
+  it('curve points can be dragged and stay between their neighbours', () => {
+    const pts = [{ x: 0, y: 0 }, { x: 0.5, y: 0.5 }, { x: 1, y: 1 }];
+    const moved = moveCurvePoint(pts, 1, 0.7, 0.8);
+    expect(moved[1]).toEqual({ x: 0.7, y: 0.8 });
+    expect(moved.map((p) => p.x)).toEqual([0, 0.7, 1]);
+    // Clamped: cannot cross the next point or leave 0–1.
+    expect(moveCurvePoint(pts, 1, 0.99, 0.5)[1].x).toBeCloseTo(0.99);
+    expect(moveCurvePoint(pts, 1, 1.5, 0.5)[1].x).toBeCloseTo(0.99);
+    expect(moveCurvePoint(pts, 1, -0.5, 0.5)[1].x).toBeCloseTo(0.01);
+    expect(moveCurvePoint(pts, 0, 0.2, 0.3)[0]).toEqual({ x: 0.2, y: 0.3 });
+    expect(moveCurvePoint(pts, 5, 0.5, 0.5)).toEqual(pts);
+  });
+
+  it('curve presets match the CapCut Curves tab', () => {
+    expect(curvePreset('custom')).toEqual([{ x: 0, y: 0 }, { x: 1, y: 1 }]);
+    expect(curvePreset('lighten')[1].y).toBeGreaterThan(0.5);
+    expect(curvePreset('darken')[1].y).toBeLessThan(0.5);
+    expect(curvePreset('fade')[0].y).toBeGreaterThan(0);
+    expect(curvePreset('fade')[1].y).toBeLessThan(1);
+    expect(curvePreset('contrast')).toHaveLength(4);
+    expect(evalCurve(curvePreset('lighten'), 0.5)).toBeCloseTo(0.65);
+  });
+
+  it('blend modes map to canvas composite operations (live in the preview)', () => {
+    expect(canvasBlendMode('normal')).toBe('source-over');
+    expect(canvasBlendMode('multiply')).toBe('multiply');
+    expect(canvasBlendMode('screen')).toBe('screen');
+    expect(canvasBlendMode('overlay')).toBe('overlay');
+    expect(canvasBlendMode('soft-light')).toBe('soft-light');
+    expect(canvasBlendMode('color-burn')).toBe('color-burn');
+    expect(canvasBlendMode('color-dodge')).toBe('color-dodge');
+    expect(canvasBlendMode('no-such-mode')).toBe('source-over');
   });
 });

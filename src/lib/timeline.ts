@@ -28,6 +28,62 @@ export function clampSpeed(speed: number): number {
   return Math.min(100, Math.max(0.1, speed));
 }
 
+/** One frame at the project frame rate (seconds). */
+export function frameDuration(fps: number): number {
+  return 1 / Math.max(1, fps);
+}
+
+/** Quantize a time to the nearest frame boundary (CapCut Web snaps
+ * frame-level; its ruler and timecode are frame-based). */
+export function snapToFrame(t: number, fps: number): number {
+  return Math.max(0, Math.round(t * Math.max(1, fps)) / Math.max(1, fps));
+}
+
+/**
+ * Timeline snapping (CapCut Web: frame-level + "Attach" magnet toggle,
+ * on by default). With Attach on, a time within 0.25s of a clip edge,
+ * the playhead, a marker or 0 snaps to that target; otherwise it
+ * quantizes to the nearest frame. With Attach off, the time passes
+ * through unchanged.
+ */
+export function snapTime(t: number, project: VidoraProject, magnetic: boolean, playhead: number): number {
+  if (!magnetic) return Math.max(0, t);
+  const fps = project.fps ?? 30;
+  const candidates: number[] = [0, playhead, ...project.markers.map((m) => m.time)];
+  for (const track of project.tracks) {
+    for (const clip of track.clips) {
+      candidates.push(clip.start, clip.start + clip.duration);
+    }
+  }
+  let best = t;
+  let bestDist = 0.25;
+  for (const c of candidates) {
+    const d = Math.abs(c - t);
+    if (d < bestDist) {
+      bestDist = d;
+      best = c;
+    }
+  }
+  if (best !== t) return Math.max(0, best);
+  return snapToFrame(t, fps);
+}
+
+/** Every clip id on every track, in track order (Ctrl+A selects all). */
+export function allClipIds(project: VidoraProject): string[] {
+  const ids: string[] = [];
+  for (const track of project.tracks) {
+    for (const clip of track.clips) ids.push(clip.id);
+  }
+  return ids;
+}
+
+/** Speed that yields a target timeline duration for a source clip,
+ * clamped the way CapCut clamps typed speeds (0.05→0.10x, 200→100x). */
+export function speedForDuration(sourceDuration: number, targetDuration: number): number {
+  if (targetDuration <= 0) return 100;
+  return clampSpeed(sourceDuration / targetDuration);
+}
+
 export const SPEED_PRESETS = [0.25, 0.5, 1, 1.5, 2, 4, 8] as const;
 
 export function setClipSpeed(project: VidoraProject, clipId: string, speed: number): VidoraProject {
@@ -215,4 +271,36 @@ export function makeCompound(project: VidoraProject, clipIds: string[], name: st
       clips: [...t.clips.filter((c) => !clipIds.includes(c.id)), ...(t.id === first.trackId ? [compound] : [])],
     })),
   };
+}
+
+/**
+ * Place an overlay clip (text / sticker / shape / drawing) on a text track.
+ * Picks the first unlocked text track where the clip's time range does not
+ * overlap an existing clip; otherwise opens a new text track. (BUG-P3-001:
+ * every overlay clip used to land on the first text track at the playhead,
+ * so clips added at the same time stacked on top of each other and the
+ * covered ones could not be clicked to select. CapCut puts overlays on
+ * their own tracks.)
+ */
+export function addClipToTextTrack(project: VidoraProject, clip: Clip): VidoraProject {
+  const start = clip.start;
+  const end = start + clip.duration;
+  const overlaps = (t: { clips: Clip[] }) =>
+    t.clips.some((c) => c.start < end && start < c.start + c.duration);
+  let track = project.tracks.find((t) => t.kind === 'text' && !t.locked && !overlaps(t));
+  let tracks = project.tracks;
+  if (!track) {
+    track = {
+      clips: [],
+      hidden: false,
+      id: newId('track'),
+      kind: 'text',
+      locked: false,
+      muted: false,
+      name: `Text ${tracks.filter((t) => t.kind === 'text').length + 1}`,
+    };
+    tracks = [...tracks, track];
+  }
+  const placed = { ...clip, trackId: track.id };
+  return { ...project, tracks: tracks.map((t) => (t.id === track!.id ? { ...t, clips: [...t.clips, placed] } : t)) };
 }

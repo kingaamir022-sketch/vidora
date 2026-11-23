@@ -1,16 +1,22 @@
 import { describe, expect, it } from 'vitest';
 import { SAMPLE_PROJECT, type Clip, type VidoraProject } from '../schema/project';
 import {
+  addClipToTextTrack,
+  allClipIds,
   clampSpeed,
   deleteClip,
   duplicateClip,
   durationAtSpeed,
+  findClip,
   groupClips,
   makeCompound,
   moveClip,
   projectDuration,
   rippleDeleteClip,
   setClipSpeed,
+  snapTime,
+  snapToFrame,
+  speedForDuration,
   splitClipAt,
   trimClip,
   ungroupClips,
@@ -124,6 +130,13 @@ describe('speed', () => {
     expect(clampSpeed(2)).toBe(2);
   });
 
+  it('clamps typed speeds the way CapCut does (0.05→0.10x, 200→100x)', () => {
+    expect(clampSpeed(0.05)).toBe(0.1);
+    expect(speedForDuration(10, 200)).toBe(0.1);
+    expect(speedForDuration(10, 0.05)).toBe(100);
+    expect(speedForDuration(10, 5)).toBe(2);
+  });
+
   it('setting speed to 2x halves the timeline duration and keeps the source', () => {
     const next = setClipSpeed(SAMPLE_PROJECT, 'clip-sample-1', 2);
     const clip = next.tracks[0].clips[0];
@@ -135,5 +148,93 @@ describe('speed', () => {
   it('setting speed to 0.5x doubles the timeline duration', () => {
     const next = setClipSpeed(SAMPLE_PROJECT, 'clip-sample-1', 0.5);
     expect(next.tracks[0].clips[0].duration).toBe(20);
+  });
+});
+
+describe('frame snapping and select-all (CapCut Web correction round)', () => {
+  it('quantizes times to the nearest frame at the project fps', () => {
+    expect(snapToFrame(1.017, 30)).toBeCloseTo(31 / 30);
+    expect(snapToFrame(1.5, 30)).toBe(1.5);
+    expect(snapToFrame(0.01, 30)).toBe(0);
+    expect(snapToFrame(2.5, 60)).toBe(2.5);
+    expect(snapToFrame(2.51, 60)).toBeCloseTo(151 / 60);
+  });
+
+  it('with Attach on, snaps to a nearby clip edge, else to the nearest frame', () => {
+    // Sample clip runs 0–10s at 30fps; marker at 0.
+    expect(snapTime(9.98, SAMPLE_PROJECT, true, 0)).toBe(10);
+    expect(snapTime(5.02, SAMPLE_PROJECT, true, 0)).toBeCloseTo(151 / 30);
+    expect(snapTime(0.3, SAMPLE_PROJECT, true, 0)).toBe(0.3); // 9 frames, no magnet target within 0.25s
+    expect(snapTime(5.1, SAMPLE_PROJECT, true, 5)).toBe(5); // magnet to the playhead
+  });
+
+  it('with Attach off, passes the time through unchanged', () => {
+    expect(snapTime(5.017, SAMPLE_PROJECT, false, 0)).toBe(5.017);
+    expect(snapTime(9.98, SAMPLE_PROJECT, false, 0)).toBe(9.98);
+  });
+
+  it('select-all returns every clip id on every track, in track order', () => {
+    const p = twoClipProject();
+    p.tracks[1].clips = [{ ...p.tracks[0].clips[0], id: 'clip-audio-1', name: 'Audio clip', start: 0, trackId: 'track-audio-1', type: 'audio' }];
+    expect(allClipIds(p)).toEqual(['clip-sample-1', 'clip-2', 'clip-audio-1']);
+    expect(allClipIds(SAMPLE_PROJECT)).toEqual(['clip-sample-1']);
+  });
+});
+
+describe('overlay clip placement (BUG-P3-001)', () => {
+  function textTrackProject(): VidoraProject {
+    const p = structuredClone(SAMPLE_PROJECT);
+    const base = p.tracks[0].clips[0];
+    p.tracks = [
+      { ...p.tracks[0] },
+      {
+        clips: [{ ...base, duration: 3, id: 'clip-text-1', name: 'Heading', start: 0, trackId: 'track-text-1', type: 'text' }],
+        hidden: false,
+        id: 'track-text-1',
+        kind: 'text',
+        locked: false,
+        muted: false,
+        name: 'Text 1',
+      },
+    ];
+    return p;
+  }
+
+  function overlayClip(id: string, start: number, duration = 3): Clip {
+    const base = SAMPLE_PROJECT.tracks[0].clips[0];
+    return { ...base, duration, id, name: id, start, trackId: '', type: 'text' };
+  }
+
+  it('opens a new text track when the clip overlaps the first one', () => {
+    const next = addClipToTextTrack(textTrackProject(), overlayClip('clip-text-2', 0));
+    expect(next.tracks).toHaveLength(3);
+    const placed = findClip(next, 'clip-text-2');
+    expect(placed).not.toBeNull();
+    expect(next.tracks[placed!.trackIndex].kind).toBe('text');
+    expect(next.tracks[placed!.trackIndex].id).not.toBe('track-text-1');
+    expect(next.tracks[placed!.trackIndex].name).toBe('Text 2');
+  });
+
+  it('reuses the first text track when the time range is free', () => {
+    const next = addClipToTextTrack(textTrackProject(), overlayClip('clip-text-2', 5));
+    expect(next.tracks).toHaveLength(2);
+    expect(findClip(next, 'clip-text-2')?.trackIndex).toBe(1);
+    expect(next.tracks[1].clips).toHaveLength(2);
+  });
+
+  it('creates a text track when the project has none', () => {
+    const next = addClipToTextTrack(SAMPLE_PROJECT, overlayClip('clip-text-9', 0));
+    expect(next.tracks).toHaveLength(3);
+    expect(next.tracks[2].kind).toBe('text');
+    expect(next.tracks[2].name).toBe('Text 1');
+    expect(findClip(next, 'clip-text-9')?.trackIndex).toBe(2);
+  });
+
+  it('skips a locked text track when placing', () => {
+    const p = textTrackProject();
+    p.tracks[1].locked = true;
+    const next = addClipToTextTrack(p, overlayClip('clip-text-2', 5));
+    expect(next.tracks).toHaveLength(3);
+    expect(findClip(next, 'clip-text-2')?.trackIndex).toBe(2);
   });
 });

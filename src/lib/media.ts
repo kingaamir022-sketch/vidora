@@ -77,6 +77,50 @@ function probeImage(url: string): Promise<{ width?: number; height?: number; thu
   });
 }
 
+/** Downsample raw PCM samples to `count` normalised peak buckets (0–1). Pure: unit-tested. */
+export function peaksFromSamples(samples: ArrayLike<number>, count = 64): number[] {
+  if (count <= 0) return [];
+  const n = samples.length;
+  if (n === 0) return Array.from({ length: count }, () => 0);
+  const out: number[] = [];
+  const per = n / count;
+  for (let i = 0; i < count; i++) {
+    const start = Math.floor(i * per);
+    const end = Math.max(start + 1, Math.floor((i + 1) * per));
+    let peak = 0;
+    for (let j = start; j < end && j < n; j++) {
+      const v = Math.abs(samples[j]);
+      if (v > peak) peak = v;
+    }
+    out.push(Math.min(1, peak));
+  }
+  return out;
+}
+
+/** Decode an audio file and return its waveform peaks (64 buckets). Never throws. */
+async function probeAudioPeaks(url: string): Promise<{ peaks?: number[] }> {
+  try {
+    const Ctor =
+      typeof window !== 'undefined'
+        ? window.AudioContext ??
+          (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+        : undefined;
+    if (!Ctor) return {};
+    const res = await fetch(url);
+    const buf = await res.arrayBuffer();
+    const ctx = new Ctor();
+    try {
+      const decoded = await ctx.decodeAudioData(buf);
+      const data = decoded.getChannelData(0);
+      return { peaks: peaksFromSamples(data, 64) };
+    } finally {
+      await ctx.close().catch(() => undefined);
+    }
+  } catch {
+    return {};
+  }
+}
+
 function probeAudio(url: string): Promise<{ duration?: number }> {
   return new Promise((resolve) => {
     const audio = new Audio();
@@ -112,5 +156,6 @@ export async function importFile(file: File, folderId = 'folder-all'): Promise<M
     return { ...base, ...meta, duration: 5 };
   }
   const meta = await probeAudio(src);
-  return { ...base, ...meta };
+  const peaks = await probeAudioPeaks(src);
+  return { ...base, ...meta, ...peaks };
 }

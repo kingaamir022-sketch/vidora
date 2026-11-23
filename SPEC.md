@@ -1,6 +1,6 @@
 # Vidora — SPEC & Checklist
 
-**App:** Vidora — "Create. Cut. Shine." · **Current version:** 0.3.0 (Phase 2)
+**App:** Vidora — "Create. Cut. Shine." · **Current version:** 0.3.2 (Phase 2 + parity retrofit + live CapCut Web correction round)
 **Status legend:** DONE = shipped and verified in this repo · PENDING = not started
 · IN PROGRESS = under active work. Nothing is skipped silently: anything
 postponed is listed here.
@@ -80,17 +80,43 @@ postponed is listed here.
 - New tests: keyframes (8), effects (5), LUT (6), colour (6), masks (6), transitions (3), scopes (4), schema v0.3.0 (14) — suite 79/79.
 - One bug found and fixed during verification: heart-mask points overshot the unit square (y up to 1.003) — formula corrected, tests re-run green.
 
-## Phase 3 — Sections H + I — PENDING
+## Parity retrofit — Rules 12/13/14 — DONE (v0.3.1, retroactive to Phases 0–2)
+
+User rules added 2026-11-22 19:17 PKT (Rule 12 Autonomous Parity Mode, Rule 13 Beginner Mode, Rule 14 Autopilot) and 19:26 PKT (reference = CapCut; when the user is unavailable, check CapCut live via cloud browser, max 30-second approval wait, never block). Applied retroactively so Phase 2 closes under the parity gate:
+
+- [x] `docs/UI_LAYOUT.md` — measured panel positions/proportions (top bar 48px, rail 64px, properties 288px, timeline 288px; re-measured in the audit with 0px drift)
+- [x] `docs/behavior/<ID>.md` — 40 behaviour cards, one per Phase 0–2 feature (controls with min/max/default/step, interactions, states, edge cases; uncertain reference behaviour marked ASSUMED)
+- [x] `docs/PARITY.md` — matrix, one row per feature: MATCH 30 / ASSUMED 10 / DIFF-FIXING 0 / total 40 — gate PASS
+- [x] `docs/INTENTIONAL_DIFFS.md` — what must match vs what must differ (name, logo, icons, palette, fonts, content)
+- [x] `docs/BUGS.md` — correction loop log (BUG-001…006 fixed, deferred engine work listed)
+- [x] Self-audit (`audit/run-audit.mjs`, `npm run audit`) — Playwright + Chromium headless shell drives the production build: 40/40 checks passed, 29 screenshots in `audit/phase2/<ID>/`, `audit/phase2/AUDIT-REPORT.md`
+- [x] Audit fixes in v0.3.1: every tab now opens a panel (honest placeholders for Audio/Text/Stickers/Captions/Templates/AI Tools); timeline clip right-click context menu; preview frame-step/loop/fullscreen/safe-zones/grid; timeline clip thumbnails; audio waveform peaks on audio clips (64 buckets, `MediaItem.peaks`); playhead/marker overlays no longer intercept clicks
+
+## Correction round — live CapCut Web check — DONE (v0.3.2, 2026-11-22)
+
+- [x] Live CapCut Web check ran 2026-11-22 20:02–20:13 PKT (no sign-in), recorded in `docs/reference/capcut/WEB-CHECK-2026-11-22.md`: 9 of 10 ASSUMED items resolved; Export could not be verified (sign-in) and stays ASSUMED
+- [x] Fixes applied (BUG-007…BUG-013): Ctrl+A selects ALL clips on all tracks; frame-level snapping (project fps, default 30) with "Attach" magnet toggle, on by default; speed slider 0.1–100× + Duration field with CapCut clamps; Pitch toggle (disabled at 0.1×/100×) + Smooth slow-mo switch; draggable curve points + presets; blend mode live in the preview compositor (CapCut's modes, Linear burn omitted — no canvas equivalent); "Reduce image noise" + "Stabilize" labels
+- [x] B-MARKER, B-GROUP, F-WHEELS → INTENTIONAL-DIFF (CapCut Web has none of them; spec requires them; await desktop screenshots). New card `docs/behavior/F-BLEND.md`. Parity score now MATCH 36 / ASSUMED 2 / INTENTIONAL-DIFF 3 / total 41
+- [x] Tests 92/92 (was 82), build green (73 modules), audit 40/40 (audit suite predates v0.3.2; the new F-BLEND row is covered by the new Vitest tests)
+- [x] Open item (not a code change): a live CapCut Web check needs the main agent's cloud browser — the retrofit used the self-built reference + Playwright audit; uncertain cards stay ASSUMED until a live check confirms them
+- [x] `npm run build` green (73 modules), `npm test` 82/82 (new: media peaks, 3 tests)
+
+## Phase 3 — Sections H + I — DONE (v0.4.0, 2026-11-23)
 
 ### H. Text & Graphics
-- [ ] Text tool (Google Fonts + custom upload), size, color, gradient, stroke, shadow, glow, background box
-- [ ] Alignment, spacing, text templates, animated text
-- [ ] Stickers, emojis, shapes, GIFs, drawing/pen tool, motion tracking
+- [x] Text tool (system fonts + custom upload via FontFace API), size 8–200, color, gradient fill, stroke, shadow, glow, background box; alignment, line spacing, text templates (14 original presets), animated text (In/Out/Loop)
+- [x] Stickers (224 original procedural SVG: 28 designs × 8 palettes), shapes (10 original SVG + fill colour), drawing/pen tool (freehand strokes on the preview), motion tracking (manual track points; automatic detection is Phase 7 — reference has Camera tracking, Pro, in Smart tools)
+- [x] Behaviour cards updated from the full signed-in CapCut Web walkthrough 2026-11-23 (07:16–07:28 PKT): Text tab has a third sub-tab "AI text FX" (Vidora: honest Phase 7 note); H-DRAW and H-TRACK/H-TRACK evidence resolved as noted in the cards
 
 ### I. Captions & Speech
-- [ ] Auto captions (Whisper, multi-language, word-level highlight), style presets
-- [ ] SRT/VTT import/export, translation, lyrics sync
-- [ ] Text-to-speech (multiple voices/languages), text-based editing via transcript
+- [x] Auto captions (honest substitute: times a pasted transcript with word-level highlight; real Whisper STT is Phase 7), 8 original caption style presets, Auto lyrics noted (reference: recognize lyrics in songs)
+- [x] SRT/VTT import/export (real parser, readable errors, round-trip tested); .ass NOT supported (panel says so); manual translation per cue (machine translation is Phase 7)
+- [x] Text-to-speech (browser speechSynthesis: voice, rate, pitch, preview, narration clips that speak during preview; rendered TTS audio in export is Phase 4/7), text-based editing via the in-panel transcript (click a word to seek; reference Web has a separate Transcript tab — desktop has none)
+
+### Phase 3 verification
+- [x] `npm run build` green (80 modules), `npm test` 147/147, Phase 3 self-audit `npm run audit:phase3` **31/31, 0 open bugs** (`audit/phase3/AUDIT-REPORT.md`, 14 card folders with screenshots)
+- [x] Audit found + fixed BUG-P3-001 (overlay clips stacked on one text track and covered each other — placement now opens a new track on overlap) and BUG-P3-002 (audit harness seek fix); see `docs/BUGS.md`
+- [x] Parity score unchanged for the Phase 0–2 matrix: MATCH 37 / ASSUMED 1 (A-ASSETS) / INTENTIONAL-DIFF 3 / total 41 — X-EXPORT is MATCH on the signed-in export check 2026-11-23; Phase 3 card statuses (14 cards): MATCH 5 (H-STICKER, H-TEXT, H-TEXTANIM, H-TEXTSTYLE, I-CAPTION-STYLE), ASSUMED 3 (H-TRACK, I-CAPTION-AUTO, I-TRANSCRIPT — resolved on Web evidence), UNKNOWN 6 (H-DRAW, H-SHAPE, I-CAPTION-MANUAL, I-SRT, I-TRANSLATE, I-TTS — desktop evidence still missing; see the cards)
 
 ## Phase 4 — Section J (Audio) — PENDING
 

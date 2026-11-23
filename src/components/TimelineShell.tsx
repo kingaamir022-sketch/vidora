@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
-import { projectDuration } from '../lib/timeline';
+import { projectDuration, snapTime, snapToFrame } from '../lib/timeline';
 import { formatTimecode } from './PreviewArea';
 
 type Drag = {
@@ -46,29 +46,14 @@ export default function TimelineShell() {
   const snapshot = useProjectStore((s) => s.snapshot);
 
   const [drag, setDrag] = useState<Drag | null>(null);
+  const [menu, setMenu] = useState<{ x: number; y: number; clipId: string } | null>(null);
   const dragRef = useRef<Drag | null>(null);
   const duration = project ? projectDuration(project) : 0;
   const totalWidth = Math.max(duration + 10, 30) * zoom;
 
-  const snap = (t: number): number => {
-    if (!magnetic || !project) return Math.max(0, t);
-    const candidates: number[] = [0, playhead, ...project.markers.map((m) => m.time)];
-    for (const track of project.tracks) {
-      for (const clip of track.clips) {
-        candidates.push(clip.start, clip.start + clip.duration);
-      }
-    }
-    let best = t;
-    let bestDist = 0.25;
-    for (const c of candidates) {
-      const d = Math.abs(c - t);
-      if (d < bestDist) {
-        bestDist = d;
-        best = c;
-      }
-    }
-    return Math.max(0, best);
-  };
+  // Frame-level snapping with the "Attach" magnet toggle (CapCut Web:
+  // frame-level snap, "Attach" on by default). See lib/timeline.ts.
+  const snap = (t: number): number => (project ? snapTime(t, project, magnetic, playhead) : Math.max(0, t));
 
   const onClipPointerDown = (e: React.PointerEvent, clipId: string, start: number, clipDuration: number) => {
     e.stopPropagation();
@@ -148,8 +133,8 @@ export default function TimelineShell() {
         <button type="button" onClick={() => addMarker()} className={toolbarBtn} title="Add marker at playhead (M)">
           + Marker
         </button>
-        <label className="ml-2 flex items-center gap-1">
-          <input type="checkbox" checked={magnetic} onChange={(e) => setMagnetic(e.target.checked)} /> Snap
+        <label className="ml-2 flex items-center gap-1" title="Attach (magnet): snap to clip edges, the playhead and markers; otherwise snap to the nearest frame">
+          <input type="checkbox" checked={magnetic} onChange={(e) => setMagnetic(e.target.checked)} /> Attach
         </label>
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={ripple} onChange={(e) => setRipple(e.target.checked)} /> Ripple
@@ -195,7 +180,8 @@ export default function TimelineShell() {
 
         <div className="min-w-0 flex-1 overflow-x-auto overflow-y-auto" onClick={(e) => {
           const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-          setPlayhead(Math.max(0, (e.clientX - rect.left) / zoom));
+          // Ruler/timecode are frame-based (CapCut Web): seek to the nearest frame.
+          setPlayhead(snapToFrame(Math.max(0, (e.clientX - rect.left) / zoom), project?.fps ?? 30));
         }}>
           <div className="relative" style={{ width: totalWidth, minHeight: '100%' }}>
             {/* Ruler */}
@@ -206,9 +192,9 @@ export default function TimelineShell() {
                 </span>
               ))}
               {(project?.markers ?? []).map((m) => (
-                <span key={m.time} className="absolute top-0 h-full w-0.5 bg-cyan-400" style={{ left: m.time * zoom }} title={`${m.label} @ ${m.time}s`} />
+                <span key={m.time} className="pointer-events-none absolute top-0 h-full w-0.5 bg-cyan-400" style={{ left: m.time * zoom }} title={`${m.label} @ ${m.time}s`} />
               ))}
-              <span className="absolute top-0 h-full w-0.5 bg-red-500" style={{ left: playhead * zoom }} />
+              <span className="pointer-events-none absolute top-0 h-full w-0.5 bg-red-500" style={{ left: playhead * zoom }} />
             </div>
             {tracks.length === 0 ? (
               <p className="p-4 text-sm text-zinc-500">No tracks yet. Add a track, then import media and add it to the timeline.</p>
@@ -217,6 +203,7 @@ export default function TimelineShell() {
                 <div key={track.id} className="relative h-14 border-b border-zinc-800/70" style={{ opacity: track.hidden ? 0.35 : 1 }}>
                   {track.clips.map((clip) => {
                     const selected = selectedClipIds.includes(clip.id);
+                    const media = project?.media.find((m) => m.id === clip.mediaId);
                     return (
                       <div
                         key={clip.id}
@@ -225,6 +212,12 @@ export default function TimelineShell() {
                         onClick={(e) => {
                           e.stopPropagation();
                           selectClip(clip.id, e.ctrlKey || e.metaKey);
+                        }}
+                        onContextMenu={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          selectClip(clip.id);
+                          setMenu({ x: e.clientX, y: e.clientY, clipId: clip.id });
                         }}
                         onPointerDown={(e) => onClipPointerDown(e, clip.id, clip.start, clip.duration)}
                         onPointerMove={onClipPointerMove}
@@ -235,22 +228,35 @@ export default function TimelineShell() {
                         className={`absolute top-2 bottom-2 flex cursor-grab items-center overflow-hidden rounded-md px-2 text-xs select-none ${
                           clip.type === 'audio' ? 'bg-emerald-600/70' : clip.type === 'image' ? 'bg-amber-600/70' : clip.isCompound ? 'bg-fuchsia-600/70' : 'bg-violet-600/70'
                         } ${selected ? 'ring-2 ring-white' : ''}`}
-                        style={{ left: clip.start * zoom, width: Math.max(clip.duration * zoom, 12) }}
+                        style={{
+                          left: clip.start * zoom,
+                          width: Math.max(clip.duration * zoom, 12),
+                          ...(media?.thumbnail
+                            ? { backgroundImage: `url(${media.thumbnail})`, backgroundPosition: 'center', backgroundSize: 'cover' }
+                            : {}),
+                        }}
                         title={`${clip.name} · ${clip.duration.toFixed(2)}s · ${clip.speed}×${clip.reversed ? ' · reversed' : ''}${clip.frozen ? ' · frozen' : ''}${clip.groupId ? ' · grouped' : ''}`}
                       >
                         <span data-edge="start" className="absolute top-0 left-0 h-full w-2 cursor-ew-resize bg-white/30" title="Drag to trim start" />
-                        <span className="truncate px-1">
+                        {clip.type === 'audio' && media?.peaks && media.peaks.length > 0 && (
+                          <span className="pointer-events-none absolute inset-x-1 bottom-0.5 flex h-5 items-end gap-px opacity-80" aria-hidden="true">
+                            {media.peaks.map((p, i) => (
+                              <span key={i} className="w-0.5 shrink-0 bg-white/80" style={{ height: `${Math.max(8, Math.round(p * 100))}%` }} />
+                            ))}
+                          </span>
+                        )}
+                        <span className="relative truncate px-1 drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
                           {clip.name} {clip.speed !== 1 ? `· ${clip.speed}×` : ''}
                         </span>
                         <span data-edge="end" className="absolute top-0 right-0 h-full w-2 cursor-ew-resize bg-white/30" title="Drag to trim end" />
                       </div>
                     );
                   })}
-                  <span className="absolute top-0 h-full w-0.5 bg-red-500/70" style={{ left: playhead * zoom }} />
+                  <span className="pointer-events-none absolute top-0 h-full w-0.5 bg-red-500/70" style={{ left: playhead * zoom }} />
                 </div>
               ))
             )}
-            <span className="absolute top-0 bottom-0 w-0.5 bg-red-500" style={{ left: playhead * zoom }} />
+            <span className="pointer-events-none absolute top-0 bottom-0 w-0.5 bg-red-500" style={{ left: playhead * zoom }} />
           </div>
         </div>
       </div>
@@ -261,6 +267,38 @@ export default function TimelineShell() {
         </button>
         <span>{drag ? `Dragging (${drag.mode})…` : `${tracks.length} tracks · ${duration.toFixed(1)}s total`}</span>
       </div>
+      {menu && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setMenu(null)} onContextMenu={(e) => { e.preventDefault(); setMenu(null); }} />
+          <div
+            role="menu"
+            aria-label="Clip context menu"
+            className="fixed z-50 w-48 overflow-hidden rounded-lg border border-zinc-700 bg-zinc-900 py-1 text-xs text-zinc-100 shadow-2xl"
+            style={{ left: Math.min(menu.x, window.innerWidth - 200), top: Math.min(menu.y, window.innerHeight - 320) }}
+          >
+            {[
+              { label: 'Split at playhead (S)', run: () => splitAtPlayhead() },
+              { label: 'Duplicate (Ctrl+D)', run: () => duplicateSelected() },
+              { label: 'Copy (Ctrl+C)', run: () => copySelected() },
+              { label: 'Paste (Ctrl+V)', run: () => pasteClipboard() },
+              { label: 'Freeze frame', run: () => freezeSelected() },
+              { label: 'Reverse', run: () => reverseSelected() },
+              { label: 'Ripple delete (Shift+Delete)', run: () => rippleDeleteSelected() },
+              { label: 'Delete (Delete)', run: () => deleteSelected() },
+            ].map((item) => (
+              <button
+                key={item.label}
+                type="button"
+                role="menuitem"
+                onClick={() => { item.run(); setMenu(null); }}
+                className="block w-full px-3 py-1.5 text-left hover:bg-zinc-800"
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </section>
   );
 }

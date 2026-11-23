@@ -26,6 +26,8 @@ import { defaultEffectParams, effectDef } from '../lib/effects';
 import { BUILTIN_LUTS, parseCube } from '../lib/lut';
 import { DEFAULT_SHORTCUTS, loadShortcuts, saveShortcuts, type ShortcutAction } from '../lib/shortcuts';
 import {
+  allClipIds,
+  addClipToTextTrack,
   deleteClip,
   duplicateClip,
   durationAtSpeed,
@@ -35,11 +37,23 @@ import {
   moveClip,
   projectDuration,
   rippleDeleteClip,
+  speedForDuration,
   splitClipAt,
   trimClip,
   ungroupClips,
   updateClip,
 } from '../lib/timeline';
+import { defaultTextStyle, type TextStyle } from '../schema/project';
+import { TEXT_STYLE_PRESETS } from '../lib/text';
+import { shapeSvg, stickerById } from '../lib/stickers';
+import {
+  parseCaptionFile,
+  retimeWords,
+  serializeSrt,
+  serializeVtt,
+  splitCue,
+  transcriptToCues,
+} from '../lib/captions';
 
 /**
  * Phase 1 store (Zustand). Command pattern is real now: every project
@@ -117,6 +131,46 @@ function loadWithRecovery(): { projects: VidoraProject[]; recovered: string | nu
 
 const initial = loadWithRecovery();
 
+/** Base clip for Phase 3 text/sticker/drawing clips (3s at the playhead by default). */
+function baseClip(type: Clip['type'], name: string, duration: number, start: number): Clip {
+  return {
+    adjustment: defaultAdjustment(),
+    animationIn: { duration: 0.5, kind: 'none' },
+    animationLoop: { duration: 2, kind: 'none' },
+    animationOut: { duration: 0.5, kind: 'none' },
+    background: { color: '#000000', gradient: 'linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%)', type: 'blur' },
+    chromaKey: { color: '#00FF00', enabled: false, smoothness: 0.2, tolerance: 0.3 },
+    duration,
+    effects: [],
+    fit: 'fit',
+    flipH: false,
+    flipV: false,
+    frozen: false,
+    id: newId('clip'),
+    isCompound: false,
+    keyframes: [],
+    layoutMode: 'full',
+    layoutSlot: 0,
+    name,
+    opacity: 1,
+    pitchPreserved: true,
+    positionX: 0,
+    positionY: 0,
+    reversed: false,
+    rotation: 0,
+    scale: 1,
+    smoothSlowMo: false,
+    sourceDuration: duration,
+    sourceStart: 0,
+    speed: 1,
+    start: Math.max(0, start),
+    trackId: '',
+    type,
+    volume: 1,
+  };
+}
+
+/** Append a clip to the first unlocked text track (creating one if needed). */
 interface ProjectState {
   activeTab: LeftTab;
   aspectRatio: AspectRatio;
@@ -142,6 +196,11 @@ interface ProjectState {
   undoStack: string[];
   view: View;
   zoom: number;
+  // Phase 3 — drawing / tracking modes (read by PreviewArea)
+  drawMode: boolean;
+  drawColor: string;
+  drawWidth: number;
+  trackingMode: boolean;
   // dashboard / projects
   createProject: (name?: string) => void;
   deleteProject: (id: string) => void;
@@ -166,8 +225,10 @@ interface ProjectState {
   reverseSelected: () => void;
   rippleDeleteSelected: () => void;
   selectClip: (clipId: string | null, additive?: boolean) => void;
+  selectAllClips: () => void;
   selectTrack: (trackId: string | null) => void;
   setClipSpeed: (speed: number) => void;
+  setClipDuration: (seconds: number) => void;
   setMagnetic: (v: boolean) => void;
   setPlayhead: (t: number) => void;
   setPlaying: (v: boolean) => void;
@@ -202,6 +263,33 @@ interface ProjectState {
   setMaskEditing: (v: boolean) => void;
   addPenPoint: (x: number, y: number) => void;
   clearPenPoints: () => void;
+  // Phase 3 — text & graphics
+  addTextClip: (presetId?: string) => void;
+  updateTextStyle: (patch: Partial<TextStyle>) => void;
+  applyTextStyleToAll: () => void;
+  addStickerClip: (stickerId: string) => void;
+  addShapeClip: (shapeId: string, fill: string) => void;
+  setDrawMode: (v: boolean) => void;
+  setDrawColor: (color: string) => void;
+  setDrawWidth: (w: number) => void;
+  addDrawingStroke: (points: { x: number; y: number }[]) => void;
+  clearDrawing: () => void;
+  setTracking: (targetClipId: string | null) => void;
+  setTrackingMode: (v: boolean) => void;
+  addTrackPoint: (x: number, y: number) => void;
+  clearTrackPoints: () => void;
+  // Phase 3 — captions & speech
+  addCaptionCue: () => void;
+  updateCaptionCue: (id: string, patch: Partial<{ end: number; start: number; styleId: string; text: string }>) => void;
+  deleteCaptionCue: (id: string) => void;
+  deleteAllCaptions: () => void;
+  splitCaptionCueAtPlayhead: () => void;
+  setCaptionStyle: (styleId: string) => void;
+  importCaptionsFile: (file: File) => Promise<string | null>;
+  exportCaptions: (format: 'srt' | 'vtt') => string;
+  generateCaptionsFromTranscript: (transcript: string, language: string) => void;
+  translateCaptionCue: (id: string, language: string, text: string) => void;
+  addTtsNarration: (text: string, voice: string, rate: number, pitch: number) => void;
   // media library
   addFolder: (name: string) => void;
   // view / misc
@@ -243,6 +331,9 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     clipboard: null,
     customRatio: { height: 1080, width: 1920 },
     dirty: false,
+    drawColor: '#FFFFFF',
+    drawMode: false,
+    drawWidth: 4,
     exportOpen: false,
     lastSavedAt: null,
     magnetic: true,
@@ -259,6 +350,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     shortcuts: loadShortcuts(),
     shortcutsOpen: false,
     theme: 'dark',
+    trackingMode: false,
     undoStack: [],
     view: 'dashboard',
     zoom: 24,
@@ -366,6 +458,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const clip: Clip = {
         adjustment: defaultAdjustment(),
         animationIn: { duration: 0.5, kind: 'none' },
+        animationLoop: { duration: 2, kind: 'none' },
         animationOut: { duration: 0.5, kind: 'none' },
         background: { color: '#000000', gradient: 'linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%)', type: 'blur' },
         chromaKey: { color: '#00FF00', enabled: false, smoothness: 0.2, tolerance: 0.3 },
@@ -389,6 +482,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
         reversed: false,
         rotation: 0,
         scale: 1,
+        smoothSlowMo: false,
         sourceDuration: duration,
         sourceStart: 0,
         speed: 1,
@@ -504,6 +598,11 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const s = get();
       set({ selectedClipIds: additive ? [...new Set([...s.selectedClipIds, clipId])] : [clipId] });
     },
+    selectAllClips: () => {
+      const s = get();
+      if (!s.project) return;
+      set({ selectedClipIds: allClipIds(s.project) });
+    },
     selectTrack: (trackId) => set({ selectedTrackId: trackId }),
     setClipSpeed: (speed) => {
       const s = get();
@@ -514,6 +613,16 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const clamped = Math.min(100, Math.max(0.1, speed));
       const source = clip.sourceDuration ?? clip.duration * clip.speed;
       commit((p) => updateClip(p, id, { duration: durationAtSpeed(source, clamped), sourceDuration: source, speed: clamped }));
+    },
+    setClipDuration: (seconds) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip) return;
+      const source = clip.sourceDuration ?? clip.duration * clip.speed;
+      const speed = speedForDuration(source, seconds);
+      commit((p) => updateClip(p, id, { duration: durationAtSpeed(source, speed), sourceDuration: source, speed }));
     },
     setMagnetic: (v) => set({ magnetic: v }),
     setPlayhead: (t) => set({ playhead: Math.max(0, t) }),
@@ -725,6 +834,223 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const clip = findClip(s.project, id)?.clip;
       if (!clip?.mask) return;
       commit((p) => updateClip(p, id, { mask: { ...clip.mask!, points: [] } }));
+    },
+
+    // ---- Phase 3: text & graphics (all undo-covered via commit) ----
+    addTextClip: (presetId) => {
+      const s = get();
+      if (!s.project) return;
+      const preset = presetId ? TEXT_STYLE_PRESETS.find((p) => p.id === presetId) : undefined;
+      const style = preset ? { ...preset.style, content: preset.style.content } : defaultTextStyle('Heading');
+      const base = baseClip('text', preset?.name ?? 'Text', 3, s.playhead);
+      const clip: Clip = { ...base, text: { content: style.content, style, tts: null } };
+      commit((p) => addClipToTextTrack(p, clip));
+      set({ selectedClipIds: [clip.id] });
+    },
+    updateTextStyle: (patch) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip?.text) return;
+      const style = { ...clip.text.style, ...patch };
+      commit((p) => updateClip(p, id, { text: { ...clip.text!, content: style.content, style } }));
+    },
+    applyTextStyleToAll: () => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const src = findClip(s.project, s.selectedClipIds[0])?.clip;
+      if (!src?.text) return;
+      const { content: _content, ...styleOnly } = src.text.style;
+      void _content;
+      let next = s.project;
+      for (const track of next.tracks) {
+        for (const c of track.clips) {
+          if (c.type === 'text' && c.text) {
+            next = updateClip(next, c.id, { text: { ...c.text, style: { ...styleOnly, content: c.text.style.content } } });
+          }
+        }
+      }
+      applyProject(next);
+    },
+    addStickerClip: (stickerId) => {
+      const s = get();
+      if (!s.project) return;
+      const def = stickerById(stickerId);
+      if (!def) return;
+      const base = baseClip('sticker', def.name, 3, s.playhead);
+      const clip: Clip = { ...base, sticker: { category: def.category, id: def.id, kind: 'sticker', svg: def.svg } };
+      commit((p) => addClipToTextTrack(p, clip));
+      set({ selectedClipIds: [clip.id] });
+    },
+    addShapeClip: (shapeId, fill) => {
+      const s = get();
+      if (!s.project) return;
+      const base = baseClip('sticker', shapeId, 3, s.playhead);
+      const clip: Clip = { ...base, sticker: { category: 'Shapes', id: `shape-${shapeId}`, kind: 'shape', svg: shapeSvg(shapeId, fill) } };
+      commit((p) => addClipToTextTrack(p, clip));
+      set({ selectedClipIds: [clip.id] });
+    },
+    setDrawMode: (v) => set({ drawMode: v }),
+    setDrawColor: (color) => set({ drawColor: color }),
+    setDrawWidth: (w) => set({ drawWidth: Math.min(40, Math.max(1, w)) }),
+    addDrawingStroke: (points) => {
+      const s = get();
+      if (!s.project || points.length < 2) return;
+      const stroke = { color: s.drawColor, points, width: s.drawWidth };
+      const selected = s.selectedClipIds.length > 0 ? findClip(s.project, s.selectedClipIds[0])?.clip : undefined;
+      if (selected?.drawing) {
+        const id = selected.id;
+        commit((p) => updateClip(p, id, { drawing: { strokes: [...selected.drawing!.strokes, stroke] } }));
+        return;
+      }
+      const base = baseClip('sticker', 'Drawing', 5, s.playhead);
+      const clip: Clip = { ...base, drawing: { strokes: [stroke] } };
+      commit((p) => addClipToTextTrack(p, clip));
+      set({ selectedClipIds: [clip.id] });
+    },
+    clearDrawing: () => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip?.drawing) return;
+      commit((p) => updateClip(p, id, { drawing: { strokes: [] } }));
+    },
+    setTracking: (targetClipId) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip) return;
+      if (!targetClipId) {
+        commit((p) => updateClip(p, id, { tracking: undefined }));
+        return;
+      }
+      const target = findClip(s.project, targetClipId)?.clip;
+      if (!target || target.id === id) return;
+      commit((p) => updateClip(p, id, { tracking: { points: clip.tracking?.points ?? [], targetClipId } }));
+    },
+    setTrackingMode: (v) => set({ trackingMode: v }),
+    addTrackPoint: (x, y) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip?.tracking) return;
+      const time = Math.round(s.playhead * 100) / 100;
+      const points = clip.tracking.points.filter((pt) => Math.abs(pt.time - time) > 0.05);
+      points.push({ time, x, y });
+      points.sort((a, b) => a.time - b.time);
+      commit((p) => updateClip(p, id, { tracking: { ...clip.tracking!, points } }));
+    },
+    clearTrackPoints: () => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      const clip = findClip(s.project, id)?.clip;
+      if (!clip?.tracking) return;
+      commit((p) => updateClip(p, id, { tracking: { ...clip.tracking!, points: [] } }));
+    },
+
+    // ---- Phase 3: captions & speech ----
+    addCaptionCue: () => {
+      const s = get();
+      if (!s.project) return;
+      const start = Math.round(s.playhead * 100) / 100;
+      const cue = { end: start + 2, id: newId('cue'), start, text: 'New caption', translations: {}, words: retimeWords('New caption', start, start + 2) };
+      applyProject({ ...s.project, captions: [...s.project.captions, cue].sort((a, b) => a.start - b.start) });
+    },
+    updateCaptionCue: (id, patch) => {
+      const s = get();
+      if (!s.project) return;
+      const cue = s.project.captions.find((c) => c.id === id);
+      if (!cue) return;
+      const next = { ...cue, ...patch };
+      if (patch.text !== undefined || patch.start !== undefined || patch.end !== undefined) {
+        next.words = retimeWords(next.text, next.start, next.end);
+      }
+      applyProject({ ...s.project, captions: s.project.captions.map((c) => (c.id === id ? next : c)).sort((a, b) => a.start - b.start) });
+    },
+    deleteCaptionCue: (id) => {
+      const s = get();
+      if (!s.project) return;
+      applyProject({ ...s.project, captions: s.project.captions.filter((c) => c.id !== id) });
+    },
+    deleteAllCaptions: () => {
+      const s = get();
+      if (!s.project) return;
+      applyProject({ ...s.project, captions: [] });
+    },
+    splitCaptionCueAtPlayhead: () => {
+      const s = get();
+      if (!s.project) return;
+      const cue = s.project.captions.find((c) => s.playhead > c.start && s.playhead < c.end);
+      if (!cue) return;
+      const halves = splitCue(cue, s.playhead);
+      if (!halves) return;
+      applyProject({
+        ...s.project,
+        captions: [...s.project.captions.filter((c) => c.id !== cue.id), halves[0], halves[1]].sort((a, b) => a.start - b.start),
+      });
+    },
+    setCaptionStyle: (styleId) => {
+      const s = get();
+      if (!s.project) return;
+      applyProject({ ...s.project, captionStyleId: styleId });
+    },
+    importCaptionsFile: async (file) => {
+      const s = get();
+      if (!s.project) return 'No project is open.';
+      let cues;
+      try {
+        cues = parseCaptionFile(file.name, await file.text());
+      } catch (err) {
+        return err instanceof Error ? err.message : 'Could not parse this caption file.';
+      }
+      const project = get().project;
+      if (!project) return 'No project is open.';
+      const merged = [...project.captions, ...cues].sort((a, b) => a.start - b.start);
+      applyProject({ ...project, captions: merged });
+      return null;
+    },
+    exportCaptions: (format) => {
+      const s = get();
+      if (!s.project) return '';
+      return format === 'srt' ? serializeSrt(s.project.captions) : serializeVtt(s.project.captions);
+    },
+    generateCaptionsFromTranscript: (transcript, _language) => {
+      const s = get();
+      if (!s.project) return;
+      void _language; // language is a UI choice for now; cues store text only (Whisper STT is Phase 7)
+      const selected = s.selectedClipIds.length > 0 ? findClip(s.project, s.selectedClipIds[0])?.clip : undefined;
+      const start = selected ? selected.start : 0;
+      const end = selected ? selected.start + selected.duration : Math.max(5, projectDuration(s.project));
+      const cues = transcriptToCues(transcript, start, end);
+      if (cues.length === 0) return;
+      applyProject({ ...s.project, captions: [...s.project.captions, ...cues].sort((a, b) => a.start - b.start) });
+    },
+    translateCaptionCue: (id, language, text) => {
+      const s = get();
+      if (!s.project) return;
+      applyProject({
+        ...s.project,
+        captions: s.project.captions.map((c) => (c.id === id ? { ...c, translations: { ...c.translations, [language]: text } } : c)),
+      });
+    },
+    addTtsNarration: (text, voice, rate, pitch) => {
+      const s = get();
+      if (!s.project || !text.trim()) return;
+      const words = text.trim().split(/\s+/).length;
+      const duration = Math.min(30, Math.max(3, Math.round(words * 0.45)));
+      const style = defaultTextStyle(text.trim());
+      const base = baseClip('text', 'Narration', duration, s.playhead);
+      const clip: Clip = {
+        ...base,
+        text: { content: text.trim(), style: { ...style, fontSize: 20 }, tts: { pitch, rate, voice } },
+      };
+      commit((p) => addClipToTextTrack(p, clip));
+      set({ selectedClipIds: [clip.id] });
     },
 
     addFolder: (name) => {

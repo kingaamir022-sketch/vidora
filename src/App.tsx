@@ -1,11 +1,15 @@
 import { useEffect } from 'react';
 import Dashboard from './components/Dashboard';
+import CaptionsPanel from './components/CaptionsPanel';
 import ColorPanel from './components/ColorPanel';
 import EffectsPanel from './components/EffectsPanel';
 import ExportPanel from './components/ExportPanel';
+import StickersPanel from './components/StickersPanel';
+import TextPanel from './components/TextPanel';
 import TransitionsPanel from './components/TransitionsPanel';
 import LeftTabs from './components/LeftTabs';
 import MediaBrowser from './components/MediaBrowser';
+import PlaceholderPanel from './components/PlaceholderPanel';
 import PreviewArea from './components/PreviewArea';
 import PropertiesPanel from './components/PropertiesPanel';
 import ShortcutsPanel from './components/ShortcutsPanel';
@@ -42,10 +46,7 @@ export default function App() {
       else if (action === 'redo') s.redo();
       else if (action === 'addMarker') s.addMarker();
       else if (action === 'rippleDelete') s.rippleDeleteSelected();
-      else if (action === 'selectAll') {
-        const track = s.project?.tracks.find((t) => t.id === s.selectedTrackId) ?? s.project?.tracks[0];
-        if (track) s.selectClip(track.clips[0]?.id ?? null);
-      }
+      else if (action === 'selectAll') s.selectAllClips();
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
@@ -65,10 +66,16 @@ export default function App() {
       <div className="flex min-h-0 flex-1">
         <LeftTabs />
         {activeTab === 'Media' && <MediaBrowser />}
+        {activeTab === 'Text' && <TextPanel />}
+        {activeTab === 'Stickers' && <StickersPanel />}
+        {activeTab === 'Captions' && <CaptionsPanel />}
         {activeTab === 'Effects' && <EffectsPanel />}
         {activeTab === 'Filters' && <EffectsPanel lutFocus />}
         {activeTab === 'Transitions' && <TransitionsPanel />}
         {activeTab === 'Adjustment' && <ColorPanel />}
+        {(activeTab === 'Audio' || activeTab === 'Templates' || activeTab === 'AI Tools') && (
+          <PlaceholderPanel tab={activeTab} />
+        )}
         <PreviewArea />
         <PropertiesPanel />
       </div>

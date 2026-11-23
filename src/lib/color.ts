@@ -29,6 +29,63 @@ export function buildCurveLookup(points: CurvePoint[]): Uint8Array {
   return lut;
 }
 
+/**
+ * Drag a curve point to (x, y). The point is clamped between its
+ * neighbours so the curve stays a function of x (endpoints stay inside
+ * 0–1); the result is re-sorted by x. Pure — used by the curves editor
+ * and unit-tested.
+ */
+export function moveCurvePoint(points: CurvePoint[], index: number, x: number, y: number): CurvePoint[] {
+  if (index < 0 || index >= points.length) return [...points];
+  const sorted = [...points].sort((a, b) => a.x - b.x);
+  const prev = sorted[index - 1];
+  const next = sorted[index + 1];
+  const minX = prev ? prev.x + 0.01 : 0;
+  const maxX = next ? next.x - 0.01 : 1;
+  const nx = Math.min(maxX, Math.max(minX, x));
+  const ny = Math.min(1, Math.max(0, y));
+  const moved = sorted.map((p, i) => (i === index ? { x: nx, y: ny } : { ...p }));
+  return moved.sort((a, b) => a.x - b.x);
+}
+
+export type CurvePresetName = 'custom' | 'lighten' | 'darken' | 'fade' | 'contrast' | 'cool' | 'warm' | 'vintage';
+
+/**
+ * Curve presets (CapCut Curves tab: Custom, Lighten, Darken, Fade,
+ * Contrast, Cool tone, Warm tone, Vintage). Each preset is a set of
+ * points for one channel; the editor applies it to the active channel.
+ */
+export function curvePreset(name: CurvePresetName): CurvePoint[] {
+  switch (name) {
+    case 'lighten':
+      return [{ x: 0, y: 0 }, { x: 0.5, y: 0.65 }, { x: 1, y: 1 }];
+    case 'darken':
+      return [{ x: 0, y: 0 }, { x: 0.5, y: 0.35 }, { x: 1, y: 1 }];
+    case 'fade':
+      return [{ x: 0, y: 0.08 }, { x: 1, y: 0.92 }];
+    case 'contrast':
+      return [{ x: 0, y: 0 }, { x: 0.25, y: 0.18 }, { x: 0.75, y: 0.82 }, { x: 1, y: 1 }];
+    case 'cool':
+      return [{ x: 0, y: 0 }, { x: 0.5, y: 0.6 }, { x: 1, y: 1 }];
+    case 'warm':
+      return [{ x: 0, y: 0.04 }, { x: 0.5, y: 0.5 }, { x: 1, y: 0.96 }];
+    case 'vintage':
+      return [{ x: 0, y: 0.08 }, { x: 0.5, y: 0.55 }, { x: 1, y: 0.92 }];
+    case 'custom':
+    default:
+      return [{ x: 0, y: 0 }, { x: 1, y: 1 }];
+  }
+}
+
+export const CURVE_PRESETS: CurvePresetName[] = ['custom', 'lighten', 'darken', 'fade', 'contrast', 'cool', 'warm', 'vintage'];
+
+/** Map a Vidora blend mode to the canvas globalCompositeOperation value. */
+export function canvasBlendMode(mode: string): GlobalCompositeOperation {
+  if (mode === 'normal') return 'source-over';
+  const valid: GlobalCompositeOperation[] = ['multiply', 'screen', 'overlay', 'darken', 'lighten', 'soft-light', 'hard-light', 'difference', 'color-burn', 'color-dodge'];
+  return (valid as string[]).includes(mode) ? (mode as GlobalCompositeOperation) : 'source-over';
+}
+
 /** Lift / gamma / gain for one channel: out = gain * (in^gamma) + lift. */
 export function applyWheel(value: number, lift: number, gamma: number, gain: number): number {
   const lifted = clamp01(value + lift * 0.5);

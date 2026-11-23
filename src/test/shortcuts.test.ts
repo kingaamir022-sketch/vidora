@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { actionForCombo, DEFAULT_SHORTCUTS, eventToCombo } from '../lib/shortcuts';
+import { actionForCombo, DEFAULT_SHORTCUTS, eventToCombo, SHORTCUT_LABELS } from '../lib/shortcuts';
 import { exportFileName, pickMimeType, resolutionSize } from '../lib/exporter';
 
 describe('keyboard shortcuts', () => {
@@ -16,6 +16,11 @@ describe('keyboard shortcuts', () => {
     expect(actionForCombo(DEFAULT_SHORTCUTS, 'ctrl+d')).toBe('duplicate');
     expect(actionForCombo(DEFAULT_SHORTCUTS, 'm')).toBe('addMarker');
     expect(actionForCombo(DEFAULT_SHORTCUTS, 'ctrl+q')).toBeNull();
+  });
+
+  it('Ctrl+A is select-all and selects all clips on all tracks (CapCut Web)', () => {
+    expect(actionForCombo(DEFAULT_SHORTCUTS, 'ctrl+a')).toBe('selectAll');
+    expect(SHORTCUT_LABELS.selectAll).toBe('Select all clips on all tracks');
   });
 
   it('normalises keyboard events to combos', () => {

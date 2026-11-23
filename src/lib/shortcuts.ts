@@ -21,7 +21,7 @@ export const SHORTCUT_LABELS: Record<ShortcutAction, string> = {
   paste: 'Paste clip',
   redo: 'Redo',
   rippleDelete: 'Ripple delete selected clip',
-  selectAll: 'Select all clips on track',
+  selectAll: 'Select all clips on all tracks',
   split: 'Split clip at playhead',
   togglePlay: 'Play / pause',
   undo: 'Undo',

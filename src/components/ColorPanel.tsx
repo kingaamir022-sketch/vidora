@@ -1,8 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { findClip } from '../lib/timeline';
+import { CURVE_PRESETS, curvePreset, moveCurvePoint } from '../lib/color';
 import type { Adjustment, BlendMode, CurvePoint } from '../schema/project';
 import ScopesPanel from './ScopesPanel';
+
+const CURVE_PRESET_LABELS: Record<string, string> = {
+  contrast: 'Contrast',
+  cool: 'Cool tone',
+  custom: 'Custom',
+  darken: 'Darken',
+  fade: 'Fade',
+  lighten: 'Lighten',
+  vintage: 'Vintage',
+  warm: 'Warm tone',
+};
+
+/** CapCut's blend-mode dropdown (Basic panel): Normal, Overlay, Screen,
+ * Darken, Brighten, Hard light, Multiply, Soft light, Linear burn,
+ * Color burn, Color dodge. Linear burn has no canvas/CSS equivalent and
+ * is omitted (see docs/behavior/F-BLEND.md). */
+const BLEND_OPTIONS: { label: string; value: BlendMode }[] = [
+  { label: 'Normal', value: 'normal' },
+  { label: 'Overlay', value: 'overlay' },
+  { label: 'Screen', value: 'screen' },
+  { label: 'Darken', value: 'darken' },
+  { label: 'Brighten', value: 'lighten' },
+  { label: 'Hard light', value: 'hard-light' },
+  { label: 'Multiply', value: 'multiply' },
+  { label: 'Soft light', value: 'soft-light' },
+  { label: 'Color burn', value: 'color-burn' },
+  { label: 'Color dodge', value: 'color-dodge' },
+  { label: 'Difference', value: 'difference' },
+];
 
 /** Colour & adjustment panel (Phase 2, SPEC F). Left panel for the Adjustment tab. */
 export default function ColorPanel() {
@@ -10,6 +40,42 @@ export default function ColorPanel() {
   const selectedClipIds = useProjectStore((s) => s.selectedClipIds);
   const updateAdjustment = useProjectStore((s) => s.updateAdjustment);
   const [curveChannel, setCurveChannel] = useState<'r' | 'g' | 'b'>('r');
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const dragRef = useRef<{ channel: 'r' | 'g' | 'b'; index: number } | null>(null);
+  const suppressClickRef = useRef(false);
+
+  // Dragging a curve point: window-level pointer tracking so a fast drag
+  // outside the point still moves it. moveCurvePoint clamps the point
+  // between its neighbours, so the sorted order (and the index) stay valid.
+  useEffect(() => {
+    if (dragIndex === null) return;
+    const onMove = (e: PointerEvent) => {
+      const svg = svgRef.current;
+      const d = dragRef.current;
+      if (!svg || !d) return;
+      const store = useProjectStore.getState();
+      const clip = store.project && store.selectedClipIds[0] ? findClip(store.project, store.selectedClipIds[0])?.clip ?? null : null;
+      const adj = clip?.adjustment;
+      if (!adj) return;
+      const rect = svg.getBoundingClientRect();
+      const x = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+      const y = Math.min(1, Math.max(0, 1 - (e.clientY - rect.top) / rect.height));
+      const next = moveCurvePoint(adj.curves[d.channel], d.index, x, y);
+      suppressClickRef.current = true;
+      store.updateAdjustment({ curves: { ...adj.curves, [d.channel]: next } });
+    };
+    const onUp = () => {
+      dragRef.current = null;
+      setDragIndex(null);
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+    };
+  }, [dragIndex]);
 
   const clip = project && selectedClipIds.length > 0 ? findClip(project, selectedClipIds[0])?.clip ?? null : null;
   const adj: Adjustment | null = clip?.adjustment ?? null;
@@ -60,6 +126,10 @@ export default function ColorPanel() {
   };
 
   const onCurveClick = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (suppressClickRef.current) {
+      suppressClickRef.current = false;
+      return;
+    }
     if (!adj || !clip) return;
     const rect = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
     const x = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
@@ -67,6 +137,12 @@ export default function ColorPanel() {
     const pts = adj.curves[curveChannel];
     const next: CurvePoint[] = [...pts, { x, y }].sort((a, b) => a.x - b.x);
     updateAdjustment({ curves: { ...adj.curves, [curveChannel]: next } });
+  };
+
+  const onCurvePointDown = (e: React.PointerEvent, index: number) => {
+    e.stopPropagation();
+    dragRef.current = { channel: curveChannel, index };
+    setDragIndex(index);
   };
 
   const curvePointsAttr = (pts: CurvePoint[]) => pts.map((p) => `${(p.x * 100).toFixed(1)},${((1 - p.y) * 100).toFixed(1)}`).join(' ');
@@ -91,7 +167,7 @@ export default function ColorPanel() {
           </section>
 
           <section className="space-y-2 border-t border-zinc-800 pt-3">
-            <h3 className="text-xs font-semibold text-zinc-300">RGB curves — click to add a point</h3>
+            <h3 className="text-xs font-semibold text-zinc-300">RGB curves — click to add a point, drag a point to move it</h3>
             <div className="flex gap-1">
               {(['r', 'g', 'b'] as const).map((ch) => (
                 <button
@@ -111,14 +187,38 @@ export default function ColorPanel() {
                 Reset curve
               </button>
             </div>
-            <svg viewBox="0 0 100 100" onClick={onCurveClick} className="h-28 w-full cursor-crosshair rounded-md border border-zinc-700 bg-zinc-900" aria-label="RGB curves editor">
+            <div className="flex flex-wrap gap-1">
+              {CURVE_PRESETS.map((preset) => (
+                <button
+                  key={preset}
+                  type="button"
+                  onClick={() => updateAdjustment({ curves: { ...adj.curves, [curveChannel]: curvePreset(preset) } })}
+                  className="rounded-md border border-zinc-700 px-2 py-0.5 text-[11px]"
+                  title={`Apply the ${CURVE_PRESET_LABELS[preset]} preset to the ${curveChannel.toUpperCase()} curve`}
+                >
+                  {CURVE_PRESET_LABELS[preset]}
+                </button>
+              ))}
+            </div>
+            <svg ref={svgRef} viewBox="0 0 100 100" onClick={onCurveClick} className="h-28 w-full cursor-crosshair rounded-md border border-zinc-700 bg-zinc-900" aria-label="RGB curves editor">
               <line x1="0" y1="100" x2="100" y2="0" stroke="#3f3f46" strokeWidth="0.5" />
               <polyline points={curvePointsAttr(adj.curves[curveChannel])} fill="none" stroke={curveChannel === 'r' ? '#f87171' : curveChannel === 'g' ? '#4ade80' : '#60a5fa'} strokeWidth="1.5" />
               {adj.curves[curveChannel].map((p, i) => (
-                <circle key={i} cx={p.x * 100} cy={(1 - p.y) * 100} r="3.5" fill="#fff" stroke="#8b5cf6" strokeWidth="1" />
+                <circle
+                  key={i}
+                  cx={p.x * 100}
+                  cy={(1 - p.y) * 100}
+                  r="4.5"
+                  fill="#fff"
+                  stroke="#8b5cf6"
+                  strokeWidth="1"
+                  className="cursor-grab active:cursor-grabbing"
+                  onPointerDown={(e) => onCurvePointDown(e, i)}
+                  onClick={(e) => e.stopPropagation()}
+                />
               ))}
             </svg>
-            <p className="text-[11px] text-zinc-500">{adj.curves[curveChannel].length} point(s) on the {curveChannel.toUpperCase()} curve.</p>
+            <p className="text-[11px] text-zinc-500">{adj.curves[curveChannel].length} point(s) on the {curveChannel.toUpperCase()} curve. Presets apply to the active channel.</p>
           </section>
 
           <section className="space-y-2 border-t border-zinc-800 pt-3">
@@ -140,34 +240,34 @@ export default function ColorPanel() {
                 onChange={(e) => updateAdjustment({ blendMode: e.target.value as BlendMode })}
                 className="rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1"
               >
-                {['normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'soft-light', 'hard-light', 'difference'].map((m) => (
-                  <option key={m} value={m}>{m}</option>
+                {BLEND_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
                 ))}
               </select>
             </label>
-            <p className="text-[11px] text-zinc-500">Blend mode is stored in the project and applied in the full export render (Phase 8); the live preview composites clips normally.</p>
+            <p className="text-[11px] text-zinc-500">Blend mode applies live in the preview (and in export, which records the preview canvas). Use Transform → Opacity for the blend opacity. Linear burn has no canvas equivalent and is not offered.</p>
           </section>
 
           <section className="space-y-1.5 border-t border-zinc-800 pt-3">
             <h3 className="text-xs font-semibold text-zinc-300">Cleanup</h3>
             <label className="flex items-center gap-2 text-xs">
-              <input type="range" min={0} max={1} step={0.05} value={adj.denoise} onChange={(e) => updateAdjustment({ denoise: Number(e.target.value) })} className="flex-1" aria-label="Denoise" />
-              <span className="w-10 text-right font-mono">Denoise {Math.round(adj.denoise * 100)}%</span>
+              <input type="range" min={0} max={1} step={0.05} value={adj.denoise} onChange={(e) => updateAdjustment({ denoise: Number(e.target.value) })} className="flex-1" aria-label="Reduce image noise" />
+              <span className="w-10 text-right font-mono">Reduce image noise {Math.round(adj.denoise * 100)}%</span>
             </label>
-            <p className="text-[11px] text-zinc-500">Denoise applies a light spatial soften in the preview.</p>
+            <p className="text-[11px] text-zinc-500">CapCut calls this “Reduce image noise” (Free). Applies a light spatial soften in the preview.</p>
             <label className="flex items-center gap-2 text-xs">
               <input type="checkbox" checked={adj.stabilization} onChange={(e) => updateAdjustment({ stabilization: e.target.checked })} />
-              Stabilization (deferred)
+              Stabilize
             </label>
             <p className="text-[11px] text-zinc-500">
-              Stabilization is stored as a flag only: real stabilization needs motion analysis of the whole clip (Phase 7). It is not faked in the preview.
+              CapCut marks Stabilize as Pro. Real motion stabilization needs whole-clip motion analysis (Phase 7); for now the toggle is stored as a flag and is not faked in the preview.
             </p>
             <label className="flex items-center gap-2 text-xs">
               <input type="checkbox" checked={adj.lensCorrection} onChange={(e) => updateAdjustment({ lensCorrection: e.target.checked })} />
               Lens correction (deferred)
             </label>
             <p className="text-[11px] text-zinc-500">
-              Lens correction is stored as a flag only: it needs a camera/lens profile (Phase 8). It is not faked in the preview.
+              Lens correction was not found in CapCut Web either. Stored as a flag only: it needs a camera/lens profile (Phase 8). It is not faked in the preview.
             </p>
             <button
               type="button"

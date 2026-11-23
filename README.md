@@ -1,6 +1,18 @@
 # Vidora — Create. Cut. Shine.
 
-A professional video editor. **Phase 2 is complete** (v0.3.0): keyframes & animation, transitions, 14 video effects, .cube LUTs, colour & adjustment with curves/wheels/scopes, masks & compositing — on top of the Phase 1 core editor and the Phase 0 branding, architecture, project JSON schema and app shell. Text, audio, captions, AI tools and full export arrive in Phases 3–9 (see [SPEC.md](SPEC.md)).
+A professional video editor. **Phase 3 is complete** (v0.4.0): text & graphics (text panel with templates/styles/animations, 224 original stickers, 10 shapes, drawing, manual motion tracking) and captions & speech (auto captions from a pasted transcript, 8 caption styles, SRT/VTT import/export, manual translation, in-panel transcript, browser text-to-speech) — on top of the Phase 2 keyframes/effects/colour/masks work, the Phase 1 core editor and the Phase 0 branding, architecture, project JSON schema and app shell. Audio, AI tools and full export arrive in Phases 4–9 (see [SPEC.md](SPEC.md)).
+
+## Parity & self-audit (Rules 12/13/14)
+
+- Behaviour cards for every Phase 0–3 feature: [docs/behavior/](docs/behavior/) (one card per feature, with controls, ranges, defaults, interactions and edge cases).
+- Parity matrix: [docs/PARITY.md](docs/PARITY.md) — MATCH 37 / ASSUMED 1 / INTENTIONAL-DIFF 3 / 41, gate PASS (Phases 0–2 rows; Phase 3 cards carry their own status: MATCH 5 / ASSUMED 3 / UNKNOWN 6). Layout reference: [docs/UI_LAYOUT.md](docs/UI_LAYOUT.md). Intentional diffs: [docs/INTENTIONAL_DIFFS.md](docs/INTENTIONAL_DIFFS.md). Bug log: [docs/BUGS.md](docs/BUGS.md).
+- Run the self-audits yourself (needs Node ≥ 20; uses the Playwright Chromium headless shell already on the machine):
+
+```bash
+npm run audit          # builds, serves the production build, drives it in headless Chromium
+                       # 40 checks, screenshots into audit/phase2/<card-ID>/, report in audit/phase2/AUDIT-REPORT.md
+npm run audit:phase3   # Phase 3: 31 checks, screenshots into audit/phase3/<card-ID>/, report in audit/phase3/AUDIT-REPORT.md
+```
 
 ## Quick start
 
@@ -8,12 +20,19 @@ A professional video editor. **Phase 2 is complete** (v0.3.0): keyframes & anima
 npm install
 npm run dev      # start the dev server (Vite) — open the URL it prints
 npm run build    # type-check + production build into dist/
-npm test         # run the Vitest suite
+npm test         # run the Vitest suite (147 tests)
 npm run preview  # serve the production build locally
+npm run audit    # build + Playwright self-audit, Phases 0–2 (see above)
+npm run audit:phase3  # build + Playwright self-audit, Phase 3 (see above)
 npm run build:assets  # regenerate logo icon-size variants from public/logo.svg
 ```
 
 Requires **Node.js ≥ 20**.
+
+## What works in Phase 3
+
+- **Text & graphics**: Text panel (Templates/Effects/AI text FX sub-tabs; AI text FX is an honest Phase 7 note), Add heading/body, 14 original text style presets, full inspector (font, size, bold/italic/underline, alignment, line spacing, fill/gradient, stroke, background box, shadow, glow, opacity, transform, Apply to all), In/Out/Loop text animations; 224 original procedural SVG stickers with search + categories, 10 original SVG shapes with fill colour, freehand drawing on the preview, manual motion tracking (attach an overlay to a video clip, place track points — automatic detection is Phase 7).
+- **Captions & speech**: Auto captions from a pasted transcript with word-level highlight (honest substitute — real Whisper speech-to-text is Phase 7), 8 original caption styles, manual cues (add/split/edit/delete, click to seek), SRT/VTT import + export, per-cue manual translation, in-panel transcript (click a word to seek), browser text-to-speech (voice, rate, pitch, preview, narration clips).
 
 ## What works in Phase 2
 

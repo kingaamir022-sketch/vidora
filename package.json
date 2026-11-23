@@ -5,12 +5,13 @@
     "zod": "^3.25.0",
     "zustand": "^5.0.3"
   },
-  "description": "Vidora \u2014 Create. Cut. Shine. A professional video editor. Phase 2: keyframes, effects, colour, masks.",
+  "description": "Vidora — Create. Cut. Shine. A professional video editor. Phase 3 (text, stickers, captions).",
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.11",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.4.1",
+    "playwright-core": "^1.65.1",
     "tailwindcss": "^4.1.11",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
@@ -29,8 +30,10 @@
     "lint": "tsc -b --noEmit",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "audit": "npm run build && node audit/run-audit.mjs",
+    "audit:phase3": "npm run build && node audit/run-audit-phase3.mjs"
   },
   "type": "module",
-  "version": "0.3.0"
+  "version": "0.4.0"
 }

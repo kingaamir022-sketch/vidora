@@ -2,6 +2,55 @@
 
 All notable changes to Vidora. Format follows Keep a Changelog.
 
+## [0.4.0] — 2026-11-23 — Phase 3: text, stickers, captions (Sections H + I)
+
+Text & graphics (H): Text panel with Templates/Effects/AI text FX sub-tabs (AI text FX is an honest Phase 7 note), Add heading/body, 14 original text style presets, full inspector (font, size 8–200, bold/italic/underline, alignment, line spacing, fill/gradient, stroke, background box, shadow, glow, opacity, transform, Apply to all), In/Out/Loop animations (8 original loop kinds). Stickers panel: 224 original procedural SVG stickers (28 designs × 8 palettes) with search + 8 categories, 10 original SVG shapes with fill colour, freehand drawing on the preview (colour + width, Clear button). Motion tracking: manual track points on an overlay clip (automatic detection is Phase 7 — the reference has Camera tracking, Pro, in Smart tools). Captions & speech (I): Auto captions from a pasted transcript with word-level highlight (honest substitute — real Whisper STT is Phase 7), 8 original caption styles, manual cue list (add/split/edit/delete, click to seek), SRT/VTT import + export (real parser, readable errors; .ass not supported, panel says so), per-cue manual translation (machine translation is Phase 7), in-panel transcript (click a word to seek), browser text-to-speech (voice, rate, pitch, preview, narration clips that speak during preview; rendered TTS audio in export is Phase 4/7).
+
+Behaviour cards updated from the full signed-in CapCut Web walkthrough 2026-11-23 (07:16–07:28 PKT, `docs/reference/capcut/FULL-WALKTHROUGH-2026-11-23.md`): H-TRACK, I-CAPTION-AUTO and I-TRANSCRIPT resolved to ASSUMED on Web evidence; H-DRAW and I-TRANSLATE stay UNKNOWN (no draw/pen tool or translation UI found in any check); desktop Text/Audio tabs and desktop export still unseen. Parity score for the Phase 0–2 matrix stays **MATCH 37 / ASSUMED 1 (A-ASSETS) / INTENTIONAL-DIFF 3 / total 41**; Phase 3 cards: MATCH 5 / ASSUMED 3 / UNKNOWN 6 (see SPEC.md).
+
+### Fixed
+- Overlay clips (text, sticker, shape, drawing) no longer stack on one text track and cover each other: `addClipToTextTrack` (moved to `src/lib/timeline.ts` as a pure function) now picks the first unlocked text track where the clip's time range is free, and opens a new text track otherwise (BUG-P3-001, found by the Phase 3 audit; 4 new unit tests).
+
+### Tests
+- Suite now 147 tests (was 143): overlay placement (4 tests). Build 80 modules, tests 147/147, Phase 3 self-audit `npm run audit:phase3` **31/31, 0 open bugs** (`audit/phase3/AUDIT-REPORT.md`, 14 card folders with screenshots). The audit harness itself had a bug (BUG-P3-002: ruler seek assumed 36px/s and never scrolled the ruler into view — now reads the live zoom, default 24px/s).
+
+## [0.3.2] — 2026-11-22 — Correction round (Rule 12.6): live CapCut Web check
+
+A live CapCut Web check ran 2026-11-22 20:02–20:13 PKT (no sign-in; recorded in `docs/reference/capcut/WEB-CHECK-2026-11-22.md`) and resolved 9 of the 10 ASSUMED items from the v0.3.1 retrofit. This round applies those findings. Parity score now **MATCH 36 / ASSUMED 2 / INTENTIONAL-DIFF 3 / total 41**.
+
+### Fixed
+- Ctrl+A now selects ALL clips on all tracks (was: first clip only). New `allClipIds` in `src/lib/timeline.ts`, `selectAllClips` store action (BUG-007).
+- Timeline snapping is now frame-level (project fps, default 30) with an "Attach" magnet toggle in the timeline toolbar, on by default (was: 0.25s threshold, labelled "Snap"). New `snapToFrame`/`snapTime` in `src/lib/timeline.ts`; ruler seeks quantize to the nearest frame (BUG-008).
+- Speed slider now runs 0.1–100× (was: 0.1–8×) with a Duration field; typed speeds clamp as CapCut does (0.05→0.10×, 200→100×). Normal/Curve tabs in the Speed section; `speedForDuration` + `setClipDuration` added (BUG-009).
+- Speed panel now has a Pitch on/off toggle (disabled at 0.1×/100×, like CapCut) and a Smooth slow-mo switch; `smoothSlowMo` added to the clip schema (default false). Pitch-preserving playback stays Phase 4 and the UI says so (BUG-010).
+- RGB curve points are now draggable (was: add-only) and curve presets exist: Custom, Lighten, Darken, Fade, Contrast, Cool tone, Warm tone, Vintage. New `moveCurvePoint`/`curvePreset` in `src/lib/color.ts` (BUG-011).
+- Blend mode is now live in the preview compositor (was: export-only). New `drawBlended` helper in `PreviewArea.tsx` applies `globalCompositeOperation` per clip; dropdown lists CapCut's modes (Normal, Overlay, Screen, Darken, Brighten, Hard light, Multiply, Soft light, Color burn, Color dodge; Linear burn omitted — no canvas equivalent); opacity lives under Transform → Opacity. Schema now accepts `color-burn`/`color-dodge` (BUG-012, closes BUG-D3).
+- Cleanup panel: denoise renamed to "Reduce image noise" (CapCut's name) and the stabilization checkbox is now labelled "Stabilize" (CapCut's Pro toggle). The real motion engine stays Phase 7 and the UI says so; lens correction was not found in CapCut Web either (BUG-013).
+
+### Changed
+- B-MARKER, B-GROUP, F-WHEELS are now INTENTIONAL-DIFF: CapCut Web has no markers, no group/compound, and no colour wheels — Vidora keeps all three because the master spec requires them. Awaiting the user's desktop screenshots before any change here.
+- New behaviour card `docs/behavior/F-BLEND.md` (HSL + blend, MATCH); F-WHEELS is now wheels-only. `docs/PARITY.md` re-scored (MATCH 36 / ASSUMED 2 / INTENTIONAL-DIFF 3 / 41), `docs/BUGS.md` logged BUG-007…BUG-013 and closed BUG-D3, `docs/INTENTIONAL_DIFFS.md` updated.
+- Export stays ASSUMED: the live check could not verify it (sign-in blocked), so no export option is claimed to match CapCut yet.
+
+### Tests
+- Suite now 92 tests (was 82): frame snapping + magnet on/off, allClipIds across tracks, speed clamps, curve drag/presets, blend-mode mapping, `smoothSlowMo` schema default. Build 73 modules, tests 92/92, audit 40/40 (audit suite predates v0.3.2; the new F-BLEND row is covered by the new Vitest tests).
+
+## [0.3.1] — 2026-11-22 — Parity retrofit for Phases 0–2 (Rules 12/13/14)
+
+### Added
+- Parity docs (Rule 12): `docs/UI_LAYOUT.md` (measured panel positions/proportions), 40 behaviour cards in `docs/behavior/<ID>.md` (controls with min/max/default/step, interactions, states, edge cases; uncertain reference behaviour marked ASSUMED), `docs/PARITY.md` (matrix: MATCH 30 / ASSUMED 10 / DIFF-FIXING 0 / 40 — gate PASS), `docs/INTENTIONAL_DIFFS.md`, `docs/BUGS.md` (correction-loop log).
+- Self-audit (`audit/run-audit.mjs`, `npm run audit`): Playwright + Chromium headless shell drives the production build — 40/40 checks passed, 29 screenshots in `audit/phase2/<ID>/`, report in `audit/phase2/AUDIT-REPORT.md`, layout re-measured at 1440×900 with 0px drift.
+- Every left tab now opens a panel: honest placeholder panels (`src/components/PlaceholderPanel.tsx`) for Audio (Phase 4), Text/Stickers/Captions (Phase 3), Templates (Phase 8), AI Tools (Phase 7).
+- Timeline clip right-click context menu (Split, Duplicate, Copy, Paste, Freeze, Reverse, Ripple delete, Delete).
+- Preview transport: frame-step buttons (−1f/+1f), Loop toggle, Fullscreen, safe-zones overlay (90% action-safe / 80% title-safe), thirds grid.
+- Timeline clip thumbnails (media thumbnails as clip backgrounds) and audio waveform peaks: imported audio is decoded at import and stored as 64 normalised peak buckets (`MediaItem.peaks`, optional so old projects still validate); audio clips draw the waveform. Unit-tested (`src/test/media.test.ts`, 3 tests).
+
+### Fixed
+- Playhead/marker overlay lines in the timeline intercepted clicks on the clip beneath them — overlays are now `pointer-events-none` (found by the Playwright audit, BUG-006).
+
+### Notes
+- Reference rule recorded (user, 2026-11-22 19:26 PKT): the reference is CapCut; when the user is unavailable, check CapCut live via cloud browser, max 30-second approval wait, never block. The live CapCut Web check ran 2026-11-22 20:02–20:13 PKT (no sign-in) and resolved 9 of the 10 ASSUMED items; the v0.3.2 correction round applied them. Only Export stayed ASSUMED (sign-in blocked).
+
 ## [0.3.0] — 2026-11-22 — Phase 2 (Sections D + E + F + G)
 
 ### Added

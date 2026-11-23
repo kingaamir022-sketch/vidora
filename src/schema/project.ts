@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
 /**
- * Vidora project document schema (Phase 2, v0.3.0).
+ * Vidora project document schema (Phase 3, v0.4.0).
  * Non-destructive: the project JSON describes tracks, clips, effects,
  * keyframes and markers. Source media is never modified (SPEC Section 2).
- * v0.1.0 / v0.2.0 documents still validate and are migrated by
+ * v0.1.0 / v0.2.0 / v0.3.0 documents still validate and are migrated by
  * `migrateProject` (additive changes only — old documents keep validating).
  */
 
@@ -68,6 +68,127 @@ export const animationSchema = z.object({
 });
 export type ClipAnimation = z.infer<typeof animationSchema>;
 
+/** Looping text animations (Phase 3, H-TEXTANIM). Evaluated per frame
+ * in the preview compositor; `duration` is one loop cycle in seconds. */
+export const loopAnimationSchema = z.enum(['none', 'pulse', 'wiggle', 'float', 'blink', 'spin-slow', 'shimmer', 'bounce-loop']);
+export type LoopAnimationKind = z.infer<typeof loopAnimationSchema>;
+
+export const loopAnimationObjectSchema = z.object({
+  duration: z.number().min(0.2).max(10).default(2),
+  kind: loopAnimationSchema.default('none'),
+});
+export type LoopAnimation = z.infer<typeof loopAnimationObjectSchema>;
+
+/** Full text style for a text clip (Phase 3, H-TEXT). */
+export const textShadowSchema = z.object({
+  blur: z.number().min(0).max(50).default(4),
+  color: z.string().default('#000000'),
+  enabled: z.boolean().default(false),
+  offsetX: z.number().min(-50).max(50).default(2),
+  offsetY: z.number().min(-50).max(50).default(2),
+});
+export type TextShadow = z.infer<typeof textShadowSchema>;
+
+export const textGlowSchema = z.object({
+  blur: z.number().min(0).max(60).default(16),
+  color: z.string().default('#06B6D4'),
+  enabled: z.boolean().default(false),
+});
+export type TextGlow = z.infer<typeof textGlowSchema>;
+
+export const textStyleSchema = z.object({
+  align: z.enum(['left', 'center', 'right']).default('center'),
+  backgroundColor: z.string().default('transparent'),
+  backgroundPadding: z.number().min(0).max(60).default(8),
+  bold: z.boolean().default(false),
+  content: z.string().default(''),
+  fill: z.string().default('#FFFFFF'),
+  /** CSS gradient for the fill (e.g. linear-gradient(...)); null = solid fill. */
+  fillGradient: z.string().nullable().default(null),
+  fontFamily: z.string().default('Inter, system-ui, sans-serif'),
+  fontSize: z.number().min(8).max(200).default(20),
+  glow: textGlowSchema.default({ blur: 16, color: '#06B6D4', enabled: false }),
+  italic: z.boolean().default(false),
+  lineSpacing: z.number().min(0.8).max(3).default(1.2),
+  shadow: textShadowSchema.default({ blur: 4, color: '#000000', enabled: false, offsetX: 2, offsetY: 2 }),
+  strokeColor: z.string().default('#000000'),
+  strokeWidth: z.number().min(0).max(20).default(0),
+  underline: z.boolean().default(false),
+});
+export type TextStyle = z.infer<typeof textStyleSchema>;
+
+/** Text-to-speech narration stored on a text clip (Phase 3, I-TTS).
+ * The clip is spoken once via speechSynthesis when the playhead enters
+ * it during preview; rendered TTS audio in export needs an offline
+ * engine (Phase 4/7) and is NOT claimed here. */
+export const ttsNarrationSchema = z.object({
+  pitch: z.number().min(0.5).max(2).default(1),
+  rate: z.number().min(0.5).max(2).default(1),
+  voice: z.string().default(''),
+});
+export type TtsNarration = z.infer<typeof ttsNarrationSchema>;
+
+/** Procedural sticker / shape stored on a sticker clip (Phase 3, H-STICKER, H-SHAPE). */
+export const stickerSchema = z.object({
+  category: z.string().min(1),
+  id: z.string().min(1),
+  kind: z.enum(['sticker', 'shape']),
+  /** Inline SVG (viewBox 0 0 120 120) rendered in the preview. */
+  svg: z.string().min(1),
+});
+export type StickerRef = z.infer<typeof stickerSchema>;
+
+/** One freehand stroke on a drawing clip (Phase 3, H-DRAW). Points are
+ * normalised preview coordinates (0–1). */
+export const drawingStrokeSchema = z.object({
+  color: z.string().default('#FFFFFF'),
+  points: z.array(z.object({ x: z.number().min(0).max(1), y: z.number().min(0).max(1) })).min(1),
+  width: z.number().min(1).max(40).default(4),
+});
+export type DrawingStroke = z.infer<typeof drawingStrokeSchema>;
+
+export const drawingSchema = z.object({
+  strokes: z.array(drawingStrokeSchema).default([]),
+});
+export type Drawing = z.infer<typeof drawingSchema>;
+
+/** Manual motion tracking (Phase 3, H-TRACK). The overlay clip follows
+ * the target clip, interpolating between manually placed points.
+ * Automatic detection is Phase 7 — this is honest manual tracking. */
+export const trackPointSchema = z.object({
+  time: z.number().min(0),
+  x: z.number().min(-1).max(2),
+  y: z.number().min(-1).max(2),
+});
+export type TrackPoint = z.infer<typeof trackPointSchema>;
+
+export const trackingSchema = z.object({
+  points: z.array(trackPointSchema).default([]),
+  targetClipId: z.string().min(1),
+});
+export type Tracking = z.infer<typeof trackingSchema>;
+
+/** One caption cue (Phase 3, I). Words carry word-level timing for the
+ * highlight during playback. */
+export const captionWordSchema = z.object({
+  end: z.number().min(0),
+  start: z.number().min(0),
+  text: z.string().min(1),
+});
+export type CaptionWord = z.infer<typeof captionWordSchema>;
+
+export const captionCueSchema = z.object({
+  end: z.number().min(0),
+  id: z.string().min(1),
+  start: z.number().min(0),
+  styleId: z.string().optional(),
+  text: z.string(),
+  /** Manual translation text per language code (e.g. 'ur', 'hi', 'ar'). */
+  translations: z.record(z.string(), z.string()).default({}),
+  words: z.array(captionWordSchema).default([]),
+});
+export type CaptionCue = z.infer<typeof captionCueSchema>;
+
 export const effectSchema = z.object({
   id: z.string().min(1),
   intensity: z.number().min(0).max(1).default(1),
@@ -125,6 +246,9 @@ export const blendModeSchema = z.enum([
   'soft-light',
   'hard-light',
   'difference',
+  /** CapCut's Blend dropdown also lists Color burn / Color dodge. */
+  'color-burn',
+  'color-dodge',
 ]);
 export type BlendMode = z.infer<typeof blendModeSchema>;
 
@@ -230,6 +354,8 @@ export const mediaItemSchema = z.object({
   /** Object URL (session only) or data URL. Never persisted as file bytes. */
   src: z.string().min(1),
   thumbnail: z.string().optional(),
+  /** Normalised audio peaks (0–1), 64 buckets, for the timeline waveform. */
+  peaks: z.array(z.number().min(0).max(1)).max(256).optional(),
   width: z.number().int().positive().optional(),
 });
 export type MediaItem = z.infer<typeof mediaItemSchema>;
@@ -268,6 +394,9 @@ export const clipSchema = z.object({
   name: z.string().min(1),
   opacity: z.number().min(0).max(1).default(1),
   pitchPreserved: z.boolean().default(true),
+  /** Smooth slow-mo switch (CapCut Speed panel). Stored flag; the
+   * optical-flow slow-motion engine is Phase 7 work. */
+  smoothSlowMo: z.boolean().default(false),
   positionX: z.number().default(0),
   positionY: z.number().default(0),
   reversed: z.boolean().default(false),
@@ -280,6 +409,13 @@ export const clipSchema = z.object({
   src: z.string().optional(),
   start: z.number().min(0),
   trackId: z.string().min(1),
+  /** Phase 3: loop animation (text/sticker clips), text content + style,
+   * sticker/shape reference, freehand drawing strokes, manual tracking. */
+  animationLoop: loopAnimationObjectSchema.default({ duration: 2, kind: 'none' }),
+  drawing: drawingSchema.optional(),
+  sticker: stickerSchema.optional(),
+  text: z.object({ content: z.string(), style: textStyleSchema, tts: ttsNarrationSchema.nullable().default(null) }).optional(),
+  tracking: trackingSchema.optional(),
   transitionIn: transitionSchema.optional(),
   type: clipTypeSchema,
   volume: z.number().min(0).max(2).default(1),
@@ -306,6 +442,10 @@ export type Marker = z.infer<typeof markerSchema>;
 
 export const projectSchema = z.object({
   aspectRatio: aspectRatioSchema,
+  /** Project-level caption cues (Phase 3, I). Default [] for old documents. */
+  captions: z.array(captionCueSchema).default([]),
+  /** Active caption style preset id (Phase 3, I-CAPTION-STYLE). */
+  captionStyleId: z.string().optional(),
   createdAt: z.string().datetime(),
   customRatio: z.object({ height: z.number().int().positive(), width: z.number().int().positive() }).optional(),
   folders: z.array(mediaFolderSchema).default([{ id: 'folder-all', name: 'All media' }]),
@@ -318,7 +458,7 @@ export const projectSchema = z.object({
   resolution: z.object({ height: z.number().int().positive(), width: z.number().int().positive() }),
   tracks: z.array(trackSchema).default([]),
   updatedAt: z.string().datetime(),
-  version: z.enum(['0.1.0', '0.2.0', '0.3.0']),
+  version: z.enum(['0.1.0', '0.2.0', '0.3.0', '0.4.0']),
 });
 export type VidoraProject = z.infer<typeof projectSchema>;
 
@@ -331,8 +471,10 @@ export function parseProject(data: unknown): VidoraProject {
 }
 
 /**
- * Migrate a v0.1.0 / v0.2.0 document to v0.3.0 (fills new fields with
- * defaults). Old keyframes (no `id`) gain one; old effects keep working.
+ * Migrate a v0.1.0 / v0.2.0 / v0.3.0 document to v0.4.0 (fills new fields
+ * with defaults). Old keyframes (no `id`) gain one; old effects keep
+ * working. Captions default to [] and new clip fields are optional, so
+ * old documents validate unchanged.
  */
 export function migrateProject(data: unknown): VidoraProject {
   const raw = data as Record<string, unknown>;
@@ -351,7 +493,7 @@ export function migrateProject(data: unknown): VidoraProject {
     };
   });
   const parsed = projectSchema.parse({ ...raw, tracks: migratedTracks });
-  return { ...parsed, version: '0.3.0' };
+  return { ...parsed, version: '0.4.0' };
 }
 
 /** Resolution for an aspect ratio, given a custom size when ratio is 'custom'. */
@@ -380,9 +522,32 @@ export function newId(prefix: string): string {
   return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+/** Default text style for a new text clip (Phase 3, H-TEXT). */
+export function defaultTextStyle(content = 'Heading'): TextStyle {
+  return {
+    align: 'center',
+    backgroundColor: 'transparent',
+    backgroundPadding: 8,
+    bold: true,
+    content,
+    fill: '#FFFFFF',
+    fillGradient: null,
+    fontFamily: 'Inter, system-ui, sans-serif',
+    fontSize: 20,
+    glow: { blur: 16, color: '#06B6D4', enabled: false },
+    italic: false,
+    lineSpacing: 1.2,
+    shadow: { blur: 4, color: '#000000', enabled: false, offsetX: 2, offsetY: 2 },
+    strokeColor: '#000000',
+    strokeWidth: 0,
+    underline: false,
+  };
+}
+
 /** The one sample project shipped with Phase 0 (original content, no real media). */
 export const SAMPLE_PROJECT: VidoraProject = {
   aspectRatio: '16:9',
+  captions: [],
   createdAt: '2026-11-22T00:00:00.000Z',
   folders: [{ id: 'folder-all', name: 'All media' }],
   fps: 30,
@@ -398,6 +563,7 @@ export const SAMPLE_PROJECT: VidoraProject = {
         {
           adjustment: defaultAdjustment(),
           animationIn: { duration: 0.5, kind: 'none' },
+          animationLoop: { duration: 2, kind: 'none' },
           animationOut: { duration: 0.5, kind: 'none' },
           background: { color: '#000000', gradient: 'linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%)', type: 'blur' },
           chromaKey: { color: '#00FF00', enabled: false, smoothness: 0.2, tolerance: 0.3 },
@@ -420,6 +586,7 @@ export const SAMPLE_PROJECT: VidoraProject = {
           reversed: false,
           rotation: 0,
           scale: 1,
+          smoothSlowMo: false,
           sourceDuration: 10,
           sourceStart: 0,
           speed: 1,
@@ -447,5 +614,5 @@ export const SAMPLE_PROJECT: VidoraProject = {
     },
   ],
   updatedAt: '2026-11-22T00:00:00.000Z',
-  version: '0.3.0',
+  version: '0.4.0',
 };
