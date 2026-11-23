@@ -1,0 +1,28 @@
+{
+  "duration": 2,
+  "id": "heart",
+  "keyframes": [
+    {
+      "t": 0,
+      "scale": 1
+    },
+    {
+      "t": 0.15,
+      "scale": 1.25
+    },
+    {
+      "t": 0.3,
+      "scale": 1
+    },
+    {
+      "t": 0.45,
+      "scale": 1.18
+    },
+    {
+      "t": 0.6,
+      "scale": 1
+    }
+  ],
+  "name": "Heartbeat",
+  "type": "vidora-motion-v1"
+}

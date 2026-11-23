@@ -1,9 +1,13 @@
 import type { Effect } from '../schema/project';
+import { defaultGlslParams, glslEffectDef, type GlslEffectDef } from './glslEffects';
+import type { GlslEffectInstance } from './glsl';
 
-/** Video effects engine (Phase 2, SPEC E). Pure catalog + filter math.
+/** Video effects engine (Phase 2, SPEC E; Phase 5 adds 62 GLSL effects).
  * CSS-filter effects are applied via ctx.filter in the compositor;
  * pixel effects (pixelate, vignette, RGB split, glitch) run on an
- * offscreen canvas step in `src/lib/compositor.ts`. */
+ * offscreen canvas step in `src/lib/compositor.ts`; GLSL effects run
+ * through the WebGL2 chain in `src/lib/glsl.ts` (same step, after the
+ * pixel pass). */
 
 export interface EffectParamDef {
   default: number;
@@ -134,7 +138,18 @@ export function effectDef(id: string): EffectDef | undefined {
   return EFFECT_CATALOG.find((d) => d.id === id);
 }
 
-export function defaultEffectParams(def: EffectDef): Record<string, number> {
+/** A GLSL effect definition, or undefined when the id is not a GLSL effect. */
+export function glslDef(id: string): GlslEffectDef | undefined {
+  return glslEffectDef(id);
+}
+
+/** Any effect definition (CSS/pixel catalog first, then the GLSL catalog). */
+export function anyEffectDef(id: string): EffectDef | GlslEffectDef | undefined {
+  return effectDef(id) ?? glslEffectDef(id);
+}
+
+export function defaultEffectParams(def: EffectDef | GlslEffectDef): Record<string, number> {
+  if ('body' in def) return defaultGlslParams(def);
   const out: Record<string, number> = {};
   for (const [k, v] of Object.entries(def.params)) out[k] = v.default;
   return out;
@@ -162,6 +177,23 @@ export function pixelEffects(effects: Effect[]): { def: EffectDef; effect: Effec
   for (const effect of effects) {
     const def = effectDef(effect.name);
     if (def?.pixel) out.push({ def, effect });
+  }
+  return out;
+}
+
+/** GLSL effects on a clip, as WebGL instances (compositor order). */
+export function glslEffectInstances(effects: Effect[]): GlslEffectInstance[] {
+  const out: GlslEffectInstance[] = [];
+  for (const effect of effects) {
+    const def = glslEffectDef(effect.name);
+    if (!def) continue;
+    const params = effectParams(effect);
+    out.push({
+      body: def.body,
+      intensity: effect.intensity,
+      p1: typeof params.p1 === 'number' ? params.p1 : (def.p1?.default ?? 0),
+      p2: typeof params.p2 === 'number' ? params.p2 : (def.p2?.default ?? 0),
+    });
   }
   return out;
 }

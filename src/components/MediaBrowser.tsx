@@ -1,19 +1,30 @@
 import { useMemo, useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { formatBytes, formatDuration } from '../lib/media';
+import { assetLibraryCounts } from '../lib/assetLibrary';
+import { BACKGROUND_CATALOG, BACKGROUND_CATEGORIES, backgroundThumbnail, type BackgroundCategory } from '../lib/backgrounds';
 
-/** Media panel (SPEC A, Phase 1): import, folders, search, thumbnails, metadata. */
+/** Media panel (SPEC A, Phase 1; Phase 5 adds the built-in asset library
+ * counts and the procedural Backgrounds section). Import, folders,
+ * search, thumbnails, metadata. */
 export default function MediaBrowser() {
   const project = useProjectStore((s) => s.project);
   const addMediaFiles = useProjectStore((s) => s.addMediaFiles);
   const addMediaToTimeline = useProjectStore((s) => s.addMediaToTimeline);
   const addFolder = useProjectStore((s) => s.addFolder);
+  const addBackgroundClip = useProjectStore((s) => s.addBackgroundClip);
   const [search, setSearch] = useState('');
   const [folderId, setFolderId] = useState('folder-all');
   const [folderName, setFolderName] = useState('');
   const [dragOver, setDragOver] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [bgCategory, setBgCategory] = useState<BackgroundCategory | 'All'>('All');
   const fileRef = useRef<HTMLInputElement>(null);
+  const counts = useMemo(() => assetLibraryCounts(), []);
+  const backgrounds = useMemo(
+    () => (bgCategory === 'All' ? BACKGROUND_CATALOG : BACKGROUND_CATALOG.filter((b) => b.category === bgCategory)),
+    [bgCategory],
+  );
 
   const media = project?.media ?? [];
   const folders = project?.folders ?? [{ id: 'folder-all', name: 'All media' }];
@@ -137,12 +148,45 @@ export default function MediaBrowser() {
             ))}
           </ul>
         )}
+      <section className="mt-4 border-t border-zinc-800 pt-3">
+        <h3 className="text-xs font-semibold text-zinc-300">Backgrounds ({BACKGROUND_CATALOG.length})</h3>
+        <p className="mt-1 text-[11px] text-zinc-500">Procedural full-frame backgrounds. Click one to add it as a 5-second clip.</p>
+        <div className="mt-2 flex flex-wrap gap-1">
+          {(['All', ...BACKGROUND_CATEGORIES] as const).map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setBgCategory(c)}
+              aria-pressed={bgCategory === c}
+              className={`rounded-full border px-2 py-0.5 text-[11px] ${bgCategory === c ? 'border-violet-500 bg-violet-600/20 text-violet-200' : 'border-zinc-700 text-zinc-400'}`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+        <div className="mt-2 grid grid-cols-2 gap-1.5">
+          {backgrounds.map((b) => (
+            <button
+              key={b.id}
+              type="button"
+              onClick={() => addBackgroundClip(b.id)}
+              title={`${b.name} — ${b.description}`}
+              className="overflow-hidden rounded-md border border-zinc-700 text-left hover:border-zinc-500"
+            >
+              <img src={backgroundThumbnail(b)} alt={b.name} className="h-12 w-full object-cover" />
+              <span className="block px-1.5 py-1 text-[11px]">{b.name}</span>
+            </button>
+          ))}
+        </div>
+      </section>
       </div>
 
       <div className="border-t border-zinc-800 p-3 text-[11px] leading-relaxed text-zinc-500">
-        <p className="font-semibold text-zinc-300">Built-in assets</p>
-        <p>Procedural effects, transitions, LUTs, stickers and templates arrive in Phase 5; AI music / clips / voices in Phase 6. Nothing here is a stock download yet.</p>
-        <p className="mt-1">Cloud sync and version history arrive in Phase 8.</p>
+        <p className="font-semibold text-zinc-300">Built-in assets ({counts.total})</p>
+        <p>
+          {counts.glslEffects} GLSL effects · {counts.transitions} transitions · {counts.luts} LUTs · {counts.stickers} stickers · {counts.fonts} fonts · {counts.textPresets} text presets · {counts.captionPresets} caption presets · {counts.templates} templates · {counts.loops} music loops · {counts.sfx} sound effects · {counts.backgrounds} backgrounds. All original or openly licensed — see the Effects, Transitions, Stickers, Text, Captions, Audio and Templates tabs.
+        </p>
+        <p className="mt-1">AI music / clips / voices arrive in Phase 6. Cloud sync and version history arrive in Phase 8.</p>
       </div>
     </aside>
   );

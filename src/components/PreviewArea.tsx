@@ -65,10 +65,10 @@ export function drawCaptionOverlay(
       const isPast = active ? index < active.index : false;
       ctx.globalAlpha = isPast ? 1 : isActive ? 1 : 0.55;
       if (isActive) {
-        ctx.fillStyle = '#7C3AED';
+        ctx.fillStyle = style.highlightBackground ?? '#7C3AED';
         ctx.fillRect(x - 3, y - style.fontSize - 2, widths[wi] + 6, style.fontSize + 8);
       }
-      ctx.fillStyle = isActive ? '#FFFFFF' : style.color;
+      ctx.fillStyle = isActive ? (style.highlight ?? '#FFFFFF') : style.color;
       ctx.fillText(word.text, x, y);
       x += widths[wi] + space;
     });
@@ -233,8 +233,32 @@ export function renderStickerFrame(
   return frame;
 }
 
-/** Render a drawing clip (freehand strokes) to a frame. */
-export function renderDrawingFrame(clip: Clip, localTime: number, w: number, h: number): HTMLCanvasElement {
+/** Render a procedural background clip (Phase 5, N-BACKGROUNDS): the SVG
+ * fills the whole frame (cover), unlike square stickers. */
+export function renderBackgroundFrame(
+  clip: Clip,
+  localTime: number,
+  w: number,
+  h: number,
+  img: HTMLImageElement | null,
+): HTMLCanvasElement {
+  const frame = makeFrameCanvas(w, h);
+  const ctx = frame.getContext('2d');
+  if (!ctx || !img || img.naturalWidth === 0) return frame;
+  const ev = evaluateClipAt(clip, localTime);
+  ctx.save();
+  ctx.globalAlpha = Math.min(1, Math.max(0, ev.opacity * ev.animOpacity));
+  const s = Math.max(w / img.naturalWidth, h / img.naturalHeight) * ev.scale * ev.animScale;
+  const dw = img.naturalWidth * s;
+  const dh = img.naturalHeight * s;
+  ctx.translate(w / 2 + (ev.positionX / 100) * w, h / 2 + (ev.positionY / 100) * h);
+  ctx.rotate(((ev.rotation + ev.animRotation) * Math.PI) / 180);
+  ctx.drawImage(img, -dw / 2, -dh / 2, dw, dh);
+  ctx.restore();
+  return frame;
+}
+
+/** Render a drawing clip (freehand strokes) to a frame. */export function renderDrawingFrame(clip: Clip, localTime: number, w: number, h: number): HTMLCanvasElement {
   const frame = makeFrameCanvas(w, h);
   const ctx = frame.getContext('2d');
   if (!ctx || !clip.drawing) return frame;
@@ -537,7 +561,10 @@ export default function PreviewArea() {
       return;
     }
 
-    const localTime = Math.max(0, playhead - primaryClip.start);
+    // Base media clip (BUG-P5-001): the last visible video/image clip,
+    // not the last clip of any type, so text/sticker overlays sit ON the
+    // video instead of replacing it in the preview.
+    const baseClip = [...visibleClips].reverse().find((c) => c.type === 'video' || c.type === 'image') ?? null;
 
     const frameFor = (clip: Clip): HTMLCanvasElement | null => {
       const local = Math.max(0, playhead - clip.start);
@@ -553,6 +580,7 @@ export default function PreviewArea() {
       }
       if (clip.type === 'sticker') {
         if (clip.drawing) return renderDrawingFrame(clip, local, W, H);
+        if (clip.sticker?.category === 'Backgrounds') return renderBackgroundFrame(clip, local, W, H, getStickerEl(clip.sticker.svg));
         if (clip.sticker) return renderStickerFrame(clip, local, playhead, W, H, getStickerEl(clip.sticker.svg));
         const img = getImageEl(clip);
         if (!img) return null;
@@ -576,8 +604,8 @@ export default function PreviewArea() {
       ctx.restore();
     };
 
-    // Background behind the primary frame.
-    const bg = primaryClip.background;
+    // Background behind the primary frame (from the base media clip).
+    const bg = (baseClip ?? primaryClip).background;
     if (bg.type === 'color') {
       ctx.fillStyle = bg.color;
       ctx.fillRect(0, 0, W, H);
@@ -626,28 +654,49 @@ export default function PreviewArea() {
           drawBlended(f, pipClip, r.x, r.y, r.width, r.height);
         }
       }
-    } else if (primaryFrame) {
-      // Transition-in: blend from the previous clip on the same track.
-      const tr = primaryClip.transitionIn;
-      if (tr && localTime < tr.duration) {
-        const prev = project.tracks
-          .find((t) => t.id === primaryClip.trackId)
-          ?.clips.filter((c) => c.id !== primaryClip.id && c.start + c.duration <= primaryClip.start + 0.01)
-          .sort((a, b) => b.start + b.duration - (a.start + a.duration))[0];
-        if (prev) {
-          const prevFrame = frameFor({ ...prev, start: prev.start, duration: prev.duration });
-          drawTransition(ctx, prevFrame, primaryFrame, tr.type, transitionProgress(localTime, tr.duration), tr.direction, W, H);
-        } else {
-          drawBlended(primaryFrame, primaryClip, 0, 0, W, H);
-        }
-      } else {
-        drawBlended(primaryFrame, primaryClip, 0, 0, W, H);
-      }
     } else {
-      ctx.fillStyle = '#71717a';
-      ctx.font = '15px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(primaryClip.name, W / 2, H / 2);
+      // Normal mode (BUG-P5-001 fix): composite ALL visible clips
+      // bottom-to-top — backgrounds, then the base video/image clip
+      // (with its transition-in), then text/sticker overlays — instead
+      // of drawing only the last clip, which hid the video under
+      // overlays. A base clip with no media still shows its name
+      // (template slot label) in the centre, as before.
+      const isBg = (c: Clip) => c.sticker?.category === 'Backgrounds';
+      for (const clip of visibleClips.filter(isBg)) {
+        const f = clip === primaryClip ? primaryFrame : frameFor(clip);
+        if (f) drawBlended(f, clip, 0, 0, W, H);
+      }
+      if (baseClip) {
+        const baseLocal = Math.max(0, playhead - baseClip.start);
+        const baseFrame = baseClip === primaryClip ? primaryFrame : frameFor(baseClip);
+        if (baseFrame) {
+          const tr = baseClip.transitionIn;
+          if (tr && baseLocal < tr.duration) {
+            const prev = project.tracks
+              .find((t) => t.id === baseClip.trackId)
+              ?.clips.filter((c) => c.id !== baseClip.id && c.start + c.duration <= baseClip.start + 0.01)
+              .sort((a, b) => b.start + b.duration - (a.start + a.duration))[0];
+            if (prev) {
+              const prevFrame = frameFor({ ...prev, start: prev.start, duration: prev.duration });
+              drawTransition(ctx, prevFrame, baseFrame, tr.type, transitionProgress(baseLocal, tr.duration), tr.direction, W, H);
+            } else {
+              drawBlended(baseFrame, baseClip, 0, 0, W, H);
+            }
+          } else {
+            drawBlended(baseFrame, baseClip, 0, 0, W, H);
+          }
+        } else {
+          ctx.fillStyle = '#71717a';
+          ctx.font = '15px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(baseClip.name, W / 2, H / 2);
+        }
+      }
+      for (const clip of visibleClips) {
+        if (isBg(clip) || clip === baseClip) continue;
+        const f = clip === primaryClip ? primaryFrame : frameFor(clip);
+        if (f) drawBlended(f, clip, 0, 0, W, H);
+      }
     }
 
     // Caption overlay (word-level highlight) on top of everything.
@@ -665,7 +714,7 @@ export default function PreviewArea() {
       ctx.textAlign = 'left';
       ctx.fillText('FREEZE FRAME', 10, 38);
     }
-    if (primaryClip.transitionIn && localTime < primaryClip.transitionIn.duration) {
+    if (primaryClip.transitionIn && Math.max(0, playhead - primaryClip.start) < primaryClip.transitionIn.duration) {
       ctx.fillStyle = 'rgba(255,255,255,0.85)';
       ctx.font = '12px sans-serif';
       ctx.textAlign = 'left';

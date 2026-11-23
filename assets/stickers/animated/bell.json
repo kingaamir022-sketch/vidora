@@ -1,0 +1,28 @@
+{
+  "duration": 2,
+  "id": "bell",
+  "keyframes": [
+    {
+      "t": 0,
+      "rotation": 0
+    },
+    {
+      "t": 0.2,
+      "rotation": 12
+    },
+    {
+      "t": 0.4,
+      "rotation": -12
+    },
+    {
+      "t": 0.6,
+      "rotation": 6
+    },
+    {
+      "t": 1,
+      "rotation": 0
+    }
+  ],
+  "name": "Bell Ring",
+  "type": "vidora-motion-v1"
+}

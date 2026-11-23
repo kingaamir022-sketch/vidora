@@ -25,7 +25,7 @@
   "private": true,
   "scripts": {
     "build": "tsc -b && vite build",
-    "build:assets": "node scripts/build-assets.mjs",
+    "build:assets": "node --import ./scripts/register-ts.mjs scripts/build-assets.mjs",
     "dev": "vite",
     "lint": "tsc -b --noEmit",
     "preview": "vite preview",
@@ -33,8 +33,9 @@
     "test:watch": "vitest",
     "audit": "npm run build && node audit/run-audit.mjs",
     "audit:phase3": "npm run build && node audit/run-audit-phase3.mjs",
-    "audit:phase4": "npm run build && node audit/run-audit-phase4.mjs"
+    "audit:phase4": "npm run build && node audit/run-audit-phase4.mjs",
+    "audit:phase5": "npm run build && node audit/run-audit-phase5.mjs"
   },
   "type": "module",
-  "version": "0.5.0"
+  "version": "0.6.0"
 }

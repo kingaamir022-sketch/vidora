@@ -1,0 +1,23 @@
+{
+  "duration": 2,
+  "id": "clapper",
+  "keyframes": [
+    {
+      "t": 0,
+      "rotation": 0,
+      "scale": 1
+    },
+    {
+      "t": 0.2,
+      "rotation": -6,
+      "scale": 1.06
+    },
+    {
+      "t": 1,
+      "rotation": 0,
+      "scale": 1
+    }
+  ],
+  "name": "Clap Snap",
+  "type": "vidora-motion-v1"
+}

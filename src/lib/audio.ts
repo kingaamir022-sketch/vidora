@@ -325,6 +325,32 @@ const FM = [174.61, 220, 261.63]; // F major
 const CM = [261.63, 329.63, 392]; // C major
 const GM = [196, 246.94, 293.66]; // G major
 
+// ---- Phase 5 (Section N): data-driven loop/SFX pattern helpers.
+// MIDI note -> frequency. All patterns are original Vidora compositions.
+const NOTE = (midi: number): number => 440 * Math.pow(2, (midi - 69) / 12);
+const kick = (ctx: OfflineAudioContext, at: number, gain = 0.6): void => {
+  osc(ctx, { at, dur: 0.25, freq: 150, freqEnd: 45, gain, type: 'sine' });
+};
+const hat = (ctx: OfflineAudioContext, at: number, gain = 0.12, dur = 0.05): void => {
+  noise(ctx, { at, dur, filterType: 'highpass', freq: 7000, gain });
+};
+const snare = (ctx: OfflineAudioContext, at: number, gain = 0.3): void => {
+  noise(ctx, { at, dur: 0.15, filterType: 'bandpass', freq: 1800, gain, q: 1 });
+  osc(ctx, { at, dur: 0.1, freq: 180, gain: gain * 0.5, type: 'triangle' });
+};
+const pluck = (ctx: OfflineAudioContext, at: number, midi: number, gain = 0.12, type: OscillatorType = 'triangle'): void => {
+  osc(ctx, { at, dur: 0.3, freq: NOTE(midi), gain, type });
+};
+const bassNote = (ctx: OfflineAudioContext, at: number, midi: number, dur = 0.5, gain = 0.3): void => {
+  osc(ctx, { at, dur, freq: NOTE(midi), gain, type: 'sine' });
+};
+const arpLine = (ctx: OfflineAudioContext, notes: number[], t0: number, step: number, gain = 0.12, type: OscillatorType = 'triangle'): void => {
+  notes.forEach((m, i) => pluck(ctx, t0 + i * step, m, gain, type));
+};
+const chordPad = (ctx: OfflineAudioContext, midis: number[], at: number, dur: number, gain: number): void => {
+  pad(ctx, midis.map((m) => NOTE(m)), at, dur, gain);
+};
+
 export const ORIGINAL_LOOPS: OriginalRecipe[] = [
   {
     bpm: 80,
@@ -430,7 +456,341 @@ export const ORIGINAL_LOOPS: OriginalRecipe[] = [
     },
     tags: ['ambient', 'rain', 'soft', 'nature'],
   },
+  // ---- Phase 5 (Section N): 23 more original loops, 30 total. ----
+  {
+    bpm: 80, category: 'Ambient', duration: 8, id: 'loop-dawn-chorus', kind: 'music', name: 'Dawn Chorus',
+    render: (ctx) => {
+      chordPad(ctx, [57, 60, 64], 0, 4, 0.12);
+      chordPad(ctx, [53, 57, 60], 4, 4, 0.12);
+      arpLine(ctx, [69, 72, 76, 72], 0, 1, 0.07, 'sine');
+      arpLine(ctx, [67, 71, 74, 71], 4, 1, 0.07, 'sine');
+    },
+    tags: ['ambient', 'dawn', 'calm', 'morning'],
+  },
+  {
+    bpm: 120, category: 'Electronic', duration: 8, id: 'loop-city-lights', kind: 'music', name: 'City Lights',
+    render: (ctx) => {
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        for (let i = 0; i < 4; i += 1) kick(ctx, t0 + i * 0.5, 0.5);
+        for (let i = 0; i < 8; i += 1) hat(ctx, t0 + i * 0.25, 0.08);
+        bassNote(ctx, t0, 33, 0.4, 0.35);
+        bassNote(ctx, t0 + 1, 36, 0.4, 0.3);
+        arpLine(ctx, [69, 72, 76, 79], t0, 0.5, 0.09, 'square');
+      }
+    },
+    tags: ['electronic', 'city', 'night', 'dance'],
+  },
+  {
+    bpm: 120, category: 'Pop', duration: 8, id: 'loop-summer-pop', kind: 'music', name: 'Summer Pop',
+    render: (ctx) => {
+      const notes = [72, 76, 79, 84, 79, 76, 74, 76];
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        chordPad(ctx, [60, 64, 67], t0, 2, 0.08);
+        arpLine(ctx, notes, t0, 0.25, 0.11);
+        kick(ctx, t0, 0.4);
+        kick(ctx, t0 + 1, 0.4);
+      }
+    },
+    tags: ['pop', 'summer', 'bright', 'happy'],
+  },
+  {
+    bpm: 100, category: 'Rock', duration: 8, id: 'loop-guitar-strum', kind: 'music', name: 'Guitar Strum',
+    render: (ctx) => {
+      const chords = [[57, 60, 64], [53, 57, 60], [55, 59, 62], [55, 59, 62]];
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        chords[bar].forEach((m, i) => pluck(ctx, t0 + i * 0.08, m + 12, 0.14, 'triangle'));
+        chords[bar].forEach((m, i) => pluck(ctx, t0 + 1 + i * 0.08, m + 12, 0.12, 'triangle'));
+        kick(ctx, t0, 0.35);
+        snare(ctx, t0 + 1, 0.25);
+      }
+    },
+    tags: ['rock', 'guitar', 'strum', 'acoustic'],
+  },
+  {
+    bpm: 90, category: 'Cinematic', duration: 8, id: 'loop-epic-rise', kind: 'music', name: 'Epic Rise',
+    render: (ctx) => {
+      chordPad(ctx, [45, 52, 57], 0, 8, 0.14);
+      for (let i = 0; i < 8; i += 1) pluck(ctx, i * 1, 69 + i, 0.06 + i * 0.01, 'sawtooth');
+      for (let i = 0; i < 4; i += 1) kick(ctx, i * 2, 0.4);
+      noise(ctx, { at: 0, dur: 8, filterType: 'bandpass', freq: 300, freqEnd: 3000, gain: 0.03, q: 1 });
+    },
+    tags: ['cinematic', 'epic', 'rise', 'drama'],
+  },
+  {
+    bpm: 75, category: 'Lo-Fi', duration: 8, id: 'loop-lofi-dusk', kind: 'music', name: 'Lo-Fi Dusk',
+    render: (ctx) => {
+      noise(ctx, { at: 0, dur: 8, filterType: 'lowpass', freq: 800, gain: 0.02 });
+      const chords = [[57, 60, 64, 67], [55, 59, 62, 65]];
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        chordPad(ctx, chords[bar % 2], t0, 2, 0.1);
+        kick(ctx, t0, 0.45);
+        snare(ctx, t0 + 1, 0.22);
+        for (let i = 0; i < 8; i += 1) hat(ctx, t0 + i * 0.25, 0.05);
+      }
+    },
+    tags: ['lofi', 'chill', 'dusk', 'vinyl'],
+  },
+  {
+    bpm: 128, category: 'Dance', duration: 8, id: 'loop-dance-floor', kind: 'music', name: 'Dance Floor',
+    render: (ctx) => {
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        for (let i = 0; i < 4; i += 1) kick(ctx, t0 + i * 0.5, 0.55);
+        snare(ctx, t0 + 0.5, 0.28);
+        snare(ctx, t0 + 1.5, 0.28);
+        for (let i = 0; i < 8; i += 1) hat(ctx, t0 + i * 0.25, i % 2 === 0 ? 0.06 : 0.1);
+        bassNote(ctx, t0, 36, 0.45, 0.35);
+        bassNote(ctx, t0 + 1.25, 41, 0.25, 0.3);
+      }
+    },
+    tags: ['dance', 'club', 'beat', 'party'],
+  },
+  {
+    bpm: 70, category: 'World', duration: 8, id: 'loop-desert-wind', kind: 'music', name: 'Desert Wind',
+    render: (ctx) => {
+      chordPad(ctx, [45, 52, 57], 0, 8, 0.1);
+      noise(ctx, { at: 0, dur: 8, filterType: 'bandpass', freq: 500, freqEnd: 900, gain: 0.03, q: 0.8 });
+      const notes = [69, 71, 74, 76, 74, 71];
+      notes.forEach((m, i) => osc(ctx, { at: 0.6 + i * 1.2, attack: 0.3, dur: 1, freq: NOTE(m), gain: 0.09, type: 'sine' }));
+    },
+    tags: ['world', 'desert', 'wind', 'ethnic'],
+  },
+  {
+    bpm: 85, category: 'Lo-Fi', duration: 8, id: 'loop-midnight-jazz', kind: 'music', name: 'Midnight Jazz',
+    render: (ctx) => {
+      const chords = [[57, 60, 64], [55, 58, 62], [53, 57, 60], [55, 59, 62]];
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        chordPad(ctx, chords[bar], t0, 2, 0.1);
+        bassNote(ctx, t0, 45 - bar, 0.5, 0.28);
+        bassNote(ctx, t0 + 1, 48 - bar, 0.5, 0.24);
+        hat(ctx, t0 + 0.5, 0.06);
+        hat(ctx, t0 + 1.5, 0.06);
+      }
+    },
+    tags: ['jazz', 'midnight', 'lofi', 'smooth'],
+  },
+  {
+    bpm: 116, category: 'Pop', duration: 8, id: 'loop-happy-days', kind: 'music', name: 'Happy Days',
+    render: (ctx) => {
+      const notes = [72, 74, 76, 79, 81, 79, 76, 74];
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        arpLine(ctx, notes, t0, 0.25, 0.1);
+        kick(ctx, t0, 0.35);
+        kick(ctx, t0 + 1, 0.35);
+        snare(ctx, t0 + 0.5, 0.18);
+      }
+    },
+    tags: ['pop', 'happy', 'cheerful', 'uplifting'],
+  },
+  {
+    bpm: 60, category: 'Ambient', duration: 8, id: 'loop-space-drift', kind: 'music', name: 'Space Drift',
+    render: (ctx) => {
+      chordPad(ctx, [48, 55, 60], 0, 8, 0.12);
+      const pings = [76, 81, 79, 84];
+      pings.forEach((m, i) => osc(ctx, { at: 1 + i * 2, attack: 0.2, dur: 1.5, freq: NOTE(m), gain: 0.06, type: 'sine' }));
+    },
+    tags: ['ambient', 'space', 'drone', 'dreamy'],
+  },
+  {
+    bpm: 105, category: 'Electronic', duration: 8, id: 'loop-urban-groove', kind: 'music', name: 'Urban Groove',
+    render: (ctx) => {
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        bassNote(ctx, t0, 38, 0.4, 0.35);
+        bassNote(ctx, t0 + 0.75, 38, 0.25, 0.3);
+        bassNote(ctx, t0 + 1.25, 41, 0.4, 0.3);
+        kick(ctx, t0, 0.4);
+        snare(ctx, t0 + 1, 0.25);
+        for (let i = 0; i < 8; i += 1) hat(ctx, t0 + i * 0.25, 0.07);
+      }
+    },
+    tags: ['electronic', 'groove', 'urban', 'bass'],
+  },
+  {
+    bpm: 72, category: 'Ambient', duration: 8, id: 'loop-soft-piano', kind: 'music', name: 'Soft Piano',
+    render: (ctx) => {
+      const notes = [72, 76, 79, 76, 74, 72, 71, 72];
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        notes.forEach((m, i) => osc(ctx, { at: t0 + i * 0.25, dur: 0.6, freq: NOTE(m), gain: 0.1, type: 'triangle' }));
+        chordPad(ctx, [48, 52, 55], t0, 2, 0.06);
+      }
+    },
+    tags: ['ambient', 'piano', 'soft', 'calm'],
+  },
+  {
+    bpm: 126, category: 'Dance', duration: 8, id: 'loop-festival-beat', kind: 'music', name: 'Festival Beat',
+    render: (ctx) => {
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        for (let i = 0; i < 4; i += 1) kick(ctx, t0 + i * 0.5, 0.55);
+        snare(ctx, t0 + 0.5, 0.3);
+        snare(ctx, t0 + 1.5, 0.3);
+        arpLine(ctx, [72, 76, 79, 84], t0, 0.5, 0.08, 'sawtooth');
+        for (let i = 0; i < 8; i += 1) hat(ctx, t0 + i * 0.25, 0.08);
+      }
+    },
+    tags: ['dance', 'festival', 'energy', 'party'],
+  },
+  {
+    bpm: 66, category: 'Ambient', duration: 8, id: 'loop-rainy-evening', kind: 'music', name: 'Rainy Evening',
+    render: (ctx) => {
+      noise(ctx, { at: 0, dur: 8, filterType: 'bandpass', freq: 1000, gain: 0.04, q: 0.5 });
+      chordPad(ctx, [57, 60, 64], 0, 4, 0.1);
+      chordPad(ctx, [55, 59, 62], 4, 4, 0.1);
+      const notes = [76, 74, 72, 74];
+      notes.forEach((m, i) => osc(ctx, { at: 0.5 + i * 1.9, dur: 1, freq: NOTE(m), gain: 0.06, type: 'sine' }));
+    },
+    tags: ['ambient', 'rain', 'evening', 'cozy'],
+  },
+  {
+    bpm: 124, category: 'Pop', duration: 8, id: 'loop-sunrise-run', kind: 'music', name: 'Sunrise Run',
+    render: (ctx) => {
+      const notes = [74, 76, 79, 81, 83, 81, 79, 76];
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        arpLine(ctx, notes, t0, 0.25, 0.1);
+        kick(ctx, t0, 0.4);
+        kick(ctx, t0 + 0.5, 0.3);
+        kick(ctx, t0 + 1, 0.4);
+        kick(ctx, t0 + 1.5, 0.3);
+        snare(ctx, t0 + 1, 0.2);
+      }
+    },
+    tags: ['pop', 'sunrise', 'energy', 'run'],
+  },
+  {
+    bpm: 122, category: 'Dance', duration: 8, id: 'loop-deep-house', kind: 'music', name: 'Deep House',
+    render: (ctx) => {
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        for (let i = 0; i < 4; i += 1) kick(ctx, t0 + i * 0.5, 0.5);
+        for (let i = 0; i < 8; i += 1) hat(ctx, t0 + i * 0.25, i % 2 === 1 ? 0.1 : 0.05);
+        bassNote(ctx, t0, 36, 1.8, 0.3);
+        chordPad(ctx, [60, 63, 67], t0, 2, 0.05);
+      }
+    },
+    tags: ['dance', 'house', 'deep', 'club'],
+  },
+  {
+    bpm: 64, category: 'Ambient', duration: 8, id: 'loop-calm-sea', kind: 'music', name: 'Calm Sea',
+    render: (ctx) => {
+      noise(ctx, { at: 0, dur: 8, filterType: 'lowpass', freq: 400, gain: 0.05 });
+      chordPad(ctx, [53, 57, 60], 0, 8, 0.1);
+      const notes = [72, 76, 79];
+      notes.forEach((m, i) => osc(ctx, { at: 1 + i * 2.5, attack: 0.4, dur: 1.5, freq: NOTE(m), gain: 0.05, type: 'sine' }));
+    },
+    tags: ['ambient', 'sea', 'calm', 'ocean'],
+  },
+  {
+    bpm: 110, category: 'Electronic', duration: 8, id: 'loop-street-beat', kind: 'music', name: 'Street Beat',
+    render: (ctx) => {
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        kick(ctx, t0, 0.5);
+        kick(ctx, t0 + 0.75, 0.4);
+        snare(ctx, t0 + 0.5, 0.28);
+        snare(ctx, t0 + 1.5, 0.28);
+        bassNote(ctx, t0 + 0.25, 41, 0.3, 0.32);
+        bassNote(ctx, t0 + 1.25, 38, 0.3, 0.32);
+        for (let i = 0; i < 8; i += 1) hat(ctx, t0 + i * 0.25, 0.07);
+      }
+    },
+    tags: ['electronic', 'street', 'beat', 'hip-hop'],
+  },
+  {
+    bpm: 76, category: 'Cinematic', duration: 8, id: 'loop-winter-night', kind: 'music', name: 'Winter Night',
+    render: (ctx) => {
+      chordPad(ctx, [48, 53, 57], 0, 8, 0.1);
+      const notes = [76, 74, 72, 71, 72];
+      notes.forEach((m, i) => osc(ctx, { at: 0.8 + i * 1.4, dur: 1.2, freq: NOTE(m), gain: 0.08, type: 'triangle' }));
+      noise(ctx, { at: 0, dur: 8, filterType: 'highpass', freq: 8000, gain: 0.008 });
+    },
+    tags: ['cinematic', 'winter', 'night', 'piano'],
+  },
+  {
+    bpm: 96, category: 'World', duration: 8, id: 'loop-tropical-breeze', kind: 'music', name: 'Tropical Breeze',
+    render: (ctx) => {
+      const notes = [72, 76, 79, 84, 79, 76];
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        notes.forEach((m, i) => pluck(ctx, t0 + i * 0.33, m, 0.11, 'sine'));
+        bassNote(ctx, t0, 48, 0.6, 0.25);
+        bassNote(ctx, t0 + 1, 45, 0.6, 0.25);
+        hat(ctx, t0 + 0.5, 0.05);
+        hat(ctx, t0 + 1.5, 0.05);
+      }
+    },
+    tags: ['world', 'tropical', 'breeze', 'island'],
+  },
+  {
+    bpm: 82, category: 'Lo-Fi', duration: 8, id: 'loop-focus-flow', kind: 'music', name: 'Focus Flow',
+    render: (ctx) => {
+      const chords = [[57, 60, 64], [55, 59, 62], [53, 57, 60], [55, 58, 62]];
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        chordPad(ctx, chords[bar], t0, 2, 0.09);
+        kick(ctx, t0, 0.4);
+        snare(ctx, t0 + 1, 0.2);
+        for (let i = 0; i < 8; i += 1) hat(ctx, t0 + i * 0.25, 0.05);
+      }
+    },
+    tags: ['lofi', 'focus', 'study', 'flow'],
+  },
+  {
+    bpm: 100, category: 'Cinematic', duration: 8, id: 'loop-victory-march', kind: 'music', name: 'Victory March',
+    render: (ctx) => {
+      const chords = [[57, 60, 64], [57, 60, 64], [53, 57, 60], [55, 59, 62]];
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        chords[bar].forEach((m) => osc(ctx, { at: t0, dur: 1.8, freq: NOTE(m), gain: 0.07, type: 'sawtooth' }));
+        kick(ctx, t0, 0.45);
+        kick(ctx, t0 + 1, 0.45);
+        snare(ctx, t0 + 0.5, 0.25);
+        snare(ctx, t0 + 1.5, 0.25);
+      }
+    },
+    tags: ['cinematic', 'victory', 'march', 'bold'],
+  },
+  {
+    bpm: 108, category: 'Pop', duration: 8, id: 'loop-golden-hour', kind: 'music', name: 'Golden Hour',
+    render: (ctx) => {
+      const notes = [72, 76, 79, 81, 79, 76, 74, 72];
+      for (let bar = 0; bar < 4; bar += 1) {
+        const t0 = bar * 2;
+        chordPad(ctx, [60, 64, 67], t0, 2, 0.08);
+        arpLine(ctx, notes, t0, 0.25, 0.1);
+        kick(ctx, t0, 0.35);
+        snare(ctx, t0 + 1, 0.2);
+      }
+    },
+    tags: ['pop', 'golden', 'warm', 'sunset'],
+  },
 ];
+
+// ---- Phase 5 (Section N): SFX builders (compact data-driven recipes). ----
+const sfx = (id: string, name: string, category: string, duration: number, render: (ctx: OfflineAudioContext) => void, tags: string[]): OriginalRecipe => ({
+  category,
+  duration,
+  id,
+  kind: 'sfx',
+  name,
+  render,
+  tags,
+});
+const tone = (freq: number, freqEnd: number | undefined, dur: number, gain: number, type: OscillatorType = 'sine') => (ctx: OfflineAudioContext) =>
+  osc(ctx, { at: 0, dur, freq, freqEnd, gain, type });
+const burst = (filterType: BiquadFilterType, freq: number, freqEnd: number | undefined, dur: number, gain: number, q = 1) => (ctx: OfflineAudioContext) =>
+  noise(ctx, { at: 0, dur, filterType, freq, freqEnd, gain, q });
+const chimeSeq = (notes: number[], step: number, dur: number, gain: number) => (ctx: OfflineAudioContext) => {
+  notes.forEach((f, i) => osc(ctx, { at: i * step, dur, freq: f, gain, type: 'sine' }));
+};
 
 export const ORIGINAL_SFX: OriginalRecipe[] = [
   {
@@ -530,6 +890,110 @@ export const ORIGINAL_SFX: OriginalRecipe[] = [
     render: (ctx) => osc(ctx, { at: 0, dur: 0.15, freq: 900, gain: 0.35, type: 'sine' }),
     tags: ['blip', 'alert', 'ui'],
   },
+  // ---- Phase 5 (Section N): 92 more original SFX, 100 total. ----
+  // Interface (11 more)
+  sfx('sfx-tap', 'Screen Tap', 'Interface', 0.15, tone(1000, 500, 0.12, 0.4), ['tap', 'ui', 'touch']),
+  sfx('sfx-double-tap', 'Double Tap', 'Interface', 0.3, (ctx) => { osc(ctx, { at: 0, dur: 0.1, freq: 1000, gain: 0.4, type: 'sine' }); osc(ctx, { at: 0.15, dur: 0.1, freq: 1000, gain: 0.4, type: 'sine' }); }, ['tap', 'double', 'ui']),
+  sfx('sfx-swipe', 'Swipe Whoosh', 'Interface', 0.25, burst('bandpass', 800, 2500, 0.25, 0.25, 1.2), ['swipe', 'ui', 'slide']),
+  sfx('sfx-page-turn', 'Page Turn', 'Interface', 0.4, burst('highpass', 2000, 3500, 0.35, 0.2, 1), ['page', 'turn', 'book']),
+  sfx('sfx-toggle-on', 'Toggle On', 'Interface', 0.25, (ctx) => { osc(ctx, { at: 0, dur: 0.1, freq: 500, gain: 0.35, type: 'sine' }); osc(ctx, { at: 0.1, dur: 0.15, freq: 800, gain: 0.35, type: 'sine' }); }, ['toggle', 'on', 'switch']),
+  sfx('sfx-toggle-off', 'Toggle Off', 'Interface', 0.25, (ctx) => { osc(ctx, { at: 0, dur: 0.1, freq: 800, gain: 0.35, type: 'sine' }); osc(ctx, { at: 0.1, dur: 0.15, freq: 500, gain: 0.35, type: 'sine' }); }, ['toggle', 'off', 'switch']),
+  sfx('sfx-success-ding', 'Success Ding', 'Interface', 0.8, chimeSeq([880, 1174.66], 0.15, 0.5, 0.3), ['success', 'ding', 'done']),
+  sfx('sfx-error-buzz', 'Error Buzz', 'Interface', 0.4, tone(160, 120, 0.35, 0.4, 'sawtooth'), ['error', 'buzz', 'fail']),
+  sfx('sfx-notification-pop', 'Notification Pop', 'Interface', 0.4, (ctx) => { osc(ctx, { at: 0, dur: 0.15, freq: 1200, gain: 0.35, type: 'sine' }); osc(ctx, { at: 0.12, dur: 0.2, freq: 1600, gain: 0.3, type: 'sine' }); }, ['notification', 'pop', 'alert']),
+  sfx('sfx-message-arrive', 'Message Arrive', 'Interface', 0.5, chimeSeq([1046.5, 1318.5], 0.12, 0.3, 0.3), ['message', 'arrive', 'chat']),
+  sfx('sfx-typing-tick', 'Typing Tick', 'Interface', 0.1, tone(2000, undefined, 0.05, 0.2, 'square'), ['typing', 'tick', 'keyboard']),
+  // Whoosh (6 more)
+  sfx('sfx-whoosh-low', 'Low Whoosh', 'Whoosh', 0.9, burst('bandpass', 200, 1200, 0.9, 0.4, 1.2), ['whoosh', 'low', 'transition']),
+  sfx('sfx-whoosh-high', 'High Whoosh', 'Whoosh', 0.7, burst('bandpass', 1500, 5000, 0.7, 0.35, 1.2), ['whoosh', 'high', 'transition']),
+  sfx('sfx-whoosh-fast', 'Fast Whoosh', 'Whoosh', 0.4, burst('bandpass', 500, 4000, 0.4, 0.4, 1.5), ['whoosh', 'fast', 'cut']),
+  sfx('sfx-swoosh-down', 'Swoosh Down', 'Whoosh', 0.6, burst('bandpass', 3000, 300, 0.6, 0.35, 1.2), ['swoosh', 'down', 'fall']),
+  sfx('sfx-air-rush', 'Air Rush', 'Whoosh', 1.0, burst('highpass', 1000, 3000, 1.0, 0.3, 0.8), ['air', 'rush', 'wind']),
+  sfx('sfx-wind-pass', 'Wind Pass', 'Whoosh', 1.2, burst('bandpass', 400, 900, 1.2, 0.25, 0.6), ['wind', 'pass', 'breeze']),
+  // Bell (7 more)
+  sfx('sfx-bell-single', 'Single Bell', 'Bell', 1.0, chimeSeq([1046.5], 0, 0.9, 0.35), ['bell', 'single', 'ring']),
+  sfx('sfx-bell-double', 'Double Bell', 'Bell', 1.4, chimeSeq([1046.5, 1046.5], 0.4, 0.9, 0.35), ['bell', 'double', 'ring']),
+  sfx('sfx-bell-triple', 'Triple Bell', 'Bell', 1.8, chimeSeq([1046.5, 1046.5, 1046.5], 0.4, 0.9, 0.35), ['bell', 'triple', 'ring']),
+  sfx('sfx-chime-soft', 'Soft Chime', 'Bell', 1.0, chimeSeq([1318.5, 1568], 0.2, 0.7, 0.22), ['chime', 'soft', 'gentle']),
+  sfx('sfx-church-bell', 'Church Bell', 'Bell', 2.0, (ctx) => { osc(ctx, { at: 0, dur: 1.8, freq: 523.25, gain: 0.4, type: 'sine' }); osc(ctx, { at: 0, dur: 1.8, freq: 1046.5, gain: 0.15, type: 'sine' }); }, ['church', 'bell', 'toll']),
+  sfx('sfx-alarm-bell', 'Alarm Bell', 'Bell', 1.5, (ctx) => { for (let i = 0; i < 4; i += 1) osc(ctx, { at: i * 0.35, dur: 0.25, freq: 1568, gain: 0.3, type: 'square' }); }, ['alarm', 'bell', 'warning']),
+  sfx('sfx-doorbell', 'Doorbell', 'Bell', 1.2, chimeSeq([880, 659.25], 0.35, 0.6, 0.35), ['doorbell', 'door', 'ring']),
+  // Impact (9 more)
+  sfx('sfx-thud-soft', 'Soft Thud', 'Impact', 0.4, tone(100, 50, 0.35, 0.5), ['thud', 'soft', 'impact']),
+  sfx('sfx-boom', 'Big Boom', 'Impact', 1.2, (ctx) => { osc(ctx, { at: 0, dur: 1, freq: 100, freqEnd: 30, gain: 0.8, type: 'sine' }); noise(ctx, { at: 0, dur: 0.3, filterType: 'lowpass', freq: 200, gain: 0.4 }); }, ['boom', 'explosion', 'big']),
+  sfx('sfx-crash', 'Crash', 'Impact', 1.0, burst('highpass', 3000, 1000, 0.9, 0.45, 0.8), ['crash', 'break', 'noise']),
+  sfx('sfx-slam', 'Door Slam', 'Impact', 0.5, (ctx) => { osc(ctx, { at: 0, dur: 0.4, freq: 90, freqEnd: 40, gain: 0.7, type: 'sine' }); noise(ctx, { at: 0, dur: 0.1, filterType: 'lowpass', freq: 400, gain: 0.3 }); }, ['slam', 'door', 'bang']),
+  sfx('sfx-knock', 'Knock Knock', 'Impact', 0.6, (ctx) => { osc(ctx, { at: 0, dur: 0.12, freq: 200, gain: 0.5, type: 'sine' }); osc(ctx, { at: 0.25, dur: 0.12, freq: 200, gain: 0.5, type: 'sine' }); }, ['knock', 'door', 'tap']),
+  sfx('sfx-stomp', 'Stomp', 'Impact', 0.4, tone(80, 40, 0.3, 0.6), ['stomp', 'foot', 'step']),
+  sfx('sfx-punch', 'Punch Hit', 'Impact', 0.3, (ctx) => { osc(ctx, { at: 0, dur: 0.2, freq: 150, freqEnd: 60, gain: 0.6, type: 'sine' }); noise(ctx, { at: 0, dur: 0.08, filterType: 'bandpass', freq: 1000, gain: 0.3 }); }, ['punch', 'hit', 'fight']),
+  sfx('sfx-explosion-small', 'Small Explosion', 'Impact', 1.0, (ctx) => { osc(ctx, { at: 0, dur: 0.8, freq: 120, freqEnd: 35, gain: 0.7, type: 'sine' }); noise(ctx, { at: 0, dur: 0.6, filterType: 'lowpass', freq: 500, gain: 0.5 }); }, ['explosion', 'small', 'blast']),
+  sfx('sfx-glass-break', 'Glass Break', 'Impact', 0.8, (ctx) => { noise(ctx, { at: 0, dur: 0.5, filterType: 'highpass', freq: 4000, gain: 0.5 }); osc(ctx, { at: 0, dur: 0.3, freq: 2500, gain: 0.15, type: 'square' }); }, ['glass', 'break', 'shatter']),
+  // Magic (9 more)
+  sfx('sfx-twinkle', 'Twinkle', 'Magic', 0.7, chimeSeq([2093, 2637, 3136], 0.1, 0.3, 0.16), ['twinkle', 'magic', 'star']),
+  sfx('sfx-magic-poof', 'Magic Poof', 'Magic', 0.6, burst('bandpass', 1000, 300, 0.5, 0.35, 1), ['poof', 'magic', 'disappear']),
+  sfx('sfx-fairy-dust', 'Fairy Dust', 'Magic', 1.0, chimeSeq([1568, 2093, 2637, 3136], 0.12, 0.4, 0.14), ['fairy', 'dust', 'magic']),
+  sfx('sfx-spell-cast', 'Spell Cast', 'Magic', 1.2, (ctx) => { osc(ctx, { at: 0, dur: 1, freq: 300, freqEnd: 1200, gain: 0.25, type: 'sawtooth' }); chimeSeq([1046.5, 1568], 0.5, 0.5, 0.2)(ctx); }, ['spell', 'cast', 'magic']),
+  sfx('sfx-shimmer', 'Shimmer', 'Magic', 0.9, (ctx) => { for (let i = 0; i < 6; i += 1) osc(ctx, { at: i * 0.12, dur: 0.3, freq: 1500 + i * 200, gain: 0.1, type: 'sine' }); }, ['shimmer', 'magic', 'shine']),
+  sfx('sfx-star-burst-sfx', 'Star Burst', 'Magic', 0.8, chimeSeq([1318.5, 1760, 2093], 0.08, 0.4, 0.2), ['star', 'burst', 'magic']),
+  sfx('sfx-potion-bubble', 'Potion Bubble', 'Magic', 1.0, (ctx) => { for (let i = 0; i < 5; i += 1) osc(ctx, { at: i * 0.18, dur: 0.15, freq: 300 + i * 120, freqEnd: 600 + i * 100, gain: 0.2, type: 'sine' }); }, ['potion', 'bubble', 'magic']),
+  sfx('sfx-enchant', 'Enchant', 'Magic', 1.4, (ctx) => { osc(ctx, { at: 0, dur: 1.2, freq: 440, freqEnd: 880, gain: 0.2, type: 'triangle' }); chimeSeq([880, 1108.7, 1318.5], 0.3, 0.5, 0.18)(ctx); }, ['enchant', 'magic', 'charm']),
+  sfx('sfx-portal-open', 'Portal Open', 'Magic', 1.5, (ctx) => { noise(ctx, { at: 0, dur: 1.2, filterType: 'bandpass', freq: 300, freqEnd: 2500, gain: 0.3, q: 2 }); osc(ctx, { at: 0, dur: 1.2, freq: 110, freqEnd: 440, gain: 0.25, type: 'sine' }); }, ['portal', 'open', 'magic']),
+  // Nature (10)
+  sfx('sfx-rain-drop', 'Rain Drop', 'Nature', 0.3, tone(1800, 900, 0.2, 0.25), ['rain', 'drop', 'water']),
+  sfx('sfx-thunder-rumble', 'Thunder Rumble', 'Nature', 2.0, (ctx) => { noise(ctx, { at: 0, dur: 1.8, filterType: 'lowpass', freq: 120, gain: 0.6 }); osc(ctx, { at: 0, dur: 1.5, freq: 60, freqEnd: 35, gain: 0.5, type: 'sine' }); }, ['thunder', 'rumble', 'storm']),
+  sfx('sfx-wind-gust', 'Wind Gust', 'Nature', 1.5, burst('bandpass', 300, 800, 1.4, 0.3, 0.7), ['wind', 'gust', 'breeze']),
+  sfx('sfx-leaves-rustle', 'Leaves Rustle', 'Nature', 0.8, burst('highpass', 2500, 3500, 0.7, 0.2, 0.8), ['leaves', 'rustle', 'tree']),
+  sfx('sfx-water-splash', 'Water Splash', 'Nature', 0.7, burst('bandpass', 800, 400, 0.6, 0.4, 0.8), ['water', 'splash', 'wave']),
+  sfx('sfx-wave-crash', 'Wave Crash', 'Nature', 1.5, burst('lowpass', 600, 200, 1.4, 0.45), ['wave', 'crash', 'ocean']),
+  sfx('sfx-fire-crackle', 'Fire Crackle', 'Nature', 1.2, (ctx) => { for (let i = 0; i < 8; i += 1) noise(ctx, { at: i * 0.14, dur: 0.06, filterType: 'bandpass', freq: 2000 + i * 300, gain: 0.15, q: 2 }); }, ['fire', 'crackle', 'flame']),
+  sfx('sfx-birds-chirp', 'Birds Chirp', 'Nature', 1.2, (ctx) => { for (let i = 0; i < 4; i += 1) osc(ctx, { at: i * 0.3, dur: 0.2, freq: 2500 + i * 200, freqEnd: 3500, gain: 0.12, type: 'sine' }); }, ['birds', 'chirp', 'morning']),
+  sfx('sfx-stream-flow', 'Stream Flow', 'Nature', 2.0, burst('bandpass', 1200, 1500, 1.9, 0.18, 0.5), ['stream', 'flow', 'water']),
+  sfx('sfx-snow-fall', 'Snow Fall', 'Nature', 1.0, burst('highpass', 5000, 6000, 0.9, 0.08, 0.5), ['snow', 'fall', 'winter']),
+  // Animals (8)
+  sfx('sfx-dog-bark', 'Dog Bark', 'Animals', 0.5, (ctx) => { osc(ctx, { at: 0, dur: 0.12, freq: 300, freqEnd: 150, gain: 0.5, type: 'square' }); osc(ctx, { at: 0.2, dur: 0.12, freq: 280, freqEnd: 140, gain: 0.5, type: 'square' }); }, ['dog', 'bark', 'pet']),
+  sfx('sfx-cat-meow', 'Cat Meow', 'Animals', 0.8, tone(700, 1100, 0.7, 0.3, 'triangle'), ['cat', 'meow', 'pet']),
+  sfx('sfx-bird-tweet', 'Bird Tweet', 'Animals', 0.6, (ctx) => { osc(ctx, { at: 0, dur: 0.15, freq: 3000, freqEnd: 3800, gain: 0.15, type: 'sine' }); osc(ctx, { at: 0.2, dur: 0.15, freq: 3200, freqEnd: 4000, gain: 0.15, type: 'sine' }); }, ['bird', 'tweet', 'song']),
+  sfx('sfx-lion-roar', 'Lion Roar', 'Animals', 1.5, (ctx) => { osc(ctx, { at: 0, dur: 1.2, freq: 120, freqEnd: 70, gain: 0.5, type: 'sawtooth' }); noise(ctx, { at: 0, dur: 1.2, filterType: 'lowpass', freq: 300, gain: 0.4 }); }, ['lion', 'roar', 'wild']),
+  sfx('sfx-horse-gallop', 'Horse Gallop', 'Animals', 1.0, (ctx) => { for (let i = 0; i < 6; i += 1) osc(ctx, { at: i * 0.16, dur: 0.08, freq: 180, gain: 0.3, type: 'sine' }); }, ['horse', 'gallop', 'ride']),
+  sfx('sfx-bee-buzz', 'Bee Buzz', 'Animals', 1.0, tone(220, 200, 0.9, 0.25, 'sawtooth'), ['bee', 'buzz', 'insect']),
+  sfx('sfx-frog-croak', 'Frog Croak', 'Animals', 0.6, tone(120, 90, 0.5, 0.4, 'square'), ['frog', 'croak', 'pond']),
+  sfx('sfx-owl-hoot', 'Owl Hoot', 'Animals', 0.8, (ctx) => { osc(ctx, { at: 0, dur: 0.3, freq: 400, gain: 0.35, type: 'sine' }); osc(ctx, { at: 0.4, dur: 0.35, freq: 350, gain: 0.35, type: 'sine' }); }, ['owl', 'hoot', 'night']),
+  // Human (6)
+  sfx('sfx-clap-single', 'Single Clap', 'Human', 0.3, burst('bandpass', 1500, 1200, 0.15, 0.5, 1), ['clap', 'hand', 'applause']),
+  sfx('sfx-applause', 'Applause', 'Human', 2.0, (ctx) => { for (let i = 0; i < 10; i += 1) noise(ctx, { at: i * 0.18, dur: 0.12, filterType: 'bandpass', freq: 1200 + (i % 3) * 300, gain: 0.25, q: 1 }); }, ['applause', 'crowd', 'cheer']),
+  sfx('sfx-laugh-giggle', 'Giggle', 'Human', 0.9, (ctx) => { for (let i = 0; i < 4; i += 1) osc(ctx, { at: i * 0.2, dur: 0.12, freq: 800 + i * 60, gain: 0.2, type: 'sine' }); }, ['laugh', 'giggle', 'happy']),
+  sfx('sfx-cough', 'Cough', 'Human', 0.4, burst('bandpass', 500, 300, 0.25, 0.4, 1), ['cough', 'human', 'throat']),
+  sfx('sfx-sneeze', 'Sneeze', 'Human', 0.6, burst('bandpass', 800, 400, 0.45, 0.4, 1), ['sneeze', 'human', 'achoo']),
+  sfx('sfx-whistle', 'Whistle', 'Human', 0.8, tone(2200, 2600, 0.7, 0.2), ['whistle', 'human', 'tune']),
+  // Sci-Fi (10)
+  sfx('sfx-laser-zap', 'Laser Zap', 'Sci-Fi', 0.5, tone(1800, 200, 0.4, 0.3, 'sawtooth'), ['laser', 'zap', 'sci-fi']),
+  sfx('sfx-robot-beep', 'Robot Beep', 'Sci-Fi', 0.6, (ctx) => { osc(ctx, { at: 0, dur: 0.15, freq: 1200, gain: 0.3, type: 'square' }); osc(ctx, { at: 0.25, dur: 0.15, freq: 900, gain: 0.3, type: 'square' }); }, ['robot', 'beep', 'sci-fi']),
+  sfx('sfx-teleport', 'Teleport', 'Sci-Fi', 1.0, (ctx) => { osc(ctx, { at: 0, dur: 0.8, freq: 400, freqEnd: 2000, gain: 0.25, type: 'sine' }); noise(ctx, { at: 0, dur: 0.8, filterType: 'bandpass', freq: 1000, freqEnd: 4000, gain: 0.15, q: 2 }); }, ['teleport', 'sci-fi', 'warp']),
+  sfx('sfx-warp-drive', 'Warp Drive', 'Sci-Fi', 1.5, tone(200, 1500, 1.4, 0.3, 'sawtooth'), ['warp', 'drive', 'sci-fi']),
+  sfx('sfx-alien-blip', 'Alien Blip', 'Sci-Fi', 0.5, (ctx) => { osc(ctx, { at: 0, dur: 0.12, freq: 1400, gain: 0.25, type: 'sine' }); osc(ctx, { at: 0.15, dur: 0.12, freq: 1800, gain: 0.25, type: 'sine' }); }, ['alien', 'blip', 'sci-fi']),
+  sfx('sfx-power-up', 'Power Up', 'Sci-Fi', 0.9, (ctx) => { const notes = [523.25, 659.25, 783.99, 1046.5]; notes.forEach((f, i) => osc(ctx, { at: i * 0.15, dur: 0.3, freq: f, gain: 0.25, type: 'square' })); }, ['power', 'up', 'game']),
+  sfx('sfx-power-down', 'Power Down', 'Sci-Fi', 0.9, (ctx) => { const notes = [1046.5, 783.99, 659.25, 523.25]; notes.forEach((f, i) => osc(ctx, { at: i * 0.15, dur: 0.3, freq: f, gain: 0.25, type: 'square' })); }, ['power', 'down', 'game']),
+  sfx('sfx-scan-beep', 'Scan Beep', 'Sci-Fi', 0.7, tone(1500, 1500, 0.5, 0.25, 'square'), ['scan', 'beep', 'sci-fi']),
+  sfx('sfx-drone-hum', 'Drone Hum', 'Sci-Fi', 1.5, tone(110, 110, 1.4, 0.3, 'sawtooth'), ['drone', 'hum', 'sci-fi']),
+  sfx('sfx-hologram-on', 'Hologram On', 'Sci-Fi', 0.8, (ctx) => { noise(ctx, { at: 0, dur: 0.6, filterType: 'highpass', freq: 3000, gain: 0.15 }); osc(ctx, { at: 0.1, dur: 0.5, freq: 1200, freqEnd: 2400, gain: 0.2, type: 'sine' }); }, ['hologram', 'on', 'sci-fi']),
+  // Household (10)
+  sfx('sfx-door-open', 'Door Open', 'Household', 0.6, burst('bandpass', 300, 500, 0.5, 0.3, 1), ['door', 'open', 'house']),
+  sfx('sfx-door-close', 'Door Close', 'Household', 0.5, tone(120, 60, 0.4, 0.5), ['door', 'close', 'house']),
+  sfx('sfx-key-turn', 'Key Turn', 'Household', 0.4, (ctx) => { osc(ctx, { at: 0, dur: 0.08, freq: 2000, gain: 0.2, type: 'square' }); osc(ctx, { at: 0.15, dur: 0.08, freq: 1800, gain: 0.2, type: 'square' }); }, ['key', 'turn', 'lock']),
+  sfx('sfx-phone-ring', 'Phone Ring', 'Household', 1.2, (ctx) => { osc(ctx, { at: 0, dur: 0.4, freq: 1200, gain: 0.25, type: 'sine' }); osc(ctx, { at: 0.5, dur: 0.4, freq: 1200, gain: 0.25, type: 'sine' }); }, ['phone', 'ring', 'call']),
+  sfx('sfx-camera-shutter', 'Camera Shutter', 'Household', 0.3, burst('highpass', 3000, 5000, 0.12, 0.45, 1), ['camera', 'shutter', 'photo']),
+  sfx('sfx-kettle-whistle', 'Kettle Whistle', 'Household', 1.0, tone(2400, 2800, 0.9, 0.18), ['kettle', 'whistle', 'kitchen']),
+  sfx('sfx-clock-tick', 'Clock Tick', 'Household', 0.2, tone(1500, undefined, 0.06, 0.3, 'square'), ['clock', 'tick', 'time']),
+  sfx('sfx-microwave-ding', 'Microwave Ding', 'Household', 0.8, chimeSeq([1174.66], 0, 0.6, 0.35), ['microwave', 'ding', 'kitchen']),
+  sfx('sfx-vacuum-hum', 'Vacuum Hum', 'Household', 1.5, (ctx) => { noise(ctx, { at: 0, dur: 1.4, filterType: 'lowpass', freq: 400, gain: 0.3 }); osc(ctx, { at: 0, dur: 1.4, freq: 90, gain: 0.15, type: 'sawtooth' }); }, ['vacuum', 'hum', 'clean']),
+  sfx('sfx-light-switch', 'Light Switch', 'Household', 0.15, tone(1800, 1200, 0.08, 0.35, 'square'), ['light', 'switch', 'click']),
+  // Sports (6) — brings the SFX total to 100.
+  sfx('sfx-referee-whistle', 'Referee Whistle', 'Sports', 0.7, (ctx) => { osc(ctx, { at: 0, dur: 0.25, freq: 2200, gain: 0.25, type: 'square' }); osc(ctx, { at: 0.3, dur: 0.3, freq: 2200, gain: 0.25, type: 'square' }); }, ['whistle', 'referee', 'sport']),
+  sfx('sfx-crowd-cheer', 'Crowd Cheer', 'Sports', 2.0, (ctx) => { noise(ctx, { at: 0, dur: 1.9, filterType: 'bandpass', freq: 1000, gain: 0.3, q: 0.5 }); for (let i = 0; i < 6; i += 1) osc(ctx, { at: i * 0.3, dur: 0.15, freq: 700 + i * 80, gain: 0.12, type: 'sine' }); }, ['crowd', 'cheer', 'sport']),
+  sfx('sfx-ball-bounce', 'Ball Bounce', 'Sports', 0.5, (ctx) => { osc(ctx, { at: 0, dur: 0.1, freq: 250, freqEnd: 120, gain: 0.45, type: 'sine' }); osc(ctx, { at: 0.25, dur: 0.1, freq: 220, freqEnd: 110, gain: 0.35, type: 'sine' }); }, ['ball', 'bounce', 'sport']),
+  sfx('sfx-goal-horn', 'Goal Horn', 'Sports', 1.5, (ctx) => { osc(ctx, { at: 0, dur: 1.2, freq: 220, gain: 0.35, type: 'sawtooth' }); osc(ctx, { at: 0, dur: 1.2, freq: 330, gain: 0.25, type: 'sawtooth' }); }, ['goal', 'horn', 'sport']),
+  sfx('sfx-bat-hit', 'Bat Hit', 'Sports', 0.4, (ctx) => { osc(ctx, { at: 0, dur: 0.2, freq: 180, freqEnd: 80, gain: 0.55, type: 'sine' }); noise(ctx, { at: 0, dur: 0.1, filterType: 'bandpass', freq: 1500, gain: 0.3 }); }, ['bat', 'hit', 'sport']),
+  sfx('sfx-ski-whoosh', 'Ski Whoosh', 'Sports', 0.9, burst('bandpass', 600, 2500, 0.8, 0.35, 1), ['ski', 'whoosh', 'sport']),
 ];
 
 const renderCache = new Map<string, Promise<RenderedOriginal>>();

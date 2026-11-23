@@ -1,0 +1,24 @@
+{
+  "duration": 2,
+  "id": "check",
+  "keyframes": [
+    {
+      "t": 0,
+      "scale": 0.8
+    },
+    {
+      "t": 0.3,
+      "scale": 1.15
+    },
+    {
+      "t": 0.6,
+      "scale": 1
+    },
+    {
+      "t": 1,
+      "scale": 0.8
+    }
+  ],
+  "name": "Check Pop",
+  "type": "vidora-motion-v1"
+}

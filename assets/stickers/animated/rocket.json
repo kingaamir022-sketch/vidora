@@ -1,0 +1,23 @@
+{
+  "duration": 2,
+  "id": "rocket",
+  "keyframes": [
+    {
+      "t": 0,
+      "offsetY": 0,
+      "rotation": 0
+    },
+    {
+      "t": 0.5,
+      "offsetY": -14,
+      "rotation": -4
+    },
+    {
+      "t": 1,
+      "offsetY": 0,
+      "rotation": 0
+    }
+  ],
+  "name": "Rocket Lift",
+  "type": "vidora-motion-v1"
+}

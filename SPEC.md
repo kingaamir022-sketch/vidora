@@ -30,7 +30,7 @@ postponed is listed here.
 - [x] Dashboard: new, recent, drafts, rename, duplicate, delete (Zustand + localStorage, verified in code + manual script below)
 - [x] Ratios 9:16, 16:9, 1:1, 4:5, 21:9, custom (custom width/height inputs in TopBar; preview + resolution follow it)
 - [x] Import video/image/audio/GIF, drag-drop, folders, search, thumbnails, metadata (real probing: duration, dimensions, size, MIME; thumbnails via canvas)
-- [ ] Built-in asset browser — PARTIAL: panel exists and honestly labels Phase 5/6 content as not yet built; no fake assets. Cloud sync + version history: PENDING (Phase 8)
+- [x] Built-in asset browser — DONE in Phase 5 (MediaBrowser: Backgrounds section + live counts, total 714; Templates tab real). Cloud sync + version history: PENDING (Phase 8)
 
 ### B. Timeline & Basic Editing
 - [x] Unlimited tracks (add video/audio/text); split, trim (drag edges), delete, duplicate, ripple delete
@@ -134,20 +134,25 @@ User rules added 2026-11-22 19:17 PKT (Rule 12 Autonomous Parity Mode, Rule 13 B
 - [x] Audit found + fixed BUG-P4-002 (audit harness markers baseline); build fixes BUG-P4-001 (voiceover duration fallback) and BUG-P4-003 (Speed note wording); BUG-D4 (pitch) closed; see `docs/BUGS.md`
 - [x] Parity score now **MATCH 40 / ASSUMED 6 / INTENTIONAL-DIFF 3 / total 49** — J rows added to `docs/PARITY.md`: MATCH 3 (J-INSPECTOR, J-DETACH, J-PITCH), ASSUMED 5 (J-AUDIO, J-MIXER, J-VOICE, J-BEAT, J-VOICEOVER)
 
-## Phase 5 — Section N (Procedural Asset Library) — PENDING
+## Phase 5 — Section N (Procedural Asset Library) — DONE (v0.6.0, 2026-11-23)
 
-- [ ] 60+ GLSL effects with auto thumbnails
-- [ ] 30+ GLSL transitions
-- [ ] 30+ procedurally generated .cube LUT looks with thumbnails
-- [ ] 200+ original SVG stickers/shapes (+ animated variants, Lottie-style JSON)
-- [ ] 40+ open-license fonts + license file
-- [ ] 50+ text style presets, 30+ text animations
-- [ ] 20+ caption style presets with word-level highlight
-- [ ] 25+ original templates
-- [ ] Procedural music/SFX via Tone.js/Web Audio (30 loops, 100 SFX)
-- [ ] Backgrounds/overlays: gradients, patterns, noise, film dust, frames
-- [ ] `npm run build:assets` regenerates everything + license report
-- [ ] `/assets` + `manifest.json` (id, name, category, tags, license)
+- [x] 60+ GLSL effects with auto thumbnails — 62 GLSL effects (`src/lib/glslEffects.ts`, `src/lib/glsl.ts`: WebGL2 ping-pong renderer, u_intensity/u_p1/u_p2 uniforms, program cache; thumbnails rendered through the shader once and cached; disabled with a note when WebGL2 is missing; a shader compile failure is caught and that effect is skipped for the frame). 6 categories: Colour 12, Light 10, Distort 12, Stylize 12, Retro 8, Motion 8
+- [x] 30+ GLSL transitions — 32 transitions (24 new canvas-2D draw cases in `drawTransition`, all deterministic; TransitionsPanel search + category filter)
+- [x] 30+ procedurally generated .cube LUT looks with thumbnails — 32 looks in 6 categories (Warm 6, Cool 6, Film 6, Mono 4, Vivid 5, Soft 5), `.cube` files in `assets/luts/`, runtime thumbnails by sampling a test gradient, round-trip `parseCube(lutToCubeText(...))` within 1e-6
+- [x] 200+ original SVG stickers/shapes (+ animated variants, Lottie-style JSON) — 232 stickers (29 base designs × 8 palettes) + 10 shapes; 28 animated motion presets (`src/lib/stickerAnim.ts`, Lottie-style JSON in `assets/stickers/animated/`), selectable per sticker clip (Stickers panel Motion select) and per text clip (loop animation picker)
+- [x] 40+ open-license fonts + license file — 40 families (Sans 14, Serif 8, Mono 6, Display 7, Handwriting 5), all SIL OFL 1.1 except JetBrains Mono (Apache-2.0); latin-subset woff2 in `public/fonts/` + `fonts.css`, license texts in `LICENSES/`
+- [x] 50+ text style presets, 30+ text animations — 50 text presets (6 categories); 30 named in/out animation kinds + 7 loop kinds + 28 motion-* kinds = 37 named animations
+- [x] 20+ caption style presets with word-level highlight — 20 presets; `CaptionStylePreset` gains `highlight`/`highlightBackground` and `drawCaptionOverlay` uses them (was hardcoded violet/white)
+- [x] 25+ original templates — 25 layouts (`src/lib/templates.ts`); "Use template" always starts a new project (never overwrites); media slots show their label on the canvas until media is added
+- [x] Procedural music/SFX via Tone.js/Web Audio (30 loops, 100 SFX) — Web Audio direct (OfflineAudioContext); Tone.js not installed — the Web Audio recipes already satisfy the spec. 30 loops (24 new) + 100 SFX (92 new), all original recipes
+- [x] Backgrounds/overlays: gradients, patterns, noise, film dust, frames — 30 backgrounds (Gradients 12, Patterns 8, Grain & Dust 4, Frames 6) as full-frame sticker clips via `addBackgroundClip`
+- [x] `npm run build:assets` regenerates everything + license report — `scripts/build-assets.mjs` (Node 24 type stripping + resolve hook): logo icons, `assets/manifest.json` (663 entries, 714 total), 32 `.cube` files, 28 animated JSON files, font downloads + `fonts.css` + font manifest, license texts, provenance Phase 5 section; enforces every floor and exits non-zero below it
+- [x] `/assets` + `manifest.json` (id, name, category, tags, license) — `assets/manifest.json` with per-section counts; `src/lib/assetLibrary.ts` exposes `assetLibraryCounts()` / `assetManifestEntries()` for the MediaBrowser live counts
+
+### Phase 5 verification
+- [x] `npm run build` green (92 modules), `npm test` 210/210 (was 184; new `src/test/phase5.test.ts` — 26 tests: catalog floors, GLSL assembly, transition schema coverage, LUT round-trips, fonts, text presets/animations, caption presets, templates, music/SFX shape, backgrounds, motion specs), Phase 5 self-audit `npm run audit:phase5` **38/38, 0 open bugs** (`audit/phase5/AUDIT-REPORT.md`, 12 card folders with screenshots); Phase 4 regression audit **31/31**
+- [x] Audit found + fixed BUG-P5-001 (preview drew only the last visible clip — overlays hid the video; now composites all visible clips bottom-to-top); see `docs/BUGS.md`. Also fixed during the build: template sticker ids that did not exist in the sticker catalog (base-design fallback resolver added), invalid animation kinds in templates ('zoom'/'slide' → 'zoom-in'/'slide-left'), and the schema's motion-* kinds aligned to the real motion spec ids
+- [x] Parity score now **MATCH 44 / ASSUMED 13 / INTENTIONAL-DIFF 3 / total 60** — A-ASSETS ASSUMED → MATCH (real asset browser), 11 new N-* rows added to `docs/PARITY.md` (MATCH: N-LUTS, N-TEXTPRESETS, H-STICKER motion; ASSUMED: N-GLSL, N-FONTS, N-TEXTANIM, N-CAPTIONPRESETS, N-TEMPLATES, N-MUSIC, N-BACKGROUNDS, N-ASSETS)
 
 ## Phase 6 — Section O (AI-Generated Content Library) — PENDING
 

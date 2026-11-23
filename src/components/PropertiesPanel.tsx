@@ -110,7 +110,7 @@ export default function PropertiesPanel() {
                 <input type="file" accept=".ttf,.otf,.woff,.woff2" onChange={(e) => void onCustomFont(e.target.files?.[0])} className="mt-1 block w-full text-[11px] text-zinc-400" />
               </label>
               {fontError && <p className="text-[11px] text-red-400">{fontError}</p>}
-              <p className="text-[11px] leading-relaxed text-zinc-500">Fonts are system stacks only — no web-font browsing or download. An uploaded font works in this session; reload the page and it must be uploaded again (the project keeps only the font name).</p>
+              <p className="text-[11px] leading-relaxed text-zinc-500">40 open-license fonts ship with Vidora and appear in the font list above, plus the 4 system stacks. An uploaded font works in this session; reload the page and it must be uploaded again (the project keeps only the font name).</p>
               {num('Size', style.fontSize, 8, 200, 1, (v) => patchStyle({ fontSize: Math.min(200, Math.max(8, v)) }))}
               <div className="flex gap-1">
                 {(['bold', 'italic', 'underline'] as const).map((k) => (

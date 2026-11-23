@@ -22,7 +22,7 @@ import {
 } from '../schema/project';
 import { importFile } from '../lib/media';
 import { addKeyframe, removeKeyframe, updateKeyframe } from '../lib/keyframes';
-import { defaultEffectParams, effectDef } from '../lib/effects';
+import { anyEffectDef, defaultEffectParams } from '../lib/effects';
 import { BUILTIN_LUTS, parseCube } from '../lib/lut';
 import { DEFAULT_SHORTCUTS, loadShortcuts, saveShortcuts, type ShortcutAction } from '../lib/shortcuts';
 import {
@@ -49,6 +49,8 @@ import {
 import { defaultTextStyle, type TextStyle } from '../schema/project';
 import { TEXT_STYLE_PRESETS } from '../lib/text';
 import { shapeSvg, stickerById } from '../lib/stickers';
+import { backgroundDef } from '../lib/backgrounds';
+import { applyTemplate } from '../lib/templates';
 import { normalizeGain } from '../lib/audio';
 import {
   parseCaptionFile,
@@ -281,6 +283,9 @@ interface ProjectState {
   applyTextStyleToAll: () => void;
   addStickerClip: (stickerId: string) => void;
   addShapeClip: (shapeId: string, fill: string) => void;
+  // Phase 5 — procedural backgrounds + templates (Section N)
+  addBackgroundClip: (backgroundId: string) => void;
+  useTemplate: (templateId: string) => void;
   setDrawMode: (v: boolean) => void;
   setDrawColor: (color: string) => void;
   setDrawWidth: (w: number) => void;
@@ -736,7 +741,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     addEffect: (name) => {
       const s = get();
       if (!s.project || s.selectedClipIds.length === 0) return;
-      const def = effectDef(name);
+      const def = anyEffectDef(name);
       if (!def) return;
       const id = s.selectedClipIds[0];
       const clip = findClip(s.project, id)?.clip;
@@ -920,6 +925,30 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const clip: Clip = { ...base, sticker: { category: 'Shapes', id: `shape-${shapeId}`, kind: 'shape', svg: shapeSvg(shapeId, fill) } };
       commit((p) => addClipToTextTrack(p, clip));
       set({ selectedClipIds: [clip.id] });
+    },
+    // ---- Phase 5: procedural backgrounds + templates (Section N) ----
+    addBackgroundClip: (backgroundId) => {
+      const s = get();
+      if (!s.project) return;
+      const def = backgroundDef(backgroundId);
+      if (!def) return;
+      const base = baseClip('sticker', def.name, 5, s.playhead);
+      const clip: Clip = { ...base, sticker: { category: 'Backgrounds', id: `bg-${def.id}`, kind: 'sticker', svg: def.svg } };
+      commit((p) => addClipToTextTrack(p, clip));
+      set({ selectedClipIds: [clip.id] });
+    },
+    useTemplate: (templateId) => {
+      let base = get().project;
+      if (!base) {
+        get().createProject('Untitled Project');
+        base = get().project;
+      }
+      if (!base) return;
+      const next = applyTemplate(base, templateId);
+      if (!next) return;
+      const projects = [next, ...get().projects.filter((p) => p.id !== next.id)];
+      writeProjects(projects);
+      set({ aspectRatio: next.aspectRatio, playhead: 0, project: next, projects, redoStack: [], selectedClipIds: [], undoStack: [], view: 'editor' });
     },
     setDrawMode: (v) => set({ drawMode: v }),
     setDrawColor: (color) => set({ drawColor: color }),

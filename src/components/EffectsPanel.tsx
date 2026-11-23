@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { findClip } from '../lib/timeline';
-import { EFFECT_CATALOG } from '../lib/effects';
-import { BUILTIN_LUTS } from '../lib/lut';
+import { EFFECT_CATALOG, anyEffectDef } from '../lib/effects';
+import { BUILTIN_LUTS, LUT_CATEGORIES, lutThumbnail } from '../lib/lut';
+import { GLSL_CATEGORIES, GLSL_EFFECT_CATALOG, searchGlslEffects, type GlslCategory } from '../lib/glslEffects';
+import { glslThumbnail, isGlslSupported } from '../lib/glsl';
 
-/** Effects + LUT filters panel (Phase 2, SPEC E). Left panel for the Effects / Filters tabs. */
+/** Effects + LUT filters panel (Phase 2, SPEC E; Phase 5 adds the 62
+ * GLSL effects with search, categories and auto thumbnails, and the 32
+ * LUT looks with categories and thumbnails). Left panel for the Effects
+ * / Filters tabs. */
 export default function EffectsPanel({ lutFocus = false }: { lutFocus?: boolean }) {
   const project = useProjectStore((s) => s.project);
   const selectedClipIds = useProjectStore((s) => s.selectedClipIds);
@@ -15,8 +20,20 @@ export default function EffectsPanel({ lutFocus = false }: { lutFocus?: boolean 
   const setLut = useProjectStore((s) => s.setLut);
   const importLutFile = useProjectStore((s) => s.importLutFile);
   const [lutError, setLutError] = useState<string | null>(null);
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState<GlslCategory | 'All'>('All');
+  const [lutCategory, setLutCategory] = useState<string>('All');
 
   const clip = project && selectedClipIds.length > 0 ? findClip(project, selectedClipIds[0])?.clip ?? null : null;
+  const glslSupported = useMemo(() => isGlslSupported(), []);
+  const glslResults = useMemo(() => {
+    const found = searchGlslEffects(query);
+    return category === 'All' ? found : found.filter((d) => d.category === category);
+  }, [query, category]);
+  const lutResults = useMemo(
+    () => (lutCategory === 'All' ? BUILTIN_LUTS : BUILTIN_LUTS.filter((l) => l.category === lutCategory)),
+    [lutCategory],
+  );
 
   const onImportLut = async (file: File | undefined) => {
     if (!file) return;
@@ -52,11 +69,65 @@ export default function EffectsPanel({ lutFocus = false }: { lutFocus?: boolean 
             </div>
           </section>
 
+          <section>
+            <h3 className="text-xs font-semibold text-zinc-300">GLSL effects ({GLSL_EFFECT_CATALOG.length})</h3>
+            {!glslSupported && (
+              <p className="mt-1 text-[11px] text-amber-400">WebGL2 is not available in this browser, so GLSL effects are disabled. The effects above still work.</p>
+            )}
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search effects…"
+              aria-label="Search GLSL effects"
+              className="mt-2 w-full rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1 text-xs text-zinc-100"
+            />
+            <div className="mt-2 flex flex-wrap gap-1">
+              {(['All', ...GLSL_CATEGORIES] as const).map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setCategory(c)}
+                  aria-pressed={category === c}
+                  className={`rounded-full border px-2 py-0.5 text-[11px] ${category === c ? 'border-violet-500 bg-violet-600/20 text-violet-200' : 'border-zinc-700 text-zinc-400'}`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+            <div className="mt-2 grid grid-cols-2 gap-1.5">
+              {glslResults.map((def) => {
+                const active = clip.effects.some((e) => e.name === def.id);
+                const thumb = glslSupported ? glslThumbnail(def.body, def.p1?.default ?? 0, def.p2?.default ?? 0) : null;
+                return (
+                  <button
+                    key={def.id}
+                    type="button"
+                    onClick={() => addEffect(def.id)}
+                    disabled={active || !glslSupported}
+                    title={def.description}
+                    className={`overflow-hidden rounded-md border text-left text-[11px] ${active ? 'border-violet-500 bg-violet-600/20 text-violet-200' : 'border-zinc-700 hover:border-zinc-500'}`}
+                  >
+                    {thumb && <img src={thumb} alt="" className="h-9 w-full object-cover" />}
+                    <span className="block px-2 py-1">
+                      {def.name}
+                      {active && ' ✓'}
+                    </span>
+                  </button>
+                );
+              })}
+              {glslResults.length === 0 && <p className="col-span-2 text-[11px] text-zinc-500">No effects match “{query}”.</p>}
+            </div>
+          </section>
+
           <section className="space-y-2">
             <h3 className="text-xs font-semibold text-zinc-300">Applied effects</h3>
             {clip.effects.length === 0 && <p className="text-[11px] text-zinc-500">None yet.</p>}
             {clip.effects.map((effect) => {
-              const def = EFFECT_CATALOG.find((d) => d.id === effect.name);
+              const def = anyEffectDef(effect.name);
+              const params = def && 'params' in def ? def.params : undefined;
+              const glslParams: { p1?: { default: number; label: string; max: number; min: number; step: number }; p2?: { default: number; label: string; max: number; min: number; step: number } } | undefined =
+                def && 'body' in def ? { p1: def.p1, p2: def.p2 } : undefined;
               return (
                 <div key={effect.id} className="rounded-md border border-zinc-800 bg-zinc-900 p-2 text-xs">
                   <div className="flex items-center justify-between">
@@ -77,8 +148,8 @@ export default function EffectsPanel({ lutFocus = false }: { lutFocus?: boolean 
                     />
                     <span className="w-8 text-right font-mono">{Math.round(effect.intensity * 100)}%</span>
                   </label>
-                  {def &&
-                    Object.entries(def.params).map(([key, p]) => (
+                  {params &&
+                    Object.entries(params).map(([key, p]) => (
                       <label key={key} className="mt-1 flex items-center gap-2">
                         {p.label}
                         <input
@@ -94,25 +165,64 @@ export default function EffectsPanel({ lutFocus = false }: { lutFocus?: boolean 
                         <span className="w-10 text-right font-mono">{typeof effect.params[key] === 'number' ? (effect.params[key] as number) : p.default}</span>
                       </label>
                     ))}
+                  {glslParams &&
+                    (['p1', 'p2'] as const).map((key) => {
+                      const p = glslParams[key];
+                      if (!p) return null;
+                      return (
+                        <label key={key} className="mt-1 flex items-center gap-2">
+                          {p.label}
+                          <input
+                            type="range"
+                            min={p.min}
+                            max={p.max}
+                            step={p.step}
+                            value={typeof effect.params[key] === 'number' ? (effect.params[key] as number) : p.default}
+                            onChange={(e) => updateEffect(effect.id, { params: { [key]: Number(e.target.value) } })}
+                            className="flex-1"
+                            aria-label={p.label}
+                          />
+                          <span className="w-10 text-right font-mono">{typeof effect.params[key] === 'number' ? (effect.params[key] as number) : p.default}</span>
+                        </label>
+                      );
+                    })}
                 </div>
               );
             })}
           </section>
 
           <section className="space-y-2 border-t border-zinc-800 pt-3">
-            <h3 className="text-xs font-semibold text-zinc-300">LUT filters (.cube)</h3>
+            <h3 className="text-xs font-semibold text-zinc-300">LUT filters (.cube) ({BUILTIN_LUTS.length})</h3>
             {lutFocus && <p className="text-[11px] text-zinc-500">Import a .cube file or pick a built-in Vidora look. Intensity blends the look in.</p>}
-            <div className="flex flex-wrap gap-1.5">
-              {BUILTIN_LUTS.map((lut) => (
+            <div className="flex flex-wrap gap-1">
+              {(['All', ...LUT_CATEGORIES] as const).map((c) => (
                 <button
-                  key={lut.name}
+                  key={c}
                   type="button"
-                  onClick={() => setBuiltinLut(lut.name)}
-                  className={`rounded-md border px-2 py-1 text-[11px] ${clip.lut?.name === lut.name ? 'border-violet-500 bg-violet-600/20' : 'border-zinc-700'}`}
+                  onClick={() => setLutCategory(c)}
+                  aria-pressed={lutCategory === c}
+                  className={`rounded-full border px-2 py-0.5 text-[11px] ${lutCategory === c ? 'border-violet-500 bg-violet-600/20 text-violet-200' : 'border-zinc-700 text-zinc-400'}`}
                 >
-                  {lut.name}
+                  {c}
                 </button>
               ))}
+            </div>
+            <div className="grid grid-cols-2 gap-1.5">
+              {lutResults.map((lut) => {
+                const thumb = lutThumbnail(lut);
+                return (
+                  <button
+                    key={lut.id}
+                    type="button"
+                    onClick={() => setBuiltinLut(lut.name)}
+                    title={lut.name}
+                    className={`overflow-hidden rounded-md border text-left text-[11px] ${clip.lut?.name === lut.name ? 'border-violet-500 bg-violet-600/20' : 'border-zinc-700'}`}
+                  >
+                    {thumb && <img src={thumb} alt="" className="h-7 w-full object-cover" />}
+                    <span className="block px-2 py-1">{lut.name}</span>
+                  </button>
+                );
+              })}
               {clip.lut && (
                 <button type="button" onClick={() => setLut(null)} className="rounded-md border border-zinc-700 px-2 py-1 text-[11px]">
                   Clear LUT

@@ -1,0 +1,23 @@
+{
+  "duration": 2,
+  "id": "bubble",
+  "keyframes": [
+    {
+      "t": 0,
+      "offsetY": 0,
+      "scale": 0.9
+    },
+    {
+      "t": 0.5,
+      "offsetY": -10,
+      "scale": 1.1
+    },
+    {
+      "t": 1,
+      "offsetY": 0,
+      "scale": 0.9
+    }
+  ],
+  "name": "Bubble Rise",
+  "type": "vidora-motion-v1"
+}

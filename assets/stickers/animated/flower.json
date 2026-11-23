@@ -1,0 +1,23 @@
+{
+  "duration": 2,
+  "id": "flower",
+  "keyframes": [
+    {
+      "t": 0,
+      "rotation": 0,
+      "scale": 1
+    },
+    {
+      "t": 0.5,
+      "rotation": 45,
+      "scale": 1.08
+    },
+    {
+      "t": 1,
+      "rotation": 0,
+      "scale": 1
+    }
+  ],
+  "name": "Bloom Turn",
+  "type": "vidora-motion-v1"
+}

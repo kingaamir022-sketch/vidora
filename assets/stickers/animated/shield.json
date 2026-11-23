@@ -1,0 +1,20 @@
+{
+  "duration": 2,
+  "id": "shield",
+  "keyframes": [
+    {
+      "t": 0,
+      "scale": 1
+    },
+    {
+      "t": 0.5,
+      "scale": 1.08
+    },
+    {
+      "t": 1,
+      "scale": 1
+    }
+  ],
+  "name": "Shield Guard",
+  "type": "vidora-motion-v1"
+}

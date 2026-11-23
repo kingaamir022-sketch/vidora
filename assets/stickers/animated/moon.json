@@ -1,0 +1,23 @@
+{
+  "duration": 2,
+  "id": "moon",
+  "keyframes": [
+    {
+      "t": 0,
+      "offsetY": 0,
+      "rotation": -6
+    },
+    {
+      "t": 0.5,
+      "offsetY": -6,
+      "rotation": 6
+    },
+    {
+      "t": 1,
+      "offsetY": 0,
+      "rotation": -6
+    }
+  ],
+  "name": "Moon Sway",
+  "type": "vidora-motion-v1"
+}

@@ -1,0 +1,33 @@
+{
+  "duration": 2,
+  "id": "music-note",
+  "keyframes": [
+    {
+      "t": 0,
+      "offsetY": 0,
+      "rotation": 0
+    },
+    {
+      "t": 0.25,
+      "offsetY": -8,
+      "rotation": -8
+    },
+    {
+      "t": 0.5,
+      "offsetY": 0,
+      "rotation": 0
+    },
+    {
+      "t": 0.75,
+      "offsetY": -8,
+      "rotation": 8
+    },
+    {
+      "t": 1,
+      "offsetY": 0,
+      "rotation": 0
+    }
+  ],
+  "name": "Note Dance",
+  "type": "vidora-motion-v1"
+}

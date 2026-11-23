@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { findClip } from '../lib/timeline';
-import { searchStickers, SHAPE_DEFS, shapeSvg, STICKER_CATEGORIES, type StickerCategory } from '../lib/stickers';
+import { searchStickers, SHAPE_DEFS, shapeSvg, STICKER_CATALOG, STICKER_CATEGORIES, type StickerCategory } from '../lib/stickers';
+import { LOOP_ANIMATION_LABELS } from '../lib/text';
+import type { LoopAnimationKind } from '../schema/project';
 
 /**
  * Stickers panel (Phase 3, SPEC H — H-STICKER, H-SHAPE, H-DRAW).
@@ -15,6 +17,7 @@ import { searchStickers, SHAPE_DEFS, shapeSvg, STICKER_CATEGORIES, type StickerC
 export default function StickersPanel() {
   const addStickerClip = useProjectStore((s) => s.addStickerClip);
   const addShapeClip = useProjectStore((s) => s.addShapeClip);
+  const updateSelectedClip = useProjectStore((s) => s.updateSelectedClip);
   const drawMode = useProjectStore((s) => s.drawMode);
   const setDrawMode = useProjectStore((s) => s.setDrawMode);
   const drawColor = useProjectStore((s) => s.drawColor);
@@ -85,9 +88,32 @@ export default function StickersPanel() {
         {results.length > 64 && <p className="mt-1 text-[11px] text-zinc-500">Showing 64 of {results.length} — refine your search to see more.</p>}
         {results.length === 0 && <p className="mt-2 text-[11px] text-zinc-500">No stickers match. Try another word.</p>}
         <p className="mt-2 text-[11px] leading-relaxed text-zinc-500">
-          Click a sticker to add it as a 3-second clip at the playhead. All {224} stickers are original procedural SVG — no downloads, no Pro locks.
+          Click a sticker to add it as a 3-second clip at the playhead. All {STICKER_CATALOG.length} stickers are original procedural SVG — no downloads, no Pro locks.
         </p>
       </section>
+
+      {selectedClip?.type === 'sticker' && selectedClip.sticker && (
+        <section className="mt-4 space-y-2 border-t border-zinc-800 pt-3">
+          <h3 className="text-xs font-semibold text-zinc-300">Motion — “{selectedClip.name}”</h3>
+          <label className="flex items-center gap-2 text-xs">
+            Animated motion
+            <select
+              value={selectedClip.animationLoop?.kind ?? 'none'}
+              onChange={(e) => updateSelectedClip({ animationLoop: { duration: selectedClip.animationLoop?.duration ?? 2, kind: e.target.value as LoopAnimationKind } })}
+              aria-label="Sticker motion"
+              className="min-w-0 flex-1 rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1"
+            >
+              <option value="none">None</option>
+              {(Object.keys(LOOP_ANIMATION_LABELS) as LoopAnimationKind[])
+                .filter((k) => k.startsWith('motion-'))
+                .map((k) => (
+                  <option key={k} value={k}>{LOOP_ANIMATION_LABELS[k]}</option>
+                ))}
+            </select>
+          </label>
+          <p className="text-[11px] leading-relaxed text-zinc-500">28 original motion presets, generated as Lottie-style JSON by <span className="font-mono">npm run build:assets</span>. The same motions are available on text clips in the Properties panel.</p>
+        </section>
+      )}
 
       <section className="mt-4 space-y-2 border-t border-zinc-800 pt-3">
         <h3 className="text-xs font-semibold text-zinc-300">Shapes</h3>

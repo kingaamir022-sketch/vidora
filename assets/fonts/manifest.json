@@ -1,0 +1,326 @@
+{
+  "fonts": [
+    {
+      "category": "Sans",
+      "family": "Inter",
+      "file": "inter.woff2",
+      "id": "inter",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Inter&display=swap"
+    },
+    {
+      "category": "Sans",
+      "family": "Roboto",
+      "file": "roboto.woff2",
+      "id": "roboto",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+    },
+    {
+      "category": "Sans",
+      "family": "Open Sans",
+      "file": "open-sans.woff2",
+      "id": "open-sans",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Open%20Sans&display=swap"
+    },
+    {
+      "category": "Sans",
+      "family": "Lato",
+      "file": "lato.woff2",
+      "id": "lato",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Lato&display=swap"
+    },
+    {
+      "category": "Sans",
+      "family": "Montserrat",
+      "file": "montserrat.woff2",
+      "id": "montserrat",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
+    },
+    {
+      "category": "Sans",
+      "family": "Poppins",
+      "file": "poppins.woff2",
+      "id": "poppins",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+    },
+    {
+      "category": "Sans",
+      "family": "Raleway",
+      "file": "raleway.woff2",
+      "id": "raleway",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Raleway&display=swap"
+    },
+    {
+      "category": "Sans",
+      "family": "Nunito",
+      "file": "nunito.woff2",
+      "id": "nunito",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Nunito&display=swap"
+    },
+    {
+      "category": "Sans",
+      "family": "Quicksand",
+      "file": "quicksand.woff2",
+      "id": "quicksand",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Quicksand&display=swap"
+    },
+    {
+      "category": "Sans",
+      "family": "Work Sans",
+      "file": "work-sans.woff2",
+      "id": "work-sans",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Work%20Sans&display=swap"
+    },
+    {
+      "category": "Sans",
+      "family": "DM Sans",
+      "file": "dm-sans.woff2",
+      "id": "dm-sans",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=DM%20Sans&display=swap"
+    },
+    {
+      "category": "Sans",
+      "family": "Manrope",
+      "file": "manrope.woff2",
+      "id": "manrope",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Manrope&display=swap"
+    },
+    {
+      "category": "Sans",
+      "family": "Outfit",
+      "file": "outfit.woff2",
+      "id": "outfit",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Outfit&display=swap"
+    },
+    {
+      "category": "Sans",
+      "family": "Plus Jakarta Sans",
+      "file": "plus-jakarta-sans.woff2",
+      "id": "plus-jakarta-sans",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Plus%20Jakarta%20Sans&display=swap"
+    },
+    {
+      "category": "Serif",
+      "family": "Playfair Display",
+      "file": "playfair-display.woff2",
+      "id": "playfair-display",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Playfair%20Display&display=swap"
+    },
+    {
+      "category": "Serif",
+      "family": "Merriweather",
+      "file": "merriweather.woff2",
+      "id": "merriweather",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Merriweather&display=swap"
+    },
+    {
+      "category": "Serif",
+      "family": "Roboto Slab",
+      "file": "roboto-slab.woff2",
+      "id": "roboto-slab",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Roboto%20Slab&display=swap"
+    },
+    {
+      "category": "Serif",
+      "family": "Source Serif 4",
+      "file": "source-serif-4.woff2",
+      "id": "source-serif-4",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Source%20Serif%204&display=swap"
+    },
+    {
+      "category": "Serif",
+      "family": "DM Serif Display",
+      "file": "dm-serif-display.woff2",
+      "id": "dm-serif-display",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=DM%20Serif%20Display&display=swap"
+    },
+    {
+      "category": "Serif",
+      "family": "Lora",
+      "file": "lora.woff2",
+      "id": "lora",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Lora&display=swap"
+    },
+    {
+      "category": "Serif",
+      "family": "Bitter",
+      "file": "bitter.woff2",
+      "id": "bitter",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Bitter&display=swap"
+    },
+    {
+      "category": "Serif",
+      "family": "Noto Serif",
+      "file": "noto-serif.woff2",
+      "id": "noto-serif",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Noto%20Serif&display=swap"
+    },
+    {
+      "category": "Mono",
+      "family": "Roboto Mono",
+      "file": "roboto-mono.woff2",
+      "id": "roboto-mono",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Roboto%20Mono&display=swap"
+    },
+    {
+      "category": "Mono",
+      "family": "JetBrains Mono",
+      "file": "jetbrains-mono.woff2",
+      "id": "jetbrains-mono",
+      "license": "Apache-2.0",
+      "source": "https://fonts.googleapis.com/css2?family=JetBrains%20Mono&display=swap"
+    },
+    {
+      "category": "Mono",
+      "family": "Fira Code",
+      "file": "fira-code.woff2",
+      "id": "fira-code",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Fira%20Code&display=swap"
+    },
+    {
+      "category": "Mono",
+      "family": "Source Code Pro",
+      "file": "source-code-pro.woff2",
+      "id": "source-code-pro",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Source%20Code%20Pro&display=swap"
+    },
+    {
+      "category": "Mono",
+      "family": "IBM Plex Mono",
+      "file": "ibm-plex-mono.woff2",
+      "id": "ibm-plex-mono",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=IBM%20Plex%20Mono&display=swap"
+    },
+    {
+      "category": "Mono",
+      "family": "Space Mono",
+      "file": "space-mono.woff2",
+      "id": "space-mono",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Space%20Mono&display=swap"
+    },
+    {
+      "category": "Display",
+      "family": "Oswald",
+      "file": "oswald.woff2",
+      "id": "oswald",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Oswald&display=swap"
+    },
+    {
+      "category": "Display",
+      "family": "Bebas Neue",
+      "file": "bebas-neue.woff2",
+      "id": "bebas-neue",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Bebas%20Neue&display=swap"
+    },
+    {
+      "category": "Display",
+      "family": "Anton",
+      "file": "anton.woff2",
+      "id": "anton",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Anton&display=swap"
+    },
+    {
+      "category": "Display",
+      "family": "Archivo Black",
+      "file": "archivo-black.woff2",
+      "id": "archivo-black",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Archivo%20Black&display=swap"
+    },
+    {
+      "category": "Display",
+      "family": "Righteous",
+      "file": "righteous.woff2",
+      "id": "righteous",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Righteous&display=swap"
+    },
+    {
+      "category": "Display",
+      "family": "Russo One",
+      "file": "russo-one.woff2",
+      "id": "russo-one",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Russo%20One&display=swap"
+    },
+    {
+      "category": "Display",
+      "family": "Orbitron",
+      "file": "orbitron.woff2",
+      "id": "orbitron",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Orbitron&display=swap"
+    },
+    {
+      "category": "Handwriting",
+      "family": "Caveat",
+      "file": "caveat.woff2",
+      "id": "caveat",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Caveat&display=swap"
+    },
+    {
+      "category": "Handwriting",
+      "family": "Dancing Script",
+      "file": "dancing-script.woff2",
+      "id": "dancing-script",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Dancing%20Script&display=swap"
+    },
+    {
+      "category": "Handwriting",
+      "family": "Pacifico",
+      "file": "pacifico.woff2",
+      "id": "pacifico",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+    },
+    {
+      "category": "Handwriting",
+      "family": "Lobster",
+      "file": "lobster.woff2",
+      "id": "lobster",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Lobster&display=swap"
+    },
+    {
+      "category": "Handwriting",
+      "family": "Permanent Marker",
+      "file": "permanent-marker.woff2",
+      "id": "permanent-marker",
+      "license": "SIL OFL 1.1",
+      "source": "https://fonts.googleapis.com/css2?family=Permanent%20Marker&display=swap"
+    }
+  ],
+  "generated": "2026-11-23T06:14:11.635Z",
+  "note": "All fonts are open-license (SIL OFL 1.1, except JetBrains Mono under Apache-2.0). Files are downloaded on first build; missing files fall back to the system stack."
+}

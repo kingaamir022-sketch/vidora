@@ -1,0 +1,28 @@
+{
+  "duration": 2,
+  "id": "warning",
+  "keyframes": [
+    {
+      "t": 0,
+      "opacity": 1
+    },
+    {
+      "t": 0.25,
+      "opacity": 0.4
+    },
+    {
+      "t": 0.5,
+      "opacity": 1
+    },
+    {
+      "t": 0.75,
+      "opacity": 0.4
+    },
+    {
+      "t": 1,
+      "opacity": 1
+    }
+  ],
+  "name": "Warn Blink",
+  "type": "vidora-motion-v1"
+}

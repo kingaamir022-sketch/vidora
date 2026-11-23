@@ -1,0 +1,23 @@
+{
+  "duration": 2,
+  "id": "drop",
+  "keyframes": [
+    {
+      "t": 0,
+      "offsetY": 0,
+      "scale": 1
+    },
+    {
+      "t": 0.5,
+      "offsetY": 6,
+      "scale": 1.1
+    },
+    {
+      "t": 1,
+      "offsetY": 0,
+      "scale": 1
+    }
+  ],
+  "name": "Drop Fall",
+  "type": "vidora-motion-v1"
+}

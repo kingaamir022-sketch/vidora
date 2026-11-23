@@ -1,0 +1,20 @@
+{
+  "duration": 2,
+  "id": "arrow",
+  "keyframes": [
+    {
+      "t": 0,
+      "offsetX": 0
+    },
+    {
+      "t": 0.5,
+      "offsetX": 12
+    },
+    {
+      "t": 1,
+      "offsetX": 0
+    }
+  ],
+  "name": "Arrow Nudge",
+  "type": "vidora-motion-v1"
+}

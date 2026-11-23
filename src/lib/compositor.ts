@@ -1,6 +1,7 @@
 import type { Clip } from '../schema/project';
 import { cssFilterForAdjustment, applyAdjustmentToPixels, isAdjustmentIdentity, sharpenPixels } from './color';
-import { cssFilterForEffects, effectParams, glitchSlices, pixelEffects } from './effects';
+import { cssFilterForEffects, effectParams, glitchSlices, glslEffectInstances, pixelEffects } from './effects';
+import { renderGlslFrame } from './glsl';
 import { combinedAnimationState, valueAtKeyframes } from './keyframes';
 import { applyLutToPixels } from './lut';
 import { applyChromaKey, layoutRects, maskPath } from './masks';
@@ -147,6 +148,17 @@ export function renderClipFrame(
         ctx.clearRect(0, s.dy, w, s.h);
         ctx.drawImage(strip, s.shift, s.dy);
       }
+    }
+  }
+
+  // 2b. GLSL effects (WebGL2 chain, after the pixel pass). When WebGL2
+  // is unavailable or every shader fails, the frame is kept as-is.
+  const glsl = glslEffectInstances(clip.effects);
+  if (glsl.length > 0) {
+    const out = renderGlslFrame(frame, glsl, localTime);
+    if (out) {
+      ctx.clearRect(0, 0, w, h);
+      ctx.drawImage(out, 0, 0, w, h);
     }
   }
 

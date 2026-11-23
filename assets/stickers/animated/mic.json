@@ -1,0 +1,20 @@
+{
+  "duration": 2,
+  "id": "mic",
+  "keyframes": [
+    {
+      "t": 0,
+      "scale": 1
+    },
+    {
+      "t": 0.5,
+      "scale": 1.12
+    },
+    {
+      "t": 1,
+      "scale": 1
+    }
+  ],
+  "name": "Mic Pulse",
+  "type": "vidora-motion-v1"
+}

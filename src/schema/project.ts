@@ -79,6 +79,27 @@ export const animationKindSchema = z.enum([
   'spin',
   'bounce',
   'pop',
+  // Phase 5 (Section N): 20 more original in/out kinds (31 total).
+  'rise',
+  'drop',
+  'flip-x',
+  'flip-y',
+  'roll',
+  'swing',
+  'elastic',
+  'blur',
+  'slide-diagonal',
+  'zoom-rotate',
+  'skew',
+  'heartbeat',
+  'jitter',
+  'float-up',
+  'scale-x',
+  'scale-y',
+  'rotate',
+  'rubber',
+  'wobble',
+  'sway',
 ]);
 export type AnimationKind = z.infer<typeof animationKindSchema>;
 
@@ -88,9 +109,50 @@ export const animationSchema = z.object({
 });
 export type ClipAnimation = z.infer<typeof animationSchema>;
 
-/** Looping text animations (Phase 3, H-TEXTANIM). Evaluated per frame
+/** Looping text animations (Phase 3, H-TEXTANIM; Phase 5 adds 28 motion
+ * variants from `src/lib/stickerAnim.ts`). Evaluated per frame
  * in the preview compositor; `duration` is one loop cycle in seconds. */
-export const loopAnimationSchema = z.enum(['none', 'pulse', 'wiggle', 'float', 'blink', 'spin-slow', 'shimmer', 'bounce-loop']);
+export const loopAnimationSchema = z.enum([
+  'none',
+  'pulse',
+  'wiggle',
+  'float',
+  'blink',
+  'spin-slow',
+  'shimmer',
+  'bounce-loop',
+  // Phase 5 (Section N): 28 original motion presets, one per entry in
+  // `src/lib/stickerAnim.ts` (STICKER_MOTION_SPECS) — the spec id after
+  // `motion-` is the lookup key, so every kind has real motion behind it.
+  'motion-heart',
+  'motion-star',
+  'motion-smile',
+  'motion-sparkle',
+  'motion-crown',
+  'motion-flame',
+  'motion-sun',
+  'motion-moon',
+  'motion-lightning',
+  'motion-music-note',
+  'motion-camera',
+  'motion-gift',
+  'motion-party',
+  'motion-rocket',
+  'motion-flower',
+  'motion-leaf',
+  'motion-drop',
+  'motion-bubble',
+  'motion-arrow',
+  'motion-check',
+  'motion-warning',
+  'motion-thumbs-up',
+  'motion-clapper',
+  'motion-mic',
+  'motion-play',
+  'motion-pause',
+  'motion-shield',
+  'motion-bell',
+]);
 export type LoopAnimationKind = z.infer<typeof loopAnimationSchema>;
 
 export const loopAnimationObjectSchema = z.object({
@@ -217,7 +279,41 @@ export const effectSchema = z.object({
 });
 export type Effect = z.infer<typeof effectSchema>;
 
-export const transitionTypeSchema = z.enum(['fade', 'dissolve', 'slide', 'push', 'zoom', 'wipe', 'blur', 'spin']);
+export const transitionTypeSchema = z.enum([
+  'fade',
+  'dissolve',
+  'slide',
+  'push',
+  'zoom',
+  'wipe',
+  'blur',
+  'spin',
+  // Phase 5 (Section N): 24 more original transitions (32 total).
+  'dip-black',
+  'dip-white',
+  'flash',
+  'slide-blur',
+  'cube',
+  'flip',
+  'split',
+  'diagonal',
+  'venetian',
+  'bars',
+  'shutter',
+  'circle',
+  'diamond',
+  'clock',
+  'iris',
+  'heart',
+  'star',
+  'checker',
+  'pixel-dissolve',
+  'blinds',
+  'zoom-rotate',
+  'ripple',
+  'wave',
+  'glitch-cut',
+]);
 export type TransitionType = z.infer<typeof transitionTypeSchema>;
 
 export const transitionSchema = z.object({

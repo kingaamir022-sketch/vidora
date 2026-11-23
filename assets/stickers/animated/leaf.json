@@ -1,0 +1,23 @@
+{
+  "duration": 2,
+  "id": "leaf",
+  "keyframes": [
+    {
+      "t": 0,
+      "offsetX": 0,
+      "rotation": -8
+    },
+    {
+      "t": 0.5,
+      "offsetX": 6,
+      "rotation": 8
+    },
+    {
+      "t": 1,
+      "offsetX": 0,
+      "rotation": -8
+    }
+  ],
+  "name": "Leaf Drift",
+  "type": "vidora-motion-v1"
+}

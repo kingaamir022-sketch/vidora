@@ -205,26 +205,46 @@ export function wordAt(cue: CaptionCue, time: number): { index: number; word: Ca
   return index >= 0 ? { index, word: cue.words[index] } : null;
 }
 
-/** Caption style presets (Phase 3, I-CAPTION-STYLE) — all original. */
+/** Caption style presets (Phase 3, I-CAPTION-STYLE; Phase 5 adds 12, 20 total) — all original.
+ * `highlight` / `highlightBackground` colour the active word (Phase 5,
+ * N-CAPTIONPRESETS); when absent the overlay falls back to the Phase 3
+ * defaults (white text on a violet box). */
 export interface CaptionStylePreset {
   background: string;
   color: string;
   description: string;
   fontSize: number;
+  /** Active-word text colour (defaults to white). */
+  highlight?: string;
+  /** Active-word background (defaults to #7C3AED). */
+  highlightBackground?: string;
   id: string;
   name: string;
   position: 'top' | 'center' | 'bottom';
 }
 
 export const CAPTION_STYLE_PRESETS: CaptionStylePreset[] = [
-  { background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', description: 'Classic white on a dark box, bottom.', fontSize: 28, id: 'classic-box', name: 'Classic Box', position: 'bottom' },
-  { background: 'transparent', color: '#FFFFFF', description: 'Plain white text with a shadow, bottom.', fontSize: 28, id: 'plain-white', name: 'Plain White', position: 'bottom' },
-  { background: 'rgba(124,58,237,0.85)', color: '#FFFFFF', description: 'Violet box, bold and bright.', fontSize: 30, id: 'violet-pop', name: 'Violet Pop', position: 'bottom' },
-  { background: 'rgba(0,0,0,0.8)', color: '#FDE68A', description: 'Warm yellow on black, bottom.', fontSize: 26, id: 'gold-on-black', name: 'Gold on Black', position: 'bottom' },
-  { background: 'rgba(6,182,212,0.85)', color: '#082F49', description: 'Cyan box with dark text, top.', fontSize: 28, id: 'cyan-top', name: 'Cyan Top', position: 'top' },
-  { background: 'transparent', color: '#FDE68A', description: 'Big yellow karaoke-style text, centre.', fontSize: 44, id: 'big-centre', name: 'Big Centre', position: 'center' },
-  { background: 'rgba(255,255,255,0.92)', color: '#18181B', description: 'White box, dark text, bottom.', fontSize: 26, id: 'paper', name: 'Paper', position: 'bottom' },
-  { background: 'rgba(0,0,0,0.6)', color: '#4ADE80', description: 'Green mono-style caption, bottom.', fontSize: 24, id: 'terminal-green', name: 'Terminal Green', position: 'bottom' },
+  { background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', description: 'Classic white on a dark box, bottom.', fontSize: 28, highlight: '#FFFFFF', highlightBackground: '#7C3AED', id: 'classic-box', name: 'Classic Box', position: 'bottom' },
+  { background: 'transparent', color: '#FFFFFF', description: 'Plain white text with a shadow, bottom.', fontSize: 28, highlight: '#FFFFFF', highlightBackground: '#7C3AED', id: 'plain-white', name: 'Plain White', position: 'bottom' },
+  { background: 'rgba(124,58,237,0.85)', color: '#FFFFFF', description: 'Violet box, bold and bright.', fontSize: 30, highlight: '#FFFFFF', highlightBackground: '#06B6D4', id: 'violet-pop', name: 'Violet Pop', position: 'bottom' },
+  { background: 'rgba(0,0,0,0.8)', color: '#FDE68A', description: 'Warm yellow on black, bottom.', fontSize: 26, highlight: '#18181B', highlightBackground: '#FDE68A', id: 'gold-on-black', name: 'Gold on Black', position: 'bottom' },
+  { background: 'rgba(6,182,212,0.85)', color: '#082F49', description: 'Cyan box with dark text, top.', fontSize: 28, highlight: '#FFFFFF', highlightBackground: '#0891B2', id: 'cyan-top', name: 'Cyan Top', position: 'top' },
+  { background: 'transparent', color: '#FDE68A', description: 'Big yellow karaoke-style text, centre.', fontSize: 44, highlight: '#18181B', highlightBackground: '#FDE68A', id: 'big-centre', name: 'Big Centre', position: 'center' },
+  { background: 'rgba(255,255,255,0.92)', color: '#18181B', description: 'White box, dark text, bottom.', fontSize: 26, highlight: '#FFFFFF', highlightBackground: '#18181B', id: 'paper', name: 'Paper', position: 'bottom' },
+  { background: 'rgba(0,0,0,0.6)', color: '#4ADE80', description: 'Green mono-style caption, bottom.', fontSize: 24, highlight: '#052E16', highlightBackground: '#4ADE80', id: 'terminal-green', name: 'Terminal Green', position: 'bottom' },
+  // ---- Phase 5 (Section N): 12 more original presets, 20 total. ----
+  { background: 'rgba(0,0,0,0.7)', color: '#FCA5A5', description: 'Soft red on black, bottom.', fontSize: 26, highlight: '#FFFFFF', highlightBackground: '#DC2626', id: 'soft-red', name: 'Soft Red', position: 'bottom' },
+  { background: 'rgba(255,255,255,0.9)', color: '#7C3AED', description: 'Violet text on white, bottom.', fontSize: 28, highlight: '#FFFFFF', highlightBackground: '#7C3AED', id: 'violet-paper', name: 'Violet Paper', position: 'bottom' },
+  { background: 'transparent', color: '#67E8F9', description: 'Bright cyan, no box, bottom.', fontSize: 30, highlight: '#082F49', highlightBackground: '#67E8F9', id: 'cyan-glow', name: 'Cyan Glow', position: 'bottom' },
+  { background: 'rgba(24,24,27,0.85)', color: '#F4F4F5', description: 'Neutral zinc box, bottom.', fontSize: 26, highlight: '#FFFFFF', highlightBackground: '#3F3F46', id: 'zinc-box', name: 'Zinc Box', position: 'bottom' },
+  { background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', description: 'Large centred caption for lyrics.', fontSize: 40, highlight: '#FFFFFF', highlightBackground: '#EC4899', id: 'lyric-centre', name: 'Lyric Centre', position: 'center' },
+  { background: 'transparent', color: '#FFFFFF', description: 'Top banner caption.', fontSize: 28, highlight: '#18181B', highlightBackground: '#FFFFFF', id: 'top-banner', name: 'Top Banner', position: 'top' },
+  { background: 'rgba(120,53,15,0.85)', color: '#FEF3C7', description: 'Warm amber box, bottom.', fontSize: 26, highlight: '#451A03', highlightBackground: '#FBBF24', id: 'amber-box', name: 'Amber Box', position: 'bottom' },
+  { background: 'rgba(0,0,0,0.6)', color: '#C4B5FD', description: 'Soft violet text, bottom.', fontSize: 28, highlight: '#FFFFFF', highlightBackground: '#8B5CF6', id: 'lavender-soft', name: 'Lavender Soft', position: 'bottom' },
+  { background: 'rgba(6,78,59,0.85)', color: '#A7F3D0', description: 'Deep green box, bottom.', fontSize: 26, highlight: '#022C22', highlightBackground: '#34D399', id: 'forest-box', name: 'Forest Box', position: 'bottom' },
+  { background: 'transparent', color: '#FDE68A', description: 'Big gold text, centre, no box.', fontSize: 48, highlight: '#18181B', highlightBackground: '#FDE68A', id: 'gold-centre', name: 'Gold Centre', position: 'center' },
+  { background: 'rgba(255,255,255,0.95)', color: '#0F172A', description: 'Clean news-ticker box, bottom.', fontSize: 24, highlight: '#FFFFFF', highlightBackground: '#0F172A', id: 'news-ticker', name: 'News Ticker', position: 'bottom' },
+  { background: 'rgba(0,0,0,0.75)', color: '#F9A8D4', description: 'Pink on black, bottom.', fontSize: 28, highlight: '#FFFFFF', highlightBackground: '#EC4899', id: 'pink-pop', name: 'Pink Pop', position: 'bottom' },
 ];
 
 export function captionStyleById(id: string | undefined): CaptionStylePreset {

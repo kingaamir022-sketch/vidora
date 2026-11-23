@@ -1,0 +1,23 @@
+{
+  "duration": 2,
+  "id": "party",
+  "keyframes": [
+    {
+      "t": 0,
+      "offsetY": 0,
+      "rotation": 0
+    },
+    {
+      "t": 0.5,
+      "offsetY": -10,
+      "rotation": 15
+    },
+    {
+      "t": 1,
+      "offsetY": 0,
+      "rotation": 0
+    }
+  ],
+  "name": "Party Pop",
+  "type": "vidora-motion-v1"
+}

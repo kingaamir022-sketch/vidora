@@ -1,0 +1,23 @@
+{
+  "duration": 2,
+  "id": "sun",
+  "keyframes": [
+    {
+      "t": 0,
+      "rotation": 0,
+      "scale": 1
+    },
+    {
+      "t": 0.5,
+      "rotation": 180,
+      "scale": 1.1
+    },
+    {
+      "t": 1,
+      "rotation": 360,
+      "scale": 1
+    }
+  ],
+  "name": "Sun Spin",
+  "type": "vidora-motion-v1"
+}

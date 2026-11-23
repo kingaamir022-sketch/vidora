@@ -143,6 +143,36 @@ export function animationState(
     return { ...base, offsetY: -b * 40, scale: 1 + b * 0.15 };
   }
   if (kind === 'pop') return { ...base, opacity: settle, scale: 0.2 + 0.8 * settle };
+  // Phase 5 (Section N): 20 more original in/out kinds.
+  if (kind === 'rise') return { ...base, offsetY: (1 - settle) * 60, opacity: settle };
+  if (kind === 'drop') return { ...base, offsetY: -(1 - settle) * 60, opacity: settle };
+  if (kind === 'flip-x') return { ...base, opacity: settle, scale: Math.abs(Math.cos((1 - settle) * Math.PI * 0.5)) * 0.9 + 0.1 };
+  if (kind === 'flip-y') return { ...base, opacity: settle, rotation: (1 - settle) * 180 };
+  if (kind === 'roll') return { ...base, offsetX: (1 - settle) * 120, rotation: (1 - settle) * 360 };
+  if (kind === 'swing') return { ...base, opacity: settle, rotation: (1 - settle) * 45 * (settle < 0.5 ? 1 : -1) };
+  if (kind === 'elastic') {
+    const e = settle === 1 ? 1 : Math.pow(2, -10 * settle) * Math.sin((settle * 10 - 0.75) * ((2 * Math.PI) / 3)) + 1;
+    return { ...base, opacity: settle, scale: 0.3 + 0.7 * e };
+  }
+  if (kind === 'blur') return { ...base, opacity: settle, scale: 1.1 - 0.1 * settle };
+  if (kind === 'slide-diagonal') return { ...base, offsetX: (1 - settle) * 80, offsetY: (1 - settle) * 50, opacity: 0.3 + 0.7 * settle };
+  if (kind === 'zoom-rotate') return { ...base, opacity: settle, rotation: (1 - settle) * 120, scale: 0.4 + 0.6 * settle };
+  if (kind === 'skew') return { ...base, offsetX: (1 - settle) * 60, rotation: (1 - settle) * 12, scale: 0.8 + 0.2 * settle };
+  if (kind === 'heartbeat') {
+    const beat = Math.abs(Math.sin(settle * Math.PI * 2)) * (1 - settle * 0.5);
+    return { ...base, opacity: settle, scale: 1 + beat * 0.25 };
+  }
+  if (kind === 'jitter') return { ...base, opacity: settle, offsetX: (settle < 1 ? (Math.sin(settle * 40) * 4 * (1 - settle)) : 0) };
+  if (kind === 'float-up') return { ...base, offsetY: (1 - settle) * 30, opacity: 0.5 + 0.5 * settle, scale: 0.95 + 0.05 * settle };
+  if (kind === 'scale-x') return { ...base, opacity: settle, scale: 0.1 + 0.9 * settle };
+  if (kind === 'scale-y') return { ...base, offsetY: (1 - settle) * 20, opacity: settle, scale: 0.1 + 0.9 * settle };
+  if (kind === 'rotate') return { ...base, opacity: settle, rotation: (1 - settle) * 90 };
+  if (kind === 'rubber') {
+    const r = 1 + 0.25 * Math.sin(settle * Math.PI * 2) * (1 - settle);
+    return { ...base, opacity: settle, scale: r };
+  }
+  if (kind === 'wobble') return { ...base, offsetX: Math.sin(settle * Math.PI * 3) * 12 * (1 - settle), rotation: Math.sin(settle * Math.PI * 3) * 6 * (1 - settle) };
+  if (kind === 'sway') return { ...base, offsetX: Math.sin(settle * Math.PI) * 20 * (1 - settle), rotation: Math.sin(settle * Math.PI) * 8 * (1 - settle) };
   return base;
 }
 

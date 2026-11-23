@@ -48,9 +48,9 @@ describe('.cube LUTs', () => {
     expect(px2[0]).toBeCloseTo(128, 0);
   });
 
-  it('ships three built-in original looks with valid data', () => {
-    expect(BUILTIN_LUTS.length).toBe(3);
-    expect(BUILTIN_LUTS.map((l) => l.name)).toEqual(['Vidora Warm', 'Vidora Cool Teal', 'Vidora Mono']);
+  it('ships 32 built-in original looks with valid data (Phase 5)', () => {
+    expect(BUILTIN_LUTS.length).toBe(32);
+    expect(BUILTIN_LUTS.map((l) => l.name).slice(0, 3)).toEqual(['Vidora Warm', 'Vidora Cool Teal', 'Vidora Mono']);
     for (const lut of BUILTIN_LUTS) {
       expect(lut.data.length).toBe(lut.size ** 3 * 3);
       expect(lut.data.every((v) => v >= 0 && v <= 1)).toBe(true);

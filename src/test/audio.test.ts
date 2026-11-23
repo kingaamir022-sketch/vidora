@@ -270,10 +270,10 @@ describe('voice presets (originality)', () => {
 });
 
 describe('Vidora Originals (originality)', () => {
-  it('has 6 loops and 8 SFX, all original names, no duplicate ids', () => {
-    expect(ORIGINAL_LOOPS).toHaveLength(6);
-    expect(ORIGINAL_SFX).toHaveLength(8);
-    expect(ORIGINAL_LOOPS.map((o) => o.name)).toEqual([
+  it('has 30 loops and 100 SFX, all original names, no duplicate ids', () => {
+    expect(ORIGINAL_LOOPS).toHaveLength(30);
+    expect(ORIGINAL_SFX).toHaveLength(100);
+    expect(ORIGINAL_LOOPS.map((o) => o.name).slice(0, 6)).toEqual([
       'Calm Pad',
       'Soft Pulse',
       'Night Drive',
@@ -281,7 +281,7 @@ describe('Vidora Originals (originality)', () => {
       'Deep Focus',
       'Gentle Rain',
     ]);
-    expect(ORIGINAL_SFX.map((o) => o.name)).toEqual([
+    expect(ORIGINAL_SFX.map((o) => o.name).slice(0, 8)).toEqual([
       'Soft Pop',
       'Air Whoosh',
       'Bright Chime',

@@ -1,0 +1,23 @@
+{
+  "duration": 2,
+  "id": "play",
+  "keyframes": [
+    {
+      "t": 0,
+      "opacity": 1,
+      "scale": 1
+    },
+    {
+      "t": 0.5,
+      "opacity": 0.75,
+      "scale": 1.12
+    },
+    {
+      "t": 1,
+      "opacity": 1,
+      "scale": 1
+    }
+  ],
+  "name": "Play Pulse",
+  "type": "vidora-motion-v1"
+}

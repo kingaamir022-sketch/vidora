@@ -93,27 +93,110 @@ export function generateLut(size: number, fn: (r: number, g: number, b: number) 
   return data;
 }
 
-/** Three built-in original Vidora looks (generated, no third-party LUTs). */
-export const BUILTIN_LUTS: { data: number[]; name: string; size: number }[] = [
-  {
-    data: generateLut(8, (r, g, b) => [clamp01(r * 1.08 + 0.04), clamp01(g * 1.0), clamp01(b * 0.92)]),
-    name: 'Vidora Warm',
+export interface BuiltinLut {
+  category: string;
+  data: number[];
+  id: string;
+  name: string;
+  size: number;
+}
+
+export const LUT_CATEGORIES = ['Warm', 'Cool', 'Film', 'Mono', 'Vivid', 'Soft'] as const;
+
+/** 30 built-in original Vidora looks (generated, no third-party LUTs). */
+export const BUILTIN_LUTS: BuiltinLut[] = (() => {
+  const make = (id: string, name: string, category: string, fn: (r: number, g: number, b: number) => [number, number, number]): BuiltinLut => ({
+    category,
+    data: generateLut(8, fn),
+    id,
+    name,
     size: 8,
-  },
-  {
-    data: generateLut(8, (r, g, b) => [clamp01(r * 0.94), clamp01(g * 1.02), clamp01(b * 1.1 + 0.03)]),
-    name: 'Vidora Cool Teal',
-    size: 8,
-  },
-  {
-    data: generateLut(8, (r, g, b) => {
-      const l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  });
+  const lum = (r: number, g: number, b: number) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return [
+    make('vidora-warm', 'Vidora Warm', 'Warm', (r, g, b) => [r * 1.08 + 0.04, g * 1.0, b * 0.92]),
+    make('vidora-cool-teal', 'Vidora Cool Teal', 'Cool', (r, g, b) => [r * 0.94, g * 1.02, b * 1.1 + 0.03]),
+    make('vidora-mono', 'Vidora Mono', 'Mono', (r, g, b) => {
+      const l = lum(r, g, b);
       return [l, l, l];
     }),
-    name: 'Vidora Mono',
-    size: 8,
-  },
-];
+    // ---- Phase 5 (Section N): 27 more original looks, 30 total. ----
+    make('golden-hour', 'Golden Hour', 'Warm', (r, g, b) => [r * 1.12 + 0.05, g * 1.02, b * 0.85]),
+    make('amber-glow', 'Amber Glow', 'Warm', (r, g, b) => [r * 1.1 + 0.06, g * 1.05 + 0.02, b * 0.8]),
+    make('sunset-blush', 'Sunset Blush', 'Warm', (r, g, b) => [r * 1.08 + 0.03, g * 0.97, b * 1.05 + 0.02]),
+    make('desert-sand', 'Desert Sand', 'Warm', (r, g, b) => [r * 1.06 + 0.05, g * 1.02 + 0.03, b * 0.82]),
+    make('honey-light', 'Honey Light', 'Warm', (r, g, b) => [r * 1.09 + 0.04, g * 1.04 + 0.02, b * 0.88]),
+    make('frost-blue', 'Frost Blue', 'Cool', (r, g, b) => [r * 0.88, g * 1.0, b * 1.12 + 0.03]),
+    make('deep-ocean', 'Deep Ocean', 'Cool', (r, g, b) => [r * 0.82, g * 1.06, b * 1.15 + 0.02]),
+    make('arctic-mist', 'Arctic Mist', 'Cool', (r, g, b) => [r * 0.96 + 0.04, g * 1.02 + 0.03, b * 1.08 + 0.04]),
+    make('moonlit', 'Moonlit', 'Cool', (r, g, b) => [r * 0.9, g * 1.04, b * 1.14 + 0.02]),
+    make('glacier', 'Glacier', 'Cool', (r, g, b) => [r * 0.92, g * 1.05 + 0.01, b * 1.1 + 0.02]),
+    make('retro-70s', 'Retro 70s', 'Film', (r, g, b) => [r * 1.1 + 0.03, g * 0.95, b * 0.85]),
+    make('vintage-fade', 'Vintage Fade', 'Film', (r, g, b) => [r * 0.95 + 0.05, g * 0.95 + 0.04, b * 0.92 + 0.05]),
+    make('grainy-film', 'Grainy Film', 'Film', (r, g, b) => [r * 1.04 + 0.02, g * 1.03 + 0.01, b * 0.96]),
+    make('cinema-scope', 'Cinema Scope', 'Film', (r, g, b) => [r * 1.05, g * 1.02, b * 0.94]),
+    make('old-reel', 'Old Reel', 'Film', (r, g, b) => [r * 1.02 + 0.06, g * 0.98 + 0.04, b * 0.88 + 0.02]),
+    make('sepia-soft', 'Sepia Soft', 'Film', (r, g, b) => {
+      const l = lum(r, g, b);
+      return [l * 1.1 + 0.05, l * 0.95 + 0.02, l * 0.8];
+    }),
+    make('graphite', 'Graphite', 'Mono', (r, g, b) => {
+      const v = (lum(r, g, b) - 0.5) * 1.2 + 0.5;
+      return [v, v, v];
+    }),
+    make('silver-mono', 'Silver Mono', 'Mono', (r, g, b) => {
+      const v = lum(r, g, b) * 1.05 + 0.05;
+      return [v, v * 0.99, v * 0.98];
+    }),
+    make('charcoal', 'Charcoal', 'Mono', (r, g, b) => {
+      const v = lum(r, g, b) * 0.9 - 0.03;
+      return [v, v, v * 1.05];
+    }),
+    make('neon-pop', 'Neon Pop', 'Vivid', (r, g, b) => [r * 1.25, g * 1.2, b * 1.25]),
+    make('candy-bright', 'Candy Bright', 'Vivid', (r, g, b) => [r * 1.15 + 0.03, g * 1.12 + 0.03, b * 1.15 + 0.03]),
+    make('electric-day', 'Electric Day', 'Vivid', (r, g, b) => [r * 1.2, g * 1.15, b * 1.1]),
+    make('tropical', 'Tropical', 'Vivid', (r, g, b) => [r * 1.1 + 0.02, g * 1.18, b * 1.12 + 0.02]),
+    make('vivid-bloom', 'Vivid Bloom', 'Vivid', (r, g, b) => [r * 1.18 + 0.01, g * 1.16 + 0.01, b * 1.18 + 0.01]),
+    make('soft-pastel', 'Soft Pastel', 'Soft', (r, g, b) => [r * 0.9 + 0.08, g * 0.9 + 0.08, b * 0.92 + 0.08]),
+    make('morning-haze', 'Morning Haze', 'Soft', (r, g, b) => [r * 0.96 + 0.06, g * 0.98 + 0.05, b * 1.0 + 0.05]),
+    make('cotton-cloud', 'Cotton Cloud', 'Soft', (r, g, b) => [r * 0.93 + 0.06, g * 0.93 + 0.06, b * 0.94 + 0.06]),
+    make('blush-mist', 'Blush Mist', 'Soft', (r, g, b) => [r * 0.97 + 0.05, g * 0.95 + 0.04, b * 0.98 + 0.03]),
+    make('airy-light', 'Airy Light', 'Soft', (r, g, b) => [r * 0.95 + 0.07, g * 0.96 + 0.06, b * 0.97 + 0.06]),
+  ];
+})();
+
+export function builtinLutById(id: string): BuiltinLut | undefined {
+  return BUILTIN_LUTS.find((l) => l.id === id);
+}
+
+const lutThumbnailCache = new Map<string, string>();
+
+/** Small LUT thumbnail: a gradient strip through the LUT (cached). */
+export function lutThumbnail(lut: BuiltinLut, w = 96, h = 32): string {
+  const cached = lutThumbnailCache.get(lut.id);
+  if (cached) return cached;
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext('2d');
+  if (!ctx) return '';
+  const img = ctx.createImageData(w, h);
+  for (let x = 0; x < w; x += 1) {
+    const t = x / (w - 1);
+    const [r, g, b] = sampleLut(lut.data, lut.size, t, 0.5 + 0.5 * Math.sin(t * Math.PI), 1 - t);
+    for (let y = 0; y < h; y += 1) {
+      const i = (y * w + x) * 4;
+      img.data[i] = Math.round(r * 255);
+      img.data[i + 1] = Math.round(g * 255);
+      img.data[i + 2] = Math.round(b * 255);
+      img.data[i + 3] = 255;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  const url = c.toDataURL('image/png');
+  lutThumbnailCache.set(lut.id, url);
+  return url;
+}
 
 /** Serialize a LUT back to .cube text (for export / inspection). */
 export function lutToCubeText(title: string, size: number, data: number[]): string {

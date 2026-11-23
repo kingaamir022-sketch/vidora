@@ -177,6 +177,18 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   presets. Fix: the note now says so plainly (J-PITCH card updated
   the same way). Verified by the Phase 4 audit (J-PITCH checks the
   corrected note text).
+- BUG-P5-001 | Phase 5 | Preview compositing | FIXED 2026-11-23
+  (found during the build, before the audit) — In normal (non-split /
+  non-PiP) mode the preview drew ONLY the last visible clip, so a
+  text or sticker overlay on the text track HID the video underneath
+  (a template's video slot + title showed the title on black). Fix:
+  `PreviewArea.tsx` now composites ALL visible clips bottom-to-top —
+  Backgrounds clips first, then the base video/image clip (with its
+  transition-in, using base-local time), then text/sticker overlays —
+  and a background clip renders full-frame via `renderBackgroundFrame`.
+  Verified by the Phase 5 audit (BUG-P5-001 pixel check: 24,569
+  colourful video pixels under the text + 3,457 near-white text
+  pixels, `audit/phase5/N-GLSL/video-plus-text.png`).
 - BUG-D5 | Phase 1 → Phase 8 | Export | DEFERRED — Export is realtime
   canvas capture only: no audio mix, no 4K, no H.265/VP9 choice, no
   bitrate control, no GIF, no background queue. Stated in the panel

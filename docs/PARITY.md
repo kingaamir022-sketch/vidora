@@ -32,7 +32,7 @@
 > Web evidence; H-DRAW and I-TRANSLATE stay UNKNOWN — no draw/pen
 > tool or translation UI was found in any check).
 
-One row per feature/panel/screen for Phases 0–4 (Phase 3 H/I cards are
+One row per feature/panel/screen for Phases 0–5 (Phase 3 H/I cards are
 behaviour cards + audit only, not matrix rows yet). Status legend:
 **MATCH** — implemented and behaving like the reference;
 **ASSUMED** — reference behaviour was not certain, so the most common
@@ -53,7 +53,7 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Aspect ratios (A-RATIO) | ✓ | ✓ | ✓ | — | ✓ | `TopBar.tsx` | MATCH |
 | Media import (A-IMPORT) | ✓ | ✓ | ✓ | — | ✓ | `MediaBrowser.tsx`, `lib/media.ts` | MATCH |
 | Folders & search (A-FOLDERS) | ✓ | ✓ | ✓ | — | ✓ | `MediaBrowser.tsx` | MATCH |
-| Built-in assets placeholder (A-ASSETS) | ~ | ~ | ~ | — | ~ | `MediaBrowser.tsx` (honest label) | ASSUMED |
+| Built-in assets browser (A-ASSETS) | ✓ | ✓ | ✓ | — | ✓ | `MediaBrowser.tsx` (Backgrounds section, live counts, total 714) · Phase 5: real browser, no longer a placeholder | MATCH |
 | Tracks (B-TRACKS) | ✓ | ✓ | ✓ | — | ✓ | `TimelineShell.tsx` | MATCH |
 | Split (B-SPLIT) | ✓ | ✓ | ✓ | ✓ | ✓ | `lib/timeline.ts` (splitClipAt) | MATCH |
 | Trim & move (B-TRIM) | ✓ | ✓ | ✓ | — | ✓ | `TimelineShell.tsx` (frame snap, Attach toggle) · live check §1 | MATCH |
@@ -69,9 +69,9 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Keyframes (D-KEYFRAMES) | ✓ | ✓ | ✓ | — | ✓ | `KeyframesPanel.tsx`, `lib/keyframes.ts` | MATCH |
 | Easing & graph (D-EASING) | ✓ | ✓ | ✓ | — | ✓ | `KeyframesPanel.tsx` (bezier solver) | MATCH |
 | In/out animations (D-ANIM) | ✓ | ✓ | ✓ | — | ✓ | `KeyframesPanel.tsx` (11 kinds) | MATCH |
-| Transitions (E-TRANS) | ✓ | ✓ | ✓ | — | ✓ | `TransitionsPanel.tsx` (8 types) | MATCH |
-| Effects (E-FX) | ✓ | ✓ | ✓ | — | ✓ | `EffectsPanel.tsx` (14 effects) | MATCH |
-| LUT import & looks (E-LUT) | ✓ | ✓ | ✓ | — | ✓ | `lib/lut.ts` (trilinear, 3 looks) | MATCH |
+| Transitions (E-TRANS) | ✓ | ✓ | ✓ | — | ✓ | `TransitionsPanel.tsx` (32 types, search + categories) | MATCH |
+| Effects (E-FX) | ✓ | ✓ | ✓ | — | ✓ | `EffectsPanel.tsx` (14 CSS/pixel effects + 62 GLSL effects, search + categories + auto thumbnails) | MATCH |
+| LUT import & looks (E-LUT) | ✓ | ✓ | ✓ | — | ✓ | `lib/lut.ts` (trilinear, 32 looks) · Filters tab real in Phase 5 | MATCH |
 | Colour sliders (F-ADJUST) | ✓ | ✓ | ✓ | — | ✓ | `ColorPanel.tsx` (10 sliders) | MATCH |
 | RGB curves (F-CURVES) | ✓ | ✓ | ✓ | — | ✓ | `ColorPanel.tsx` (draggable points + presets) · live check §7 | MATCH |
 | HSL / blend (F-BLEND) | ✓ | ✓ | ✓ | — | ✓ | `ColorPanel.tsx` + `PreviewArea.tsx` (live blend) · live check §8 | MATCH |
@@ -87,7 +87,7 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Basic export (X-EXPORT) | ✓ | ✓ | ~ | — | ✓ | `ExportPanel.tsx` (480–1080p, 24–60fps, MP4/WebM) · signed-in Web check 2026-11-23 (WEB-CHECK-2026-11-23.md §3): Download 360p–4k, quality High/Recommended/Fast, 24/25/30/50/60fps, MP4/MOV — Vidora covers the common subset; 2K/4K, 25/50fps, MOV, quality tiers are Phase 8; desktop export may differ | MATCH |
 | Undo / redo (X-UNDO) | ✓ | ✓ | ✓ | ✓ | ✓ | `projectStore.ts` (stack cap 100) | MATCH |
 | Timeline waveform (B-WAVE) | ✓ | ✓ | ✓ | — | ✓ | `lib/media.ts` (64 peaks), `TimelineShell.tsx` | MATCH |
-| Audio tab: Music / SFX (J-AUDIO) | ✓ | ✓ | ~ | — | ✓ | `AudioPanel.tsx`, `lib/audio.ts` (ORIGINAL_LOOPS/SFX) · FULL-WALKTHROUGH-2026-11-23.md (Audio tab) — sub-tabs, search, chips, categories, recommended rows, play + "+" add observed; desktop Audio tab never seen, categories/tracks are Vidora Originals | ASSUMED |
+| Audio tab: Music / SFX (J-AUDIO) | ✓ | ✓ | ~ | — | ✓ | `AudioPanel.tsx`, `lib/audio.ts` (ORIGINAL_LOOPS/SFX — 30 loops + 100 SFX in Phase 5) · FULL-WALKTHROUGH-2026-11-23.md (Audio tab) — sub-tabs, search, chips, categories, recommended rows, play + "+" add observed; desktop Audio tab never seen, categories/tracks are Vidora Originals | ASSUMED |
 | Audio mixer (J-MIXER) | ~ | ~ | ~ | — | ~ | `MixerPanel.tsx` — no mixer exists in the reference; standard mixer shape (master + per-track volume/mute/solo, ducking) | ASSUMED |
 | Audio inspector: volume, fades, EQ, noise, normalize (J-INSPECTOR) | ✓ | ✓ | ~ | — | ✓ | `PropertiesPanel.tsx` Audio section · FULL-WALKTHROUGH-2026-11-23.md (Audio Basic: volume slider + dB box, fade in/out, noise reduction switch) — volume/fade/noise structure observed; linear fade curve + EQ/Role/Mute/Normalize are Section J additions | MATCH |
 | Voice changer (J-VOICE) | ~ | ~ | ~ | — | ~ | `PropertiesPanel.tsx` voice select + Apply to all · FULL-WALKTHROUGH-2026-11-23.md (Voice changer grid observed) — structure matched, presets are Vidora Originals, select instead of grid; desktop UI never seen | ASSUMED |
@@ -95,22 +95,35 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Pitch-preserving speed (J-PITCH) | ✓ | ✓ | ✓ | — | ✓ | `lib/audioEngine.ts` (preservesPitch) + Speed section Pitch switch · FULL-WALKTHROUGH-2026-11-23.md (Speed panel: Pitch switch) | MATCH |
 | Beat detection (J-BEAT) | ~ | ~ | ~ | — | ~ | `lib/audio.ts` detectBeats, `AudioPanel.tsx` Tools — no beat UI observed in the reference; energy-onset method, labelled as an estimate | ASSUMED |
 | Voiceover recording (J-VOICEOVER) | ~ | ~ | ~ | — | ~ | `AudioPanel.tsx` Voiceover section, `lib/audio.ts` startVoiceoverRecording — no in-editor voiceover observed in the reference; standard record → stop → clip shape | ASSUMED |
+| GLSL effects engine (N-GLSL) | ~ | ~ | ~ | — | ~ | `lib/glsl.ts` + `lib/glslEffects.ts` (62 effects, WebGL2, auto thumbnails) — no GLSL panel observed in the reference; engine shape and categories are Vidora's own | ASSUMED |
+| LUT looks library (N-LUTS) | ✓ | ✓ | ✓ | — | ✓ | `lib/lut.ts` (32 procedural looks in 6 categories) · FULL-WALKTHROUGH-2026-11-23.md (Filters tab with preset rows) — tab shape matched, looks are Vidora Originals | MATCH |
+| Open-license fonts (N-FONTS) | ~ | ~ | ~ | — | ~ | `lib/fonts.ts` (40 families, SIL OFL/Apache, local woff2) — no font list observed in the reference; shipping fonts locally is the standard open-license approach | ASSUMED |
+| Text style presets (N-TEXTPRESETS) | ✓ | ✓ | ✓ | — | ✓ | `lib/text.ts` (50 presets in 6 categories) · FULL-WALKTHROUGH-2026-11-23.md (Text tab: template rows by category) — rows-by-category shape matched, styles are Vidora Originals | MATCH |
+| Text animations (N-TEXTANIM) | ~ | ~ | ~ | — | ~ | `lib/keyframes.ts` + `lib/text.ts` (30 in/out kinds + 7 loop kinds + 28 motion presets) — animation kinds are Vidora Originals; reference animation names were never observed | ASSUMED |
+| Caption style presets (N-CAPTIONPRESETS) | ~ | ~ | ~ | — | ~ | `lib/captions.ts` (20 presets with word-level highlight) — no caption style list observed in the reference; styles are Vidora Originals | ASSUMED |
+| Templates (N-TEMPLATES) | ~ | ~ | ~ | — | ~ | `lib/templates.ts` (25 original layouts with media slots) · FULL-WALKTHROUGH-2026-11-23.md (Templates tab + "Use template" observed) — flow matched, layouts are Vidora Originals; Phase 8 adds replaceable slots + sharing | ASSUMED |
+| Procedural music / SFX (N-MUSIC) | ~ | ~ | ~ | — | ~ | `lib/audio.ts` (30 loops + 100 SFX, Web Audio synthesis) — no procedural library observed in the reference; all recipes are Vidora Originals | ASSUMED |
+| Backgrounds (N-BACKGROUNDS) | ~ | ~ | ~ | — | ~ | `lib/backgrounds.ts` (30 gradients/patterns/grain/frames as full-frame clips) — no background library observed in the reference; artwork is Vidora Original | ASSUMED |
+| Asset library build (N-ASSETS) | ~ | ~ | ~ | — | ~ | `scripts/build-assets.mjs` (`npm run build:assets`, manifest 663 entries, 714 total) — build-time generation, no reference behaviour to match | ASSUMED |
+| Sticker motion presets (H-STICKER) | ✓ | ✓ | ✓ | — | ✓ | `lib/stickerAnim.ts` (28 motion presets, Lottie-style JSON) + Stickers panel Motion select — motion is applied to the selected sticker clip; presets are Vidora Originals | MATCH |
 
-## Parity score (correction round v0.3.2 + signed-in export check 2026-11-23 + Phase 3 v0.4.0 + Phase 4 v0.5.0)
+## Parity score (correction round v0.3.2 + signed-in export check 2026-11-23 + Phase 3 v0.4.0 + Phase 4 v0.5.0 + Phase 5 v0.6.0)
 
-- **MATCH: 40 / 49**
-- **ASSUMED: 6 / 49** — A-ASSETS (built-in asset library placeholder), J-AUDIO, J-MIXER, J-VOICE, J-BEAT, J-VOICEOVER
-- **DIFF-FIXING: 0 / 49**
-- **INTENTIONAL-DIFF: 3 / 49** — B-MARKER, B-GROUP, F-WHEELS (spec-required extras CapCut Web lacks; awaiting desktop screenshots)
+- **MATCH: 44 / 60**
+- **ASSUMED: 13 / 60** — J-AUDIO, J-MIXER, J-VOICE, J-BEAT, J-VOICEOVER, N-GLSL, N-FONTS, N-TEXTANIM, N-CAPTIONPRESETS, N-TEMPLATES, N-MUSIC, N-BACKGROUNDS, N-ASSETS
+- **DIFF-FIXING: 0 / 60**
+- **INTENTIONAL-DIFF: 3 / 60** — B-MARKER, B-GROUP, F-WHEELS (spec-required extras CapCut Web lacks; awaiting desktop screenshots)
 - **Gate result: PASS** — every Phase 0–2 feature is MATCH, ASSUMED or INTENTIONAL-DIFF,
-  `npm run build` is green (84 modules), `npm test` is 184/184, and the
+  `npm run build` is green (92 modules), `npm test` is 210/210, and the
   Playwright self-audits pass: Phase 2 (`audit/phase2/AUDIT-REPORT.md`)
   40/40 checks with 0 open bugs (29 screenshots in `audit/phase2/<ID>/`,
   layout re-measured at 1440×900 with 0px drift), Phase 3
   (`audit/phase3/AUDIT-REPORT.md`) 31/31 checks with 0 open bugs
   (14 card folders with screenshots in `audit/phase3/<ID>/`), Phase 4
   (`audit/phase4/AUDIT-REPORT.md`) 31/31 checks with 0 open bugs
-  (8 card folders with screenshots in `audit/phase4/<ID>/`). The Phase 2
+  (8 card folders with screenshots in `audit/phase4/<ID>/`), Phase 5
+  (`audit/phase5/AUDIT-REPORT.md`) 38/38 checks with 0 open bugs
+  (12 card folders with screenshots in `audit/phase5/<ID>/`). The Phase 2
   audit suite predates v0.3.2; the F-BLEND row is covered by the new Vitest tests
   (blend mapping, live compositing path) and the updated F-WHEELS
   audit screenshots.
@@ -124,13 +137,15 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
   in Phase 4 (browser `preservesPitch` + Web Audio voice shifter). Blend
   modes now apply live in the preview (v0.3.2), so they no longer belong
   in this list.
-- Tabs whose phases have not started (Templates → Phase 8,
-  AI Tools → Phase 7) open an honest placeholder panel; they are not scored
-  as features here. Audio (Phase 4) is implemented in v0.5.0 and scored
-  above (J rows). Text/Stickers/Captions (Phase 3) are implemented in
-  v0.4.0 — their behaviour cards carry the status (MATCH / ASSUMED /
+- Tabs whose phases have not started (AI Tools → Phase 7) open an
+  honest placeholder panel; they are not scored as features here. The
+  Templates tab is implemented in v0.6.0 (25 original layouts, N-TEMPLATES)
+  and scored above; Phase 8 adds replaceable media slots + sharing.
+  Audio (Phase 4) is implemented in v0.5.0 and scored above (J rows).
+  Text/Stickers/Captions (Phase 3) are implemented in v0.4.0 — their
+  behaviour cards carry the status (MATCH / ASSUMED /
   UNKNOWN) and the Phase 3 audit covers them; they are not yet rows in
-  this matrix, which now scores Phases 0–2 + Phase 4 (49 rows).
+  this matrix, which now scores Phases 0–2 + Phase 4 + Phase 5 (60 rows).
 - Light-theme editor styling is Phase 9; the dashboard toggle exists
   and the editor remains dark until then.
 - CapCut Web's left rail differs from desktop (Elements/Transcript/

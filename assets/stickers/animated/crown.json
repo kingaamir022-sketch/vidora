@@ -1,0 +1,20 @@
+{
+  "duration": 2,
+  "id": "crown",
+  "keyframes": [
+    {
+      "t": 0,
+      "offsetY": 0
+    },
+    {
+      "t": 0.5,
+      "offsetY": -8
+    },
+    {
+      "t": 1,
+      "offsetY": 0
+    }
+  ],
+  "name": "Royal Float",
+  "type": "vidora-motion-v1"
+}

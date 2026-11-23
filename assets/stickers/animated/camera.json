@@ -1,0 +1,24 @@
+{
+  "duration": 2,
+  "id": "camera",
+  "keyframes": [
+    {
+      "t": 0,
+      "scale": 1
+    },
+    {
+      "t": 0.2,
+      "scale": 0.92
+    },
+    {
+      "t": 0.4,
+      "scale": 1.08
+    },
+    {
+      "t": 1,
+      "scale": 1
+    }
+  ],
+  "name": "Shutter Snap",
+  "type": "vidora-motion-v1"
+}

@@ -1,0 +1,28 @@
+{
+  "duration": 2,
+  "id": "gift",
+  "keyframes": [
+    {
+      "t": 0,
+      "rotation": -5
+    },
+    {
+      "t": 0.25,
+      "rotation": 5
+    },
+    {
+      "t": 0.5,
+      "rotation": -5
+    },
+    {
+      "t": 0.75,
+      "rotation": 5
+    },
+    {
+      "t": 1,
+      "rotation": -5
+    }
+  ],
+  "name": "Gift Wiggle",
+  "type": "vidora-motion-v1"
+}

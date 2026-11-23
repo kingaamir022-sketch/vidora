@@ -7,6 +7,7 @@ import EffectsPanel from './components/EffectsPanel';
 import ExportPanel from './components/ExportPanel';
 import StickersPanel from './components/StickersPanel';
 import TextPanel from './components/TextPanel';
+import TemplatesPanel from './components/TemplatesPanel';
 import TransitionsPanel from './components/TransitionsPanel';
 import LeftTabs from './components/LeftTabs';
 import MediaBrowser from './components/MediaBrowser';
@@ -76,9 +77,8 @@ export default function App() {
         {activeTab === 'Transitions' && <TransitionsPanel />}
         {activeTab === 'Audio' && <AudioPanel />}
         {activeTab === 'Adjustment' && <ColorPanel />}
-        {(activeTab === 'Templates' || activeTab === 'AI Tools') && (
-          <PlaceholderPanel tab={activeTab} />
-        )}
+        {activeTab === 'Templates' && <TemplatesPanel />}
+        {activeTab === 'AI Tools' && <PlaceholderPanel tab={activeTab} />}
         <PreviewArea />
         <PropertiesPanel />
       </div>

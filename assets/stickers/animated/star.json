@@ -1,0 +1,26 @@
+{
+  "duration": 2,
+  "id": "star",
+  "keyframes": [
+    {
+      "t": 0,
+      "opacity": 1,
+      "rotation": 0,
+      "scale": 1
+    },
+    {
+      "t": 0.5,
+      "opacity": 0.7,
+      "rotation": 180,
+      "scale": 1.15
+    },
+    {
+      "t": 1,
+      "opacity": 1,
+      "rotation": 360,
+      "scale": 1
+    }
+  ],
+  "name": "Twinkle Spin",
+  "type": "vidora-motion-v1"
+}

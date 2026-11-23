@@ -1,0 +1,23 @@
+{
+  "duration": 2,
+  "id": "sparkle",
+  "keyframes": [
+    {
+      "t": 0,
+      "opacity": 0.2,
+      "scale": 0.7
+    },
+    {
+      "t": 0.5,
+      "opacity": 1,
+      "scale": 1.2
+    },
+    {
+      "t": 1,
+      "opacity": 0.2,
+      "scale": 0.7
+    }
+  ],
+  "name": "Sparkle Pulse",
+  "type": "vidora-motion-v1"
+}
