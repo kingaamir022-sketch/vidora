@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { migrateProject, parseProject, resolutionForRatio, SAMPLE_PROJECT, validateProject } from '../schema/project';
 
-describe('project JSON schema (v0.4.0)', () => {
+describe('project JSON schema (v0.5.0)', () => {
   it('accepts the shipped sample project', () => {
     const result = validateProject(SAMPLE_PROJECT);
     expect(result.success).toBe(true);
     expect(parseProject(SAMPLE_PROJECT).name).toBe('Sunset Coast — Sample Project');
-    expect(parseProject(SAMPLE_PROJECT).version).toBe('0.4.0');
+    expect(parseProject(SAMPLE_PROJECT).version).toBe('0.5.0');
   });
 
   it('accepts a minimal valid project', () => {
@@ -23,10 +23,10 @@ describe('project JSON schema (v0.4.0)', () => {
     expect(validateProject(minimal).success).toBe(true);
   });
 
-  it('still accepts a v0.1.0 document and migrates it to 0.4.0', () => {
+  it('still accepts a v0.1.0 document and migrates it to 0.5.0', () => {
     const old = { ...SAMPLE_PROJECT, version: '0.1.0' as const };
     expect(validateProject(old).success).toBe(true);
-    expect(migrateProject(old).version).toBe('0.4.0');
+    expect(migrateProject(old).version).toBe('0.5.0');
     expect(migrateProject(old).media).toEqual([]);
   });
 
@@ -38,7 +38,7 @@ describe('project JSON schema (v0.4.0)', () => {
     delete clip.animationIn;
     clip.keyframes = [{ easing: 'linear', property: 'opacity', time: 0, value: 1 }];
     const migrated = migrateProject(old);
-    expect(migrated.version).toBe('0.4.0');
+    expect(migrated.version).toBe('0.5.0');
     const mclip = migrated.tracks[0].clips[0];
     expect(mclip.adjustment.brightness).toBe(0);
     expect(mclip.keyframes[0].id).toMatch(/^kf-/);
@@ -158,7 +158,7 @@ describe('project JSON schema (v0.4.0)', () => {
   });
 });
 
-describe('project JSON schema — Phase 3 fields (v0.4.0)', () => {
+describe('project JSON schema — Phase 3 fields (v0.5.0)', () => {
   it('migrates a v0.3.0 document: captions default to [] and loop animation defaults to none', () => {
     const old = structuredClone(SAMPLE_PROJECT);
     old.version = '0.3.0';
@@ -166,7 +166,7 @@ describe('project JSON schema — Phase 3 fields (v0.4.0)', () => {
     const clip = old.tracks[0].clips[0] as unknown as Record<string, unknown>;
     delete clip.animationLoop;
     const migrated = migrateProject(old);
-    expect(migrated.version).toBe('0.4.0');
+    expect(migrated.version).toBe('0.5.0');
     expect(migrated.captions).toEqual([]);
     expect(migrated.tracks[0].clips[0].animationLoop).toEqual({ duration: 2, kind: 'none' });
     expect(validateProject(migrated).success).toBe(true);
@@ -247,5 +247,45 @@ describe('project JSON schema — Phase 3 fields (v0.4.0)', () => {
     const project = structuredClone(SAMPLE_PROJECT);
     project.tracks[0].clips[0].animationLoop = { duration: 2, kind: 'spin-fast' } as never;
     expect(validateProject(project).success).toBe(false);
+  });
+});
+
+describe('project JSON schema — Phase 4 audio fields (v0.5.0)', () => {
+  it('migrates a v0.4.0 document: mixer, audio clip and track defaults appear', () => {
+    const old = structuredClone(SAMPLE_PROJECT);
+    old.version = '0.4.0';
+    delete (old as unknown as Record<string, unknown>).mixer;
+    const clip = old.tracks[0].clips[0] as unknown as Record<string, unknown>;
+    for (const k of ['audioDetached', 'audioRole', 'eq', 'fadeIn', 'fadeOut', 'muted', 'noiseReduction', 'voice']) delete clip[k];
+    const track = old.tracks[0] as unknown as Record<string, unknown>;
+    delete track.solo;
+    delete track.volume;
+    const migrated = migrateProject(old);
+    expect(migrated.version).toBe('0.5.0');
+    expect(migrated.mixer).toEqual({ duckAmountDb: 12, ducking: false, masterVolume: 1 });
+    const mclip = migrated.tracks[0].clips[0];
+    expect(mclip.audioDetached).toBe(false);
+    expect(mclip.audioRole).toBe('music');
+    expect(mclip.eq).toEqual({ high: 0, low: 0, mid: 0 });
+    expect(mclip.fadeIn).toBe(0);
+    expect(mclip.fadeOut).toBe(0);
+    expect(mclip.muted).toBe(false);
+    expect(mclip.noiseReduction).toBe(false);
+    expect(mclip.voice).toBe('none');
+    expect(migrated.tracks[0].solo).toBe(false);
+    expect(migrated.tracks[0].volume).toBe(1);
+    expect(validateProject(migrated).success).toBe(true);
+  });
+
+  it('rejects out-of-range audio values', () => {
+    const project = structuredClone(SAMPLE_PROJECT);
+    project.tracks[0].clips[0].eq = { high: 99, low: 0, mid: 0 };
+    expect(validateProject(project).success).toBe(false);
+    const project2 = structuredClone(SAMPLE_PROJECT);
+    project2.mixer = { duckAmountDb: 99, ducking: true, masterVolume: 1 };
+    expect(validateProject(project2).success).toBe(false);
+    const project3 = structuredClone(SAMPLE_PROJECT);
+    project3.tracks[0].clips[0].audioRole = 'podcast' as never;
+    expect(validateProject(project3).success).toBe(false);
   });
 });

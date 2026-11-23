@@ -7,10 +7,6 @@ import type { LeftTab } from '../store/projectStore';
  * plainly what is coming and in which phase. Nothing here is faked.
  */
 const COMING: Record<string, { phase: string; items: string }> = {
-  Audio: {
-    phase: 'Phase 4',
-    items: 'Multi-track mixer, fades, volume keyframes, extract/detach audio, voiceover recording, beat detection, noise reduction, voice enhancement, equalizer, voice changer, ducking, normalization, pitch control, vocal isolation.',
-  },
   Text: {
     phase: 'Phase 3 — built',
     items: 'Text tool (fonts, size, colour, gradient, stroke, shadow, glow, background box, alignment, spacing), text templates, animated text, shapes, drawing/pen tool, motion tracking. Open the Text tab to use it.',
@@ -43,7 +39,7 @@ export default function PlaceholderPanel({ tab }: { tab: LeftTab }) {
       </p>
       <p className="mt-3 text-[11px] leading-relaxed text-zinc-500">{info.items}</p>
       <p className="mt-3 border-t border-zinc-800 pt-3 text-[11px] leading-relaxed text-zinc-500">
-        What already works: the dashboard, media import, timeline editing, speed, keyframes, effects, transitions, LUTs, colour, masks, text, stickers, captions and basic export.
+        What already works: the dashboard, media import, timeline editing, speed, keyframes, effects, transitions, LUTs, colour, masks, text, stickers, captions, audio tools and basic export.
       </p>
     </div>
   );

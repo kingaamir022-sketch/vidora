@@ -298,9 +298,97 @@ export function addClipToTextTrack(project: VidoraProject, clip: Clip): VidoraPr
       locked: false,
       muted: false,
       name: `Text ${tracks.filter((t) => t.kind === 'text').length + 1}`,
+      solo: false,
+      volume: 1,
     };
     tracks = [...tracks, track];
   }
   const placed = { ...clip, trackId: track.id };
   return { ...project, tracks: tracks.map((t) => (t.id === track!.id ? { ...t, clips: [...t.clips, placed] } : t)) };
+}
+
+/**
+ * Phase 4 (J) — append a clip to the first unlocked audio track where its
+ * time range is free, else open a new audio track (same placement rule
+ * as addClipToTextTrack, for audio clips).
+ */
+export function addClipToAudioTrack(project: VidoraProject, clip: Clip): VidoraProject {
+  const start = clip.start;
+  const end = start + clip.duration;
+  const overlaps = (t: { clips: Clip[] }) =>
+    t.clips.some((c) => c.start < end && start < c.start + c.duration);
+  let track = project.tracks.find((t) => t.kind === 'audio' && !t.locked && !overlaps(t));
+  let tracks = project.tracks;
+  if (!track) {
+    track = {
+      clips: [],
+      hidden: false,
+      id: newId('track'),
+      kind: 'audio',
+      locked: false,
+      muted: false,
+      name: `Audio ${tracks.filter((t) => t.kind === 'audio').length + 1}`,
+      solo: false,
+      volume: 1,
+    };
+    tracks = [...tracks, track];
+  }
+  const placed = { ...clip, trackId: track.id };
+  return { ...project, tracks: tracks.map((t) => (t.id === track!.id ? { ...t, clips: [...t.clips, placed] } : t)) };
+}
+
+/**
+ * Phase 4 (J-DETACH) — separate a video clip's audio onto its own audio
+ * clip. Returns null when the clip is not a video clip, has no audio
+ * (no media), or its audio was already separated. The new audio clip
+ * copies start/duration/sourceStart/speed/volume and links back via
+ * linkedClipId; the video clip is muted and marked audioDetached so its
+ * sound does not play twice. One call = one undo step (store commits it).
+ */
+export function detachAudio(
+  project: VidoraProject,
+  clipId: string,
+): { project: VidoraProject; audioClipId: string } | null {
+  const found = findClip(project, clipId);
+  if (!found) return null;
+  const { clip } = found;
+  if (clip.type !== 'video') return null;
+  if (clip.audioDetached) return null;
+  if (!clip.mediaId && !clip.src) return null;
+  const audioClip: Clip = {
+    ...clip,
+    audioRole: 'voice',
+    id: newId('clip'),
+    linkedClipId: clip.id,
+    name: `${clip.name} (audio)`,
+    type: 'audio',
+  };
+  let next = updateClip(project, clipId, { audioDetached: true, muted: true });
+  next = addClipToAudioTrack(next, audioClip);
+  return { audioClipId: audioClip.id, project: next };
+}
+
+/**
+ * Phase 4 (J-BEAT) — split one clip at several absolute times (ascending).
+ * Times within 0.1 s of a clip edge are skipped. Returns the new project
+ * (unchanged when nothing could be split).
+ */
+export function splitClipAtTimes(project: VidoraProject, clipId: string, times: number[]): VidoraProject {
+  let next = project;
+  let currentId = clipId;
+  for (const at of [...times].sort((a, b) => a - b)) {
+    const found = findClip(next, currentId);
+    if (!found) break;
+    const { clip } = found;
+    if (at <= clip.start + 0.1 || at >= clip.start + clip.duration - 0.1) continue;
+    const split = splitClipAt(next, currentId, at);
+    if (!split) continue;
+    next = split;
+    // The right-hand segment starts exactly at `at`.
+    const track = next.tracks[found.trackIndex];
+    const right = track?.clips.find((c) => c.id !== currentId && Math.abs(c.start - at) < 0.001);
+    if (!right) break;
+    currentId = right.id;
+  }
+  return next;
 }

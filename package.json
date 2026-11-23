@@ -32,8 +32,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "audit": "npm run build && node audit/run-audit.mjs",
-    "audit:phase3": "npm run build && node audit/run-audit-phase3.mjs"
+    "audit:phase3": "npm run build && node audit/run-audit-phase3.mjs",
+    "audit:phase4": "npm run build && node audit/run-audit-phase4.mjs"
   },
   "type": "module",
-  "version": "0.4.0"
+  "version": "0.5.0"
 }

@@ -27,8 +27,10 @@ import { BUILTIN_LUTS, parseCube } from '../lib/lut';
 import { DEFAULT_SHORTCUTS, loadShortcuts, saveShortcuts, type ShortcutAction } from '../lib/shortcuts';
 import {
   allClipIds,
+  addClipToAudioTrack,
   addClipToTextTrack,
   deleteClip,
+  detachAudio,
   duplicateClip,
   durationAtSpeed,
   findClip,
@@ -39,6 +41,7 @@ import {
   rippleDeleteClip,
   speedForDuration,
   splitClipAt,
+  splitClipAtTimes,
   trimClip,
   ungroupClips,
   updateClip,
@@ -46,6 +49,7 @@ import {
 import { defaultTextStyle, type TextStyle } from '../schema/project';
 import { TEXT_STYLE_PRESETS } from '../lib/text';
 import { shapeSvg, stickerById } from '../lib/stickers';
+import { normalizeGain } from '../lib/audio';
 import {
   parseCaptionFile,
   retimeWords,
@@ -138,10 +142,15 @@ function baseClip(type: Clip['type'], name: string, duration: number, start: num
     animationIn: { duration: 0.5, kind: 'none' },
     animationLoop: { duration: 2, kind: 'none' },
     animationOut: { duration: 0.5, kind: 'none' },
+    audioDetached: false,
+    audioRole: 'music',
     background: { color: '#000000', gradient: 'linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%)', type: 'blur' },
     chromaKey: { color: '#00FF00', enabled: false, smoothness: 0.2, tolerance: 0.3 },
     duration,
     effects: [],
+    eq: { high: 0, low: 0, mid: 0 },
+    fadeIn: 0,
+    fadeOut: 0,
     fit: 'fit',
     flipH: false,
     flipV: false,
@@ -152,6 +161,8 @@ function baseClip(type: Clip['type'], name: string, duration: number, start: num
     layoutMode: 'full',
     layoutSlot: 0,
     name,
+    muted: false,
+    noiseReduction: false,
     opacity: 1,
     pitchPreserved: true,
     positionX: 0,
@@ -166,6 +177,7 @@ function baseClip(type: Clip['type'], name: string, duration: number, start: num
     start: Math.max(0, start),
     trackId: '',
     type,
+    voice: 'none',
     volume: 1,
   };
 }
@@ -233,7 +245,7 @@ interface ProjectState {
   setPlayhead: (t: number) => void;
   setPlaying: (v: boolean) => void;
   setRipple: (v: boolean) => void;
-  setTrackProp: (trackId: string, patch: Partial<{ hidden: boolean; locked: boolean; muted: boolean; name: string }>) => void;
+  setTrackProp: (trackId: string, patch: Partial<{ hidden: boolean; locked: boolean; muted: boolean; name: string; solo: boolean; volume: number }>) => void;
   setZoom: (z: number) => void;
   splitAtPlayhead: () => void;
   trimSelected: (edge: 'start' | 'end', delta: number) => void;
@@ -290,6 +302,16 @@ interface ProjectState {
   generateCaptionsFromTranscript: (transcript: string, language: string) => void;
   translateCaptionCue: (id: string, language: string, text: string) => void;
   addTtsNarration: (text: string, voice: string, rate: number, pitch: number) => void;
+  // Phase 4 — audio (Section J)
+  detachAudio: () => void;
+  setMixer: (patch: Partial<{ duckAmountDb: number; ducking: boolean; masterVolume: number }>) => void;
+  normalizeSelectedClip: () => number | null;
+  applyVoiceToAll: (voiceId: string) => void;
+  addBeatMarkers: (times: number[]) => void;
+  splitSelectedAtTimes: (times: number[]) => void;
+  addVoiceoverClip: (blob: Blob, name: string, durationSeconds?: number) => Promise<void>;
+  addAudioClip: (mediaId: string, start?: number) => void;
+  addMediaItem: (item: MediaItem) => void;
   // media library
   addFolder: (name: string) => void;
   // view / misc
@@ -367,8 +389,8 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
         media: [],
         name: name?.trim() || 'Untitled Project',
         tracks: [
-          { clips: [], hidden: false, id: newId('track'), kind: 'video', locked: false, muted: false, name: 'Video 1' },
-          { clips: [], hidden: false, id: newId('track'), kind: 'audio', locked: false, muted: false, name: 'Audio 1' },
+          { clips: [], hidden: false, id: newId('track'), kind: 'video', locked: false, muted: false, name: 'Video 1', solo: false, volume: 1 },
+          { clips: [], hidden: false, id: newId('track'), kind: 'audio', locked: false, muted: false, name: 'Audio 1', solo: false, volume: 1 },
         ],
         updatedAt: now,
       };
@@ -450,7 +472,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       let tracks = s.project.tracks;
       let track = tracks.find((t) => t.kind === kind && !t.locked);
       if (!track) {
-        track = { clips: [], hidden: false, id: newId('track'), kind, locked: false, muted: false, name: `${kind === 'audio' ? 'Audio' : 'Video'} ${tracks.filter((t) => t.kind === kind).length + 1}` };
+        track = { clips: [], hidden: false, id: newId('track'), kind, locked: false, muted: false, name: `${kind === 'audio' ? 'Audio' : 'Video'} ${tracks.filter((t) => t.kind === kind).length + 1}`, solo: false, volume: 1 };
         tracks = [...tracks, track];
       }
       const duration = media.kind === 'image' || media.kind === 'gif' ? 5 : media.duration && media.duration > 0 ? media.duration : 5;
@@ -460,10 +482,15 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
         animationIn: { duration: 0.5, kind: 'none' },
         animationLoop: { duration: 2, kind: 'none' },
         animationOut: { duration: 0.5, kind: 'none' },
+        audioDetached: false,
+        audioRole: 'music',
         background: { color: '#000000', gradient: 'linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%)', type: 'blur' },
         chromaKey: { color: '#00FF00', enabled: false, smoothness: 0.2, tolerance: 0.3 },
         duration,
         effects: [],
+        eq: { high: 0, low: 0, mid: 0 },
+        fadeIn: 0,
+        fadeOut: 0,
         fit: 'fit',
         flipH: false,
         flipV: false,
@@ -475,6 +502,8 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
         layoutSlot: 0,
         mediaId: media.id,
         name: media.name,
+        muted: false,
+        noiseReduction: false,
         opacity: 1,
         pitchPreserved: true,
         positionX: 0,
@@ -490,6 +519,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
         start,
         trackId: track.id,
         type: media.kind === 'audio' ? 'audio' : media.kind === 'image' || media.kind === 'gif' ? 'image' : 'video',
+        voice: 'none',
         volume: 1,
       };
       applyProject({
@@ -502,7 +532,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const s = get();
       if (!s.project) return;
       const count = s.project.tracks.filter((t) => t.kind === kind).length + 1;
-      const track = { clips: [], hidden: false, id: newId('track'), kind, locked: false, muted: false, name: `${kind === 'video' ? 'Video' : kind === 'audio' ? 'Audio' : 'Text'} ${count}` };
+      const track = { clips: [], hidden: false, id: newId('track'), kind, locked: false, muted: false, name: `${kind === 'video' ? 'Video' : kind === 'audio' ? 'Audio' : 'Text'} ${count}`, solo: false, volume: 1 };
       applyProject({ ...s.project, tracks: [...s.project.tracks, track] });
     },
     copySelected: () => {
@@ -1051,6 +1081,91 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       };
       commit((p) => addClipToTextTrack(p, clip));
       set({ selectedClipIds: [clip.id] });
+    },
+
+    // Phase 4 — audio (Section J)
+    detachAudio: () => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return;
+      const id = s.selectedClipIds[0];
+      let audioClipId: string | null = null;
+      commit((p) => {
+        const result = detachAudio(p, id);
+        if (!result) return null;
+        audioClipId = result.audioClipId;
+        return result.project;
+      });
+      if (audioClipId) set({ selectedClipIds: [audioClipId] });
+    },
+    setMixer: (patch) => {
+      const s = get();
+      if (!s.project) return;
+      applyProject({ ...s.project, mixer: { ...s.project.mixer, ...patch } });
+    },
+    normalizeSelectedClip: () => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0) return null;
+      const found = findClip(s.project, s.selectedClipIds[0]);
+      if (!found || found.clip.type !== 'audio') return null;
+      const media = s.project.media.find((m) => m.id === found.clip.mediaId);
+      const gain = normalizeGain(media?.peakLevel);
+      if (gain === null) return null;
+      commit((p) => updateClip(p, found.clip.id, { volume: gain }));
+      return gain;
+    },
+    applyVoiceToAll: (voiceId) => {
+      const s = get();
+      if (!s.project) return;
+      commit((p) => ({
+        ...p,
+        tracks: p.tracks.map((t) => ({ ...t, clips: t.clips.map((c) => (c.type === 'audio' ? { ...c, voice: voiceId } : c)) })),
+      }));
+    },
+    addBeatMarkers: (times) => {
+      const s = get();
+      if (!s.project || times.length === 0) return;
+      const markers = times.map((t) => ({ color: '#A855F7', label: 'Beat', time: t }));
+      applyProject({ ...s.project, markers: [...s.project.markers, ...markers].sort((a, b) => a.time - b.time) });
+    },
+    splitSelectedAtTimes: (times) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0 || times.length === 0) return;
+      commit((p) => splitClipAtTimes(p, s.selectedClipIds[0], times));
+    },
+    addVoiceoverClip: async (blob, name, durationSeconds) => {
+      const s = get();
+      if (!s.project) return;
+      const file = new File([blob], name, { type: blob.type || 'audio/webm' });
+      const item = await importFile(file);
+      if (!item) return;
+      // MediaRecorder webm often reports no (finite) duration — fall back
+      // to the seconds actually recorded, so a real recording never vanishes.
+      const duration = item.duration && item.duration > 0 ? item.duration : durationSeconds;
+      if (!duration || duration <= 0) return;
+      const timedItem = { ...item, duration };
+      const state = get();
+      if (!state.project) return;
+      const base = baseClip('audio', timedItem.name, timedItem.duration, state.playhead);
+      const clip: Clip = { ...base, mediaId: timedItem.id, src: timedItem.src, sourceDuration: timedItem.duration };
+      commit((p) => addClipToAudioTrack({ ...p, media: [...p.media, timedItem] }, clip));
+      set({ selectedClipIds: [clip.id] });
+    },
+    addAudioClip: (mediaId, start) => {
+      const s = get();
+      if (!s.project) return;
+      const media = s.project.media.find((m) => m.id === mediaId);
+      if (!media || media.kind !== 'audio') return;
+      const duration = media.duration && media.duration > 0 ? media.duration : 5;
+      const base = baseClip('audio', media.name, duration, start ?? s.playhead);
+      const clip: Clip = { ...base, mediaId: media.id, src: media.src, sourceDuration: duration };
+      commit((p) => addClipToAudioTrack(p, clip));
+      set({ selectedClipIds: [clip.id] });
+    },
+    addMediaItem: (item) => {
+      const s = get();
+      if (!s.project) return;
+      if (s.project.media.some((m) => m.id === item.id)) return;
+      applyProject({ ...s.project, media: [...s.project.media, item] });
     },
 
     addFolder: (name) => {

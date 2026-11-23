@@ -32,7 +32,8 @@
 > Web evidence; H-DRAW and I-TRANSLATE stay UNKNOWN — no draw/pen
 > tool or translation UI was found in any check).
 
-One row per feature/panel/screen for Phases 0–2. Status legend:
+One row per feature/panel/screen for Phases 0–4 (Phase 3 H/I cards are
+behaviour cards + audit only, not matrix rows yet). Status legend:
 **MATCH** — implemented and behaving like the reference;
 **ASSUMED** — reference behaviour was not certain, so the most common
 industry-standard behaviour was chosen and marked in the behaviour
@@ -86,20 +87,30 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Basic export (X-EXPORT) | ✓ | ✓ | ~ | — | ✓ | `ExportPanel.tsx` (480–1080p, 24–60fps, MP4/WebM) · signed-in Web check 2026-11-23 (WEB-CHECK-2026-11-23.md §3): Download 360p–4k, quality High/Recommended/Fast, 24/25/30/50/60fps, MP4/MOV — Vidora covers the common subset; 2K/4K, 25/50fps, MOV, quality tiers are Phase 8; desktop export may differ | MATCH |
 | Undo / redo (X-UNDO) | ✓ | ✓ | ✓ | ✓ | ✓ | `projectStore.ts` (stack cap 100) | MATCH |
 | Timeline waveform (B-WAVE) | ✓ | ✓ | ✓ | — | ✓ | `lib/media.ts` (64 peaks), `TimelineShell.tsx` | MATCH |
+| Audio tab: Music / SFX (J-AUDIO) | ✓ | ✓ | ~ | — | ✓ | `AudioPanel.tsx`, `lib/audio.ts` (ORIGINAL_LOOPS/SFX) · FULL-WALKTHROUGH-2026-11-23.md (Audio tab) — sub-tabs, search, chips, categories, recommended rows, play + "+" add observed; desktop Audio tab never seen, categories/tracks are Vidora Originals | ASSUMED |
+| Audio mixer (J-MIXER) | ~ | ~ | ~ | — | ~ | `MixerPanel.tsx` — no mixer exists in the reference; standard mixer shape (master + per-track volume/mute/solo, ducking) | ASSUMED |
+| Audio inspector: volume, fades, EQ, noise, normalize (J-INSPECTOR) | ✓ | ✓ | ~ | — | ✓ | `PropertiesPanel.tsx` Audio section · FULL-WALKTHROUGH-2026-11-23.md (Audio Basic: volume slider + dB box, fade in/out, noise reduction switch) — volume/fade/noise structure observed; linear fade curve + EQ/Role/Mute/Normalize are Section J additions | MATCH |
+| Voice changer (J-VOICE) | ~ | ~ | ~ | — | ~ | `PropertiesPanel.tsx` voice select + Apply to all · FULL-WALKTHROUGH-2026-11-23.md (Voice changer grid observed) — structure matched, presets are Vidora Originals, select instead of grid; desktop UI never seen | ASSUMED |
+| Separate audio (J-DETACH) | ✓ | ✓ | ✓ | ✓ | ✓ | `lib/timeline.ts` detachAudio, `TimelineShell.tsx` context menu, Ctrl+Shift+S · FULL-WALKTHROUGH-2026-11-23.md (context menu + shortcuts dialog) | MATCH |
+| Pitch-preserving speed (J-PITCH) | ✓ | ✓ | ✓ | — | ✓ | `lib/audioEngine.ts` (preservesPitch) + Speed section Pitch switch · FULL-WALKTHROUGH-2026-11-23.md (Speed panel: Pitch switch) | MATCH |
+| Beat detection (J-BEAT) | ~ | ~ | ~ | — | ~ | `lib/audio.ts` detectBeats, `AudioPanel.tsx` Tools — no beat UI observed in the reference; energy-onset method, labelled as an estimate | ASSUMED |
+| Voiceover recording (J-VOICEOVER) | ~ | ~ | ~ | — | ~ | `AudioPanel.tsx` Voiceover section, `lib/audio.ts` startVoiceoverRecording — no in-editor voiceover observed in the reference; standard record → stop → clip shape | ASSUMED |
 
-## Parity score (correction round v0.3.2 + signed-in export check 2026-11-23 + Phase 3 v0.4.0)
+## Parity score (correction round v0.3.2 + signed-in export check 2026-11-23 + Phase 3 v0.4.0 + Phase 4 v0.5.0)
 
-- **MATCH: 37 / 41**
-- **ASSUMED: 1 / 41** — A-ASSETS (built-in asset library placeholder)
-- **DIFF-FIXING: 0 / 41**
-- **INTENTIONAL-DIFF: 3 / 41** — B-MARKER, B-GROUP, F-WHEELS (spec-required extras CapCut Web lacks; awaiting desktop screenshots)
+- **MATCH: 40 / 49**
+- **ASSUMED: 6 / 49** — A-ASSETS (built-in asset library placeholder), J-AUDIO, J-MIXER, J-VOICE, J-BEAT, J-VOICEOVER
+- **DIFF-FIXING: 0 / 49**
+- **INTENTIONAL-DIFF: 3 / 49** — B-MARKER, B-GROUP, F-WHEELS (spec-required extras CapCut Web lacks; awaiting desktop screenshots)
 - **Gate result: PASS** — every Phase 0–2 feature is MATCH, ASSUMED or INTENTIONAL-DIFF,
-  `npm run build` is green (80 modules), `npm test` is 147/147, and the
+  `npm run build` is green (84 modules), `npm test` is 184/184, and the
   Playwright self-audits pass: Phase 2 (`audit/phase2/AUDIT-REPORT.md`)
   40/40 checks with 0 open bugs (29 screenshots in `audit/phase2/<ID>/`,
   layout re-measured at 1440×900 with 0px drift), Phase 3
   (`audit/phase3/AUDIT-REPORT.md`) 31/31 checks with 0 open bugs
-  (14 card folders with screenshots in `audit/phase3/<ID>/`). The Phase 2
+  (14 card folders with screenshots in `audit/phase3/<ID>/`), Phase 4
+  (`audit/phase4/AUDIT-REPORT.md`) 31/31 checks with 0 open bugs
+  (8 card folders with screenshots in `audit/phase4/<ID>/`). The Phase 2
   audit suite predates v0.3.2; the F-BLEND row is covered by the new Vitest tests
   (blend mapping, live compositing path) and the updated F-WHEELS
   audit screenshots.
@@ -107,17 +118,19 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 ## What the score does not cover
 
 - Deferred engine work (real motion stabilization → Phase 7, lens
-  correction → Phase 8, pitch-preserving audio → Phase 4, optical
-  flow → Phase 7, 4K/H.265 export → Phase 8) is honestly labelled in
-  the UI and logged in `docs/BUGS.md` as deferred, not counted as a
-  parity failure. Blend modes now apply live in the preview (v0.3.2),
-  so they no longer belong in this list.
-- Tabs whose phases have not started (Audio → Phase 4, Templates → Phase 8,
+  correction → Phase 8, optical flow → Phase 7, 4K/H.265 export → Phase 8)
+  is honestly labelled in the UI and logged in `docs/BUGS.md` as deferred,
+  not counted as a parity failure. Pitch-preserving speed playback is DONE
+  in Phase 4 (browser `preservesPitch` + Web Audio voice shifter). Blend
+  modes now apply live in the preview (v0.3.2), so they no longer belong
+  in this list.
+- Tabs whose phases have not started (Templates → Phase 8,
   AI Tools → Phase 7) open an honest placeholder panel; they are not scored
-  as features here. Text/Stickers/Captions (Phase 3) are implemented in
+  as features here. Audio (Phase 4) is implemented in v0.5.0 and scored
+  above (J rows). Text/Stickers/Captions (Phase 3) are implemented in
   v0.4.0 — their behaviour cards carry the status (MATCH / ASSUMED /
   UNKNOWN) and the Phase 3 audit covers them; they are not yet rows in
-  this matrix, which still scores Phases 0–2 only (41 rows).
+  this matrix, which now scores Phases 0–2 + Phase 4 (49 rows).
 - Light-theme editor styling is Phase 9; the dashboard toggle exists
   and the editor remains dark until then.
 - CapCut Web's left rail differs from desktop (Elements/Transcript/

@@ -5,11 +5,13 @@ import { evaluateClipAt, renderClipFrame, rectsForLayout } from '../lib/composit
 import { drawTransition, transitionProgress } from '../lib/transitions';
 import { layoutRects } from '../lib/masks';
 import { IconPause, IconPlay } from './icons';
-import type { Clip, TrackPoint } from '../schema/project';
+import type { Clip, Track, TrackPoint } from '../schema/project';
 import { canvasBlendMode } from '../lib/color';
 import { canvasFontFor, evaluateLoopAnimation, wrapLines } from '../lib/text';
 import { captionStyleById, cueAt, wordAt } from '../lib/captions';
 import { shouldSpeak } from '../lib/tts';
+import { effectiveClipGainForProject } from '../lib/audio';
+import { AudioEngine, type ClipAudioState } from '../lib/audioEngine';
 
 /** Caption overlay with word-level highlight (Phase 3, I-CAPTION-AUTO).
  * Draws the active cue in the active caption style; the word under the
@@ -314,15 +316,55 @@ export default function PreviewArea() {
   const primaryClip = visibleClips.length > 0 ? visibleClips[visibleClips.length - 1] : null;
   const secondaryClips = visibleClips.filter((c) => c.id !== primaryClip?.id);
 
-  const activeAudio = (() => {
-    if (!project) return null;
+  // Phase 4 audio engine: one AudioContext; every sounding clip (audio
+  // clips AND video clips' embedded audio) routes through it, so volume,
+  // fades, keyframes, EQ, voice, noise reduction, ducking, mute/solo and
+  // pitch-preserving speed all apply in one place. When Web Audio is
+  // unavailable the engine falls back to plain element volume.
+  const engineRef = useRef<AudioEngine | null>(null);
+  const getEngine = (): AudioEngine => {
+    if (!engineRef.current) engineRef.current = new AudioEngine();
+    return engineRef.current;
+  };
+
+  /** Per-clip audio state for one tick (gain already includes fades,
+   * keyframes, ducking, mute, solo and master volume). */
+  const audioStateFor = (clip: Clip, track: Track): ClipAudioState => {
+    const local = Math.max(0, playhead - clip.start);
+    const seekTo = clip.reversed
+      ? clip.sourceStart + Math.max(0, (clip.sourceDuration ?? clip.duration) - local * clip.speed)
+      : clip.sourceStart + local * clip.speed;
+    return {
+      chainKey: `${clip.voice}|${clip.noiseReduction}|${clip.eq.low},${clip.eq.mid},${clip.eq.high}`,
+      clipId: clip.id,
+      eq: clip.eq,
+      gain: project ? effectiveClipGainForProject(clip, track, project, playhead) : 0,
+      localTime: local,
+      noiseReduction: clip.noiseReduction,
+      pitchPreserved: clip.pitchPreserved,
+      reversed: clip.reversed,
+      seekTo,
+      speed: clip.speed,
+      src: clip.src,
+      voiceId: clip.voice,
+    };
+  };
+
+  /** Sync every audio clip under the playhead through the engine. */
+  const syncAllAudio = () => {
+    if (!project) return;
+    const engine = getEngine();
+    const activeIds = new Set<string>(visibleClips.map((c) => c.id));
     for (const track of project.tracks) {
-      if (track.kind !== 'audio' || track.muted) continue;
-      const clip = track.clips.find((c) => playhead >= c.start && playhead < c.start + c.duration);
-      if (clip) return clip;
+      if (track.kind !== 'audio' || track.hidden) continue;
+      for (const clip of track.clips) {
+        if (playhead < clip.start || playhead >= clip.start + clip.duration) continue;
+        const state = audioStateFor(clip, track);
+        if (engine.syncAudioClip(state, playing)) activeIds.add(clip.id);
+      }
     }
-    return null;
-  })();
+    engine.prune(activeIds);
+  };
 
   // Video element pool: one hidden <video> per video clip, synced to the playhead.
   const getVideoEl = (clip: Clip): HTMLVideoElement | null => {
@@ -391,7 +433,7 @@ export default function PreviewArea() {
 
   const syncVideo = (clip: Clip) => {
     const el = getVideoEl(clip);
-    if (!el) return;
+    if (!el || !project) return;
     const local = Math.max(0, playhead - clip.start);
     const target = clip.frozen
       ? clip.sourceStart
@@ -400,36 +442,35 @@ export default function PreviewArea() {
         : clip.sourceStart + local * clip.speed;
     if (Math.abs(el.currentTime - target) > 0.3) el.currentTime = target;
     el.playbackRate = clip.speed;
-    el.volume = clip.volume;
+    // Route the video's embedded audio through the engine (volume, fades,
+    // keyframes, ducking, mute/solo, pitch). Falls back to el.volume.
+    const track = project.tracks.find((t) => t.clips.some((c) => c.id === clip.id));
+    if (track) {
+      const routed = getEngine().syncMediaElement(el, audioStateFor(clip, track));
+      if (!routed) el.volume = audioStateFor(clip, track).gain;
+    } else {
+      el.volume = clip.volume;
+    }
     if (playing && !clip.frozen) void el.play().catch(() => undefined);
     else el.pause();
   };
 
-  // Sync every visible video clip.
+  // Sync every visible video clip + every audio clip under the playhead.
   useEffect(() => {
     for (const clip of visibleClips) syncVideo(clip);
+    syncAllAudio();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visibleClips.map((c) => c.id).join(','), playing, Math.round(playhead * 4)]);
 
-  // Audio element (single, as in Phase 1) — kept via a dedicated element.
-  const audioRef = useRef<HTMLAudioElement>(null);
+  // Resume the AudioContext on play (browsers require a user gesture)
+  // and release it when the preview unmounts.
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (activeAudio?.src) {
-      if (audio.getAttribute('data-clip') !== activeAudio.id) {
-        audio.setAttribute('data-clip', activeAudio.id);
-        audio.src = activeAudio.src;
-        audio.load();
-      }
-      audio.volume = activeAudio.volume;
-      audio.playbackRate = activeAudio.speed;
-      if (playing) void audio.play().catch(() => undefined);
-      else audio.pause();
-    } else {
-      audio.pause();
-    }
-  }, [activeAudio?.id, activeAudio?.src, playing]);
+    if (playing) getEngine().resume();
+  }, [playing]);
+  useEffect(() => () => {
+    engineRef.current?.dispose();
+    engineRef.current = null;
+  }, []);
 
   // Playhead driver.
   useEffect(() => {
@@ -726,7 +767,6 @@ export default function PreviewArea() {
             </div>
           )}
         </div>
-        <audio ref={audioRef} className="hidden" />
       </div>
       <div className="flex h-12 shrink-0 items-center justify-center gap-2 border-t border-zinc-800 bg-zinc-950 px-2">
         <button type="button" onClick={() => stepFrame(-1)} className="rounded-md border border-zinc-700 px-2 py-1 text-[11px] text-zinc-300 hover:bg-zinc-800" aria-label="Previous frame" title="Previous frame (one frame back)">

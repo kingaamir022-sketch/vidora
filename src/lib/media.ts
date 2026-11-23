@@ -97,8 +97,8 @@ export function peaksFromSamples(samples: ArrayLike<number>, count = 64): number
   return out;
 }
 
-/** Decode an audio file and return its waveform peaks (64 buckets). Never throws. */
-async function probeAudioPeaks(url: string): Promise<{ peaks?: number[] }> {
+/** Decode an audio file and return its waveform peaks (64 buckets) and absolute peak level. Never throws. */
+async function probeAudioPeaks(url: string): Promise<{ peakLevel?: number; peaks?: number[] }> {
   try {
     const Ctor =
       typeof window !== 'undefined'
@@ -112,7 +112,9 @@ async function probeAudioPeaks(url: string): Promise<{ peaks?: number[] }> {
     try {
       const decoded = await ctx.decodeAudioData(buf);
       const data = decoded.getChannelData(0);
-      return { peaks: peaksFromSamples(data, 64) };
+      let peak = 0;
+      for (let i = 0; i < data.length; i += 1) peak = Math.max(peak, Math.abs(data[i]));
+      return { peakLevel: peak, peaks: peaksFromSamples(data, 64) };
     } finally {
       await ctx.close().catch(() => undefined);
     }

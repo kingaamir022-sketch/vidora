@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { SAMPLE_PROJECT, type Clip, type VidoraProject } from '../schema/project';
 import {
+  addClipToAudioTrack,
   addClipToTextTrack,
   allClipIds,
   clampSpeed,
   deleteClip,
+  detachAudio,
   duplicateClip,
   durationAtSpeed,
   findClip,
@@ -18,6 +20,7 @@ import {
   snapToFrame,
   speedForDuration,
   splitClipAt,
+  splitClipAtTimes,
   trimClip,
   ungroupClips,
 } from '../lib/timeline';
@@ -195,6 +198,8 @@ describe('overlay clip placement (BUG-P3-001)', () => {
         locked: false,
         muted: false,
         name: 'Text 1',
+        solo: false,
+        volume: 1,
       },
     ];
     return p;
@@ -236,5 +241,69 @@ describe('overlay clip placement (BUG-P3-001)', () => {
     const next = addClipToTextTrack(p, overlayClip('clip-text-2', 5));
     expect(next.tracks).toHaveLength(3);
     expect(findClip(next, 'clip-text-2')?.trackIndex).toBe(2);
+  });
+});
+
+describe('Phase 4 audio timeline operations', () => {
+  function videoWithMedia(): VidoraProject {
+    const p = structuredClone(SAMPLE_PROJECT);
+    const clip = p.tracks[0].clips[0];
+    clip.mediaId = 'media-1';
+    clip.src = 'blob:video-1';
+    return p;
+  }
+
+  it('detaches a video clip audio onto its own audio track', () => {
+    const result = detachAudio(videoWithMedia(), 'clip-sample-1');
+    expect(result).not.toBeNull();
+    const { audioClipId, project } = result!;
+    const audio = findClip(project, audioClipId);
+    expect(audio).not.toBeNull();
+    expect(audio!.clip.type).toBe('audio');
+    expect(audio!.clip.start).toBe(0);
+    expect(audio!.clip.duration).toBe(10);
+    expect(audio!.clip.sourceStart).toBe(0);
+    expect(audio!.clip.linkedClipId).toBe('clip-sample-1');
+    expect(audio!.clip.name).toBe('Sunset Coast — Title Card (audio)');
+    expect(project.tracks[audio!.trackIndex].kind).toBe('audio');
+    const video = findClip(project, 'clip-sample-1')!.clip;
+    expect(video.muted).toBe(true);
+    expect(video.audioDetached).toBe(true);
+  });
+
+  it('refuses to detach twice, or a clip with no media, or a non-video clip', () => {
+    const once = detachAudio(videoWithMedia(), 'clip-sample-1')!;
+    expect(detachAudio(once.project, 'clip-sample-1')).toBeNull();
+    expect(detachAudio(SAMPLE_PROJECT, 'clip-sample-1')).toBeNull(); // no mediaId/src
+    expect(detachAudio(once.project, once.audioClipId)).toBeNull(); // audio clip
+    expect(detachAudio(SAMPLE_PROJECT, 'missing')).toBeNull();
+  });
+
+  it('splits a clip at several times, skipping edges', () => {
+    const next = splitClipAtTimes(SAMPLE_PROJECT, 'clip-sample-1', [3, 7]);
+    expect(next).not.toBeNull();
+    const clips = next!.tracks[0].clips;
+    expect(clips).toHaveLength(3);
+    expect(clips.map((c) => c.duration)).toEqual([3, 4, 3]);
+    expect(clips.map((c) => c.start)).toEqual([0, 3, 7]);
+    expect(clips.map((c) => c.sourceStart)).toEqual([0, 3, 7]);
+  });
+
+  it('sorts split times and ignores times at the clip edges', () => {
+    const next = splitClipAtTimes(SAMPLE_PROJECT, 'clip-sample-1', [7, 0.05, 3, 9.95]);
+    expect(next).not.toBeNull();
+    expect(next!.tracks[0].clips).toHaveLength(3);
+    expect(next!.tracks[0].clips.map((c) => c.duration)).toEqual([3, 4, 3]);
+  });
+
+  it('places audio clips on the first free audio track, else a new one', () => {
+    const clip = { ...SAMPLE_PROJECT.tracks[0].clips[0], duration: 5, id: 'clip-a1', name: 'A1', type: 'audio' as const };
+    const first = addClipToAudioTrack(SAMPLE_PROJECT, clip);
+    expect(findClip(first, 'clip-a1')?.trackIndex).toBe(1);
+    expect(first.tracks[1].name).toBe('Audio 1');
+    const second = addClipToAudioTrack(first, { ...clip, id: 'clip-a2', name: 'A2', start: 2 });
+    expect(second.tracks).toHaveLength(3);
+    expect(second.tracks[2].kind).toBe('audio');
+    expect(second.tracks[2].name).toBe('Audio 2');
   });
 });

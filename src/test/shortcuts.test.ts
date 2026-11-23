@@ -23,6 +23,12 @@ describe('keyboard shortcuts', () => {
     expect(SHORTCUT_LABELS.selectAll).toBe('Select all clips on all tracks');
   });
 
+  it('Ctrl+Shift+S separates audio (Phase 4, J-DETACH)', () => {
+    expect(DEFAULT_SHORTCUTS.separateAudio).toBe('ctrl+shift+s');
+    expect(actionForCombo(DEFAULT_SHORTCUTS, 'ctrl+shift+s')).toBe('separateAudio');
+    expect(SHORTCUT_LABELS.separateAudio).toBe('Separate audio from selected video clip');
+  });
+
   it('normalises keyboard events to combos', () => {
     const e = { altKey: false, ctrlKey: true, key: 'z', metaKey: false, shiftKey: false } as KeyboardEvent;
     expect(eventToCombo(e)).toBe('ctrl+z');

@@ -4,8 +4,10 @@ import { SPEED_PRESETS } from '../lib/timeline';
 import { findClip } from '../lib/timeline';
 import { FONT_STACKS, LOOP_ANIMATION_LABELS, TEXT_STYLE_PRESETS } from '../lib/text';
 import type { LoopAnimationKind, TextStyle } from '../schema/project';
+import { formatDb, VOICE_PRESETS } from '../lib/audio';
 import KeyframesPanel from './KeyframesPanel';
 import MaskPanel from './MaskPanel';
+import MixerPanel from './MixerPanel';
 
 /** Right contextual properties panel (Phase 1): selected-clip controls for video/audio/speed/transform. */
 export default function PropertiesPanel() {
@@ -22,6 +24,10 @@ export default function PropertiesPanel() {
   const trackingMode = useProjectStore((s) => s.trackingMode);
   const setTrackingMode = useProjectStore((s) => s.setTrackingMode);
   const clearTrackPoints = useProjectStore((s) => s.clearTrackPoints);
+  const detachAudio = useProjectStore((s) => s.detachAudio);
+  const normalizeSelectedClip = useProjectStore((s) => s.normalizeSelectedClip);
+  const applyVoiceToAll = useProjectStore((s) => s.applyVoiceToAll);
+  const [normalizeNote, setNormalizeNote] = useState<string | null>(null);
   const [speedTab, setSpeedTab] = useState<'normal' | 'curve'>('normal');
   const [customFonts, setCustomFonts] = useState<string[]>([]);
   const [fontError, setFontError] = useState<string | null>(null);
@@ -285,7 +291,7 @@ export default function PropertiesPanel() {
                   Smooth slow-mo
                 </label>
                 <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">
-                  Speed is clamped to 0.1×–100× (typing 0.05 gives 0.10×, 200 gives 100×). Pitch is stored in the project JSON; pitch-preserving playback uses Web Audio (Phase 4) — playback here uses the browser rate control. Smooth slow-mo is a flag for the Phase 7 optical-flow engine.
+                  Speed is clamped to 0.1×–100× (typing 0.05 gives 0.10×, 200 gives 100×). Pitch is kept by the browser's pitch-preserving playback while the Pitch switch is on (the same mechanism the reference uses); the Web Audio pitch shifter is used for the voice-changer presets in the Audio section. At 0.1× / 100× the switch is off and the voice sounds deeper / higher. Smooth slow-mo is a flag for the Phase 7 optical-flow engine.
                 </p>
               </>
             ) : (
@@ -346,8 +352,117 @@ export default function PropertiesPanel() {
                 {clip.reversed ? 'Un-reverse' : 'Reverse'}
               </button>
             </div>
-            {clip.type === 'audio' && num('Volume', clip.volume, 0, 2, 0.05, (v) => updateSelectedClip({ volume: v }))}
           </section>
+
+          {(clip.type === 'audio' || clip.type === 'video') && (
+            <section className="space-y-2 border-t border-zinc-800 pt-3">
+              <h3 className="text-xs font-semibold text-zinc-300">Audio</h3>
+              <label className="block text-xs">
+                <span className="flex items-center justify-between text-zinc-400">
+                  <span>Volume</span>
+                  <span className="font-mono">{formatDb(clip.volume)}</span>
+                </span>
+                <input
+                  type="range"
+                  min={0}
+                  max={2}
+                  step={0.05}
+                  value={clip.volume}
+                  onChange={(e) => updateSelectedClip({ volume: Number(e.target.value) })}
+                  aria-label="Clip volume"
+                  className="mt-1 w-full"
+                />
+              </label>
+              {num('Volume (number)', clip.volume, 0, 2, 0.05, (v) => updateSelectedClip({ volume: v }))}
+              <p className="text-[11px] text-zinc-500">Volume keyframes live in the Keyframes section below (Volume property).</p>
+              <label className="flex items-center gap-2 text-xs">
+                <input type="checkbox" checked={clip.muted} onChange={(e) => updateSelectedClip({ muted: e.target.checked })} />
+                Mute this clip
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {num('Fade in (s)', clip.fadeIn, 0, 10, 0.1, (v) => updateSelectedClip({ fadeIn: Math.min(10, Math.max(0, v)) }))}
+                {num('Fade out (s)', clip.fadeOut, 0, 10, 0.1, (v) => updateSelectedClip({ fadeOut: Math.min(10, Math.max(0, v)) }))}
+              </div>
+              {clip.type === 'audio' && (
+                <>
+                  <label className="flex items-center justify-between gap-2 text-xs">
+                    Role
+                    <select
+                      value={clip.audioRole}
+                      onChange={(e) => updateSelectedClip({ audioRole: e.target.value as 'music' | 'voice' | 'sfx' })}
+                      className="rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1"
+                      aria-label="Audio role"
+                    >
+                      <option value="music">Music</option>
+                      <option value="voice">Voice</option>
+                      <option value="sfx">Sound effect</option>
+                    </select>
+                  </label>
+                  <div className="space-y-1">
+                    <span className="text-xs text-zinc-400">Equalizer (dB)</span>
+                    {(['low', 'mid', 'high'] as const).map((band) => (
+                      <label key={band} className="flex items-center justify-between gap-2 text-xs capitalize">
+                        {band}
+                        <input
+                          type="range"
+                          min={-12}
+                          max={12}
+                          step={1}
+                          value={clip.eq[band]}
+                          onChange={(e) => updateSelectedClip({ eq: { ...clip.eq, [band]: Number(e.target.value) } })}
+                          aria-label={`EQ ${band}`}
+                          className="w-32"
+                        />
+                        <span className="w-10 text-right font-mono">{clip.eq[band] > 0 ? '+' : ''}{clip.eq[band]} dB</span>
+                      </label>
+                    ))}
+                  </div>
+                  <label className="flex items-center gap-2 text-xs" title="High-pass filter (cuts low rumble) plus a compressor that evens out loud peaks">
+                    <input type="checkbox" checked={clip.noiseReduction} onChange={(e) => updateSelectedClip({ noiseReduction: e.target.checked })} />
+                    Noise reduction
+                  </label>
+                  <p className="text-[11px] leading-relaxed text-zinc-500">
+                    Noise reduction removes low rumble and evens out loud peaks. It does not remove background voices or room noise — real voice isolation needs an AI model (Phase 7).
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const gain = normalizeSelectedClip();
+                      setNormalizeNote(gain === null ? 'Could not normalize — the clip has no loudness data yet.' : `Volume set to ${formatDb(gain)} (peak at −1 dB).`);
+                    }}
+                    className="w-full rounded-md border border-zinc-700 px-2 py-1.5 text-xs"
+                  >
+                    Normalize volume
+                  </button>
+                  {normalizeNote && <p className="text-[11px] text-zinc-500">{normalizeNote}</p>}
+                  <label className="flex items-center justify-between gap-2 text-xs">
+                    Voice
+                    <select
+                      value={clip.voice}
+                      onChange={(e) => updateSelectedClip({ voice: e.target.value })}
+                      className="rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1"
+                      aria-label="Voice changer preset"
+                    >
+                      {VOICE_PRESETS.map((v) => (
+                        <option key={v.id} value={v.id}>{v.name}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <button type="button" onClick={() => applyVoiceToAll(clip.voice)} className="w-full rounded-md border border-zinc-700 px-2 py-1.5 text-xs">
+                    Apply voice to all audio
+                  </button>
+                </>
+              )}
+              {clip.type === 'video' && !clip.audioDetached && (
+                <button type="button" onClick={detachAudio} className="w-full rounded-md border border-zinc-700 px-2 py-1.5 text-xs" title="Move this video's audio onto its own track (Ctrl+Shift+S)">
+                  Separate audio (Ctrl+Shift+S)
+                </button>
+              )}
+              {clip.type === 'video' && clip.audioDetached && (
+                <p className="text-[11px] text-zinc-500">This video's audio was separated onto its own track and the video is muted.</p>
+              )}
+            </section>
+          )}
 
           <KeyframesPanel />
           <MaskPanel />
@@ -399,14 +514,15 @@ export default function PropertiesPanel() {
           </section>
 
           <p className="border-t border-zinc-800 pt-3 text-[11px] leading-relaxed text-zinc-500">
-            Effects, transitions, LUTs and colour live in the left tabs (Effects / Transitions / Filters / Adjustment). Text, stickers and captions live in the left tabs too (Phase 3); the audio mixer arrives in Phase 4.
+            Effects, transitions, LUTs and colour live in the left tabs (Effects / Transitions / Filters / Adjustment). Text, stickers and captions live in the left tabs too (Phase 3). With no clip selected, the mixer is shown here.
           </p>
         </div>
       ) : (
         <>
-          <p className="mt-1 text-xs leading-relaxed text-zinc-400">
+          <MixerPanel />
+          <p className="mt-3 text-xs leading-relaxed text-zinc-400">
             {activeTab === 'Media'
-              ? 'Use the Media panel on the left to import files. Select a clip on the timeline to edit its speed, transform, crop, freeze and reverse settings here.'
+              ? 'Use the Media panel on the left to import files. Select a clip on the timeline to edit it here.'
               : 'Select a clip on the timeline to edit it here.'}
           </p>
           <div className="mt-4 space-y-2 border-t border-zinc-800 pt-4 text-xs text-zinc-400">

@@ -43,7 +43,7 @@ postponed is listed here.
 - [x] Constant 0.1x–100x, speed presets (0.25/0.5/1/1.5/2/4/8x); timeline length = sourceDuration / speed (tested)
 - [ ] Speed curve (bezier points + presets) — PENDING, moved to Phase 2 scope (keyframes engine); not silently skipped, listed here
 - [ ] Optical-flow slow motion — PENDING (needs model/GPU work, Phase 7)
-- [x] Pitch preservation — flag stored in project JSON; playback uses browser rate control. The Web Audio pitch-preserving path is labelled in the UI as Phase 4 audio-engine work, not faked.
+- [x] Pitch preservation — DONE in Phase 4 (v0.5.0): the audio engine sets `preservesPitch` on every media element (browser pitch-preserving rate control) and the Web Audio modulated-delay pitch shifter drives the voice-changer presets. The Speed section note describes the real behaviour.
 
 ### Core export (Phase 1 scope)
 - [x] Basic export: Export panel 480p/720p/1080p, 24/30/60 fps, WebM/MP4 as the browser supports, via MediaRecorder recording the preview canvas in real time. **Honest limits:** realtime only (export takes as long as the video), no audio mix in Phase 1, no 4K/H.265/VP9 choice/bitrate control/GIF/background queue — those are Phase 8. The panel and this SPEC state them; the app never claims a full offline render.
@@ -111,19 +111,28 @@ User rules added 2026-11-22 19:17 PKT (Rule 12 Autonomous Parity Mode, Rule 13 B
 ### I. Captions & Speech
 - [x] Auto captions (honest substitute: times a pasted transcript with word-level highlight; real Whisper STT is Phase 7), 8 original caption style presets, Auto lyrics noted (reference: recognize lyrics in songs)
 - [x] SRT/VTT import/export (real parser, readable errors, round-trip tested); .ass NOT supported (panel says so); manual translation per cue (machine translation is Phase 7)
-- [x] Text-to-speech (browser speechSynthesis: voice, rate, pitch, preview, narration clips that speak during preview; rendered TTS audio in export is Phase 4/7), text-based editing via the in-panel transcript (click a word to seek; reference Web has a separate Transcript tab — desktop has none)
+- [x] Text-to-speech (browser speechSynthesis: voice, rate, pitch, preview, narration clips that speak during preview; rendered TTS audio in export is Phase 7), text-based editing via the in-panel transcript (click a word to seek; reference Web has a separate Transcript tab — desktop has none)
 
 ### Phase 3 verification
 - [x] `npm run build` green (80 modules), `npm test` 147/147, Phase 3 self-audit `npm run audit:phase3` **31/31, 0 open bugs** (`audit/phase3/AUDIT-REPORT.md`, 14 card folders with screenshots)
 - [x] Audit found + fixed BUG-P3-001 (overlay clips stacked on one text track and covered each other — placement now opens a new track on overlap) and BUG-P3-002 (audit harness seek fix); see `docs/BUGS.md`
 - [x] Parity score unchanged for the Phase 0–2 matrix: MATCH 37 / ASSUMED 1 (A-ASSETS) / INTENTIONAL-DIFF 3 / total 41 — X-EXPORT is MATCH on the signed-in export check 2026-11-23; Phase 3 card statuses (14 cards): MATCH 5 (H-STICKER, H-TEXT, H-TEXTANIM, H-TEXTSTYLE, I-CAPTION-STYLE), ASSUMED 3 (H-TRACK, I-CAPTION-AUTO, I-TRANSCRIPT — resolved on Web evidence), UNKNOWN 6 (H-DRAW, H-SHAPE, I-CAPTION-MANUAL, I-SRT, I-TRANSLATE, I-TTS — desktop evidence still missing; see the cards)
 
-## Phase 4 — Section J (Audio) — PENDING
+## Phase 4 — Section J (Audio) — DONE (v0.5.0, 2026-11-23)
 
-- [ ] Multi-track mixer, waveform, fades, volume keyframes, extract/detach audio
-- [ ] Voiceover recording, beat detection (auto markers + auto-cut)
-- [ ] Noise reduction, voice enhancement, equalizer, voice changer, ducking, normalization
-- [ ] Pitch control, vocal isolation/stem separation
+- [x] Audio tab (Music / Sound effects sub-tabs, search, chips, categories + View all, Recommended rows with play + add) — 6 original music loops + 8 original SFX synthesized in-browser (Vidora Originals), imported-audio list, Voiceover section, Tools (Detect beats / Cut at beats / Open mixer)
+- [x] Audio inspector: volume slider + dB readout + numeric, volume keyframes (Phase 2 engine), fade in/out 0–10 s, role (Music/Voice/SFX), 3-band EQ ±12 dB, noise reduction (high-pass + compressor — honestly labelled: does not remove voices or room noise), mute, Normalize to −1 dBFS (from probed peak level), voice changer (8 original presets) + Apply to all
+- [x] Separate audio (detach): context menu + "Separate audio" inspector button + Ctrl+Shift+S; video muted + audioDetached, audio clip linked via linkedClipId (role defaults to Voice)
+- [x] Mixer panel (shown when no clip is selected): master volume, ducking (music drops under voice, amount 0–24 dB, default 12), per-track volume/mute/solo
+- [x] Audio engine (`src/lib/audioEngine.ts`): one AudioContext; every sounding clip (audio clips + video clips' embedded audio) routed through per-clip chains (pitch shifter for voice presets, 3-band EQ, bandpass, noise reduction, echo/robot AM) with per-tick effective gain (fades, keyframes, ducking, mute/solo, master); falls back to plain element volume when Web Audio is unavailable; pitch-preserving speed via browser `preservesPitch`
+- [x] Beat detection (energy onsets, BPM estimate, labelled as an estimate) with Add beat markers + Cut at beats (multi-split)
+- [x] Voiceover recording (getUserMedia + MediaRecorder, tested with the fake media device) with a recorded-seconds fallback for webm files whose duration cannot be probed (BUG-P4-001)
+- [ ] Vocal isolation / stem separation — DEFERRED to Phase 7 (needs an ML model; not faked; see `docs/BUGS.md` BUG-D12)
+
+### Phase 4 verification
+- [x] `npm run build` green (84 modules), `npm test` 184/184, Phase 4 self-audit `npm run audit:phase4` **31/31, 0 open bugs** (`audit/phase4/AUDIT-REPORT.md`, 8 card folders with screenshots)
+- [x] Audit found + fixed BUG-P4-002 (audit harness markers baseline); build fixes BUG-P4-001 (voiceover duration fallback) and BUG-P4-003 (Speed note wording); BUG-D4 (pitch) closed; see `docs/BUGS.md`
+- [x] Parity score now **MATCH 40 / ASSUMED 6 / INTENTIONAL-DIFF 3 / total 49** — J rows added to `docs/PARITY.md`: MATCH 3 (J-INSPECTOR, J-DETACH, J-PITCH), ASSUMED 5 (J-AUDIO, J-MIXER, J-VOICE, J-BEAT, J-VOICEOVER)
 
 ## Phase 5 — Section N (Procedural Asset Library) — PENDING
 

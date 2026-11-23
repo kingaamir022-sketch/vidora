@@ -20,6 +20,26 @@ export type TrackKind = z.infer<typeof trackKindSchema>;
 export const mediaKindSchema = z.enum(['video', 'image', 'audio', 'gif']);
 export type MediaKind = z.infer<typeof mediaKindSchema>;
 
+/** Phase 4 (J): what an audio clip is used as — decides ducking (Voice ducks Music). */
+export const audioRoleSchema = z.enum(['music', 'voice', 'sfx']);
+export type AudioRole = z.infer<typeof audioRoleSchema>;
+
+/** Phase 4 (J): 3-band EQ gains in dB (lowshelf 200 Hz / peaking 1 kHz / highshelf 4 kHz). */
+export const eqSchema = z.object({
+  high: z.number().min(-12).max(12).default(0),
+  low: z.number().min(-12).max(12).default(0),
+  mid: z.number().min(-12).max(12).default(0),
+});
+export type EqSettings = z.infer<typeof eqSchema>;
+
+/** Phase 4 (J): project mixer settings (master volume, ducking). */
+export const mixerSchema = z.object({
+  duckAmountDb: z.number().min(0).max(24).default(12),
+  ducking: z.boolean().default(false),
+  masterVolume: z.number().min(0).max(2).default(1),
+});
+export type MixerSettings = z.infer<typeof mixerSchema>;
+
 export const easingSchema = z.enum(['linear', 'ease', 'ease-in', 'ease-out', 'bezier']);
 export type Easing = z.infer<typeof easingSchema>;
 
@@ -356,6 +376,8 @@ export const mediaItemSchema = z.object({
   thumbnail: z.string().optional(),
   /** Normalised audio peaks (0–1), 64 buckets, for the timeline waveform. */
   peaks: z.array(z.number().min(0).max(1)).max(256).optional(),
+  /** Absolute peak amplitude (0–1) of the audio file, for Normalize (Phase 4, J). */
+  peakLevel: z.number().min(0).max(1).optional(),
   width: z.number().int().positive().optional(),
 });
 export type MediaItem = z.infer<typeof mediaItemSchema>;
@@ -372,12 +394,21 @@ export const clipSchema = z.object({
   adjustment: adjustmentSchema.default(defaultAdjustment()),
   animationIn: animationSchema.default({ duration: 0.5, kind: 'none' }),
   animationOut: animationSchema.default({ duration: 0.5, kind: 'none' }),
+  /** Phase 4 (J-DETACH): true once this video clip's audio was separated onto its own track. */
+  audioDetached: z.boolean().default(false),
+  /** Phase 4 (J): Music / Voice / SFX — decides ducking. */
+  audioRole: audioRoleSchema.default('music'),
   background: backgroundSchema.default({ color: '#000000', gradient: 'linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%)', type: 'blur' }),
   chromaKey: chromaKeySchema.default({ color: '#00FF00', enabled: false, smoothness: 0.2, tolerance: 0.3 }),
   compoundId: z.string().optional(),
   crop: cropSchema.optional(),
   duration: z.number().positive(),
   effects: z.array(effectSchema).default([]),
+  /** Phase 4 (J): 3-band EQ gains in dB. */
+  eq: eqSchema.default({ high: 0, low: 0, mid: 0 }),
+  /** Phase 4 (J): fade-in / fade-out durations in seconds (linear ramps). */
+  fadeIn: z.number().min(0).max(10).default(0),
+  fadeOut: z.number().min(0).max(10).default(0),
   fit: z.enum(['fit', 'fill']).default('fit'),
   flipH: z.boolean().default(false),
   flipV: z.boolean().default(false),
@@ -388,10 +419,16 @@ export const clipSchema = z.object({
   keyframes: z.array(keyframeSchema).default([]),
   layoutMode: layoutModeSchema.default('full'),
   layoutSlot: z.number().int().min(0).max(3).default(0),
+  /** Phase 4 (J-DETACH): video clip id this audio clip was separated from. */
+  linkedClipId: z.string().optional(),
   lut: lutSchema.optional(),
   mask: maskSchema.optional(),
   mediaId: z.string().optional(),
+  /** Phase 4 (J): silences only this clip (track mute is separate). */
+  muted: z.boolean().default(false),
   name: z.string().min(1),
+  /** Phase 4 (J): gate + high-pass noise reduction (honest label — not spectral cleanup). */
+  noiseReduction: z.boolean().default(false),
   opacity: z.number().min(0).max(1).default(1),
   pitchPreserved: z.boolean().default(true),
   /** Smooth slow-mo switch (CapCut Speed panel). Stored flag; the
@@ -418,6 +455,8 @@ export const clipSchema = z.object({
   tracking: trackingSchema.optional(),
   transitionIn: transitionSchema.optional(),
   type: clipTypeSchema,
+  /** Phase 4 (J-VOICE): voice-changer preset id ('none' = no processing). */
+  voice: z.string().default('none'),
   volume: z.number().min(0).max(2).default(1),
 });
 export type Clip = z.infer<typeof clipSchema>;
@@ -430,6 +469,10 @@ export const trackSchema = z.object({
   locked: z.boolean().default(false),
   muted: z.boolean().default(false),
   name: z.string().min(1),
+  /** Phase 4 (J-MIXER): when any track is soloed, only soloed tracks sound. */
+  solo: z.boolean().default(false),
+  /** Phase 4 (J-MIXER): per-track volume multiplier (0–2, default 1). */
+  volume: z.number().min(0).max(2).default(1),
 });
 export type Track = z.infer<typeof trackSchema>;
 
@@ -454,11 +497,13 @@ export const projectSchema = z.object({
   isDraft: z.boolean().default(false),
   markers: z.array(markerSchema).default([]),
   media: z.array(mediaItemSchema).default([]),
+  /** Phase 4 (J-MIXER): master volume + ducking. */
+  mixer: mixerSchema.default({ duckAmountDb: 12, ducking: false, masterVolume: 1 }),
   name: z.string().min(1).max(120),
   resolution: z.object({ height: z.number().int().positive(), width: z.number().int().positive() }),
   tracks: z.array(trackSchema).default([]),
   updatedAt: z.string().datetime(),
-  version: z.enum(['0.1.0', '0.2.0', '0.3.0', '0.4.0']),
+  version: z.enum(['0.1.0', '0.2.0', '0.3.0', '0.4.0', '0.5.0']),
 });
 export type VidoraProject = z.infer<typeof projectSchema>;
 
@@ -471,8 +516,8 @@ export function parseProject(data: unknown): VidoraProject {
 }
 
 /**
- * Migrate a v0.1.0 / v0.2.0 / v0.3.0 document to v0.4.0 (fills new fields
- * with defaults). Old keyframes (no `id`) gain one; old effects keep
+ * Migrate a v0.1.0 / v0.2.0 / v0.3.0 / v0.4.0 document to v0.5.0 (fills new
+ * fields with defaults). Old keyframes (no `id`) gain one; old effects keep
  * working. Captions default to [] and new clip fields are optional, so
  * old documents validate unchanged.
  */
@@ -493,7 +538,7 @@ export function migrateProject(data: unknown): VidoraProject {
     };
   });
   const parsed = projectSchema.parse({ ...raw, tracks: migratedTracks });
-  return { ...parsed, version: '0.4.0' };
+  return { ...parsed, version: '0.5.0' };
 }
 
 /** Resolution for an aspect ratio, given a custom size when ratio is 'custom'. */
@@ -555,6 +600,7 @@ export const SAMPLE_PROJECT: VidoraProject = {
   isDraft: false,
   markers: [{ color: '#7C3AED', label: 'Intro', time: 0 }],
   media: [],
+  mixer: { duckAmountDb: 12, ducking: false, masterVolume: 1 },
   name: 'Sunset Coast — Sample Project',
   resolution: { height: 1080, width: 1920 },
   tracks: [
@@ -565,10 +611,15 @@ export const SAMPLE_PROJECT: VidoraProject = {
           animationIn: { duration: 0.5, kind: 'none' },
           animationLoop: { duration: 2, kind: 'none' },
           animationOut: { duration: 0.5, kind: 'none' },
+          audioDetached: false,
+          audioRole: 'music',
           background: { color: '#000000', gradient: 'linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%)', type: 'blur' },
           chromaKey: { color: '#00FF00', enabled: false, smoothness: 0.2, tolerance: 0.3 },
           duration: 10,
           effects: [],
+          eq: { high: 0, low: 0, mid: 0 },
+          fadeIn: 0,
+          fadeOut: 0,
           fit: 'fit',
           flipH: false,
           flipV: false,
@@ -579,6 +630,8 @@ export const SAMPLE_PROJECT: VidoraProject = {
           layoutMode: 'full',
           layoutSlot: 0,
           name: 'Sunset Coast — Title Card',
+          muted: false,
+          noiseReduction: false,
           opacity: 1,
           pitchPreserved: true,
           positionX: 0,
@@ -593,6 +646,7 @@ export const SAMPLE_PROJECT: VidoraProject = {
           start: 0,
           trackId: 'track-video-1',
           type: 'video',
+          voice: 'none',
           volume: 1,
         },
       ],
@@ -602,6 +656,8 @@ export const SAMPLE_PROJECT: VidoraProject = {
       locked: false,
       muted: false,
       name: 'Video 1',
+      solo: false,
+      volume: 1,
     },
     {
       clips: [],
@@ -611,8 +667,10 @@ export const SAMPLE_PROJECT: VidoraProject = {
       locked: false,
       muted: false,
       name: 'Audio 1',
+      solo: false,
+      volume: 1,
     },
   ],
   updatedAt: '2026-11-22T00:00:00.000Z',
-  version: '0.4.0',
+  version: '0.5.0',
 };

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
-import { projectDuration, snapTime, snapToFrame } from '../lib/timeline';
+import { findClip, projectDuration, snapTime, snapToFrame } from '../lib/timeline';
 import { formatTimecode } from './PreviewArea';
 
 type Drag = {
@@ -41,6 +41,7 @@ export default function TimelineShell() {
   const addMarker = useProjectStore((s) => s.addMarker);
   const addTrack = useProjectStore((s) => s.addTrack);
   const setTrackProp = useProjectStore((s) => s.setTrackProp);
+  const detachAudio = useProjectStore((s) => s.detachAudio);
   const moveSelected = useProjectStore((s) => s.moveSelected);
   const trimSelected = useProjectStore((s) => s.trimSelected);
   const snapshot = useProjectStore((s) => s.snapshot);
@@ -50,6 +51,7 @@ export default function TimelineShell() {
   const dragRef = useRef<Drag | null>(null);
   const duration = project ? projectDuration(project) : 0;
   const totalWidth = Math.max(duration + 10, 30) * zoom;
+  const menuClip = menu && project ? findClip(project, menu.clipId)?.clip ?? null : null;
 
   // Frame-level snapping with the "Attach" magnet toggle (CapCut Web:
   // frame-level snap, "Attach" on by default). See lib/timeline.ts.
@@ -162,6 +164,11 @@ export default function TimelineShell() {
                 <button type="button" onClick={(e) => { e.stopPropagation(); setTrackProp(track.id, { muted: !track.muted }); }} className="rounded border border-zinc-700 px-1 text-[10px]" title={track.muted ? 'Unmute track' : 'Mute track'}>
                   {track.muted ? '🔇' : '🔊'}
                 </button>
+                {(track.kind === 'audio' || track.kind === 'video') && (
+                  <button type="button" onClick={(e) => { e.stopPropagation(); setTrackProp(track.id, { solo: !track.solo }); }} aria-pressed={track.solo} className={`rounded border px-1 text-[10px] font-bold ${track.solo ? 'border-amber-500 bg-amber-600/20 text-amber-300' : 'border-zinc-700'}`} title={track.solo ? 'Unsolo track' : 'Solo track (only soloed tracks sound)'}>
+                    S
+                  </button>
+                )}
               </span>
             </div>
           ))}
@@ -283,6 +290,9 @@ export default function TimelineShell() {
               { label: 'Paste (Ctrl+V)', run: () => pasteClipboard() },
               { label: 'Freeze frame', run: () => freezeSelected() },
               { label: 'Reverse', run: () => reverseSelected() },
+              ...(menuClip?.type === 'video' && !menuClip.audioDetached
+                ? [{ label: 'Separate audio (Ctrl+Shift+S)', run: () => detachAudio() }]
+                : []),
               { label: 'Ripple delete (Shift+Delete)', run: () => rippleDeleteSelected() },
               { label: 'Delete (Delete)', run: () => deleteSelected() },
             ].map((item) => (

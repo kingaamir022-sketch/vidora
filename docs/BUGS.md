@@ -144,10 +144,39 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   modes now apply live in the preview via `drawBlended` in
   `PreviewArea.tsx`; they are no longer deferred. (Was: stored per
   clip and applied only in the full export render.)
-- BUG-D4 | Phase 1 → Phase 4 | Speed | DEFERRED — Pitch preservation
-  is a stored flag; playback uses browser rate control. The Web Audio
-  pitch-preserving path is Phase 4 work; the UI says so. The Pitch
-  toggle itself now matches CapCut (v0.3.2, BUG-010).
+- BUG-D4 | Phase 1 → Phase 4 | Speed | FIXED 2026-11-23 (v0.5.0) —
+  Pitch preservation is real now: the engine sets `preservesPitch` on
+  every media element (browser pitch-preserving rate control, the same
+  mechanism the reference uses) and the Web Audio modulated-delay pitch
+  shifter drives the voice-changer presets. The Speed section note now
+  describes the real behaviour. Verified by the Phase 4 audit
+  (J-PITCH, 31/31) and `src/test/audio.test.ts`.
+- BUG-P4-001 | Phase 4 | Voiceover | FIXED 2026-11-23 (found during
+  the build, before the audit) — A recorded voiceover could silently
+  vanish: MediaRecorder webm often has no finite duration in a plain
+  audio element, so `probeAudio` returned `duration: undefined` and
+  `addVoiceoverClip` returned early with no clip and no message. Fix:
+  the store action takes the recorded seconds as a fallback
+  (`addVoiceoverClip(blob, name, durationSeconds)`) and the panel
+  passes the timer value; the clip is never dropped. Also: very short
+  recordings now show "Recording too short — nothing saved." instead
+  of failing silently. Verified by the Phase 4 audit (J-VOICEOVER,
+  fake media device, 31/31).
+- BUG-P4-002 (audit harness, not an app bug) | Phase 4 | Audit | FIXED
+  2026-11-23 — The Phase 4 audit read the markers baseline while a
+  clip was still selected, so the Properties summary (which only shows
+  the marker count with no clip selected) was not visible and the
+  baseline read −1. Fix: the baseline is now read in the no-clip
+  (mixer) state, where it is 0 in a new project. Audit re-ran 31/31
+  PASS after the fix.
+- BUG-P4-003 | Phase 4 | Speed note | FIXED 2026-11-23 (found during
+  the build, before the audit) — The Speed-section note said "Pitch is
+  kept by the Web Audio pitch shifter", which is wrong: pitch at
+  changed speed is kept by the browser's native `preservesPitch`
+  playback; the Web Audio shifter is only used for voice-changer
+  presets. Fix: the note now says so plainly (J-PITCH card updated
+  the same way). Verified by the Phase 4 audit (J-PITCH checks the
+  corrected note text).
 - BUG-D5 | Phase 1 → Phase 8 | Export | DEFERRED — Export is realtime
   canvas capture only: no audio mix, no 4K, no H.265/VP9 choice, no
   bitrate control, no GIF, no background queue. Stated in the panel
@@ -177,6 +206,13 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
 - BUG-D11 | Phase 3 | Captions | DEFERRED — .ass caption files are not
   imported (no parser in this build); .srt/.vtt import and export work.
   The panel says so plainly.
+- BUG-D12 | Phase 4 → Phase 7 | Audio | DEFERRED — Vocal isolation /
+  stem separation (splitting a mixed track into voice and music) needs
+  an ML model and is NOT in this build; it is not faked. Noise
+  reduction in the inspector is only a high-pass filter (low rumble)
+  plus a compressor (evens out loud peaks) — the panel says plainly
+  that it does not remove background voices or room noise, and that
+  real voice isolation is Phase 7.
 - BUG-P3-003 | Phase 3 audit harness | FIXED 2026-11-23 (main-agent
   verification) — `npm run audit:phase3` crashed on a fresh machine:
   it wrote its SRT fixture into /tmp/audit-media without creating the

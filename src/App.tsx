@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import Dashboard from './components/Dashboard';
+import AudioPanel from './components/AudioPanel';
 import CaptionsPanel from './components/CaptionsPanel';
 import ColorPanel from './components/ColorPanel';
 import EffectsPanel from './components/EffectsPanel';
@@ -47,6 +48,7 @@ export default function App() {
       else if (action === 'addMarker') s.addMarker();
       else if (action === 'rippleDelete') s.rippleDeleteSelected();
       else if (action === 'selectAll') s.selectAllClips();
+      else if (action === 'separateAudio') s.detachAudio();
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
@@ -72,8 +74,9 @@ export default function App() {
         {activeTab === 'Effects' && <EffectsPanel />}
         {activeTab === 'Filters' && <EffectsPanel lutFocus />}
         {activeTab === 'Transitions' && <TransitionsPanel />}
+        {activeTab === 'Audio' && <AudioPanel />}
         {activeTab === 'Adjustment' && <ColorPanel />}
-        {(activeTab === 'Audio' || activeTab === 'Templates' || activeTab === 'AI Tools') && (
+        {(activeTab === 'Templates' || activeTab === 'AI Tools') && (
           <PlaceholderPanel tab={activeTab} />
         )}
         <PreviewArea />

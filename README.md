@@ -1,17 +1,18 @@
 # Vidora — Create. Cut. Shine.
 
-A professional video editor. **Phase 3 is complete** (v0.4.0): text & graphics (text panel with templates/styles/animations, 224 original stickers, 10 shapes, drawing, manual motion tracking) and captions & speech (auto captions from a pasted transcript, 8 caption styles, SRT/VTT import/export, manual translation, in-panel transcript, browser text-to-speech) — on top of the Phase 2 keyframes/effects/colour/masks work, the Phase 1 core editor and the Phase 0 branding, architecture, project JSON schema and app shell. Audio, AI tools and full export arrive in Phases 4–9 (see [SPEC.md](SPEC.md)).
+A professional video editor. **Phase 4 is complete** (v0.5.0): audio (Audio tab with Music/Sound effects and 6 original music loops + 8 original SFX synthesized in-browser, full audio inspector with volume/fades/EQ/noise reduction/normalize/voice changer, separate audio, mixer with ducking, beat detection, voiceover recording, pitch-preserving speed) — on top of the Phase 3 text/stickers/captions work, the Phase 2 keyframes/effects/colour/masks work, the Phase 1 core editor and the Phase 0 branding, architecture, project JSON schema and app shell. AI tools, templates and full export arrive in Phases 5–9 (see [SPEC.md](SPEC.md)).
 
 ## Parity & self-audit (Rules 12/13/14)
 
-- Behaviour cards for every Phase 0–3 feature: [docs/behavior/](docs/behavior/) (one card per feature, with controls, ranges, defaults, interactions and edge cases).
-- Parity matrix: [docs/PARITY.md](docs/PARITY.md) — MATCH 37 / ASSUMED 1 / INTENTIONAL-DIFF 3 / 41, gate PASS (Phases 0–2 rows; Phase 3 cards carry their own status: MATCH 5 / ASSUMED 3 / UNKNOWN 6). Layout reference: [docs/UI_LAYOUT.md](docs/UI_LAYOUT.md). Intentional diffs: [docs/INTENTIONAL_DIFFS.md](docs/INTENTIONAL_DIFFS.md). Bug log: [docs/BUGS.md](docs/BUGS.md).
+- Behaviour cards for every Phase 0–4 feature: [docs/behavior/](docs/behavior/) (one card per feature, with controls, ranges, defaults, interactions and edge cases).
+- Parity matrix: [docs/PARITY.md](docs/PARITY.md) — MATCH 40 / ASSUMED 6 / INTENTIONAL-DIFF 3 / 49, gate PASS (Phases 0–2 + Phase 4 rows; Phase 3 cards carry their own status: MATCH 5 / ASSUMED 3 / UNKNOWN 6). Layout reference: [docs/UI_LAYOUT.md](docs/UI_LAYOUT.md). Intentional diffs: [docs/INTENTIONAL_DIFFS.md](docs/INTENTIONAL_DIFFS.md). Bug log: [docs/BUGS.md](docs/BUGS.md).
 - Run the self-audits yourself (needs Node ≥ 20; uses the Playwright Chromium headless shell already on the machine):
 
 ```bash
 npm run audit          # builds, serves the production build, drives it in headless Chromium
                        # 40 checks, screenshots into audit/phase2/<card-ID>/, report in audit/phase2/AUDIT-REPORT.md
 npm run audit:phase3   # Phase 3: 31 checks, screenshots into audit/phase3/<card-ID>/, report in audit/phase3/AUDIT-REPORT.md
+npm run audit:phase4   # Phase 4: 31 checks, screenshots into audit/phase4/<card-ID>/, report in audit/phase4/AUDIT-REPORT.md
 ```
 
 ## Quick start
@@ -20,14 +21,25 @@ npm run audit:phase3   # Phase 3: 31 checks, screenshots into audit/phase3/<card
 npm install
 npm run dev      # start the dev server (Vite) — open the URL it prints
 npm run build    # type-check + production build into dist/
-npm test         # run the Vitest suite (147 tests)
+npm test         # run the Vitest suite (184 tests)
 npm run preview  # serve the production build locally
 npm run audit    # build + Playwright self-audit, Phases 0–2 (see above)
 npm run audit:phase3  # build + Playwright self-audit, Phase 3 (see above)
+npm run audit:phase4  # build + Playwright self-audit, Phase 4 (see above)
 npm run build:assets  # regenerate logo icon-size variants from public/logo.svg
 ```
 
 Requires **Node.js ≥ 20**.
+
+## What works in Phase 4
+
+- **Audio tab**: Music / Sound effects sub-tabs, search, suggestion chips, categories + View all, Recommended rows with play-preview and "+" add; 6 original music loops + 8 original SFX synthesized in-browser (Vidora Originals), your imported audio listed the same way, Voiceover section, Tools (Detect beats / Cut at beats / Open mixer).
+- **Audio inspector**: volume slider + dB readout + numeric input, volume keyframes, fade in/out 0–10 s, role (Music/Voice/SFX), 3-band EQ ±12 dB, noise reduction (high-pass + compressor — the panel says plainly it does not remove background voices or room noise), mute, Normalize to −1 dBFS, voice changer (8 original presets) + Apply to all.
+- **Separate audio**: right-click a video clip → "Separate audio (Ctrl+Shift+S)", or the inspector button, or the shortcut; the video is muted and its audio moves to its own track, linked back.
+- **Mixer**: master volume, ducking (music drops under voice), per-track volume/mute/solo — shown in the right panel when no clip is selected; Solo buttons also on timeline track headers.
+- **Audio engine**: one AudioContext routes every sounding clip (audio + video audio) through volume/fades/keyframes/EQ/voice/noise/ducking/mute/solo; falls back to plain element volume if Web Audio is unavailable. Pitch-preserving speed is real (browser `preservesPitch`).
+- **Beat detection**: energy-onset beats with a BPM estimate (labelled as an estimate), Add beat markers, Cut at beats.
+- **Voiceover**: record from the microphone, stop, and the clip lands on the timeline at the playhead.
 
 ## What works in Phase 3
 

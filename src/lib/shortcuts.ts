@@ -11,7 +11,8 @@ export type ShortcutAction =
   | 'togglePlay'
   | 'addMarker'
   | 'rippleDelete'
-  | 'selectAll';
+  | 'selectAll'
+  | 'separateAudio';
 
 export const SHORTCUT_LABELS: Record<ShortcutAction, string> = {
   addMarker: 'Add marker at playhead',
@@ -22,6 +23,7 @@ export const SHORTCUT_LABELS: Record<ShortcutAction, string> = {
   redo: 'Redo',
   rippleDelete: 'Ripple delete selected clip',
   selectAll: 'Select all clips on all tracks',
+  separateAudio: 'Separate audio from selected video clip',
   split: 'Split clip at playhead',
   togglePlay: 'Play / pause',
   undo: 'Undo',
@@ -36,6 +38,7 @@ export const DEFAULT_SHORTCUTS: Record<ShortcutAction, string> = {
   redo: 'ctrl+shift+z',
   rippleDelete: 'shift+delete',
   selectAll: 'ctrl+a',
+  separateAudio: 'ctrl+shift+s',
   split: 's',
   togglePlay: 'space',
   undo: 'ctrl+z',
