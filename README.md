@@ -1,6 +1,8 @@
 # Vidora — Create. Cut. Shine.
 
-A professional video editor. **v1.0.0 — complete.** All nine build phases are done (Phases 0–9), verified by build + 308 tests + Playwright self-audits with zero open bugs.
+A professional video editor. **v1.0.0 — complete.** All nine build phases are done (Phases 0–9), verified by build + 313 tests + Playwright self-audits with zero open bugs.
+
+**Try it live:** https://kingaamir022-sketch.github.io/vidora/ — no install needed, open the link in a browser and use it directly. (Deploy notes: [`docs/PAGES-DEPLOY.md`](docs/PAGES-DEPLOY.md).)
 
 - **Phase 0–1**: branding (original logo, violet → cyan), project JSON schema, dashboard, import with real probing/thumbnails, unlimited tracks, split/trim/duplicate/ripple/freeze/reverse/crop/rotate/flip, markers, customizable shortcuts, undo/redo, autosave + crash recovery, speed 0.1×–100×.
 - **Phase 2**: keyframes + easing + bezier graph editor, animations, 8 transitions, 14 effects, .cube LUT import + 3 original looks, colour/adjustment (curves/HSL/wheels/blend modes), scopes, masks, chroma key, PiP/split-screen, backgrounds.
@@ -20,7 +22,7 @@ All branding, icons, fonts, effects, templates, stickers, music, clips and voice
 npm install
 npm run dev      # start the dev server (Vite) — open the URL it prints
 npm run build    # type-check + production build into dist/
-npm test         # run the Vitest suite (308 tests)
+npm test         # run the Vitest suite (313 tests)
 npm run preview  # serve the production build locally
 npm run build:assets  # regenerate the procedural asset library (manifest, .cube LUTs, animated stickers, fonts, licenses, provenance)
 ```

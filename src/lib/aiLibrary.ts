@@ -88,10 +88,30 @@ export interface AiManifest {
 
 const manifest = aiManifest as unknown as AiManifest;
 
-export const AI_MUSIC_TRACKS: AiMusicEntry[] = manifest.entries.music ?? [];
-export const AI_SFX: AiSfxEntry[] = manifest.entries.sfx ?? [];
-export const AI_CLIPS: AiClipEntry[] = manifest.entries.clips ?? [];
-export const AI_IMAGES: AiImageEntry[] = manifest.entries.images ?? [];
+/**
+ * Prefix a root-absolute public path with the Vite deploy base
+ * (import.meta.env.BASE_URL — '/' locally, '/vidora/' on GitHub Pages).
+ * The ai-manifest stores root-absolute paths ('/ai-library/...'); without
+ * this the library media 404s under a subpath deploy. Already-relative
+ * paths pass through untouched.
+ */
+export function withBase(path: string): string {
+  const base = import.meta.env.BASE_URL ?? '/';
+  if (!path.startsWith('/')) return path;
+  return `${base}${path.slice(1)}`;
+}
+
+const baseEntries = <T extends { file: string; poster?: string }>(entries: T[]): T[] =>
+  entries.map((e) => {
+    const out = { ...e, file: withBase(e.file) };
+    if (e.poster) out.poster = withBase(e.poster);
+    return out;
+  });
+
+export const AI_MUSIC_TRACKS: AiMusicEntry[] = baseEntries(manifest.entries.music ?? []);
+export const AI_SFX: AiSfxEntry[] = baseEntries(manifest.entries.sfx ?? []);
+export const AI_CLIPS: AiClipEntry[] = baseEntries(manifest.entries.clips ?? []);
+export const AI_IMAGES: AiImageEntry[] = baseEntries(manifest.entries.images ?? []);
 export const AI_MANIFEST_VERSION = manifest.version;
 
 export const AI_MUSIC_STYLES: string[] = [...new Set(AI_MUSIC_TRACKS.map((t) => t.style))].sort();

@@ -52,7 +52,7 @@ export default function TopBar() {
     <>
       <header className="flex h-12 shrink-0 flex-wrap items-center gap-3 border-b border-zinc-800 bg-zinc-950 px-3 text-zinc-100">
         <button type="button" onClick={openDashboard} className="flex items-center gap-2 rounded-md px-1 py-1 hover:bg-zinc-800" aria-label="Back to dashboard" title="Back to dashboard">
-          <img src="/logo.svg" alt="Vidora logo" className="h-7 w-7" />
+          <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Vidora logo" className="h-7 w-7" />
           <span className="bg-gradient-to-r from-violet-600 to-cyan-500 bg-clip-text text-lg font-bold text-transparent">Vidora</span>
         </button>
         <span className="hidden max-w-56 truncate text-sm text-zinc-300 sm:block" title={project?.name}>

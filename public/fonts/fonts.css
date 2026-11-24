@@ -3,7 +3,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/inter.woff2') format('woff2');
+  src: url('./inter.woff2') format('woff2');
 }
 
 @font-face {
@@ -11,7 +11,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/roboto.woff2') format('woff2');
+  src: url('./roboto.woff2') format('woff2');
 }
 
 @font-face {
@@ -19,7 +19,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/open-sans.woff2') format('woff2');
+  src: url('./open-sans.woff2') format('woff2');
 }
 
 @font-face {
@@ -27,7 +27,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/lato.woff2') format('woff2');
+  src: url('./lato.woff2') format('woff2');
 }
 
 @font-face {
@@ -35,7 +35,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/montserrat.woff2') format('woff2');
+  src: url('./montserrat.woff2') format('woff2');
 }
 
 @font-face {
@@ -43,7 +43,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/poppins.woff2') format('woff2');
+  src: url('./poppins.woff2') format('woff2');
 }
 
 @font-face {
@@ -51,7 +51,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/raleway.woff2') format('woff2');
+  src: url('./raleway.woff2') format('woff2');
 }
 
 @font-face {
@@ -59,7 +59,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/nunito.woff2') format('woff2');
+  src: url('./nunito.woff2') format('woff2');
 }
 
 @font-face {
@@ -67,7 +67,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/quicksand.woff2') format('woff2');
+  src: url('./quicksand.woff2') format('woff2');
 }
 
 @font-face {
@@ -75,7 +75,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/work-sans.woff2') format('woff2');
+  src: url('./work-sans.woff2') format('woff2');
 }
 
 @font-face {
@@ -83,7 +83,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/dm-sans.woff2') format('woff2');
+  src: url('./dm-sans.woff2') format('woff2');
 }
 
 @font-face {
@@ -91,7 +91,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/manrope.woff2') format('woff2');
+  src: url('./manrope.woff2') format('woff2');
 }
 
 @font-face {
@@ -99,7 +99,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/outfit.woff2') format('woff2');
+  src: url('./outfit.woff2') format('woff2');
 }
 
 @font-face {
@@ -107,7 +107,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/plus-jakarta-sans.woff2') format('woff2');
+  src: url('./plus-jakarta-sans.woff2') format('woff2');
 }
 
 @font-face {
@@ -115,7 +115,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/playfair-display.woff2') format('woff2');
+  src: url('./playfair-display.woff2') format('woff2');
 }
 
 @font-face {
@@ -123,7 +123,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/merriweather.woff2') format('woff2');
+  src: url('./merriweather.woff2') format('woff2');
 }
 
 @font-face {
@@ -131,7 +131,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/roboto-slab.woff2') format('woff2');
+  src: url('./roboto-slab.woff2') format('woff2');
 }
 
 @font-face {
@@ -139,7 +139,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/source-serif-4.woff2') format('woff2');
+  src: url('./source-serif-4.woff2') format('woff2');
 }
 
 @font-face {
@@ -147,7 +147,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/dm-serif-display.woff2') format('woff2');
+  src: url('./dm-serif-display.woff2') format('woff2');
 }
 
 @font-face {
@@ -155,7 +155,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/lora.woff2') format('woff2');
+  src: url('./lora.woff2') format('woff2');
 }
 
 @font-face {
@@ -163,7 +163,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/bitter.woff2') format('woff2');
+  src: url('./bitter.woff2') format('woff2');
 }
 
 @font-face {
@@ -171,7 +171,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/noto-serif.woff2') format('woff2');
+  src: url('./noto-serif.woff2') format('woff2');
 }
 
 @font-face {
@@ -179,7 +179,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/roboto-mono.woff2') format('woff2');
+  src: url('./roboto-mono.woff2') format('woff2');
 }
 
 @font-face {
@@ -187,7 +187,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/jetbrains-mono.woff2') format('woff2');
+  src: url('./jetbrains-mono.woff2') format('woff2');
 }
 
 @font-face {
@@ -195,7 +195,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/fira-code.woff2') format('woff2');
+  src: url('./fira-code.woff2') format('woff2');
 }
 
 @font-face {
@@ -203,7 +203,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/source-code-pro.woff2') format('woff2');
+  src: url('./source-code-pro.woff2') format('woff2');
 }
 
 @font-face {
@@ -211,7 +211,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/ibm-plex-mono.woff2') format('woff2');
+  src: url('./ibm-plex-mono.woff2') format('woff2');
 }
 
 @font-face {
@@ -219,7 +219,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/space-mono.woff2') format('woff2');
+  src: url('./space-mono.woff2') format('woff2');
 }
 
 @font-face {
@@ -227,7 +227,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/oswald.woff2') format('woff2');
+  src: url('./oswald.woff2') format('woff2');
 }
 
 @font-face {
@@ -235,7 +235,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/bebas-neue.woff2') format('woff2');
+  src: url('./bebas-neue.woff2') format('woff2');
 }
 
 @font-face {
@@ -243,7 +243,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/anton.woff2') format('woff2');
+  src: url('./anton.woff2') format('woff2');
 }
 
 @font-face {
@@ -251,7 +251,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/archivo-black.woff2') format('woff2');
+  src: url('./archivo-black.woff2') format('woff2');
 }
 
 @font-face {
@@ -259,7 +259,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/righteous.woff2') format('woff2');
+  src: url('./righteous.woff2') format('woff2');
 }
 
 @font-face {
@@ -267,7 +267,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/russo-one.woff2') format('woff2');
+  src: url('./russo-one.woff2') format('woff2');
 }
 
 @font-face {
@@ -275,7 +275,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/orbitron.woff2') format('woff2');
+  src: url('./orbitron.woff2') format('woff2');
 }
 
 @font-face {
@@ -283,7 +283,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/caveat.woff2') format('woff2');
+  src: url('./caveat.woff2') format('woff2');
 }
 
 @font-face {
@@ -291,7 +291,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/dancing-script.woff2') format('woff2');
+  src: url('./dancing-script.woff2') format('woff2');
 }
 
 @font-face {
@@ -299,7 +299,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/pacifico.woff2') format('woff2');
+  src: url('./pacifico.woff2') format('woff2');
 }
 
 @font-face {
@@ -307,7 +307,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/lobster.woff2') format('woff2');
+  src: url('./lobster.woff2') format('woff2');
 }
 
 @font-face {
@@ -315,5 +315,5 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/permanent-marker.woff2') format('woff2');
+  src: url('./permanent-marker.woff2') format('woff2');
 }

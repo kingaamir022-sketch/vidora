@@ -43,7 +43,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       <header className="flex h-14 items-center gap-3 border-b border-zinc-800 px-5">
-        <img src="/logo.svg" alt="Vidora logo" className="h-8 w-8" />
+        <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Vidora logo" className="h-8 w-8" />
         <span className="bg-gradient-to-r from-violet-600 to-cyan-500 bg-clip-text text-xl font-bold text-transparent">Vidora</span>
         <span className="hidden text-xs tracking-widest text-zinc-500 uppercase sm:block">Create. Cut. Shine.</span>
         <button
