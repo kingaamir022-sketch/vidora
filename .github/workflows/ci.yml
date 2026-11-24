@@ -1,0 +1,38 @@
+# Vidora CI (Phase 9, Section M — M-CI).
+# Runs on every push and pull request to main: install, build, full
+# Vitest suite, and a lint check. Playwright self-audits are NOT run
+# here — they need the headless-shell browser + ffmpeg + a local
+# preview server and are run by the maintainer with
+# `npm run audit:phase9` (and audit:phase4 … audit:phase8).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Test (Vitest)
+        run: npm test
+
+      - name: Lint
+        run: npm run lint
