@@ -1,0 +1,58 @@
+# Vidora — GitHub Pages deploy (Section M, post-v1.0.0).
+# Publishes the production build to https://kingaamir022-sketch.github.io/vidora/
+# (project Pages site, subpath /vidora/).
+#
+# The build runs with VITE_BASE=/vidora/ so Vite emits every asset URL
+# under the subpath; see docs/PAGES-DEPLOY.md for the full picture.
+# Playwright self-audits are NOT run here — they need the headless-shell
+# browser + ffmpeg + a local preview server (run by the maintainer).
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Allow only one concurrent deployment, but never cancel a deploy that
+# is already running (a half-published site is worse than a queued one).
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (Pages base /vidora/)
+        run: npm run build
+        env:
+          VITE_BASE: /vidora/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
