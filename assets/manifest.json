@@ -14,10 +14,10 @@
     "sfx": 200,
     "shapes": 10,
     "stickers": 232,
-    "templates": 25,
+    "templates": 35,
     "textAnimations": 37,
     "textPresets": 50,
-    "total": 1240,
+    "total": 1250,
     "transitions": 32,
     "voices": 16
   },
@@ -5707,6 +5707,126 @@
       "id": "workout-vlog",
       "license": "CC0 (Vidora original)",
       "name": "Workout Vlog",
+      "tags": [
+        "template",
+        "vlog",
+        "16:9"
+      ],
+      "type": "template"
+    },
+    {
+      "category": "Intro",
+      "id": "sunrise-intro",
+      "license": "CC0 (Vidora original)",
+      "name": "Sunrise Intro",
+      "tags": [
+        "template",
+        "intro",
+        "16:9"
+      ],
+      "type": "template"
+    },
+    {
+      "category": "Intro",
+      "id": "quote-intro",
+      "license": "CC0 (Vidora original)",
+      "name": "Quote Intro",
+      "tags": [
+        "template",
+        "intro",
+        "16:9"
+      ],
+      "type": "template"
+    },
+    {
+      "category": "Outro",
+      "id": "wave-outro",
+      "license": "CC0 (Vidora original)",
+      "name": "Wave Outro",
+      "tags": [
+        "template",
+        "outro",
+        "16:9"
+      ],
+      "type": "template"
+    },
+    {
+      "category": "Outro",
+      "id": "see-you-outro",
+      "license": "CC0 (Vidora original)",
+      "name": "See You Outro",
+      "tags": [
+        "template",
+        "outro",
+        "16:9"
+      ],
+      "type": "template"
+    },
+    {
+      "category": "Social",
+      "id": "dance-reel",
+      "license": "CC0 (Vidora original)",
+      "name": "Dance Reel",
+      "tags": [
+        "template",
+        "social",
+        "9:16"
+      ],
+      "type": "template"
+    },
+    {
+      "category": "Social",
+      "id": "food-reel",
+      "license": "CC0 (Vidora original)",
+      "name": "Food Reel",
+      "tags": [
+        "template",
+        "social",
+        "9:16"
+      ],
+      "type": "template"
+    },
+    {
+      "category": "Promo",
+      "id": "launch-teaser",
+      "license": "CC0 (Vidora original)",
+      "name": "Launch Teaser",
+      "tags": [
+        "template",
+        "promo",
+        "16:9"
+      ],
+      "type": "template"
+    },
+    {
+      "category": "Promo",
+      "id": "coupon-promo",
+      "license": "CC0 (Vidora original)",
+      "name": "Coupon Promo",
+      "tags": [
+        "template",
+        "promo",
+        "16:9"
+      ],
+      "type": "template"
+    },
+    {
+      "category": "Vlog",
+      "id": "travel-diary",
+      "license": "CC0 (Vidora original)",
+      "name": "Travel Diary",
+      "tags": [
+        "template",
+        "vlog",
+        "16:9"
+      ],
+      "type": "template"
+    },
+    {
+      "category": "Vlog",
+      "id": "gym-vlog",
+      "license": "CC0 (Vidora original)",
+      "name": "Gym Vlog",
       "tags": [
         "template",
         "vlog",
@@ -13333,7 +13453,7 @@
       "type": "ai-voice"
     }
   ],
-  "generated": "2026-11-23T08:08:19.379Z",
+  "generated": "2026-11-24T05:40:22.257Z",
   "generatedBy": "npm run build:assets (Phase 6)",
   "version": "0.7.0"
 }

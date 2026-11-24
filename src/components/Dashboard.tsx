@@ -1,20 +1,31 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { IconClock, IconFolder, IconPlus } from './icons';
+import { buildBundle, bundleFileName, bundleToText, deleteBackupRecord, loadBackupRecords, saveBackupRecords, type BackupRecord } from '../lib/cloudBackup';
+import { downloadBlob, formatBytesShort } from '../lib/exportEngine';
 
-/** Dashboard (SPEC A, Phase 1): new / recent / drafts with rename, duplicate, delete. */
+/** Dashboard (SPEC A, Phase 1): new / recent / drafts with rename, duplicate, delete.
+ * Phase 8 (L-CLOUD): project backups — a .vidora file you keep anywhere
+ * (Drive, a USB stick, a chat message). The file holds the project + the
+ * names of its media; when you restore, Vidora asks you to point at the
+ * media files again. Media is never inside the bundle (too large). */
 export default function Dashboard() {
   const [tab, setTab] = useState<'recent' | 'drafts'>('recent');
   const [newName, setNewName] = useState('');
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [backupProjectId, setBackupProjectId] = useState('');
+  const [backupRecords, setBackupRecords] = useState<BackupRecord[]>(() => loadBackupRecords());
+  const [backupNotice, setBackupNotice] = useState('');
+  const importFileRef = useRef<HTMLInputElement>(null);
   const projects = useProjectStore((s) => s.projects);
   const openProject = useProjectStore((s) => s.openProject);
   const createProject = useProjectStore((s) => s.createProject);
   const renameProject = useProjectStore((s) => s.renameProject);
   const duplicateProject = useProjectStore((s) => s.duplicateProject);
   const deleteProject = useProjectStore((s) => s.deleteProject);
+  const importBundle = useProjectStore((s) => s.importBundle);
   const recoveredNotice = useProjectStore((s) => s.recoveredNotice);
   const dismissRecovery = useProjectStore((s) => s.dismissRecovery);
   const theme = useProjectStore((s) => s.theme);
@@ -172,6 +183,98 @@ export default function Dashboard() {
             })}
           </ul>
         )}
+        <section className="mt-10 rounded-xl border border-zinc-800 bg-zinc-900 p-4" aria-label="Backups">
+          <h2 className="text-lg font-semibold">Backups</h2>
+          <p className="mt-1 text-sm text-zinc-400">
+            Back up a project to a .vidora file and keep it anywhere — Google Drive, a USB stick, a message to yourself. The file holds the project and the
+            names of its media files; when you restore it, Vidora asks you to point at the media again. Media is never inside the backup file (too large).
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <select
+              value={backupProjectId}
+              onChange={(e) => setBackupProjectId(e.target.value)}
+              aria-label="Project to back up"
+              className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm"
+            >
+              <option value="">— Choose a project —</option>
+              {sorted.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              disabled={!backupProjectId}
+              onClick={() => {
+                const target = projects.find((p) => p.id === backupProjectId);
+                if (!target) return;
+                const bundle = buildBundle(target);
+                downloadBlob(new Blob([bundleToText(bundle)], { type: 'application/json' }), bundleFileName(target));
+                const record: BackupRecord = {
+                  createdAt: new Date().toISOString(),
+                  id: `bk-${Date.now().toString(36)}`,
+                  projectId: target.id,
+                  projectName: target.name,
+                  size: bundleToText(bundle).length,
+                };
+                const next = [record, ...loadBackupRecords()];
+                saveBackupRecords(next);
+                setBackupRecords(next);
+                setBackupNotice(`Backed up ${target.name} → ${bundleFileName(target)}. Keep the file somewhere safe.`);
+              }}
+              className="rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+            >
+              Back up this project
+            </button>
+            <button type="button" onClick={() => importFileRef.current?.click()} className="rounded-lg border border-zinc-700 px-4 py-2 text-sm">
+              Import backup…
+            </button>
+            <input
+              ref={importFileRef}
+              type="file"
+              accept=".vidora,application/json"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                void file
+                  .text()
+                  .then((text) => {
+                    const ok = importBundle(text);
+                    setBackupNotice(ok ? `Restored “${file.name}”. If any media was missing, re-import the files and re-attach them.` : 'That file is not a valid Vidora backup.');
+                  })
+                  .catch(() => setBackupNotice('Could not read that file.'));
+                e.target.value = '';
+              }}
+            />
+          </div>
+          {backupNotice && <p className="mt-2 text-sm text-zinc-300">{backupNotice}</p>}
+          {backupRecords.length > 0 && (
+            <ul className="mt-3 space-y-2">
+              {backupRecords.map((r) => (
+                <li key={r.id} className="flex items-center justify-between gap-3 rounded-lg border border-zinc-800 bg-zinc-950 p-3 text-sm">
+                  <span className="min-w-0">
+                    <span className="block truncate font-medium">{r.projectName}</span>
+                    <span className="text-xs text-zinc-400">
+                      {new Date(r.createdAt).toLocaleString()} · {formatBytesShort(r.size)} · backup file not stored here — keep the .vidora file you downloaded
+                    </span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const next = deleteBackupRecord(r.id);
+                      setBackupRecords(next);
+                    }}
+                    className="shrink-0 rounded-md border border-zinc-700 px-2 py-1 text-xs"
+                  >
+                    Remove record
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
       </main>
     </div>
   );

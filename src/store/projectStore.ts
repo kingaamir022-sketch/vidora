@@ -51,7 +51,9 @@ import { defaultTextStyle, type TextStyle } from '../schema/project';
 import { TEXT_STYLE_PRESETS } from '../lib/text';
 import { shapeSvg, stickerById } from '../lib/stickers';
 import { backgroundDef } from '../lib/backgrounds';
-import { applyTemplate } from '../lib/templates';
+import { applyTemplate, applyTemplateWithSlots } from '../lib/templates';
+import { addComment, mergeComments, setCommentResolved } from '../lib/collab';
+import { parseBundle, relinkMedia } from '../lib/cloudBackup';
 import { normalizeGain } from '../lib/audio';
 import {
   parseCaptionFile,
@@ -205,6 +207,8 @@ interface ProjectState {
   customRatio: { height: number; width: number };
   dirty: boolean;
   exportOpen: boolean;
+  /** Phase 8 (L-SHARE): fullscreen presentation playback (no editing UI). */
+  presentMode: boolean;
   lastSavedAt: string | null;
   magnetic: boolean;
   maskEditing: boolean;
@@ -298,7 +302,13 @@ interface ProjectState {
   addShapeClip: (shapeId: string, fill: string) => void;
   // Phase 5 — procedural backgrounds + templates (Section N)
   addBackgroundClip: (backgroundId: string) => void;
-  useTemplate: (templateId: string) => void;
+  useTemplate: (templateId: string, slotMedia?: Record<string, string>) => void;
+  // Phase 8 — collaboration + cloud (Section L)
+  addComment: (author: string, text: string) => void;
+  setCommentResolved: (id: string, resolved: boolean) => void;
+  shareWith: (name: string) => void;
+  importBundle: (bundleText: string) => { error?: string; projectId?: string };
+  setPresentMode: (v: boolean) => void;
   setDrawMode: (v: boolean) => void;
   setDrawColor: (color: string) => void;
   setDrawWidth: (w: number) => void;
@@ -388,6 +398,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     drawMode: false,
     drawWidth: 4,
     exportOpen: false,
+    presentMode: false,
     lastSavedAt: null,
     magnetic: true,
     maskEditing: false,
@@ -975,19 +986,63 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       commit((p) => addClipToTextTrack(p, clip));
       set({ selectedClipIds: [clip.id] });
     },
-    useTemplate: (templateId) => {
+    useTemplate: (templateId, slotMedia) => {
       let base = get().project;
       if (!base) {
         get().createProject('Untitled Project');
         base = get().project;
       }
       if (!base) return;
-      const next = applyTemplate(base, templateId);
+      const next = slotMedia ? applyTemplateWithSlots(base, templateId, slotMedia) : applyTemplate(base, templateId);
       if (!next) return;
       const projects = [next, ...get().projects.filter((p) => p.id !== next.id)];
       writeProjects(projects);
       set({ aspectRatio: next.aspectRatio, playhead: 0, project: next, projects, redoStack: [], selectedClipIds: [], undoStack: [], view: 'editor' });
     },
+    // Phase 8 — collaboration + cloud (Section L)
+    addComment: (author, text) => {
+      const s = get();
+      if (!s.project) return;
+      const comments = addComment(s.project.comments ?? [], author, s.playhead, text);
+      if (comments.length === (s.project.comments ?? []).length) return;
+      applyProject({ ...s.project, comments });
+    },
+    setCommentResolved: (id, resolved) => {
+      const s = get();
+      if (!s.project) return;
+      applyProject({ ...s.project, comments: setCommentResolved(s.project.comments ?? [], id, resolved) });
+    },
+    shareWith: (name) => {
+      const s = get();
+      if (!s.project) return;
+      const trimmed = name.trim();
+      if (!trimmed || (s.project.sharedWith ?? []).includes(trimmed)) return;
+      applyProject({ ...s.project, sharedWith: [...(s.project.sharedWith ?? []), trimmed] });
+    },
+    importBundle: (bundleText) => {
+      let bundle;
+      try {
+        bundle = parseBundle(bundleText);
+      } catch (e) {
+        return { error: (e as Error).message };
+      }
+      const migrated = migrateProject(bundle.project);
+      const sessionMedia = get().projects.flatMap((p) => p.media);
+      const { project: relinked, relinked: names } = relinkMedia(migrated, sessionMedia);
+      const next: VidoraProject = {
+        ...relinked,
+        comments: mergeComments([], bundle.project.comments ?? []).merged,
+        id: newId('project'),
+        name: `${relinked.name} (restored)`.slice(0, 120),
+        sharedWith: bundle.project.sharedWith ?? [],
+      };
+      const projects = [next, ...get().projects];
+      writeProjects(projects);
+      set({ aspectRatio: next.aspectRatio, playhead: 0, project: next, projects, redoStack: [], selectedClipIds: [], undoStack: [], view: 'editor' });
+      void names;
+      return { projectId: next.id };
+    },
+    setPresentMode: (v) => set({ presentMode: v }),
     setDrawMode: (v) => set({ drawMode: v }),
     setDrawColor: (color) => set({ drawColor: color }),
     setDrawWidth: (w) => set({ drawWidth: Math.min(40, Math.max(1, w)) }),

@@ -599,12 +599,25 @@ export const markerSchema = z.object({
 });
 export type Marker = z.infer<typeof markerSchema>;
 
+/** Phase 8 (L-COLLAB): a timecoded review comment on the project. */
+export const commentSchema = z.object({
+  author: z.string().min(1).max(80),
+  createdAt: z.string().datetime(),
+  id: z.string().min(1),
+  resolved: z.boolean().default(false),
+  text: z.string().min(1).max(1000),
+  time: z.number().min(0),
+});
+export type ProjectComment = z.infer<typeof commentSchema>;
+
 export const projectSchema = z.object({
   aspectRatio: aspectRatioSchema,
   /** Project-level caption cues (Phase 3, I). Default [] for old documents. */
   captions: z.array(captionCueSchema).default([]),
   /** Active caption style preset id (Phase 3, I-CAPTION-STYLE). */
   captionStyleId: z.string().optional(),
+  /** Phase 8 (L-COLLAB): timecoded review comments. */
+  comments: z.array(commentSchema).default([]),
   createdAt: z.string().datetime(),
   customRatio: z.object({ height: z.number().int().positive(), width: z.number().int().positive() }).optional(),
   folders: z.array(mediaFolderSchema).default([{ id: 'folder-all', name: 'All media' }]),
@@ -617,9 +630,11 @@ export const projectSchema = z.object({
   mixer: mixerSchema.default({ duckAmountDb: 12, ducking: false, masterVolume: 1 }),
   name: z.string().min(1).max(120),
   resolution: z.object({ height: z.number().int().positive(), width: z.number().int().positive() }),
+  /** Phase 8 (L-COLLAB): names of people the project file was shared with (local record only). */
+  sharedWith: z.array(z.string().min(1).max(80)).default([]),
   tracks: z.array(trackSchema).default([]),
   updatedAt: z.string().datetime(),
-  version: z.enum(['0.1.0', '0.2.0', '0.3.0', '0.4.0', '0.5.0', '0.6.0', '0.7.0', '0.8.0']),
+  version: z.enum(['0.1.0', '0.2.0', '0.3.0', '0.4.0', '0.5.0', '0.6.0', '0.7.0', '0.8.0', '0.9.0']),
 });
 export type VidoraProject = z.infer<typeof projectSchema>;
 
@@ -632,10 +647,11 @@ export function parseProject(data: unknown): VidoraProject {
 }
 
 /**
- * Migrate a v0.1.0 / v0.2.0 / v0.3.0 / v0.4.0 / v0.5.0 / v0.6.0 / v0.7.0
- * document to v0.8.0 (fills new fields with defaults). Old keyframes
- * (no `id`) gain one; old effects keep working. Captions default to []
- * and new clip fields are optional, so old documents validate unchanged.
+ * Migrate a v0.1.0 / v0.2.0 / v0.3.0 / v0.4.0 / v0.5.0 / v0.6.0 / v0.7.0 /
+ * v0.8.0 document to v0.9.0 (fills new fields with defaults). Old
+ * keyframes (no `id`) gain one; old effects keep working. Captions,
+ * comments and sharedWith default to [] and new clip fields are
+ * optional, so old documents validate unchanged.
  */
 export function migrateProject(data: unknown): VidoraProject {
   const raw = data as Record<string, unknown>;
@@ -654,7 +670,7 @@ export function migrateProject(data: unknown): VidoraProject {
     };
   });
   const parsed = projectSchema.parse({ ...raw, tracks: migratedTracks });
-  return { ...parsed, version: '0.8.0' };
+  return { ...parsed, version: '0.9.0' };
 }
 
 /** Resolution for an aspect ratio, given a custom size when ratio is 'custom'. */
@@ -709,6 +725,7 @@ export function defaultTextStyle(content = 'Heading'): TextStyle {
 export const SAMPLE_PROJECT: VidoraProject = {
   aspectRatio: '16:9',
   captions: [],
+  comments: [],
   createdAt: '2026-11-22T00:00:00.000Z',
   folders: [{ id: 'folder-all', name: 'All media' }],
   fps: 30,
@@ -717,6 +734,7 @@ export const SAMPLE_PROJECT: VidoraProject = {
   markers: [{ color: '#7C3AED', label: 'Intro', time: 0 }],
   media: [],
   mixer: { duckAmountDb: 12, ducking: false, masterVolume: 1 },
+  sharedWith: [],
   name: 'Sunset Coast — Sample Project',
   resolution: { height: 1080, width: 1920 },
   tracks: [
@@ -800,5 +818,5 @@ export const SAMPLE_PROJECT: VidoraProject = {
     },
   ],
   updatedAt: '2026-11-22T00:00:00.000Z',
-  version: '0.8.0',
+  version: '0.9.0',
 };

@@ -66,7 +66,9 @@ function makeCanvas(width: number, height: number): HTMLCanvasElement {
   return c;
 }
 
-/** Render one clip's source frame (video/image) into a working canvas. */
+/** Render one clip's source frame (video/image) into a working canvas.
+ * maxWidth caps the working width (preview: 960 for speed; export passes
+ * the real output width for full-resolution frames — Phase 8). */
 export function renderClipFrame(
   source: CanvasImageSource,
   sourceW: number,
@@ -76,8 +78,9 @@ export function renderClipFrame(
   frameIndex: number,
   outWidth: number,
   outHeight: number,
+  maxWidth: number = WORKING_MAX_WIDTH,
 ): HTMLCanvasElement {
-  const scale = Math.min(1, WORKING_MAX_WIDTH / Math.max(1, outWidth));
+  const scale = Math.min(1, maxWidth / Math.max(1, outWidth));
   const w = Math.max(1, Math.round(outWidth * scale));
   const h = Math.max(1, Math.round(outHeight * scale));
   const frame = makeCanvas(w, h);

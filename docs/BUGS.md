@@ -252,10 +252,22 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   Node 24 type-stripping rejects (`ERR_IMPORT_ATTRIBUTE_MISSING`).
   Fix: double-quoted string; `with { type: 'json' }` on the import
   (valid for Vite too). `build:assets` passes (1,089 entries).
-- BUG-D5 | Phase 1 → Phase 8 | Export | DEFERRED — Export is realtime
-  canvas capture only: no audio mix, no 4K, no H.265/VP9 choice, no
-  bitrate control, no GIF, no background queue. Stated in the panel
-  and in SPEC.md.
+- BUG-D5 | Phase 1 → Phase 8 | Export | FIXED 2026-11-24 (v0.9.0) —
+  Full offline export is real: `src/lib/exportEngine.ts` renders frame
+  by frame through the shared compositor (`renderTimelineFrame`) and
+  encodes with mediabunny (WebCodecs) — MP4/MOV (H.264 + AAC) or WebM
+  (VP9/VP8 + Opus), 360p–4K, 24/25/30/50/60 fps, quality tiers with
+  real bitrates, plus the audio mix (OfflineAudioContext 48 kHz:
+  volume, fades, keyframed volume, ducking, mute/solo, master, 3-band
+  EQ, 120 Hz highpass) — rendered narration/TTS WAVs now export too.
+  Audio-only WAV, GIF (10 fps, 320 px, first 30 s), PNG image sequence
+  and cover frame are real exports, and a background queue (one job at
+  a time, cancel, re-run, re-download) runs in `src/lib/exportQueue.ts`.
+  Honest limits that stay: no H.265 (no browser encoder exists), no
+  MP3 (audio-only is WAV), voice-changer presets are preview-only,
+  reversed clips are silent as in preview. Verified by 23 Phase 8
+  unit tests and the Phase 8 audit (real MP4/WebM file ffprobed:
+  h264/vp9 + aac/opus, duration ≈ project).
 - BUG-D7 | Phase 1 → Phase 2 retrofit | Timeline | FIXED 2026-11-22 —
   Audio waveform on timeline clips: implemented in the parity retrofit.
   `probeAudioPeaks` decodes imported audio with `AudioContext` and
@@ -318,10 +330,9 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   (v0.8.0, partial — see D5) — Real TTS audio now exists: the offline
   Piper pipeline `tools/narrate.py` (en_US-lessac-medium, CC-BY,
   22050 Hz WAV) renders narration to a real audio clip on the timeline
-  (volume, fades, EQ, ducking all work). Remaining gap: rendered export
-  still has no audio mix at all (BUG-D5, Phase 8), so the WAV plays on
-  the timeline and in preview but is not yet in exported files. The
-  panel says both parts plainly.
+  (volume, fades, EQ, ducking all work). The remaining gap closed in
+  v0.9.0: BUG-D5 is fixed, so the rendered WAV now exports with the
+  audio mix. Fully fixed as of Phase 8.
 - BUG-D12 | Phase 4 → Phase 7 | Audio | FIXED 2026-11-24 (v0.8.0) —
   Real vocal isolation: centre-channel (mid/side) separation — "Isolate
   voice" renders the mid stem, "Remove voice" renders the side stem,
@@ -365,3 +376,53 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   cannot listen to a clip file. Card corrected: dictation (mic) +
   the Vosk script for file transcription; the panel already said this
   plainly.
+- BUG-P8-001 | Phase 8 | Export queue | FIXED 2026-11-24 — The first
+  export job never left "queued": `loadJobs()` only set its
+  `interruptedMarked` flag after the empty-storage early returns, so on
+  a fresh session the flag stayed false until the first load AFTER a job
+  was saved — and that load flipped the fresh job to "interrupted", so
+  `runQueue` found no queued job and returned. Found by the Phase 8
+  audit (job sat "queued" for 10 minutes) and a focused Playwright
+  probe with temporary console logging. Fix: mark the first load at
+  function entry in `loadJobs()` (an empty store still counts as a
+  load). The probe file was deleted after use.
+- BUG-P8-002 | Phase 8 | Export | FIXED 2026-11-24 — 480p export of a
+  16:9 project failed in the encoder: `exportSizeFor` computed
+  853x480 and H.264 (YUV 4:2:0) rejects odd dimensions ("both width
+  and height must be even numbers"). Found by the Phase 8 audit
+  (ffprobe never ran — the job failed first). Fix: round both sides
+  to even numbers in `exportSizeFor` (16:9 at 480p is now 854x480);
+  covers video, GIF, frames and cover exports, which all use it.
+  Regression-tested (all resolutions, landscape + portrait, even).
+- BUG-P8-003 | Phase 8 | Export audio | FIXED 2026-11-24 — The
+  audio-only WAV read as twice its real length (ffprobe: 12.00 s for
+  a 6 s project). Cause: `encodeWav` always wrote a MONO header, but
+  `exportAudioWav` feeds it interleaved STEREO samples, so the data
+  was 2x what the header described. Fix: `encodeWav(samples,
+  sampleRate, channels = 1)` writes the real channel count, byte rate
+  and block align; the export passes 2. Mono callers (music/SFX
+  renderers, AI Tools) are unchanged by the default. Regression test
+  reads the stereo header bytes back.
+- BUG-P8-004 | Phase 8 | Export render | FIXED 2026-11-24 — The
+  exported video's first frame was black even though the media was
+  fine. Cause: `seekVideoForFrame` only waits for 'seeked' when the
+  target differs from the element's current time — at frame 0 the
+  target IS the initial currentTime, so no seek was issued and the
+  function returned before any frame was decoded. Fix: after
+  metadata loads, wait for 'loadeddata' (first frame available) when
+  readyState is still below 2. Also fixed the warning precision in
+  the same pass: the "rendered as a label" warning used to fire if a
+  clip was skipped on ANY frame (one loading frame was enough); it
+  now counts skips and warns only when a clip is missing for more
+  than 10% of frames. Verified by extracting frame 0 from the
+  exported MP4 (black before, real video after) in the Phase 8 audit.
+- BUG-P8-005 | Phase 8 | Export dialog | FIXED 2026-11-24 — Once the
+  export queue grew, the dialog's tabs at the top became unclickable:
+  the overlay used flex `items-center` (vertical centering) with
+  `overflow-y-auto`, and when the panel grew taller than the viewport
+  the top overflowed above the screen and could not be scrolled to
+  (the classic flex-centering overflow trap). Found by the Phase 8
+  audit (the 'Share for review' tab click timed out twice). Fix:
+  `items-start` so the panel starts at the top and scrolls normally.
+  (ShortcutsPanel uses the same centering but its content is short
+  and has no scroll container, so it is unaffected.)

@@ -119,10 +119,60 @@ export const TEMPLATE_CATALOG: TemplateDef[] = [
   { category: 'Vlog', description: 'Tasty food title.', duration: 10, id: 'food-vlog', items: [txt('sunset-banner', 'Tasty', 0.4, 4, { animationIn: 'pop' }), txt('clean-subtitle', 'Today we cook...', 4.5, 5, { positionY: 18 })], name: 'Food Vlog', ratio: '16:9', slots: [slot('food', 'Food clip', 0, 10)] },
   { category: 'Vlog', description: 'Calm morning routine opener.', duration: 12, id: 'morning-routine', items: [bgItem('mint-breeze', 0, 3), txt('bold-title', 'Morning', 0.4, 4, { animationIn: 'fade' }), txt('clean-subtitle', 'Slow starts, good coffee', 5, 6, { positionY: 16 })], name: 'Morning Routine', ratio: '16:9', slots: [slot('morning', 'Morning clip', 3, 9)] },
   { category: 'Vlog', description: 'High-energy workout title.', duration: 10, id: 'workout-vlog', items: [txt('bold-title', 'Train hard', 0.4, 4, { animationIn: 'pop' }), txt('clean-subtitle', 'No excuses today', 4.5, 5, { positionY: 18 }), stk('burst', 1, 8, { motion: 'motion-flame', positionX: 32, positionY: -16 })], name: 'Workout Vlog', ratio: '16:9', slots: [slot('workout', 'Workout clip', 0, 10)] },
+  // ---- Phase 8 additions (10 new, 2 per category) ----
+  { category: 'Intro', description: 'Soft sunrise title over your footage.', duration: 6, id: 'sunrise-intro', items: [txt('sunset-banner', 'Good morning', 0.4, 5.2, { animationIn: 'rise' }), stk('sun', 1, 4.5, { motion: 'motion-sun', positionX: -30, positionY: -18 })], name: 'Sunrise Intro', ratio: '16:9', slots: [slot('main', 'Main clip', 0, 6)] },
+  { category: 'Intro', description: 'A quote to open with.', duration: 5, id: 'quote-intro', items: [bgItem('rose-dawn', 0, 5), txt('quote-card', '“Begin anywhere.”', 0.5, 4, { animationIn: 'fade' })], name: 'Quote Intro', ratio: '16:9', slots: [] },
+  { category: 'Outro', description: 'Gentle wave goodbye.', duration: 5, id: 'wave-outro', items: [bgItem('slate-rain', 0, 5), txt('clean-subtitle', 'See you next time', 0.5, 4, { animationIn: 'rise' }), stk('heart', 1, 3.5, { motion: 'motion-heart', positionX: 0, positionY: 16 })], name: 'Wave Outro', ratio: '16:9', slots: [] },
+  { category: 'Outro', description: 'Point at the next clip.', duration: 6, id: 'see-you-outro', items: [txt('bold-title', 'See you soon', 0.4, 4, { animationIn: 'pop' }), txt('clean-subtitle', 'Watch the next one', 3, 2.5, { positionY: 16 })], name: 'See You Outro', ratio: '16:9', slots: [slot('next', 'Next clip', 0, 6)] },
+  { category: 'Social', description: 'Dance hook for your reel.', duration: 7, id: 'dance-reel', items: [txt('bold-title', 'Watch me', 0.3, 3, { animationIn: 'pop' }), stk('star', 1, 5, { motion: 'motion-sparkle', positionX: 26, positionY: -20 })], name: 'Dance Reel', ratio: '9:16', slots: [slot('main', 'Main clip', 0, 7)] },
+  { category: 'Social', description: 'Tasty food teaser.', duration: 6, id: 'food-reel', items: [txt('sunset-banner', 'Yum', 0.4, 4.5, { animationIn: 'pop' }), txt('clean-subtitle', 'Recipe in the comments', 3, 2.5, { positionY: 18 })], name: 'Food Reel', ratio: '9:16', slots: [slot('food', 'Food clip', 0, 6)] },
+  { category: 'Promo', description: 'Short teaser for a launch.', duration: 8, id: 'launch-teaser', items: [txt('bold-title', 'Coming soon', 0.3, 3, { animationIn: 'fade' }), txt('clean-subtitle', 'Stay tuned', 4, 3.5, { positionY: 18 })], name: 'Launch Teaser', ratio: '16:9', slots: [slot('product', 'Product clip', 0, 8)] },
+  { category: 'Promo', description: 'Coupon code card.', duration: 6, id: 'coupon-promo', items: [bgItem('ember-glow', 0, 6), txt('bold-title', 'Use code VIDORA', 0.5, 5, { animationIn: 'pop' })], name: 'Coupon Promo', ratio: '16:9', slots: [] },
+  { category: 'Vlog', description: 'Travel diary opener.', duration: 12, id: 'travel-diary', items: [txt('bold-title', 'On the road', 0.4, 4, { animationIn: 'rise' }), txt('clean-subtitle', 'Day 1 — the journey begins', 5, 6, { positionY: 16 })], name: 'Travel Diary', ratio: '16:9', slots: [slot('travel', 'Travel clip', 0, 12)] },
+  { category: 'Vlog', description: 'Gym session opener.', duration: 10, id: 'gym-vlog', items: [txt('bold-title', 'Gym time', 0.4, 4, { animationIn: 'pop' }), txt('clean-subtitle', 'Warm up, then work', 4.5, 5, { positionY: 18 })], name: 'Gym Vlog', ratio: '16:9', slots: [slot('gym', 'Gym clip', 0, 10)] },
 ];
 
 export function templateDef(id: string): TemplateDef | undefined {
   return TEMPLATE_CATALOG.find((t) => t.id === id);
+}
+
+/**
+ * Build a new project from a template with the user's own media in the
+ * slots (Phase 8, L-TEMPLATES-SLOTS). `slotMedia` maps slot id → media
+ * id from the source project. Slots without media keep the Phase 5
+ * placeholder behaviour ("▶ label"). The new project keeps the source
+ * project's media library so the slot clips have files to play.
+ */
+export function applyTemplateWithSlots(
+  project: VidoraProject,
+  templateId: string,
+  slotMedia: Record<string, string>,
+): VidoraProject | null {
+  const def = templateDef(templateId);
+  if (!def) return null;
+  const next = applyTemplate(project, templateId);
+  if (!next) return null;
+  next.media = [...project.media];
+  const videoTrack = next.tracks.find((t) => t.kind === 'video');
+  if (!videoTrack) return next;
+  for (const slot of def.slots) {
+    const mediaId = slotMedia[slot.id];
+    if (!mediaId) continue;
+    const media = project.media.find((m) => m.id === mediaId);
+    if (!media) continue;
+    const clip = videoTrack.clips.find((c) => c.name === `▶ ${slot.label}`);
+    if (!clip) continue;
+    const isImage = media.kind === 'image' || media.kind === 'gif';
+    const dur = isImage ? slot.duration : Math.min(slot.duration, media.duration && media.duration > 0 ? media.duration : slot.duration);
+    clip.duration = dur;
+    clip.mediaId = media.id;
+    clip.name = media.name;
+    clip.sourceDuration = media.duration ?? dur;
+    clip.sourceStart = 0;
+    clip.src = media.src;
+    clip.type = isImage ? 'image' : 'video';
+  }
+  return next;
 }
 
 export function templatesByCategory(category: TemplateCategory): TemplateDef[] {

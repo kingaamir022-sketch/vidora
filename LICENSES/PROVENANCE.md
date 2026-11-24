@@ -43,11 +43,11 @@ TypeScript catalogs in `src/lib/`. Counts are enforced by the script.
 | Text style presets (`src/lib/text.ts`) | 50 | Original Vidora styles | CC0 (Vidora original) |
 | Text animations | 37 | Original in/out + loop animation code | CC0 (Vidora original) |
 | Caption style presets (`src/lib/captions.ts`) | 20 | Original Vidora styles | CC0 (Vidora original) |
-| Templates (`src/lib/templates.ts`) | 25 | Original layouts from Vidora assets only | CC0 (Vidora original) |
+| Templates (`src/lib/templates.ts`) | 35 | Original layouts from Vidora assets only | CC0 (Vidora original) |
 | Procedural music loops (`src/lib/audio.ts`) | 30 | Original Web Audio compositions (no samples) | CC0 (Vidora original) |
 | Procedural sound effects (`src/lib/audio.ts`) | 200 | Original Web Audio synthesis (no samples) | CC0 (Vidora original) |
 | Backgrounds (`src/lib/backgrounds.ts`) | 30 | Original generated SVG artwork | CC0 (Vidora original) |
-| Asset manifest (`assets/manifest.json`) | 1089 entries | Generated from the catalogs on every run | — |
+| Asset manifest (`assets/manifest.json`) | 1099 entries | Generated from the catalogs on every run | — |
 
 No third-party effect/transition/filter/sticker/template names or artwork
 are used. No stock photos, music, samples or copied source code.

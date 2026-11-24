@@ -28,10 +28,10 @@ describe('Phase 5 catalog floors (SPEC N)', () => {
     expect(FONT_CATALOG.length).toBe(40);
   });
 
-  it('ships 50 text presets, 20 caption presets, 25 templates, 30 loops, 100 SFX, 30 backgrounds', () => {
+  it('ships 50 text presets, 20 caption presets, 35 templates, 30 loops, 100 SFX, 30 backgrounds', () => {
     expect(TEXT_STYLE_PRESETS.length).toBe(50);
     expect(CAPTION_STYLE_PRESETS.length).toBe(20);
-    expect(TEMPLATE_CATALOG.length).toBe(25);
+    expect(TEMPLATE_CATALOG.length).toBe(35);
     expect(ORIGINAL_LOOPS.length).toBe(30);
     expect(ORIGINAL_SFX.length).toBe(100);
     expect(BACKGROUND_CATALOG.length).toBe(30);

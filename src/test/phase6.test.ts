@@ -226,6 +226,6 @@ describe('Phase 6 asset library counts', () => {
     expect(entries.filter((e) => e.type === 'ai-clip').length).toBe(100);
     expect(entries.filter((e) => e.type === 'ai-image').length).toBe(110);
     expect(entries.filter((e) => e.type === 'ai-voice').length).toBe(16);
-    expect(entries.length).toBe(663 + 100 + 100 + 100 + 110 + 16);
+    expect(entries.length).toBe(673 + 100 + 100 + 100 + 110 + 16);
   });
 });

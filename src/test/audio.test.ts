@@ -230,6 +230,19 @@ describe('detectBeats', () => {
 });
 
 describe('encodeWav', () => {
+  it('writes a valid stereo WAV header (BUG-P8-003)', async () => {
+    // Interleaved stereo: 2 channels x 4 frames at 48000 Hz.
+    const blob = encodeWav(new Float32Array([0, 0, 0.5, -0.5, 1, 1, -1, -1]), 48000, 2);
+    const buf = await blob.arrayBuffer();
+    const view = new DataView(buf);
+    expect(view.getUint16(22, true)).toBe(2); // channels
+    expect(view.getUint32(24, true)).toBe(48000); // sample rate
+    expect(view.getUint32(28, true)).toBe(48000 * 2 * 2); // byte rate
+    expect(view.getUint16(32, true)).toBe(4); // block align
+    expect(view.getUint32(40, true)).toBe(16); // data bytes = 8 samples x 2
+    expect(buf.byteLength).toBe(44 + 16);
+  });
+
   it('writes a valid 16-bit mono WAV header', async () => {
     const blob = encodeWav(new Float32Array([0, 1, -1, 0.5]), 44100);
     expect(blob.type).toBe('audio/wav');

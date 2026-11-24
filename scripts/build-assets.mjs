@@ -66,7 +66,7 @@ const MINIMUMS = {
   luts: 30,
   sfx: 200,
   stickers: 200,
-  templates: 25,
+  templates: 35,
   textAnimations: 37,
   textPresets: 50,
   transitions: 30,

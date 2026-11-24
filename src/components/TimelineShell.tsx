@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { findClip, projectDuration, snapTime, snapToFrame } from '../lib/timeline';
-import { formatTimecode } from './PreviewArea';
+import { formatCommentTime } from '../lib/collab';
+import { formatTimecode } from '../lib/renderFrame';
 
 type Drag = {
   clipId: string;
@@ -200,6 +201,22 @@ export default function TimelineShell() {
               ))}
               {(project?.markers ?? []).map((m) => (
                 <span key={m.time} className="pointer-events-none absolute top-0 h-full w-0.5 bg-cyan-400" style={{ left: m.time * zoom }} title={`${m.label} @ ${m.time}s`} />
+              ))}
+              {/* Review comments (Phase 8, L-COLLAB): amber dots on the ruler;
+                  click one to jump to that moment. Resolved comments are dimmed. */}
+              {(project?.comments ?? []).map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPlayhead(c.time);
+                  }}
+                  className={`absolute top-0.5 h-2.5 w-2.5 -translate-x-1/2 rounded-full ${c.resolved ? 'bg-zinc-600' : 'bg-amber-400'}`}
+                  style={{ left: c.time * zoom }}
+                  title={`Comment @ ${formatCommentTime(c.time)} — ${c.author}: ${c.text}`}
+                  aria-label={`Comment at ${formatCommentTime(c.time)}: ${c.text}`}
+                />
               ))}
               <span className="pointer-events-none absolute top-0 h-full w-0.5 bg-red-500" style={{ left: playhead * zoom }} />
             </div>

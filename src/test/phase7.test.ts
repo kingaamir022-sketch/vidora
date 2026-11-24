@@ -396,10 +396,10 @@ describe('Phase 7 schema (v0.8.0)', () => {
     expect(validateProject(SAMPLE_PROJECT).success).toBe(true);
   });
 
-  it('migrates a v0.7.0 document to 0.8.0 with AI defaults', () => {
+  it('migrates a v0.7.0 document to 0.9.0 with AI defaults', () => {
     const old = { ...SAMPLE_PROJECT, version: '0.7.0' as const };
     const migrated = migrateProject(old);
-    expect(migrated.version).toBe('0.8.0');
+    expect(migrated.version).toBe('0.9.0');
     const clip = migrated.tracks[0].clips[0];
     expect(clip.aiLowLight).toBe(0);
     expect(clip.aiBgRemove).toBe(false);
@@ -422,7 +422,7 @@ describe('Phase 7 schema (v0.8.0)', () => {
       delete clips[0][k];
     }
     const migrated = migrateProject(old);
-    expect(migrated.version).toBe('0.8.0');
+    expect(migrated.version).toBe('0.9.0');
     expect(migrated.tracks[0].clips[0].aiLowLight).toBe(0);
   });
 });

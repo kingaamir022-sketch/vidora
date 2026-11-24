@@ -25,6 +25,9 @@ export default function App() {
   const view = useProjectStore((s) => s.view);
   const theme = useProjectStore((s) => s.theme);
   const activeTab = useProjectStore((s) => s.activeTab);
+  const presentMode = useProjectStore((s) => s.presentMode);
+  const setPresentMode = useProjectStore((s) => s.setPresentMode);
+  const setPlaying = useProjectStore((s) => s.setPlaying);
 
   useEffect(() => startAutosave(), []);
 
@@ -34,6 +37,11 @@ export default function App() {
     const handler = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
       if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable)) return;
+      // Phase 8 (L-SHARE): Esc exits presentation mode.
+      if (e.key === 'Escape' && useProjectStore.getState().presentMode) {
+        useProjectStore.getState().setPresentMode(false);
+        return;
+      }
       const s = useProjectStore.getState();
       const action = actionForCombo(s.shortcuts, eventToCombo(e));
       if (!action) return;
@@ -59,6 +67,31 @@ export default function App() {
     return (
       <div data-theme={theme}>
         <Dashboard />
+      </div>
+    );
+  }
+
+  // Phase 8 (L-SHARE): presentation mode — fullscreen playback only,
+  // no editing UI. Esc or the button exits.
+  if (presentMode) {
+    return (
+      <div data-theme={theme} className="flex h-screen flex-col overflow-hidden bg-black text-zinc-100">
+        <div className="flex flex-1 items-center justify-center overflow-hidden">
+          <PreviewArea />
+        </div>
+        <div className="flex h-12 shrink-0 items-center justify-center gap-3 border-t border-zinc-800 bg-zinc-950 px-2">
+          <button
+            type="button"
+            onClick={() => {
+              setPlaying(false);
+              setPresentMode(false);
+            }}
+            className="rounded-lg border border-zinc-700 px-4 py-2 text-sm"
+          >
+            Exit presentation (Esc)
+          </button>
+          <span className="text-xs text-zinc-500">Presentation — watch only, no editing.</span>
+        </div>
       </div>
     );
   }

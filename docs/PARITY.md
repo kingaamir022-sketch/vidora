@@ -84,7 +84,7 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Backgrounds (G-BG) | ✓ | ✓ | ✓ | — | ✓ | `MaskPanel.tsx` (blur/colour/gradient/image) | MATCH |
 | Preview transport (X-PREVIEW) | ✓ | ✓ | ✓ | ✓ | ✓ | `PreviewArea.tsx` (step/loop/fullscreen/safe/grid) | MATCH |
 | Autosave & recovery (X-AUTOSAVE) | ✓ | ✓ | ✓ | — | ✓ | `projectStore.ts` (3s autosave) | MATCH |
-| Basic export (X-EXPORT) | ✓ | ✓ | ~ | — | ✓ | `ExportPanel.tsx` (480–1080p, 24–60fps, MP4/WebM) · signed-in Web check 2026-11-23 (WEB-CHECK-2026-11-23.md §3): Download 360p–4k, quality High/Recommended/Fast, 24/25/30/50/60fps, MP4/MOV — Vidora covers the common subset; 2K/4K, 25/50fps, MOV, quality tiers are Phase 8; desktop export may differ | MATCH |
+| Basic export (X-EXPORT) | ✓ | ✓ | ~ | — | ✓ | `ExportPanel.tsx` (360p–4K, 24/25/30/50/60fps, Fast/Recommended/High, MP4/WebM/MOV) · signed-in Web check 2026-11-23 (WEB-CHECK-2026-11-23.md §3): Download 360p–4k, quality High/Recommended/Fast, 24/25/30/50/60fps, MP4/MOV — Vidora now covers the full Web subset; desktop export may differ; H.265 is not offered (no browser encoder) | MATCH |
 | Undo / redo (X-UNDO) | ✓ | ✓ | ✓ | ✓ | ✓ | `projectStore.ts` (stack cap 100) | MATCH |
 | Timeline waveform (B-WAVE) | ✓ | ✓ | ✓ | — | ✓ | `lib/media.ts` (64 peaks), `TimelineShell.tsx` | MATCH |
 | Audio tab: Music / SFX (J-AUDIO) | ✓ | ✓ | ~ | — | ✓ | `AudioPanel.tsx`, `lib/audio.ts` (ORIGINAL_LOOPS/SFX — 30 loops + 100 SFX in Phase 5) · FULL-WALKTHROUGH-2026-11-23.md (Audio tab) — sub-tabs, search, chips, categories, recommended rows, play + "+" add observed; desktop Audio tab never seen, categories/tracks are Vidora Originals | ASSUMED |
@@ -127,15 +127,22 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Script-to-Video (K-SCRIPT) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (script → scenes) + Phase 6 `lib/aiGenerate.ts` visuals + text overlays with narration cues — the reference flow (write → scenes → video) is the standard shape; the assembly is Vidora's own composition of its generators | ASSUMED |
 | Upscale to 4K (K-UPSCALE) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (canvas resample + unsharp-mask sharpen) renders a 2K/4K copy via MediaRecorder — the reference flow (upscale → 4K file) is matched; the engine is Vidora's own resample, honestly labelled (no detail recovery, not AI upscaling) | ASSUMED |
 | AI Providers (K-PROVIDERS) | ~ | ~ | ~ | — | ~ | `lib/aiProviders.ts` (Local provider ready; OpenAI/Stability/Replicate stubs, not configured) — no reference provider UI was observed; the adapter shape is Vidora's own, no cloud call is made | ASSUMED |
+| Full export (L-EXPORT) | ✓ | ✓ | ✓ | — | ✓ | `lib/exportEngine.ts` (WebCodecs/mediabunny MP4/WebM/MOV, 360p–4K, 24/25/30/50/60fps, Fast/Recommended/High, real audio mix) + `ExportPanel.tsx` — matches the signed-in Web export panel (WEB-CHECK-2026-11-23.md §3) option for option; H.265 honestly not offered (no browser encoder); AAC unavailable in this browser so MP4/MOV is video-only with a visible note | MATCH |
+| Export queue (L-EXPORT-QUEUE) | ~ | ~ | ~ | — | ~ | `lib/exportQueue.ts` (one job at a time, cancel, re-run, background while editing) + queue section in `ExportPanel.tsx` — no reference queue UI was observed; the background-queue shape is the standard editor pattern, honestly labelled (finished files live in memory only) | ASSUMED |
+| Audio / GIF / frames / cover export (L-EXPORT-AUDIO) | ~ | ~ | ~ | — | ~ | `lib/exportEngine.ts` (WAV audio-only, GIF 10fps/320px/30s, PNG frame sequence, cover frame) + "More export kinds" in `ExportPanel.tsx` — no reference UI for these kinds was observed; the kinds are the standard export extras, each honestly limited in the UI | ASSUMED |
+| Template slots (L-TEMPLATES-SLOTS) | ~ | ~ | ~ | — | ~ | `lib/templates.ts` (35 templates, `applyTemplateWithSlots`) + slot pickers in `TemplatesPanel.tsx` — no reference slot UI was observed; the "choose media for each slot" shape is the standard template flow, unfilled slots keep the placeholder clip | ASSUMED |
+| Cloud backup (L-CLOUD) | ~ | ~ | ~ | — | ~ | `lib/cloudBackup.ts` (.vidora bundle: project JSON + media list, media files NOT inside) + Backups section in `Dashboard.tsx` — no reference cloud UI was observed; Drive is the user's cloud (bundle downloads, user saves it to Drive), honestly labelled, no rented server | ASSUMED |
+| Review comments (L-COLLAB) | ~ | ~ | ~ | — | ~ | `lib/collab.ts` (time-anchored comments, resolve/reopen) + review tab in `ExportPanel.tsx` + amber markers on the timeline ruler — the review flow mirrors CapCut's "Share for review" (people can add comments); the local-first storage (comments live in the project file) is Vidora's own, honestly labelled | ASSUMED |
+| Share (L-SHARE) | ~ | ~ | ~ | — | ~ | `lib/share.ts` (YouTube/Shorts, TikTok, TikTok Ads Manager, Facebook Page upload links; Instagram Reels has no web upload, honestly labelled) + share tabs in `ExportPanel.tsx` + presentation mode — matches the signed-in Web share menu (WEB-CHECK-2026-11-23.md §3) link for link; Free Schedule is disabled with a reason (no scheduler service) | ASSUMED |
 
-## Parity score (correction round v0.3.2 + signed-in export check 2026-11-23 + Phase 3 v0.4.0 + Phase 4 v0.5.0 + Phase 5 v0.6.0 + Phase 6 v0.7.0 + Phase 7 v0.8.0)
+## Parity score (correction round v0.3.2 + signed-in export check 2026-11-23 + Phase 3 v0.4.0 + Phase 4 v0.5.0 + Phase 5 v0.6.0 + Phase 6 v0.7.0 + Phase 7 v0.8.0 + Phase 8 v0.9.0)
 
-- **MATCH: 44 / 81**
-- **ASSUMED: 34 / 81** — J-AUDIO, J-MIXER, J-VOICE, J-BEAT, J-VOICEOVER, N-GLSL, N-FONTS, N-TEXTANIM, N-CAPTIONPRESETS, N-TEMPLATES, N-MUSIC, N-BACKGROUNDS, N-ASSETS, O-AI-LIBRARY, O-AI-GENERATE, O-AI-MUSIC, O-AI-CLIPS, O-AI-IMAGES, O-AI-VOICES, K-STT, K-TTS, K-SMARTCUT, K-REFRAME, K-BGREMOVE, K-TRACK, K-STABILIZE, K-ENHANCE, K-MOVEMENT, K-OPTFLOW, K-VOCAL, K-HIGHLIGHTS, K-SCRIPT, K-UPSCALE, K-PROVIDERS
-- **DIFF-FIXING: 0 / 81**
-- **INTENTIONAL-DIFF: 3 / 81** — B-MARKER, B-GROUP, F-WHEELS (spec-required extras CapCut Web lacks; awaiting desktop screenshots)
+- **MATCH: 45 / 88**
+- **ASSUMED: 40 / 88** — J-AUDIO, J-MIXER, J-VOICE, J-BEAT, J-VOICEOVER, N-GLSL, N-FONTS, N-TEXTANIM, N-CAPTIONPRESETS, N-TEMPLATES, N-MUSIC, N-BACKGROUNDS, N-ASSETS, O-AI-LIBRARY, O-AI-GENERATE, O-AI-MUSIC, O-AI-CLIPS, O-AI-IMAGES, O-AI-VOICES, K-STT, K-TTS, K-SMARTCUT, K-REFRAME, K-BGREMOVE, K-TRACK, K-STABILIZE, K-ENHANCE, K-MOVEMENT, K-OPTFLOW, K-VOCAL, K-HIGHLIGHTS, K-SCRIPT, K-UPSCALE, K-PROVIDERS, L-EXPORT-QUEUE, L-EXPORT-AUDIO, L-TEMPLATES-SLOTS, L-CLOUD, L-COLLAB, L-SHARE
+- **DIFF-FIXING: 0 / 88**
+- **INTENTIONAL-DIFF: 3 / 88** — B-MARKER, B-GROUP, F-WHEELS (spec-required extras CapCut Web lacks; awaiting desktop screenshots)
 - **Gate result: PASS** — every Phase 0–2 feature is MATCH, ASSUMED or INTENTIONAL-DIFF,
-  `npm run build` is green (99 modules), `npm test` is 256/256, and the
+  `npm run build` is green (176 modules), `npm test` is 282/282, and the
   Playwright self-audits pass: Phase 2 (`audit/phase2/AUDIT-REPORT.md`)
   40/40 checks with 0 open bugs (29 screenshots in `audit/phase2/<ID>/`,
   layout re-measured at 1440×900 with 0px drift), Phase 3
@@ -148,16 +155,20 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
   (`audit/phase6/AUDIT-REPORT.md`) 32/32 checks with 0 open bugs
   (6 card folders with screenshots in `audit/phase6/<ID>/`), Phase 7
   (`audit/phase7/AUDIT-REPORT.md`) 61/61 checks with 0 open bugs
-  (15 card folders with screenshots in `audit/phase7/<ID>/`). The Phase 2
+  (15 card folders with screenshots in `audit/phase7/<ID>/`), Phase 8
+  (`audit/phase8/AUDIT-REPORT.md`) 61/61 checks with 0 open bugs
+  (7 card folders with screenshots in `audit/phase8/<ID>/`). The Phase 2
   audit suite predates v0.3.2; the F-BLEND row is covered by the new Vitest tests
   (blend mapping, live compositing path) and the updated F-WHEELS
   audit screenshots.
 
 ## What the score does not cover
 
-- Deferred engine work (lens correction → Phase 8, 4K/H.265 export →
-  Phase 8) is honestly labelled in the UI and logged in `docs/BUGS.md`
-  as deferred, not counted as a parity failure. Real motion
+- Deferred engine work: 4K export is DONE in Phase 8 (v0.9.0) — H.265
+  is still not offered (no browser encoder exists for it) and lens
+  correction is still deferred (BUG-D2), both honestly labelled in
+  the UI and logged in `docs/BUGS.md` as deferred, not counted as a
+  parity failure. Real motion
   stabilization and optical flow are DONE in Phase 7 (v0.8.0), as are
   auto captions, auto tracking, vocal isolation and TTS audio — see the
   K rows above. Pitch-preserving speed playback is DONE in Phase 4
@@ -170,12 +181,13 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
   scored as a feature here. The AI Tools tab is implemented in v0.7.0
   (AI Library, O rows above) and extended in v0.8.0 (K rows above).
   Templates tab is implemented in v0.6.0 (25 original layouts, N-TEMPLATES)
-  and scored above; Phase 8 adds replaceable media slots + sharing.
+  and extended in v0.9.0 to 35 layouts with replaceable media slots
+  (L-TEMPLATES-SLOTS) and sharing (L-SHARE), scored above.
   Audio (Phase 4) is implemented in v0.5.0 and scored above (J rows).
   Text/Stickers/Captions (Phase 3) are implemented in v0.4.0 — their
   behaviour cards carry the status (MATCH / ASSUMED /
   UNKNOWN) and the Phase 3 audit covers them; they are not yet rows in
-  this matrix, which now scores Phases 0–2 + Phase 4 + Phase 5 + Phase 6 + Phase 7 (81 rows).
+  this matrix, which now scores Phases 0–2 + Phase 4 + Phase 5 + Phase 6 + Phase 7 + Phase 8 (88 rows).
 - Light-theme editor styling is Phase 9; the dashboard toggle exists
   and the editor remains dark until then.
 - CapCut Web's left rail differs from desktop (Elements/Transcript/
