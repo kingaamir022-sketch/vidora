@@ -1,10 +1,10 @@
 # Vidora Phase 5 audit report
 
-Run: 2026-11-23T06:25:36.930Z
+Run: 2026-11-23T08:46:56.084Z
 Result: 38/38 checks passed, 0 failed.
 
-- PASS [N-ASSETS] assets/manifest.json has 663 entries — entries: 663
-- PASS [N-ASSETS] manifest counts meet every floor — {"backgrounds":30,"captionPresets":20,"cssEffects":14,"fonts":40,"glslEffects":62,"loops":30,"luts":32,"sfx":100,"shapes":10,"stickers":232,"templates":25,"textAnimations":37,"textPresets":50,"total":714,"transitions":32}
+- PASS [N-ASSETS] assets/manifest.json has 1089 entries (663 Phase 5 + 426 Phase 6 AI rows) — entries: 1089
+- PASS [N-ASSETS] manifest counts meet every floor — {"aiClips":100,"aiImages":110,"aiSfx":100,"aiTracks":100,"backgrounds":30,"captionPresets":20,"cssEffects":14,"fonts":40,"glslEffects":62,"loops":30,"luts":32,"sfx":200,"shapes":10,"stickers":232,"templates":25,"textAnimations":37,"textPresets":50,"total":1240,"transitions":32,"voices":16}
 - PASS [N-ASSETS] 32 .cube files generated — files: 32
 - PASS [N-ASSETS] 28 animated sticker JSON files generated — files: 28
 - PASS [N-ASSETS] 40 woff2 fonts downloaded — files: 41

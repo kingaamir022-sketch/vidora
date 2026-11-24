@@ -1,0 +1,1812 @@
+[
+  {
+    "id": "ai-frame-01",
+    "kind": "frame",
+    "name": "Thin Line Frame 1",
+    "design": "thin-line",
+    "file": "/ai-library/images/frames/ai-frame-01.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 10456,
+    "tags": [
+      "frame",
+      "thin-line",
+      "ai"
+    ],
+    "seed": 30000
+  },
+  {
+    "id": "ai-frame-02",
+    "kind": "frame",
+    "name": "Double Line Frame 1",
+    "design": "double-line",
+    "file": "/ai-library/images/frames/ai-frame-02.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 10511,
+    "tags": [
+      "frame",
+      "double-line",
+      "ai"
+    ],
+    "seed": 30019
+  },
+  {
+    "id": "ai-frame-03",
+    "kind": "frame",
+    "name": "Rounded Frame 1",
+    "design": "rounded",
+    "file": "/ai-library/images/frames/ai-frame-03.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 11156,
+    "tags": [
+      "frame",
+      "rounded",
+      "ai"
+    ],
+    "seed": 30038
+  },
+  {
+    "id": "ai-frame-04",
+    "kind": "frame",
+    "name": "Corner Flourish Frame 1",
+    "design": "corner-flourish",
+    "file": "/ai-library/images/frames/ai-frame-04.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 9703,
+    "tags": [
+      "frame",
+      "corner-flourish",
+      "ai"
+    ],
+    "seed": 30057
+  },
+  {
+    "id": "ai-frame-05",
+    "kind": "frame",
+    "name": "Vignette Frame 1",
+    "design": "vignette",
+    "file": "/ai-library/images/frames/ai-frame-05.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 67699,
+    "tags": [
+      "frame",
+      "vignette",
+      "ai"
+    ],
+    "seed": 30076
+  },
+  {
+    "id": "ai-frame-06",
+    "kind": "frame",
+    "name": "Film Strip Frame 1",
+    "design": "film-strip",
+    "file": "/ai-library/images/frames/ai-frame-06.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 12786,
+    "tags": [
+      "frame",
+      "film-strip",
+      "ai"
+    ],
+    "seed": 30095
+  },
+  {
+    "id": "ai-frame-07",
+    "kind": "frame",
+    "name": "Polaroid Frame 1",
+    "design": "polaroid",
+    "file": "/ai-library/images/frames/ai-frame-07.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 10637,
+    "tags": [
+      "frame",
+      "polaroid",
+      "ai"
+    ],
+    "seed": 30114
+  },
+  {
+    "id": "ai-frame-08",
+    "kind": "frame",
+    "name": "Neon Glow Frame 1",
+    "design": "neon-glow",
+    "file": "/ai-library/images/frames/ai-frame-08.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 28846,
+    "tags": [
+      "frame",
+      "neon-glow",
+      "ai"
+    ],
+    "seed": 30133
+  },
+  {
+    "id": "ai-frame-09",
+    "kind": "frame",
+    "name": "Gold Foil Frame 1",
+    "design": "gold-foil",
+    "file": "/ai-library/images/frames/ai-frame-09.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 11459,
+    "tags": [
+      "frame",
+      "gold-foil",
+      "ai"
+    ],
+    "seed": 30152
+  },
+  {
+    "id": "ai-frame-10",
+    "kind": "frame",
+    "name": "Torn Edge Frame 1",
+    "design": "torn-edge",
+    "file": "/ai-library/images/frames/ai-frame-10.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 16371,
+    "tags": [
+      "frame",
+      "torn-edge",
+      "ai"
+    ],
+    "seed": 30171
+  },
+  {
+    "id": "ai-frame-11",
+    "kind": "frame",
+    "name": "Thin Line Frame 2",
+    "design": "thin-line",
+    "file": "/ai-library/images/frames/ai-frame-11.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 10456,
+    "tags": [
+      "frame",
+      "thin-line",
+      "ai"
+    ],
+    "seed": 30190
+  },
+  {
+    "id": "ai-frame-12",
+    "kind": "frame",
+    "name": "Double Line Frame 2",
+    "design": "double-line",
+    "file": "/ai-library/images/frames/ai-frame-12.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 10511,
+    "tags": [
+      "frame",
+      "double-line",
+      "ai"
+    ],
+    "seed": 30209
+  },
+  {
+    "id": "ai-frame-13",
+    "kind": "frame",
+    "name": "Rounded Frame 2",
+    "design": "rounded",
+    "file": "/ai-library/images/frames/ai-frame-13.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 11154,
+    "tags": [
+      "frame",
+      "rounded",
+      "ai"
+    ],
+    "seed": 30228
+  },
+  {
+    "id": "ai-frame-14",
+    "kind": "frame",
+    "name": "Corner Flourish Frame 2",
+    "design": "corner-flourish",
+    "file": "/ai-library/images/frames/ai-frame-14.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 9701,
+    "tags": [
+      "frame",
+      "corner-flourish",
+      "ai"
+    ],
+    "seed": 30247
+  },
+  {
+    "id": "ai-frame-15",
+    "kind": "frame",
+    "name": "Vignette Frame 2",
+    "design": "vignette",
+    "file": "/ai-library/images/frames/ai-frame-15.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 67699,
+    "tags": [
+      "frame",
+      "vignette",
+      "ai"
+    ],
+    "seed": 30266
+  },
+  {
+    "id": "ai-frame-16",
+    "kind": "frame",
+    "name": "Film Strip Frame 2",
+    "design": "film-strip",
+    "file": "/ai-library/images/frames/ai-frame-16.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 12786,
+    "tags": [
+      "frame",
+      "film-strip",
+      "ai"
+    ],
+    "seed": 30285
+  },
+  {
+    "id": "ai-frame-17",
+    "kind": "frame",
+    "name": "Polaroid Frame 2",
+    "design": "polaroid",
+    "file": "/ai-library/images/frames/ai-frame-17.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 10637,
+    "tags": [
+      "frame",
+      "polaroid",
+      "ai"
+    ],
+    "seed": 30304
+  },
+  {
+    "id": "ai-frame-18",
+    "kind": "frame",
+    "name": "Neon Glow Frame 2",
+    "design": "neon-glow",
+    "file": "/ai-library/images/frames/ai-frame-18.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 30634,
+    "tags": [
+      "frame",
+      "neon-glow",
+      "ai"
+    ],
+    "seed": 30323
+  },
+  {
+    "id": "ai-frame-19",
+    "kind": "frame",
+    "name": "Gold Foil Frame 2",
+    "design": "gold-foil",
+    "file": "/ai-library/images/frames/ai-frame-19.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 11459,
+    "tags": [
+      "frame",
+      "gold-foil",
+      "ai"
+    ],
+    "seed": 30342
+  },
+  {
+    "id": "ai-frame-20",
+    "kind": "frame",
+    "name": "Torn Edge Frame 2",
+    "design": "torn-edge",
+    "file": "/ai-library/images/frames/ai-frame-20.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 16036,
+    "tags": [
+      "frame",
+      "torn-edge",
+      "ai"
+    ],
+    "seed": 30361
+  },
+  {
+    "id": "ai-sticker-01",
+    "kind": "sticker",
+    "name": "Star Sticker",
+    "design": "star",
+    "file": "/ai-library/images/stickers/ai-sticker-01.png",
+    "width": 512,
+    "height": 512,
+    "size": 3882,
+    "tags": [
+      "sticker",
+      "star",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40000
+  },
+  {
+    "id": "ai-sticker-02",
+    "kind": "sticker",
+    "name": "Heart Sticker",
+    "design": "heart",
+    "file": "/ai-library/images/stickers/ai-sticker-02.png",
+    "width": 512,
+    "height": 512,
+    "size": 3470,
+    "tags": [
+      "sticker",
+      "heart",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40023
+  },
+  {
+    "id": "ai-sticker-03",
+    "kind": "sticker",
+    "name": "Bolt Sticker",
+    "design": "bolt",
+    "file": "/ai-library/images/stickers/ai-sticker-03.png",
+    "width": 512,
+    "height": 512,
+    "size": 3655,
+    "tags": [
+      "sticker",
+      "bolt",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40046
+  },
+  {
+    "id": "ai-sticker-04",
+    "kind": "sticker",
+    "name": "Arrow Sticker",
+    "design": "arrow",
+    "file": "/ai-library/images/stickers/ai-sticker-04.png",
+    "width": 512,
+    "height": 512,
+    "size": 2534,
+    "tags": [
+      "sticker",
+      "arrow",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40069
+  },
+  {
+    "id": "ai-sticker-05",
+    "kind": "sticker",
+    "name": "Badge Sticker",
+    "design": "badge",
+    "file": "/ai-library/images/stickers/ai-sticker-05.png",
+    "width": 512,
+    "height": 512,
+    "size": 7429,
+    "tags": [
+      "sticker",
+      "badge",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40092
+  },
+  {
+    "id": "ai-sticker-06",
+    "kind": "sticker",
+    "name": "Flower Sticker",
+    "design": "flower",
+    "file": "/ai-library/images/stickers/ai-sticker-06.png",
+    "width": 512,
+    "height": 512,
+    "size": 4344,
+    "tags": [
+      "sticker",
+      "flower",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40115
+  },
+  {
+    "id": "ai-sticker-07",
+    "kind": "sticker",
+    "name": "Sun Sticker",
+    "design": "sun",
+    "file": "/ai-library/images/stickers/ai-sticker-07.png",
+    "width": 512,
+    "height": 512,
+    "size": 6058,
+    "tags": [
+      "sticker",
+      "sun",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40138
+  },
+  {
+    "id": "ai-sticker-08",
+    "kind": "sticker",
+    "name": "Moon Sticker",
+    "design": "moon",
+    "file": "/ai-library/images/stickers/ai-sticker-08.png",
+    "width": 512,
+    "height": 512,
+    "size": 3798,
+    "tags": [
+      "sticker",
+      "moon",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40161
+  },
+  {
+    "id": "ai-sticker-09",
+    "kind": "sticker",
+    "name": "Crown Sticker",
+    "design": "crown",
+    "file": "/ai-library/images/stickers/ai-sticker-09.png",
+    "width": 512,
+    "height": 512,
+    "size": 3355,
+    "tags": [
+      "sticker",
+      "crown",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40184
+  },
+  {
+    "id": "ai-sticker-10",
+    "kind": "sticker",
+    "name": "Gem Sticker",
+    "design": "gem",
+    "file": "/ai-library/images/stickers/ai-sticker-10.png",
+    "width": 512,
+    "height": 512,
+    "size": 2675,
+    "tags": [
+      "sticker",
+      "gem",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40207
+  },
+  {
+    "id": "ai-sticker-11",
+    "kind": "sticker",
+    "name": "Leaf Sticker",
+    "design": "leaf",
+    "file": "/ai-library/images/stickers/ai-sticker-11.png",
+    "width": 512,
+    "height": 512,
+    "size": 3687,
+    "tags": [
+      "sticker",
+      "leaf",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40230
+  },
+  {
+    "id": "ai-sticker-12",
+    "kind": "sticker",
+    "name": "Drop Sticker",
+    "design": "drop",
+    "file": "/ai-library/images/stickers/ai-sticker-12.png",
+    "width": 512,
+    "height": 512,
+    "size": 3877,
+    "tags": [
+      "sticker",
+      "drop",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40253
+  },
+  {
+    "id": "ai-sticker-13",
+    "kind": "sticker",
+    "name": "Cloud Sticker",
+    "design": "cloud",
+    "file": "/ai-library/images/stickers/ai-sticker-13.png",
+    "width": 512,
+    "height": 512,
+    "size": 3399,
+    "tags": [
+      "sticker",
+      "cloud",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40276
+  },
+  {
+    "id": "ai-sticker-14",
+    "kind": "sticker",
+    "name": "Flame Sticker",
+    "design": "flame",
+    "file": "/ai-library/images/stickers/ai-sticker-14.png",
+    "width": 512,
+    "height": 512,
+    "size": 4958,
+    "tags": [
+      "sticker",
+      "flame",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40299
+  },
+  {
+    "id": "ai-sticker-15",
+    "kind": "sticker",
+    "name": "Music Note Sticker",
+    "design": "music-note",
+    "file": "/ai-library/images/stickers/ai-sticker-15.png",
+    "width": 512,
+    "height": 512,
+    "size": 3266,
+    "tags": [
+      "sticker",
+      "music-note",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40322
+  },
+  {
+    "id": "ai-sticker-16",
+    "kind": "sticker",
+    "name": "Camera Sticker",
+    "design": "camera",
+    "file": "/ai-library/images/stickers/ai-sticker-16.png",
+    "width": 512,
+    "height": 512,
+    "size": 3360,
+    "tags": [
+      "sticker",
+      "camera",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40345
+  },
+  {
+    "id": "ai-sticker-17",
+    "kind": "sticker",
+    "name": "Rocket Sticker",
+    "design": "rocket",
+    "file": "/ai-library/images/stickers/ai-sticker-17.png",
+    "width": 512,
+    "height": 512,
+    "size": 4765,
+    "tags": [
+      "sticker",
+      "rocket",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40368
+  },
+  {
+    "id": "ai-sticker-18",
+    "kind": "sticker",
+    "name": "Diamond Sticker",
+    "design": "diamond",
+    "file": "/ai-library/images/stickers/ai-sticker-18.png",
+    "width": 512,
+    "height": 512,
+    "size": 3673,
+    "tags": [
+      "sticker",
+      "diamond",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40391
+  },
+  {
+    "id": "ai-sticker-19",
+    "kind": "sticker",
+    "name": "Shield Sticker",
+    "design": "shield",
+    "file": "/ai-library/images/stickers/ai-sticker-19.png",
+    "width": 512,
+    "height": 512,
+    "size": 3357,
+    "tags": [
+      "sticker",
+      "shield",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40414
+  },
+  {
+    "id": "ai-sticker-20",
+    "kind": "sticker",
+    "name": "Key Sticker",
+    "design": "key",
+    "file": "/ai-library/images/stickers/ai-sticker-20.png",
+    "width": 512,
+    "height": 512,
+    "size": 2920,
+    "tags": [
+      "sticker",
+      "key",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40437
+  },
+  {
+    "id": "ai-sticker-21",
+    "kind": "sticker",
+    "name": "Bell Sticker",
+    "design": "bell",
+    "file": "/ai-library/images/stickers/ai-sticker-21.png",
+    "width": 512,
+    "height": 512,
+    "size": 2959,
+    "tags": [
+      "sticker",
+      "bell",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40460
+  },
+  {
+    "id": "ai-sticker-22",
+    "kind": "sticker",
+    "name": "Gift Sticker",
+    "design": "gift",
+    "file": "/ai-library/images/stickers/ai-sticker-22.png",
+    "width": 512,
+    "height": 512,
+    "size": 2986,
+    "tags": [
+      "sticker",
+      "gift",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40483
+  },
+  {
+    "id": "ai-sticker-23",
+    "kind": "sticker",
+    "name": "Trophy Sticker",
+    "design": "trophy",
+    "file": "/ai-library/images/stickers/ai-sticker-23.png",
+    "width": 512,
+    "height": 512,
+    "size": 3829,
+    "tags": [
+      "sticker",
+      "trophy",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40506
+  },
+  {
+    "id": "ai-sticker-24",
+    "kind": "sticker",
+    "name": "Anchor Sticker",
+    "design": "anchor",
+    "file": "/ai-library/images/stickers/ai-sticker-24.png",
+    "width": 512,
+    "height": 512,
+    "size": 4098,
+    "tags": [
+      "sticker",
+      "anchor",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40529
+  },
+  {
+    "id": "ai-sticker-25",
+    "kind": "sticker",
+    "name": "Compass Sticker",
+    "design": "compass",
+    "file": "/ai-library/images/stickers/ai-sticker-25.png",
+    "width": 512,
+    "height": 512,
+    "size": 5012,
+    "tags": [
+      "sticker",
+      "compass",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40552
+  },
+  {
+    "id": "ai-sticker-26",
+    "kind": "sticker",
+    "name": "Feather Sticker",
+    "design": "feather",
+    "file": "/ai-library/images/stickers/ai-sticker-26.png",
+    "width": 512,
+    "height": 512,
+    "size": 3807,
+    "tags": [
+      "sticker",
+      "feather",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40575
+  },
+  {
+    "id": "ai-sticker-27",
+    "kind": "sticker",
+    "name": "Butterfly Sticker",
+    "design": "butterfly",
+    "file": "/ai-library/images/stickers/ai-sticker-27.png",
+    "width": 512,
+    "height": 512,
+    "size": 4663,
+    "tags": [
+      "sticker",
+      "butterfly",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40598
+  },
+  {
+    "id": "ai-sticker-28",
+    "kind": "sticker",
+    "name": "Snowflake Sticker",
+    "design": "snowflake",
+    "file": "/ai-library/images/stickers/ai-sticker-28.png",
+    "width": 512,
+    "height": 512,
+    "size": 5514,
+    "tags": [
+      "sticker",
+      "snowflake",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40621
+  },
+  {
+    "id": "ai-sticker-29",
+    "kind": "sticker",
+    "name": "Shell Sticker",
+    "design": "shell",
+    "file": "/ai-library/images/stickers/ai-sticker-29.png",
+    "width": 512,
+    "height": 512,
+    "size": 3543,
+    "tags": [
+      "sticker",
+      "shell",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40644
+  },
+  {
+    "id": "ai-sticker-30",
+    "kind": "sticker",
+    "name": "Pearl Sticker",
+    "design": "pearl",
+    "file": "/ai-library/images/stickers/ai-sticker-30.png",
+    "width": 512,
+    "height": 512,
+    "size": 5110,
+    "tags": [
+      "sticker",
+      "pearl",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40667
+  },
+  {
+    "id": "ai-sticker-31",
+    "kind": "sticker",
+    "name": "Lantern Sticker",
+    "design": "lantern",
+    "file": "/ai-library/images/stickers/ai-sticker-31.png",
+    "width": 512,
+    "height": 512,
+    "size": 3183,
+    "tags": [
+      "sticker",
+      "lantern",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40690
+  },
+  {
+    "id": "ai-sticker-32",
+    "kind": "sticker",
+    "name": "Kite Sticker",
+    "design": "kite",
+    "file": "/ai-library/images/stickers/ai-sticker-32.png",
+    "width": 512,
+    "height": 512,
+    "size": 4295,
+    "tags": [
+      "sticker",
+      "kite",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40713
+  },
+  {
+    "id": "ai-sticker-33",
+    "kind": "sticker",
+    "name": "Balloon Sticker",
+    "design": "balloon",
+    "file": "/ai-library/images/stickers/ai-sticker-33.png",
+    "width": 512,
+    "height": 512,
+    "size": 3586,
+    "tags": [
+      "sticker",
+      "balloon",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40736
+  },
+  {
+    "id": "ai-sticker-34",
+    "kind": "sticker",
+    "name": "Cactus Sticker",
+    "design": "cactus",
+    "file": "/ai-library/images/stickers/ai-sticker-34.png",
+    "width": 512,
+    "height": 512,
+    "size": 3468,
+    "tags": [
+      "sticker",
+      "cactus",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40759
+  },
+  {
+    "id": "ai-sticker-35",
+    "kind": "sticker",
+    "name": "Wave Sticker",
+    "design": "wave",
+    "file": "/ai-library/images/stickers/ai-sticker-35.png",
+    "width": 512,
+    "height": 512,
+    "size": 7608,
+    "tags": [
+      "sticker",
+      "wave",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40782
+  },
+  {
+    "id": "ai-sticker-36",
+    "kind": "sticker",
+    "name": "Mountain Sticker",
+    "design": "mountain",
+    "file": "/ai-library/images/stickers/ai-sticker-36.png",
+    "width": 512,
+    "height": 512,
+    "size": 3740,
+    "tags": [
+      "sticker",
+      "mountain",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40805
+  },
+  {
+    "id": "ai-sticker-37",
+    "kind": "sticker",
+    "name": "Planet Sticker",
+    "design": "planet",
+    "file": "/ai-library/images/stickers/ai-sticker-37.png",
+    "width": 512,
+    "height": 512,
+    "size": 3846,
+    "tags": [
+      "sticker",
+      "planet",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40828
+  },
+  {
+    "id": "ai-sticker-38",
+    "kind": "sticker",
+    "name": "Comet Sticker",
+    "design": "comet",
+    "file": "/ai-library/images/stickers/ai-sticker-38.png",
+    "width": 512,
+    "height": 512,
+    "size": 4487,
+    "tags": [
+      "sticker",
+      "comet",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40851
+  },
+  {
+    "id": "ai-sticker-39",
+    "kind": "sticker",
+    "name": "Prism Sticker",
+    "design": "prism",
+    "file": "/ai-library/images/stickers/ai-sticker-39.png",
+    "width": 512,
+    "height": 512,
+    "size": 3997,
+    "tags": [
+      "sticker",
+      "prism",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40874
+  },
+  {
+    "id": "ai-sticker-40",
+    "kind": "sticker",
+    "name": "Mask Sticker",
+    "design": "mask",
+    "file": "/ai-library/images/stickers/ai-sticker-40.png",
+    "width": 512,
+    "height": 512,
+    "size": 3794,
+    "tags": [
+      "sticker",
+      "mask",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40897
+  },
+  {
+    "id": "ai-sticker-41",
+    "kind": "sticker",
+    "name": "Scroll Sticker",
+    "design": "scroll",
+    "file": "/ai-library/images/stickers/ai-sticker-41.png",
+    "width": 512,
+    "height": 512,
+    "size": 2018,
+    "tags": [
+      "sticker",
+      "scroll",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40920
+  },
+  {
+    "id": "ai-sticker-42",
+    "kind": "sticker",
+    "name": "Wand Sticker",
+    "design": "wand",
+    "file": "/ai-library/images/stickers/ai-sticker-42.png",
+    "width": 512,
+    "height": 512,
+    "size": 3915,
+    "tags": [
+      "sticker",
+      "wand",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40943
+  },
+  {
+    "id": "ai-sticker-43",
+    "kind": "sticker",
+    "name": "Coin Sticker",
+    "design": "coin",
+    "file": "/ai-library/images/stickers/ai-sticker-43.png",
+    "width": 512,
+    "height": 512,
+    "size": 4869,
+    "tags": [
+      "sticker",
+      "coin",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40966
+  },
+  {
+    "id": "ai-sticker-44",
+    "kind": "sticker",
+    "name": "Cup Sticker",
+    "design": "cup",
+    "file": "/ai-library/images/stickers/ai-sticker-44.png",
+    "width": 512,
+    "height": 512,
+    "size": 2744,
+    "tags": [
+      "sticker",
+      "cup",
+      "ai",
+      "transparent"
+    ],
+    "seed": 40989
+  },
+  {
+    "id": "ai-sticker-45",
+    "kind": "sticker",
+    "name": "Book Sticker",
+    "design": "book",
+    "file": "/ai-library/images/stickers/ai-sticker-45.png",
+    "width": 512,
+    "height": 512,
+    "size": 2098,
+    "tags": [
+      "sticker",
+      "book",
+      "ai",
+      "transparent"
+    ],
+    "seed": 41012
+  },
+  {
+    "id": "ai-sticker-46",
+    "kind": "sticker",
+    "name": "Pen Sticker",
+    "design": "pen",
+    "file": "/ai-library/images/stickers/ai-sticker-46.png",
+    "width": 512,
+    "height": 512,
+    "size": 3855,
+    "tags": [
+      "sticker",
+      "pen",
+      "ai",
+      "transparent"
+    ],
+    "seed": 41035
+  },
+  {
+    "id": "ai-sticker-47",
+    "kind": "sticker",
+    "name": "Globe Sticker",
+    "design": "globe",
+    "file": "/ai-library/images/stickers/ai-sticker-47.png",
+    "width": 512,
+    "height": 512,
+    "size": 4832,
+    "tags": [
+      "sticker",
+      "globe",
+      "ai",
+      "transparent"
+    ],
+    "seed": 41058
+  },
+  {
+    "id": "ai-sticker-48",
+    "kind": "sticker",
+    "name": "Hourglass Sticker",
+    "design": "hourglass",
+    "file": "/ai-library/images/stickers/ai-sticker-48.png",
+    "width": 512,
+    "height": 512,
+    "size": 3746,
+    "tags": [
+      "sticker",
+      "hourglass",
+      "ai",
+      "transparent"
+    ],
+    "seed": 41081
+  },
+  {
+    "id": "ai-sticker-49",
+    "kind": "sticker",
+    "name": "Puzzle Sticker",
+    "design": "puzzle",
+    "file": "/ai-library/images/stickers/ai-sticker-49.png",
+    "width": 512,
+    "height": 512,
+    "size": 2623,
+    "tags": [
+      "sticker",
+      "puzzle",
+      "ai",
+      "transparent"
+    ],
+    "seed": 41104
+  },
+  {
+    "id": "ai-sticker-50",
+    "kind": "sticker",
+    "name": "Ribbon Sticker",
+    "design": "ribbon",
+    "file": "/ai-library/images/stickers/ai-sticker-50.png",
+    "width": 512,
+    "height": 512,
+    "size": 2440,
+    "tags": [
+      "sticker",
+      "ribbon",
+      "ai",
+      "transparent"
+    ],
+    "seed": 41127
+  },
+  {
+    "id": "ai-texture-01",
+    "kind": "texture",
+    "name": "Gradient Mesh 1",
+    "design": "gradient-mesh",
+    "file": "/ai-library/images/textures/ai-texture-01.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 263481,
+    "tags": [
+      "texture",
+      "gradient-mesh",
+      "ai"
+    ],
+    "seed": 20000
+  },
+  {
+    "id": "ai-texture-02",
+    "kind": "texture",
+    "name": "Noise Grain 1",
+    "design": "noise-grain",
+    "file": "/ai-library/images/textures/ai-texture-02.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 3820064,
+    "tags": [
+      "texture",
+      "noise-grain",
+      "ai"
+    ],
+    "seed": 20017
+  },
+  {
+    "id": "ai-texture-03",
+    "kind": "texture",
+    "name": "Stripes 1",
+    "design": "stripes",
+    "file": "/ai-library/images/textures/ai-texture-03.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 12378,
+    "tags": [
+      "texture",
+      "stripes",
+      "ai"
+    ],
+    "seed": 20034
+  },
+  {
+    "id": "ai-texture-04",
+    "kind": "texture",
+    "name": "Dots 1",
+    "design": "dots",
+    "file": "/ai-library/images/textures/ai-texture-04.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 19087,
+    "tags": [
+      "texture",
+      "dots",
+      "ai"
+    ],
+    "seed": 20051
+  },
+  {
+    "id": "ai-texture-05",
+    "kind": "texture",
+    "name": "Waves 1",
+    "design": "waves",
+    "file": "/ai-library/images/textures/ai-texture-05.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 123277,
+    "tags": [
+      "texture",
+      "waves",
+      "ai"
+    ],
+    "seed": 20068
+  },
+  {
+    "id": "ai-texture-06",
+    "kind": "texture",
+    "name": "Marble 1",
+    "design": "marble",
+    "file": "/ai-library/images/textures/ai-texture-06.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 19406,
+    "tags": [
+      "texture",
+      "marble",
+      "ai"
+    ],
+    "seed": 20085
+  },
+  {
+    "id": "ai-texture-07",
+    "kind": "texture",
+    "name": "Grid 1",
+    "design": "grid",
+    "file": "/ai-library/images/textures/ai-texture-07.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 15175,
+    "tags": [
+      "texture",
+      "grid",
+      "ai"
+    ],
+    "seed": 20102
+  },
+  {
+    "id": "ai-texture-08",
+    "kind": "texture",
+    "name": "Hex 1",
+    "design": "hex",
+    "file": "/ai-library/images/textures/ai-texture-08.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 41113,
+    "tags": [
+      "texture",
+      "hex",
+      "ai"
+    ],
+    "seed": 20119
+  },
+  {
+    "id": "ai-texture-09",
+    "kind": "texture",
+    "name": "Checker 1",
+    "design": "checker",
+    "file": "/ai-library/images/textures/ai-texture-09.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 13962,
+    "tags": [
+      "texture",
+      "checker",
+      "ai"
+    ],
+    "seed": 20136
+  },
+  {
+    "id": "ai-texture-10",
+    "kind": "texture",
+    "name": "Radial 1",
+    "design": "radial",
+    "file": "/ai-library/images/textures/ai-texture-10.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 161057,
+    "tags": [
+      "texture",
+      "radial",
+      "ai"
+    ],
+    "seed": 20153
+  },
+  {
+    "id": "ai-texture-11",
+    "kind": "texture",
+    "name": "Gradient Mesh 2",
+    "design": "gradient-mesh",
+    "file": "/ai-library/images/textures/ai-texture-11.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 404783,
+    "tags": [
+      "texture",
+      "gradient-mesh",
+      "ai"
+    ],
+    "seed": 20170
+  },
+  {
+    "id": "ai-texture-12",
+    "kind": "texture",
+    "name": "Noise Grain 2",
+    "design": "noise-grain",
+    "file": "/ai-library/images/textures/ai-texture-12.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 2892593,
+    "tags": [
+      "texture",
+      "noise-grain",
+      "ai"
+    ],
+    "seed": 20187
+  },
+  {
+    "id": "ai-texture-13",
+    "kind": "texture",
+    "name": "Stripes 2",
+    "design": "stripes",
+    "file": "/ai-library/images/textures/ai-texture-13.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 12178,
+    "tags": [
+      "texture",
+      "stripes",
+      "ai"
+    ],
+    "seed": 20204
+  },
+  {
+    "id": "ai-texture-14",
+    "kind": "texture",
+    "name": "Dots 2",
+    "design": "dots",
+    "file": "/ai-library/images/textures/ai-texture-14.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 18057,
+    "tags": [
+      "texture",
+      "dots",
+      "ai"
+    ],
+    "seed": 20221
+  },
+  {
+    "id": "ai-texture-15",
+    "kind": "texture",
+    "name": "Waves 2",
+    "design": "waves",
+    "file": "/ai-library/images/textures/ai-texture-15.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 130825,
+    "tags": [
+      "texture",
+      "waves",
+      "ai"
+    ],
+    "seed": 20238
+  },
+  {
+    "id": "ai-texture-16",
+    "kind": "texture",
+    "name": "Marble 2",
+    "design": "marble",
+    "file": "/ai-library/images/textures/ai-texture-16.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 21612,
+    "tags": [
+      "texture",
+      "marble",
+      "ai"
+    ],
+    "seed": 20255
+  },
+  {
+    "id": "ai-texture-17",
+    "kind": "texture",
+    "name": "Grid 2",
+    "design": "grid",
+    "file": "/ai-library/images/textures/ai-texture-17.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 18289,
+    "tags": [
+      "texture",
+      "grid",
+      "ai"
+    ],
+    "seed": 20272
+  },
+  {
+    "id": "ai-texture-18",
+    "kind": "texture",
+    "name": "Hex 2",
+    "design": "hex",
+    "file": "/ai-library/images/textures/ai-texture-18.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 37382,
+    "tags": [
+      "texture",
+      "hex",
+      "ai"
+    ],
+    "seed": 20289
+  },
+  {
+    "id": "ai-texture-19",
+    "kind": "texture",
+    "name": "Checker 2",
+    "design": "checker",
+    "file": "/ai-library/images/textures/ai-texture-19.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 11063,
+    "tags": [
+      "texture",
+      "checker",
+      "ai"
+    ],
+    "seed": 20306
+  },
+  {
+    "id": "ai-texture-20",
+    "kind": "texture",
+    "name": "Radial 2",
+    "design": "radial",
+    "file": "/ai-library/images/textures/ai-texture-20.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 215655,
+    "tags": [
+      "texture",
+      "radial",
+      "ai"
+    ],
+    "seed": 20323
+  },
+  {
+    "id": "ai-texture-21",
+    "kind": "texture",
+    "name": "Gradient Mesh 3",
+    "design": "gradient-mesh",
+    "file": "/ai-library/images/textures/ai-texture-21.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 325195,
+    "tags": [
+      "texture",
+      "gradient-mesh",
+      "ai"
+    ],
+    "seed": 20340
+  },
+  {
+    "id": "ai-texture-22",
+    "kind": "texture",
+    "name": "Noise Grain 3",
+    "design": "noise-grain",
+    "file": "/ai-library/images/textures/ai-texture-22.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 3748919,
+    "tags": [
+      "texture",
+      "noise-grain",
+      "ai"
+    ],
+    "seed": 20357
+  },
+  {
+    "id": "ai-texture-23",
+    "kind": "texture",
+    "name": "Stripes 3",
+    "design": "stripes",
+    "file": "/ai-library/images/textures/ai-texture-23.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 14844,
+    "tags": [
+      "texture",
+      "stripes",
+      "ai"
+    ],
+    "seed": 20374
+  },
+  {
+    "id": "ai-texture-24",
+    "kind": "texture",
+    "name": "Dots 3",
+    "design": "dots",
+    "file": "/ai-library/images/textures/ai-texture-24.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 19954,
+    "tags": [
+      "texture",
+      "dots",
+      "ai"
+    ],
+    "seed": 20391
+  },
+  {
+    "id": "ai-texture-25",
+    "kind": "texture",
+    "name": "Waves 3",
+    "design": "waves",
+    "file": "/ai-library/images/textures/ai-texture-25.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 140393,
+    "tags": [
+      "texture",
+      "waves",
+      "ai"
+    ],
+    "seed": 20408
+  },
+  {
+    "id": "ai-texture-26",
+    "kind": "texture",
+    "name": "Marble 3",
+    "design": "marble",
+    "file": "/ai-library/images/textures/ai-texture-26.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 19969,
+    "tags": [
+      "texture",
+      "marble",
+      "ai"
+    ],
+    "seed": 20425
+  },
+  {
+    "id": "ai-texture-27",
+    "kind": "texture",
+    "name": "Grid 3",
+    "design": "grid",
+    "file": "/ai-library/images/textures/ai-texture-27.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 12748,
+    "tags": [
+      "texture",
+      "grid",
+      "ai"
+    ],
+    "seed": 20442
+  },
+  {
+    "id": "ai-texture-28",
+    "kind": "texture",
+    "name": "Hex 3",
+    "design": "hex",
+    "file": "/ai-library/images/textures/ai-texture-28.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 38487,
+    "tags": [
+      "texture",
+      "hex",
+      "ai"
+    ],
+    "seed": 20459
+  },
+  {
+    "id": "ai-texture-29",
+    "kind": "texture",
+    "name": "Checker 3",
+    "design": "checker",
+    "file": "/ai-library/images/textures/ai-texture-29.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 10969,
+    "tags": [
+      "texture",
+      "checker",
+      "ai"
+    ],
+    "seed": 20476
+  },
+  {
+    "id": "ai-texture-30",
+    "kind": "texture",
+    "name": "Radial 3",
+    "design": "radial",
+    "file": "/ai-library/images/textures/ai-texture-30.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 133934,
+    "tags": [
+      "texture",
+      "radial",
+      "ai"
+    ],
+    "seed": 20493
+  },
+  {
+    "id": "ai-texture-31",
+    "kind": "texture",
+    "name": "Gradient Mesh 4",
+    "design": "gradient-mesh",
+    "file": "/ai-library/images/textures/ai-texture-31.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 406432,
+    "tags": [
+      "texture",
+      "gradient-mesh",
+      "ai"
+    ],
+    "seed": 20510
+  },
+  {
+    "id": "ai-texture-32",
+    "kind": "texture",
+    "name": "Noise Grain 4",
+    "design": "noise-grain",
+    "file": "/ai-library/images/textures/ai-texture-32.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 2964806,
+    "tags": [
+      "texture",
+      "noise-grain",
+      "ai"
+    ],
+    "seed": 20527
+  },
+  {
+    "id": "ai-texture-33",
+    "kind": "texture",
+    "name": "Stripes 4",
+    "design": "stripes",
+    "file": "/ai-library/images/textures/ai-texture-33.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 18163,
+    "tags": [
+      "texture",
+      "stripes",
+      "ai"
+    ],
+    "seed": 20544
+  },
+  {
+    "id": "ai-texture-34",
+    "kind": "texture",
+    "name": "Dots 4",
+    "design": "dots",
+    "file": "/ai-library/images/textures/ai-texture-34.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 18387,
+    "tags": [
+      "texture",
+      "dots",
+      "ai"
+    ],
+    "seed": 20561
+  },
+  {
+    "id": "ai-texture-35",
+    "kind": "texture",
+    "name": "Waves 4",
+    "design": "waves",
+    "file": "/ai-library/images/textures/ai-texture-35.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 127064,
+    "tags": [
+      "texture",
+      "waves",
+      "ai"
+    ],
+    "seed": 20578
+  },
+  {
+    "id": "ai-texture-36",
+    "kind": "texture",
+    "name": "Marble 4",
+    "design": "marble",
+    "file": "/ai-library/images/textures/ai-texture-36.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 20597,
+    "tags": [
+      "texture",
+      "marble",
+      "ai"
+    ],
+    "seed": 20595
+  },
+  {
+    "id": "ai-texture-37",
+    "kind": "texture",
+    "name": "Grid 4",
+    "design": "grid",
+    "file": "/ai-library/images/textures/ai-texture-37.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 12534,
+    "tags": [
+      "texture",
+      "grid",
+      "ai"
+    ],
+    "seed": 20612
+  },
+  {
+    "id": "ai-texture-38",
+    "kind": "texture",
+    "name": "Hex 4",
+    "design": "hex",
+    "file": "/ai-library/images/textures/ai-texture-38.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 36541,
+    "tags": [
+      "texture",
+      "hex",
+      "ai"
+    ],
+    "seed": 20629
+  },
+  {
+    "id": "ai-texture-39",
+    "kind": "texture",
+    "name": "Checker 4",
+    "design": "checker",
+    "file": "/ai-library/images/textures/ai-texture-39.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 12336,
+    "tags": [
+      "texture",
+      "checker",
+      "ai"
+    ],
+    "seed": 20646
+  },
+  {
+    "id": "ai-texture-40",
+    "kind": "texture",
+    "name": "Radial 4",
+    "design": "radial",
+    "file": "/ai-library/images/textures/ai-texture-40.png",
+    "width": 1920,
+    "height": 1080,
+    "size": 298948,
+    "tags": [
+      "texture",
+      "radial",
+      "ai"
+    ],
+    "seed": 20663
+  }
+]

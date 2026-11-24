@@ -1,0 +1,1402 @@
+[
+  {
+    "id": "ai-sfx-001",
+    "name": "Whoosh 1",
+    "kind": "sfx",
+    "family": "whoosh",
+    "duration": 1.06,
+    "seed": 5013,
+    "tags": [
+      "whoosh",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Air whoosh, filtered noise sweep. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-002",
+    "name": "Whoosh 2",
+    "kind": "sfx",
+    "family": "whoosh",
+    "duration": 0.9,
+    "seed": 5026,
+    "tags": [
+      "whoosh",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Air whoosh, filtered noise sweep. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-003",
+    "name": "Whoosh 3",
+    "kind": "sfx",
+    "family": "whoosh",
+    "duration": 0.7,
+    "seed": 5039,
+    "tags": [
+      "whoosh",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Air whoosh, filtered noise sweep. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-004",
+    "name": "Whoosh 4",
+    "kind": "sfx",
+    "family": "whoosh",
+    "duration": 0.96,
+    "seed": 5052,
+    "tags": [
+      "whoosh",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Air whoosh, filtered noise sweep. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-005",
+    "name": "Whoosh 5",
+    "kind": "sfx",
+    "family": "whoosh",
+    "duration": 0.72,
+    "seed": 5065,
+    "tags": [
+      "whoosh",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Air whoosh, filtered noise sweep. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-006",
+    "name": "Pop 1",
+    "kind": "sfx",
+    "family": "pop",
+    "duration": 0.27,
+    "seed": 5078,
+    "tags": [
+      "pop",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Short sine pop, pitch drop. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-007",
+    "name": "Pop 2",
+    "kind": "sfx",
+    "family": "pop",
+    "duration": 0.36,
+    "seed": 5091,
+    "tags": [
+      "pop",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Short sine pop, pitch drop. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-008",
+    "name": "Pop 3",
+    "kind": "sfx",
+    "family": "pop",
+    "duration": 0.35,
+    "seed": 5104,
+    "tags": [
+      "pop",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Short sine pop, pitch drop. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-009",
+    "name": "Pop 4",
+    "kind": "sfx",
+    "family": "pop",
+    "duration": 0.36,
+    "seed": 5117,
+    "tags": [
+      "pop",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Short sine pop, pitch drop. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-010",
+    "name": "Pop 5",
+    "kind": "sfx",
+    "family": "pop",
+    "duration": 0.39,
+    "seed": 5130,
+    "tags": [
+      "pop",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Short sine pop, pitch drop. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-011",
+    "name": "Chime 1",
+    "kind": "sfx",
+    "family": "chime",
+    "duration": 1.47,
+    "seed": 5143,
+    "tags": [
+      "chime",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Bright bell chime, harmonic decay. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-012",
+    "name": "Chime 2",
+    "kind": "sfx",
+    "family": "chime",
+    "duration": 0.99,
+    "seed": 5156,
+    "tags": [
+      "chime",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Bright bell chime, harmonic decay. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-013",
+    "name": "Chime 3",
+    "kind": "sfx",
+    "family": "chime",
+    "duration": 1.28,
+    "seed": 5169,
+    "tags": [
+      "chime",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Bright bell chime, harmonic decay. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-014",
+    "name": "Chime 4",
+    "kind": "sfx",
+    "family": "chime",
+    "duration": 1.31,
+    "seed": 5182,
+    "tags": [
+      "chime",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Bright bell chime, harmonic decay. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-015",
+    "name": "Chime 5",
+    "kind": "sfx",
+    "family": "chime",
+    "duration": 1.47,
+    "seed": 5195,
+    "tags": [
+      "chime",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Bright bell chime, harmonic decay. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-016",
+    "name": "Impact 1",
+    "kind": "sfx",
+    "family": "impact",
+    "duration": 0.74,
+    "seed": 5208,
+    "tags": [
+      "impact",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Deep impact thud, low sine + noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-017",
+    "name": "Impact 2",
+    "kind": "sfx",
+    "family": "impact",
+    "duration": 0.85,
+    "seed": 5221,
+    "tags": [
+      "impact",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Deep impact thud, low sine + noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-018",
+    "name": "Impact 3",
+    "kind": "sfx",
+    "family": "impact",
+    "duration": 0.5,
+    "seed": 5234,
+    "tags": [
+      "impact",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Deep impact thud, low sine + noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-019",
+    "name": "Impact 4",
+    "kind": "sfx",
+    "family": "impact",
+    "duration": 0.67,
+    "seed": 5247,
+    "tags": [
+      "impact",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Deep impact thud, low sine + noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-020",
+    "name": "Impact 5",
+    "kind": "sfx",
+    "family": "impact",
+    "duration": 0.8,
+    "seed": 5260,
+    "tags": [
+      "impact",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Deep impact thud, low sine + noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-021",
+    "name": "Riser 1",
+    "kind": "sfx",
+    "family": "riser",
+    "duration": 1.54,
+    "seed": 5273,
+    "tags": [
+      "riser",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Rising sweep, noise + pitch climb. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-022",
+    "name": "Riser 2",
+    "kind": "sfx",
+    "family": "riser",
+    "duration": 0.99,
+    "seed": 5286,
+    "tags": [
+      "riser",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Rising sweep, noise + pitch climb. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-023",
+    "name": "Riser 3",
+    "kind": "sfx",
+    "family": "riser",
+    "duration": 0.9,
+    "seed": 5299,
+    "tags": [
+      "riser",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Rising sweep, noise + pitch climb. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-024",
+    "name": "Riser 4",
+    "kind": "sfx",
+    "family": "riser",
+    "duration": 1.8,
+    "seed": 5312,
+    "tags": [
+      "riser",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Rising sweep, noise + pitch climb. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-025",
+    "name": "Riser 5",
+    "kind": "sfx",
+    "family": "riser",
+    "duration": 1.9,
+    "seed": 5325,
+    "tags": [
+      "riser",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Rising sweep, noise + pitch climb. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-026",
+    "name": "Sweep 1",
+    "kind": "sfx",
+    "family": "sweep",
+    "duration": 0.71,
+    "seed": 5338,
+    "tags": [
+      "sweep",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Downward frequency sweep. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-027",
+    "name": "Sweep 2",
+    "kind": "sfx",
+    "family": "sweep",
+    "duration": 0.58,
+    "seed": 5351,
+    "tags": [
+      "sweep",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Downward frequency sweep. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-028",
+    "name": "Sweep 3",
+    "kind": "sfx",
+    "family": "sweep",
+    "duration": 0.61,
+    "seed": 5364,
+    "tags": [
+      "sweep",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Downward frequency sweep. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-029",
+    "name": "Sweep 4",
+    "kind": "sfx",
+    "family": "sweep",
+    "duration": 0.5,
+    "seed": 5377,
+    "tags": [
+      "sweep",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Downward frequency sweep. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-030",
+    "name": "Sweep 5",
+    "kind": "sfx",
+    "family": "sweep",
+    "duration": 0.41,
+    "seed": 5390,
+    "tags": [
+      "sweep",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Downward frequency sweep. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-031",
+    "name": "Click 1",
+    "kind": "sfx",
+    "family": "click",
+    "duration": 0.05,
+    "seed": 5403,
+    "tags": [
+      "click",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: UI click, short noise burst. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-032",
+    "name": "Click 2",
+    "kind": "sfx",
+    "family": "click",
+    "duration": 0.11,
+    "seed": 5416,
+    "tags": [
+      "click",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: UI click, short noise burst. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-033",
+    "name": "Click 3",
+    "kind": "sfx",
+    "family": "click",
+    "duration": 0.09,
+    "seed": 5429,
+    "tags": [
+      "click",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: UI click, short noise burst. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-034",
+    "name": "Click 4",
+    "kind": "sfx",
+    "family": "click",
+    "duration": 0.15,
+    "seed": 5442,
+    "tags": [
+      "click",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: UI click, short noise burst. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-035",
+    "name": "Click 5",
+    "kind": "sfx",
+    "family": "click",
+    "duration": 0.06,
+    "seed": 5455,
+    "tags": [
+      "click",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: UI click, short noise burst. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-036",
+    "name": "Bubble 1",
+    "kind": "sfx",
+    "family": "bubble",
+    "duration": 0.2,
+    "seed": 5468,
+    "tags": [
+      "bubble",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Bubble blip, sine pitch rise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-037",
+    "name": "Bubble 2",
+    "kind": "sfx",
+    "family": "bubble",
+    "duration": 0.28,
+    "seed": 5481,
+    "tags": [
+      "bubble",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Bubble blip, sine pitch rise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-038",
+    "name": "Bubble 3",
+    "kind": "sfx",
+    "family": "bubble",
+    "duration": 0.57,
+    "seed": 5494,
+    "tags": [
+      "bubble",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Bubble blip, sine pitch rise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-039",
+    "name": "Bubble 4",
+    "kind": "sfx",
+    "family": "bubble",
+    "duration": 0.38,
+    "seed": 5507,
+    "tags": [
+      "bubble",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Bubble blip, sine pitch rise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-040",
+    "name": "Bubble 5",
+    "kind": "sfx",
+    "family": "bubble",
+    "duration": 0.21,
+    "seed": 5520,
+    "tags": [
+      "bubble",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Bubble blip, sine pitch rise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-041",
+    "name": "Zap 1",
+    "kind": "sfx",
+    "family": "zap",
+    "duration": 0.44,
+    "seed": 5533,
+    "tags": [
+      "zap",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Electric zap, saw sweep down. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-042",
+    "name": "Zap 2",
+    "kind": "sfx",
+    "family": "zap",
+    "duration": 0.27,
+    "seed": 5546,
+    "tags": [
+      "zap",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Electric zap, saw sweep down. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-043",
+    "name": "Zap 3",
+    "kind": "sfx",
+    "family": "zap",
+    "duration": 0.34,
+    "seed": 5559,
+    "tags": [
+      "zap",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Electric zap, saw sweep down. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-044",
+    "name": "Zap 4",
+    "kind": "sfx",
+    "family": "zap",
+    "duration": 0.32,
+    "seed": 5572,
+    "tags": [
+      "zap",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Electric zap, saw sweep down. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-045",
+    "name": "Zap 5",
+    "kind": "sfx",
+    "family": "zap",
+    "duration": 0.45,
+    "seed": 5585,
+    "tags": [
+      "zap",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Electric zap, saw sweep down. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-046",
+    "name": "Sparkle 1",
+    "kind": "sfx",
+    "family": "sparkle",
+    "duration": 1.32,
+    "seed": 5598,
+    "tags": [
+      "sparkle",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Sparkle arpeggio, high sine notes. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-047",
+    "name": "Sparkle 2",
+    "kind": "sfx",
+    "family": "sparkle",
+    "duration": 1.21,
+    "seed": 5611,
+    "tags": [
+      "sparkle",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Sparkle arpeggio, high sine notes. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-048",
+    "name": "Sparkle 3",
+    "kind": "sfx",
+    "family": "sparkle",
+    "duration": 0.81,
+    "seed": 5624,
+    "tags": [
+      "sparkle",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Sparkle arpeggio, high sine notes. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-049",
+    "name": "Sparkle 4",
+    "kind": "sfx",
+    "family": "sparkle",
+    "duration": 1.26,
+    "seed": 5637,
+    "tags": [
+      "sparkle",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Sparkle arpeggio, high sine notes. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-050",
+    "name": "Sparkle 5",
+    "kind": "sfx",
+    "family": "sparkle",
+    "duration": 1.02,
+    "seed": 5650,
+    "tags": [
+      "sparkle",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Sparkle arpeggio, high sine notes. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-051",
+    "name": "Snap 1",
+    "kind": "sfx",
+    "family": "snap",
+    "duration": 0.25,
+    "seed": 5663,
+    "tags": [
+      "snap",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Finger snap, noise burst + click. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-052",
+    "name": "Snap 2",
+    "kind": "sfx",
+    "family": "snap",
+    "duration": 0.13,
+    "seed": 5676,
+    "tags": [
+      "snap",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Finger snap, noise burst + click. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-053",
+    "name": "Snap 3",
+    "kind": "sfx",
+    "family": "snap",
+    "duration": 0.11,
+    "seed": 5689,
+    "tags": [
+      "snap",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Finger snap, noise burst + click. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-054",
+    "name": "Snap 4",
+    "kind": "sfx",
+    "family": "snap",
+    "duration": 0.16,
+    "seed": 5702,
+    "tags": [
+      "snap",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Finger snap, noise burst + click. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-055",
+    "name": "Snap 5",
+    "kind": "sfx",
+    "family": "snap",
+    "duration": 0.1,
+    "seed": 5715,
+    "tags": [
+      "snap",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Finger snap, noise burst + click. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-056",
+    "name": "Shimmer 1",
+    "kind": "sfx",
+    "family": "shimmer",
+    "duration": 0.97,
+    "seed": 5728,
+    "tags": [
+      "shimmer",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Shimmer pad, tremolo high tones. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-057",
+    "name": "Shimmer 2",
+    "kind": "sfx",
+    "family": "shimmer",
+    "duration": 1.04,
+    "seed": 5741,
+    "tags": [
+      "shimmer",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Shimmer pad, tremolo high tones. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-058",
+    "name": "Shimmer 3",
+    "kind": "sfx",
+    "family": "shimmer",
+    "duration": 1.38,
+    "seed": 5754,
+    "tags": [
+      "shimmer",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Shimmer pad, tremolo high tones. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-059",
+    "name": "Shimmer 4",
+    "kind": "sfx",
+    "family": "shimmer",
+    "duration": 1.08,
+    "seed": 5767,
+    "tags": [
+      "shimmer",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Shimmer pad, tremolo high tones. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-060",
+    "name": "Shimmer 5",
+    "kind": "sfx",
+    "family": "shimmer",
+    "duration": 1.19,
+    "seed": 5780,
+    "tags": [
+      "shimmer",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Shimmer pad, tremolo high tones. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-061",
+    "name": "Thump 1",
+    "kind": "sfx",
+    "family": "thump",
+    "duration": 0.57,
+    "seed": 5793,
+    "tags": [
+      "thump",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Soft thump, low sine burst. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-062",
+    "name": "Thump 2",
+    "kind": "sfx",
+    "family": "thump",
+    "duration": 0.35,
+    "seed": 5806,
+    "tags": [
+      "thump",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Soft thump, low sine burst. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-063",
+    "name": "Thump 3",
+    "kind": "sfx",
+    "family": "thump",
+    "duration": 0.27,
+    "seed": 5819,
+    "tags": [
+      "thump",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Soft thump, low sine burst. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-064",
+    "name": "Thump 4",
+    "kind": "sfx",
+    "family": "thump",
+    "duration": 0.58,
+    "seed": 5832,
+    "tags": [
+      "thump",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Soft thump, low sine burst. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-065",
+    "name": "Thump 5",
+    "kind": "sfx",
+    "family": "thump",
+    "duration": 0.32,
+    "seed": 5845,
+    "tags": [
+      "thump",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Soft thump, low sine burst. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-066",
+    "name": "Swoosh 1",
+    "kind": "sfx",
+    "family": "swoosh",
+    "duration": 0.45,
+    "seed": 5858,
+    "tags": [
+      "swoosh",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Fast swoosh, bandpass noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-067",
+    "name": "Swoosh 2",
+    "kind": "sfx",
+    "family": "swoosh",
+    "duration": 0.83,
+    "seed": 5871,
+    "tags": [
+      "swoosh",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Fast swoosh, bandpass noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-068",
+    "name": "Swoosh 3",
+    "kind": "sfx",
+    "family": "swoosh",
+    "duration": 0.42,
+    "seed": 5884,
+    "tags": [
+      "swoosh",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Fast swoosh, bandpass noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-069",
+    "name": "Swoosh 4",
+    "kind": "sfx",
+    "family": "swoosh",
+    "duration": 0.67,
+    "seed": 5897,
+    "tags": [
+      "swoosh",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Fast swoosh, bandpass noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-070",
+    "name": "Swoosh 5",
+    "kind": "sfx",
+    "family": "swoosh",
+    "duration": 0.75,
+    "seed": 5910,
+    "tags": [
+      "swoosh",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Fast swoosh, bandpass noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-071",
+    "name": "Glitch 1",
+    "kind": "sfx",
+    "family": "glitch",
+    "duration": 0.8,
+    "seed": 5923,
+    "tags": [
+      "glitch",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Digital glitch, stepped pitch jumps. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-072",
+    "name": "Glitch 2",
+    "kind": "sfx",
+    "family": "glitch",
+    "duration": 0.76,
+    "seed": 5936,
+    "tags": [
+      "glitch",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Digital glitch, stepped pitch jumps. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-073",
+    "name": "Glitch 3",
+    "kind": "sfx",
+    "family": "glitch",
+    "duration": 0.63,
+    "seed": 5949,
+    "tags": [
+      "glitch",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Digital glitch, stepped pitch jumps. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-074",
+    "name": "Glitch 4",
+    "kind": "sfx",
+    "family": "glitch",
+    "duration": 0.46,
+    "seed": 5962,
+    "tags": [
+      "glitch",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Digital glitch, stepped pitch jumps. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-075",
+    "name": "Glitch 5",
+    "kind": "sfx",
+    "family": "glitch",
+    "duration": 0.57,
+    "seed": 5975,
+    "tags": [
+      "glitch",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Digital glitch, stepped pitch jumps. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-076",
+    "name": "Ding 1",
+    "kind": "sfx",
+    "family": "ding",
+    "duration": 1.18,
+    "seed": 5988,
+    "tags": [
+      "ding",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Soft ding, single bell tone. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-077",
+    "name": "Ding 2",
+    "kind": "sfx",
+    "family": "ding",
+    "duration": 0.78,
+    "seed": 6001,
+    "tags": [
+      "ding",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Soft ding, single bell tone. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-078",
+    "name": "Ding 3",
+    "kind": "sfx",
+    "family": "ding",
+    "duration": 0.67,
+    "seed": 6014,
+    "tags": [
+      "ding",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Soft ding, single bell tone. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-079",
+    "name": "Ding 4",
+    "kind": "sfx",
+    "family": "ding",
+    "duration": 0.56,
+    "seed": 6027,
+    "tags": [
+      "ding",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Soft ding, single bell tone. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-080",
+    "name": "Ding 5",
+    "kind": "sfx",
+    "family": "ding",
+    "duration": 1.03,
+    "seed": 6040,
+    "tags": [
+      "ding",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Soft ding, single bell tone. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-081",
+    "name": "Slide 1",
+    "kind": "sfx",
+    "family": "slide",
+    "duration": 0.44,
+    "seed": 6053,
+    "tags": [
+      "slide",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Slide whistle up, sine glide. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-082",
+    "name": "Slide 2",
+    "kind": "sfx",
+    "family": "slide",
+    "duration": 0.57,
+    "seed": 6066,
+    "tags": [
+      "slide",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Slide whistle up, sine glide. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-083",
+    "name": "Slide 3",
+    "kind": "sfx",
+    "family": "slide",
+    "duration": 0.51,
+    "seed": 6079,
+    "tags": [
+      "slide",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Slide whistle up, sine glide. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-084",
+    "name": "Slide 4",
+    "kind": "sfx",
+    "family": "slide",
+    "duration": 0.64,
+    "seed": 6092,
+    "tags": [
+      "slide",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Slide whistle up, sine glide. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-085",
+    "name": "Slide 5",
+    "kind": "sfx",
+    "family": "slide",
+    "duration": 0.6,
+    "seed": 6105,
+    "tags": [
+      "slide",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Slide whistle up, sine glide. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-086",
+    "name": "Rumble 1",
+    "kind": "sfx",
+    "family": "rumble",
+    "duration": 0.84,
+    "seed": 6118,
+    "tags": [
+      "rumble",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Low rumble, filtered brown noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-087",
+    "name": "Rumble 2",
+    "kind": "sfx",
+    "family": "rumble",
+    "duration": 1.91,
+    "seed": 6131,
+    "tags": [
+      "rumble",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Low rumble, filtered brown noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-088",
+    "name": "Rumble 3",
+    "kind": "sfx",
+    "family": "rumble",
+    "duration": 1.39,
+    "seed": 6144,
+    "tags": [
+      "rumble",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Low rumble, filtered brown noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-089",
+    "name": "Rumble 4",
+    "kind": "sfx",
+    "family": "rumble",
+    "duration": 1.08,
+    "seed": 6157,
+    "tags": [
+      "rumble",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Low rumble, filtered brown noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-090",
+    "name": "Rumble 5",
+    "kind": "sfx",
+    "family": "rumble",
+    "duration": 1.25,
+    "seed": 6170,
+    "tags": [
+      "rumble",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Low rumble, filtered brown noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-091",
+    "name": "Twinkle 1",
+    "kind": "sfx",
+    "family": "twinkle",
+    "duration": 1.14,
+    "seed": 6183,
+    "tags": [
+      "twinkle",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Twinkle notes, pentatonic plucks. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-092",
+    "name": "Twinkle 2",
+    "kind": "sfx",
+    "family": "twinkle",
+    "duration": 0.93,
+    "seed": 6196,
+    "tags": [
+      "twinkle",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Twinkle notes, pentatonic plucks. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-093",
+    "name": "Twinkle 3",
+    "kind": "sfx",
+    "family": "twinkle",
+    "duration": 0.65,
+    "seed": 6209,
+    "tags": [
+      "twinkle",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Twinkle notes, pentatonic plucks. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-094",
+    "name": "Twinkle 4",
+    "kind": "sfx",
+    "family": "twinkle",
+    "duration": 0.73,
+    "seed": 6222,
+    "tags": [
+      "twinkle",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Twinkle notes, pentatonic plucks. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-095",
+    "name": "Twinkle 5",
+    "kind": "sfx",
+    "family": "twinkle",
+    "duration": 1.03,
+    "seed": 6235,
+    "tags": [
+      "twinkle",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Twinkle notes, pentatonic plucks. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-096",
+    "name": "Boom 1",
+    "kind": "sfx",
+    "family": "boom",
+    "duration": 1.1,
+    "seed": 6248,
+    "tags": [
+      "boom",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Cinematic boom, sub sine + noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-097",
+    "name": "Boom 2",
+    "kind": "sfx",
+    "family": "boom",
+    "duration": 1.41,
+    "seed": 6261,
+    "tags": [
+      "boom",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Cinematic boom, sub sine + noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-098",
+    "name": "Boom 3",
+    "kind": "sfx",
+    "family": "boom",
+    "duration": 0.64,
+    "seed": 6274,
+    "tags": [
+      "boom",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Cinematic boom, sub sine + noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-099",
+    "name": "Boom 4",
+    "kind": "sfx",
+    "family": "boom",
+    "duration": 1.4,
+    "seed": 6287,
+    "tags": [
+      "boom",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Cinematic boom, sub sine + noise. No samples, no recordings."
+  },
+  {
+    "id": "ai-sfx-100",
+    "name": "Boom 5",
+    "kind": "sfx",
+    "family": "boom",
+    "duration": 0.68,
+    "seed": 6300,
+    "tags": [
+      "boom",
+      "ai",
+      "sfx"
+    ],
+    "prompt": "Original sound effect: Cinematic boom, sub sine + noise. No samples, no recordings."
+  }
+]

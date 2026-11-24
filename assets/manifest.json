@@ -1,5 +1,9 @@
 {
   "counts": {
+    "aiClips": 100,
+    "aiImages": 110,
+    "aiSfx": 100,
+    "aiTracks": 100,
     "backgrounds": 30,
     "captionPresets": 20,
     "cssEffects": 14,
@@ -7,14 +11,15 @@
     "glslEffects": 62,
     "loops": 30,
     "luts": 32,
-    "sfx": 100,
+    "sfx": 200,
     "shapes": 10,
     "stickers": 232,
     "templates": 25,
     "textAnimations": 37,
     "textPresets": 50,
-    "total": 714,
-    "transitions": 32
+    "total": 1240,
+    "transitions": 32,
+    "voices": 16
   },
   "entries": [
     {
@@ -7788,9 +7793,5547 @@
         "frames"
       ],
       "type": "background"
+    },
+    {
+      "category": "Ambient",
+      "id": "ai-track-001",
+      "license": "CC0 (Vidora original)",
+      "name": "Midnight Bloom",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "ambient",
+        "calm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Lo-Fi",
+      "id": "ai-track-002",
+      "license": "CC0 (Vidora original)",
+      "name": "Dreamy Meadow",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "lo-fi",
+        "mellow"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Cinematic",
+      "id": "ai-track-003",
+      "license": "CC0 (Vidora original)",
+      "name": "Wild Bloom",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "cinematic",
+        "epic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Electronic",
+      "id": "ai-track-004",
+      "license": "CC0 (Vidora original)",
+      "name": "Hidden Drive",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "electronic",
+        "energetic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Acoustic",
+      "id": "ai-track-005",
+      "license": "CC0 (Vidora original)",
+      "name": "Urban Path",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "acoustic",
+        "warm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Corporate",
+      "id": "ai-track-006",
+      "license": "CC0 (Vidora original)",
+      "name": "Wild Rain",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "corporate",
+        "uplifting"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Chillwave",
+      "id": "ai-track-007",
+      "license": "CC0 (Vidora original)",
+      "name": "Electric Echo",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "chillwave",
+        "dreamy"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Synthwave",
+      "id": "ai-track-008",
+      "license": "CC0 (Vidora original)",
+      "name": "Bright Echo",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "synthwave",
+        "retro"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Jazz",
+      "id": "ai-track-009",
+      "license": "CC0 (Vidora original)",
+      "name": "Silent Orbit",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "jazz",
+        "smooth"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Epic",
+      "id": "ai-track-010",
+      "license": "CC0 (Vidora original)",
+      "name": "Silent Streets",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "epic",
+        "heroic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Minimal",
+      "id": "ai-track-011",
+      "license": "CC0 (Vidora original)",
+      "name": "Solar Ember",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "minimal",
+        "quiet"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Dance",
+      "id": "ai-track-012",
+      "license": "CC0 (Vidora original)",
+      "name": "Rapid Rain",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "dance",
+        "party"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Ambient",
+      "id": "ai-track-013",
+      "license": "CC0 (Vidora original)",
+      "name": "Urban Meadow",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "ambient",
+        "calm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Lo-Fi",
+      "id": "ai-track-014",
+      "license": "CC0 (Vidora original)",
+      "name": "Rapid Path",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "lo-fi",
+        "mellow"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Cinematic",
+      "id": "ai-track-015",
+      "license": "CC0 (Vidora original)",
+      "name": "Misty Ember",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "cinematic",
+        "epic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Electronic",
+      "id": "ai-track-016",
+      "license": "CC0 (Vidora original)",
+      "name": "Dreamy Waves",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "electronic",
+        "energetic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Acoustic",
+      "id": "ai-track-017",
+      "license": "CC0 (Vidora original)",
+      "name": "Electric Field",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "acoustic",
+        "warm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Corporate",
+      "id": "ai-track-018",
+      "license": "CC0 (Vidora original)",
+      "name": "Silent Echo",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "corporate",
+        "uplifting"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Chillwave",
+      "id": "ai-track-019",
+      "license": "CC0 (Vidora original)",
+      "name": "Gentle Valley",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "chillwave",
+        "dreamy"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Synthwave",
+      "id": "ai-track-020",
+      "license": "CC0 (Vidora original)",
+      "name": "Quiet Dawn",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "synthwave",
+        "retro"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Jazz",
+      "id": "ai-track-021",
+      "license": "CC0 (Vidora original)",
+      "name": "Cosmic Path",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "jazz",
+        "smooth"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Epic",
+      "id": "ai-track-022",
+      "license": "CC0 (Vidora original)",
+      "name": "Solar Path",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "epic",
+        "heroic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Minimal",
+      "id": "ai-track-023",
+      "license": "CC0 (Vidora original)",
+      "name": "Cosmic Lights",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "minimal",
+        "quiet"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Dance",
+      "id": "ai-track-024",
+      "license": "CC0 (Vidora original)",
+      "name": "Urban Ember",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "dance",
+        "party"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Ambient",
+      "id": "ai-track-025",
+      "license": "CC0 (Vidora original)",
+      "name": "Crystal Pulse",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "ambient",
+        "calm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Lo-Fi",
+      "id": "ai-track-026",
+      "license": "CC0 (Vidora original)",
+      "name": "Frozen Summit",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "lo-fi",
+        "mellow"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Cinematic",
+      "id": "ai-track-027",
+      "license": "CC0 (Vidora original)",
+      "name": "Lunar Bloom",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "cinematic",
+        "epic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Electronic",
+      "id": "ai-track-028",
+      "license": "CC0 (Vidora original)",
+      "name": "Quiet Waves",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "electronic",
+        "energetic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Acoustic",
+      "id": "ai-track-029",
+      "license": "CC0 (Vidora original)",
+      "name": "Misty Bloom",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "acoustic",
+        "warm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Corporate",
+      "id": "ai-track-030",
+      "license": "CC0 (Vidora original)",
+      "name": "Electric Path",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "corporate",
+        "uplifting"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Chillwave",
+      "id": "ai-track-031",
+      "license": "CC0 (Vidora original)",
+      "name": "Bright Storm",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "chillwave",
+        "dreamy"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Synthwave",
+      "id": "ai-track-032",
+      "license": "CC0 (Vidora original)",
+      "name": "Misty Glow",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "synthwave",
+        "retro"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Jazz",
+      "id": "ai-track-033",
+      "license": "CC0 (Vidora original)",
+      "name": "Gentle Drive",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "jazz",
+        "smooth"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Epic",
+      "id": "ai-track-034",
+      "license": "CC0 (Vidora original)",
+      "name": "Velvet Horizon",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "epic",
+        "heroic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Minimal",
+      "id": "ai-track-035",
+      "license": "CC0 (Vidora original)",
+      "name": "Golden Meadow",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "minimal",
+        "quiet"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Dance",
+      "id": "ai-track-036",
+      "license": "CC0 (Vidora original)",
+      "name": "Amber Tide",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "dance",
+        "party"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Ambient",
+      "id": "ai-track-037",
+      "license": "CC0 (Vidora original)",
+      "name": "Solar Valley",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "ambient",
+        "calm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Lo-Fi",
+      "id": "ai-track-038",
+      "license": "CC0 (Vidora original)",
+      "name": "Misty Echo",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "lo-fi",
+        "mellow"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Cinematic",
+      "id": "ai-track-039",
+      "license": "CC0 (Vidora original)",
+      "name": "Slow Field",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "cinematic",
+        "epic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Electronic",
+      "id": "ai-track-040",
+      "license": "CC0 (Vidora original)",
+      "name": "Golden Echo",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "electronic",
+        "energetic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Acoustic",
+      "id": "ai-track-041",
+      "license": "CC0 (Vidora original)",
+      "name": "Crimson Tide",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "acoustic",
+        "warm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Corporate",
+      "id": "ai-track-042",
+      "license": "CC0 (Vidora original)",
+      "name": "Cosmic Storm",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "corporate",
+        "uplifting"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Chillwave",
+      "id": "ai-track-043",
+      "license": "CC0 (Vidora original)",
+      "name": "Dreamy Harbor",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "chillwave",
+        "dreamy"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Synthwave",
+      "id": "ai-track-044",
+      "license": "CC0 (Vidora original)",
+      "name": "Rapid Garden",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "synthwave",
+        "retro"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Jazz",
+      "id": "ai-track-045",
+      "license": "CC0 (Vidora original)",
+      "name": "Velvet Breeze",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "jazz",
+        "smooth"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Epic",
+      "id": "ai-track-046",
+      "license": "CC0 (Vidora original)",
+      "name": "Hidden Waves",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "epic",
+        "heroic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Minimal",
+      "id": "ai-track-047",
+      "license": "CC0 (Vidora original)",
+      "name": "Lunar Skyline",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "minimal",
+        "quiet"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Dance",
+      "id": "ai-track-048",
+      "license": "CC0 (Vidora original)",
+      "name": "Lunar Tide",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "dance",
+        "party"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Ambient",
+      "id": "ai-track-049",
+      "license": "CC0 (Vidora original)",
+      "name": "Bold Storm",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "ambient",
+        "calm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Lo-Fi",
+      "id": "ai-track-050",
+      "license": "CC0 (Vidora original)",
+      "name": "Lunar Orbit",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "lo-fi",
+        "mellow"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Cinematic",
+      "id": "ai-track-051",
+      "license": "CC0 (Vidora original)",
+      "name": "Amber Breeze",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "cinematic",
+        "epic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Electronic",
+      "id": "ai-track-052",
+      "license": "CC0 (Vidora original)",
+      "name": "Electric Waves",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "electronic",
+        "energetic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Acoustic",
+      "id": "ai-track-053",
+      "license": "CC0 (Vidora original)",
+      "name": "Bright Orbit",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "acoustic",
+        "warm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Corporate",
+      "id": "ai-track-054",
+      "license": "CC0 (Vidora original)",
+      "name": "Quiet Tide",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "corporate",
+        "uplifting"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Chillwave",
+      "id": "ai-track-055",
+      "license": "CC0 (Vidora original)",
+      "name": "Slow Orbit",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "chillwave",
+        "dreamy"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Synthwave",
+      "id": "ai-track-056",
+      "license": "CC0 (Vidora original)",
+      "name": "Bright Rain",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "synthwave",
+        "retro"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Jazz",
+      "id": "ai-track-057",
+      "license": "CC0 (Vidora original)",
+      "name": "Solar Garden",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "jazz",
+        "smooth"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Epic",
+      "id": "ai-track-058",
+      "license": "CC0 (Vidora original)",
+      "name": "Golden Orbit",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "epic",
+        "heroic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Minimal",
+      "id": "ai-track-059",
+      "license": "CC0 (Vidora original)",
+      "name": "Soft Summit",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "minimal",
+        "quiet"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Dance",
+      "id": "ai-track-060",
+      "license": "CC0 (Vidora original)",
+      "name": "Midnight Garden",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "dance",
+        "party"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Ambient",
+      "id": "ai-track-061",
+      "license": "CC0 (Vidora original)",
+      "name": "Midnight Valley",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "ambient",
+        "calm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Lo-Fi",
+      "id": "ai-track-062",
+      "license": "CC0 (Vidora original)",
+      "name": "Dreamy Skyline",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "lo-fi",
+        "mellow"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Cinematic",
+      "id": "ai-track-063",
+      "license": "CC0 (Vidora original)",
+      "name": "Crimson Garden",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "cinematic",
+        "epic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Electronic",
+      "id": "ai-track-064",
+      "license": "CC0 (Vidora original)",
+      "name": "Wild Streets",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "electronic",
+        "energetic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Acoustic",
+      "id": "ai-track-065",
+      "license": "CC0 (Vidora original)",
+      "name": "Crimson Field",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "acoustic",
+        "warm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Corporate",
+      "id": "ai-track-066",
+      "license": "CC0 (Vidora original)",
+      "name": "Lunar Path",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "corporate",
+        "uplifting"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Chillwave",
+      "id": "ai-track-067",
+      "license": "CC0 (Vidora original)",
+      "name": "Slow Path",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "chillwave",
+        "dreamy"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Synthwave",
+      "id": "ai-track-068",
+      "license": "CC0 (Vidora original)",
+      "name": "Frozen Field",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "synthwave",
+        "retro"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Jazz",
+      "id": "ai-track-069",
+      "license": "CC0 (Vidora original)",
+      "name": "Silent Pulse",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "jazz",
+        "smooth"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Epic",
+      "id": "ai-track-070",
+      "license": "CC0 (Vidora original)",
+      "name": "Misty Storm",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "epic",
+        "heroic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Minimal",
+      "id": "ai-track-071",
+      "license": "CC0 (Vidora original)",
+      "name": "Amber Rain",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "minimal",
+        "quiet"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Dance",
+      "id": "ai-track-072",
+      "license": "CC0 (Vidora original)",
+      "name": "Crystal Orbit",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "dance",
+        "party"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Ambient",
+      "id": "ai-track-073",
+      "license": "CC0 (Vidora original)",
+      "name": "Frozen Drive",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "ambient",
+        "calm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Lo-Fi",
+      "id": "ai-track-074",
+      "license": "CC0 (Vidora original)",
+      "name": "Velvet Ember",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "lo-fi",
+        "mellow"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Cinematic",
+      "id": "ai-track-075",
+      "license": "CC0 (Vidora original)",
+      "name": "Bold Tide",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "cinematic",
+        "epic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Electronic",
+      "id": "ai-track-076",
+      "license": "CC0 (Vidora original)",
+      "name": "Hidden Ember",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "electronic",
+        "energetic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Acoustic",
+      "id": "ai-track-077",
+      "license": "CC0 (Vidora original)",
+      "name": "Midnight Rain",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "acoustic",
+        "warm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Corporate",
+      "id": "ai-track-078",
+      "license": "CC0 (Vidora original)",
+      "name": "Golden Streets",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "corporate",
+        "uplifting"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Chillwave",
+      "id": "ai-track-079",
+      "license": "CC0 (Vidora original)",
+      "name": "Bold Skyline",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "chillwave",
+        "dreamy"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Synthwave",
+      "id": "ai-track-080",
+      "license": "CC0 (Vidora original)",
+      "name": "Lunar Lights",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "synthwave",
+        "retro"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Jazz",
+      "id": "ai-track-081",
+      "license": "CC0 (Vidora original)",
+      "name": "Silent Horizon",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "jazz",
+        "smooth"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Epic",
+      "id": "ai-track-082",
+      "license": "CC0 (Vidora original)",
+      "name": "Cosmic Bloom",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "epic",
+        "heroic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Minimal",
+      "id": "ai-track-083",
+      "license": "CC0 (Vidora original)",
+      "name": "Soft Breeze",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "minimal",
+        "quiet"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Dance",
+      "id": "ai-track-084",
+      "license": "CC0 (Vidora original)",
+      "name": "Bright Summit",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "dance",
+        "party"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Ambient",
+      "id": "ai-track-085",
+      "license": "CC0 (Vidora original)",
+      "name": "Urban Orbit",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "ambient",
+        "calm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Lo-Fi",
+      "id": "ai-track-086",
+      "license": "CC0 (Vidora original)",
+      "name": "Amber Meadow",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "lo-fi",
+        "mellow"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Cinematic",
+      "id": "ai-track-087",
+      "license": "CC0 (Vidora original)",
+      "name": "Silent Meadow",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "cinematic",
+        "epic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Electronic",
+      "id": "ai-track-088",
+      "license": "CC0 (Vidora original)",
+      "name": "Soft Storm",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "electronic",
+        "energetic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Acoustic",
+      "id": "ai-track-089",
+      "license": "CC0 (Vidora original)",
+      "name": "Crimson Valley",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "acoustic",
+        "warm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Corporate",
+      "id": "ai-track-090",
+      "license": "CC0 (Vidora original)",
+      "name": "Misty Skyline",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "corporate",
+        "uplifting"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Chillwave",
+      "id": "ai-track-091",
+      "license": "CC0 (Vidora original)",
+      "name": "Frozen Lights",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "chillwave",
+        "dreamy"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Synthwave",
+      "id": "ai-track-092",
+      "license": "CC0 (Vidora original)",
+      "name": "Dreamy Echo",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "synthwave",
+        "retro"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Jazz",
+      "id": "ai-track-093",
+      "license": "CC0 (Vidora original)",
+      "name": "Electric Ember",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "jazz",
+        "smooth"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Epic",
+      "id": "ai-track-094",
+      "license": "CC0 (Vidora original)",
+      "name": "Hidden Field",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "epic",
+        "heroic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Minimal",
+      "id": "ai-track-095",
+      "license": "CC0 (Vidora original)",
+      "name": "Neon Bloom",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "minimal",
+        "quiet"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Dance",
+      "id": "ai-track-096",
+      "license": "CC0 (Vidora original)",
+      "name": "Silent Rain",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "dance",
+        "party"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Ambient",
+      "id": "ai-track-097",
+      "license": "CC0 (Vidora original)",
+      "name": "Hidden Horizon",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "ambient",
+        "calm"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Lo-Fi",
+      "id": "ai-track-098",
+      "license": "CC0 (Vidora original)",
+      "name": "Misty Garden",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "lo-fi",
+        "mellow"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Cinematic",
+      "id": "ai-track-099",
+      "license": "CC0 (Vidora original)",
+      "name": "Neon Pulse",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "cinematic",
+        "epic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "Electronic",
+      "id": "ai-track-100",
+      "license": "CC0 (Vidora original)",
+      "name": "Soft Tide",
+      "tags": [
+        "ai",
+        "music",
+        "track",
+        "electronic",
+        "energetic"
+      ],
+      "type": "ai-track"
+    },
+    {
+      "category": "whoosh",
+      "id": "ai-sfx-001",
+      "license": "CC0 (Vidora original)",
+      "name": "Whoosh 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "whoosh"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "whoosh",
+      "id": "ai-sfx-002",
+      "license": "CC0 (Vidora original)",
+      "name": "Whoosh 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "whoosh"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "whoosh",
+      "id": "ai-sfx-003",
+      "license": "CC0 (Vidora original)",
+      "name": "Whoosh 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "whoosh"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "whoosh",
+      "id": "ai-sfx-004",
+      "license": "CC0 (Vidora original)",
+      "name": "Whoosh 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "whoosh"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "whoosh",
+      "id": "ai-sfx-005",
+      "license": "CC0 (Vidora original)",
+      "name": "Whoosh 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "whoosh"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "pop",
+      "id": "ai-sfx-006",
+      "license": "CC0 (Vidora original)",
+      "name": "Pop 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "pop"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "pop",
+      "id": "ai-sfx-007",
+      "license": "CC0 (Vidora original)",
+      "name": "Pop 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "pop"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "pop",
+      "id": "ai-sfx-008",
+      "license": "CC0 (Vidora original)",
+      "name": "Pop 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "pop"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "pop",
+      "id": "ai-sfx-009",
+      "license": "CC0 (Vidora original)",
+      "name": "Pop 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "pop"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "pop",
+      "id": "ai-sfx-010",
+      "license": "CC0 (Vidora original)",
+      "name": "Pop 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "pop"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "chime",
+      "id": "ai-sfx-011",
+      "license": "CC0 (Vidora original)",
+      "name": "Chime 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "chime"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "chime",
+      "id": "ai-sfx-012",
+      "license": "CC0 (Vidora original)",
+      "name": "Chime 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "chime"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "chime",
+      "id": "ai-sfx-013",
+      "license": "CC0 (Vidora original)",
+      "name": "Chime 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "chime"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "chime",
+      "id": "ai-sfx-014",
+      "license": "CC0 (Vidora original)",
+      "name": "Chime 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "chime"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "chime",
+      "id": "ai-sfx-015",
+      "license": "CC0 (Vidora original)",
+      "name": "Chime 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "chime"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "impact",
+      "id": "ai-sfx-016",
+      "license": "CC0 (Vidora original)",
+      "name": "Impact 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "impact"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "impact",
+      "id": "ai-sfx-017",
+      "license": "CC0 (Vidora original)",
+      "name": "Impact 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "impact"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "impact",
+      "id": "ai-sfx-018",
+      "license": "CC0 (Vidora original)",
+      "name": "Impact 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "impact"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "impact",
+      "id": "ai-sfx-019",
+      "license": "CC0 (Vidora original)",
+      "name": "Impact 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "impact"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "impact",
+      "id": "ai-sfx-020",
+      "license": "CC0 (Vidora original)",
+      "name": "Impact 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "impact"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "riser",
+      "id": "ai-sfx-021",
+      "license": "CC0 (Vidora original)",
+      "name": "Riser 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "riser"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "riser",
+      "id": "ai-sfx-022",
+      "license": "CC0 (Vidora original)",
+      "name": "Riser 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "riser"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "riser",
+      "id": "ai-sfx-023",
+      "license": "CC0 (Vidora original)",
+      "name": "Riser 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "riser"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "riser",
+      "id": "ai-sfx-024",
+      "license": "CC0 (Vidora original)",
+      "name": "Riser 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "riser"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "riser",
+      "id": "ai-sfx-025",
+      "license": "CC0 (Vidora original)",
+      "name": "Riser 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "riser"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "sweep",
+      "id": "ai-sfx-026",
+      "license": "CC0 (Vidora original)",
+      "name": "Sweep 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "sweep"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "sweep",
+      "id": "ai-sfx-027",
+      "license": "CC0 (Vidora original)",
+      "name": "Sweep 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "sweep"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "sweep",
+      "id": "ai-sfx-028",
+      "license": "CC0 (Vidora original)",
+      "name": "Sweep 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "sweep"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "sweep",
+      "id": "ai-sfx-029",
+      "license": "CC0 (Vidora original)",
+      "name": "Sweep 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "sweep"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "sweep",
+      "id": "ai-sfx-030",
+      "license": "CC0 (Vidora original)",
+      "name": "Sweep 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "sweep"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "click",
+      "id": "ai-sfx-031",
+      "license": "CC0 (Vidora original)",
+      "name": "Click 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "click"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "click",
+      "id": "ai-sfx-032",
+      "license": "CC0 (Vidora original)",
+      "name": "Click 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "click"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "click",
+      "id": "ai-sfx-033",
+      "license": "CC0 (Vidora original)",
+      "name": "Click 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "click"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "click",
+      "id": "ai-sfx-034",
+      "license": "CC0 (Vidora original)",
+      "name": "Click 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "click"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "click",
+      "id": "ai-sfx-035",
+      "license": "CC0 (Vidora original)",
+      "name": "Click 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "click"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "bubble",
+      "id": "ai-sfx-036",
+      "license": "CC0 (Vidora original)",
+      "name": "Bubble 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "bubble"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "bubble",
+      "id": "ai-sfx-037",
+      "license": "CC0 (Vidora original)",
+      "name": "Bubble 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "bubble"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "bubble",
+      "id": "ai-sfx-038",
+      "license": "CC0 (Vidora original)",
+      "name": "Bubble 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "bubble"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "bubble",
+      "id": "ai-sfx-039",
+      "license": "CC0 (Vidora original)",
+      "name": "Bubble 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "bubble"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "bubble",
+      "id": "ai-sfx-040",
+      "license": "CC0 (Vidora original)",
+      "name": "Bubble 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "bubble"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "zap",
+      "id": "ai-sfx-041",
+      "license": "CC0 (Vidora original)",
+      "name": "Zap 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "zap"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "zap",
+      "id": "ai-sfx-042",
+      "license": "CC0 (Vidora original)",
+      "name": "Zap 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "zap"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "zap",
+      "id": "ai-sfx-043",
+      "license": "CC0 (Vidora original)",
+      "name": "Zap 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "zap"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "zap",
+      "id": "ai-sfx-044",
+      "license": "CC0 (Vidora original)",
+      "name": "Zap 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "zap"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "zap",
+      "id": "ai-sfx-045",
+      "license": "CC0 (Vidora original)",
+      "name": "Zap 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "zap"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "sparkle",
+      "id": "ai-sfx-046",
+      "license": "CC0 (Vidora original)",
+      "name": "Sparkle 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "sparkle"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "sparkle",
+      "id": "ai-sfx-047",
+      "license": "CC0 (Vidora original)",
+      "name": "Sparkle 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "sparkle"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "sparkle",
+      "id": "ai-sfx-048",
+      "license": "CC0 (Vidora original)",
+      "name": "Sparkle 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "sparkle"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "sparkle",
+      "id": "ai-sfx-049",
+      "license": "CC0 (Vidora original)",
+      "name": "Sparkle 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "sparkle"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "sparkle",
+      "id": "ai-sfx-050",
+      "license": "CC0 (Vidora original)",
+      "name": "Sparkle 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "sparkle"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "snap",
+      "id": "ai-sfx-051",
+      "license": "CC0 (Vidora original)",
+      "name": "Snap 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "snap"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "snap",
+      "id": "ai-sfx-052",
+      "license": "CC0 (Vidora original)",
+      "name": "Snap 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "snap"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "snap",
+      "id": "ai-sfx-053",
+      "license": "CC0 (Vidora original)",
+      "name": "Snap 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "snap"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "snap",
+      "id": "ai-sfx-054",
+      "license": "CC0 (Vidora original)",
+      "name": "Snap 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "snap"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "snap",
+      "id": "ai-sfx-055",
+      "license": "CC0 (Vidora original)",
+      "name": "Snap 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "snap"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "shimmer",
+      "id": "ai-sfx-056",
+      "license": "CC0 (Vidora original)",
+      "name": "Shimmer 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "shimmer"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "shimmer",
+      "id": "ai-sfx-057",
+      "license": "CC0 (Vidora original)",
+      "name": "Shimmer 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "shimmer"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "shimmer",
+      "id": "ai-sfx-058",
+      "license": "CC0 (Vidora original)",
+      "name": "Shimmer 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "shimmer"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "shimmer",
+      "id": "ai-sfx-059",
+      "license": "CC0 (Vidora original)",
+      "name": "Shimmer 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "shimmer"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "shimmer",
+      "id": "ai-sfx-060",
+      "license": "CC0 (Vidora original)",
+      "name": "Shimmer 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "shimmer"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "thump",
+      "id": "ai-sfx-061",
+      "license": "CC0 (Vidora original)",
+      "name": "Thump 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "thump"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "thump",
+      "id": "ai-sfx-062",
+      "license": "CC0 (Vidora original)",
+      "name": "Thump 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "thump"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "thump",
+      "id": "ai-sfx-063",
+      "license": "CC0 (Vidora original)",
+      "name": "Thump 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "thump"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "thump",
+      "id": "ai-sfx-064",
+      "license": "CC0 (Vidora original)",
+      "name": "Thump 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "thump"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "thump",
+      "id": "ai-sfx-065",
+      "license": "CC0 (Vidora original)",
+      "name": "Thump 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "thump"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "swoosh",
+      "id": "ai-sfx-066",
+      "license": "CC0 (Vidora original)",
+      "name": "Swoosh 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "swoosh"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "swoosh",
+      "id": "ai-sfx-067",
+      "license": "CC0 (Vidora original)",
+      "name": "Swoosh 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "swoosh"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "swoosh",
+      "id": "ai-sfx-068",
+      "license": "CC0 (Vidora original)",
+      "name": "Swoosh 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "swoosh"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "swoosh",
+      "id": "ai-sfx-069",
+      "license": "CC0 (Vidora original)",
+      "name": "Swoosh 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "swoosh"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "swoosh",
+      "id": "ai-sfx-070",
+      "license": "CC0 (Vidora original)",
+      "name": "Swoosh 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "swoosh"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "glitch",
+      "id": "ai-sfx-071",
+      "license": "CC0 (Vidora original)",
+      "name": "Glitch 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "glitch"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "glitch",
+      "id": "ai-sfx-072",
+      "license": "CC0 (Vidora original)",
+      "name": "Glitch 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "glitch"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "glitch",
+      "id": "ai-sfx-073",
+      "license": "CC0 (Vidora original)",
+      "name": "Glitch 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "glitch"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "glitch",
+      "id": "ai-sfx-074",
+      "license": "CC0 (Vidora original)",
+      "name": "Glitch 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "glitch"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "glitch",
+      "id": "ai-sfx-075",
+      "license": "CC0 (Vidora original)",
+      "name": "Glitch 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "glitch"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "ding",
+      "id": "ai-sfx-076",
+      "license": "CC0 (Vidora original)",
+      "name": "Ding 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "ding"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "ding",
+      "id": "ai-sfx-077",
+      "license": "CC0 (Vidora original)",
+      "name": "Ding 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "ding"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "ding",
+      "id": "ai-sfx-078",
+      "license": "CC0 (Vidora original)",
+      "name": "Ding 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "ding"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "ding",
+      "id": "ai-sfx-079",
+      "license": "CC0 (Vidora original)",
+      "name": "Ding 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "ding"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "ding",
+      "id": "ai-sfx-080",
+      "license": "CC0 (Vidora original)",
+      "name": "Ding 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "ding"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "slide",
+      "id": "ai-sfx-081",
+      "license": "CC0 (Vidora original)",
+      "name": "Slide 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "slide"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "slide",
+      "id": "ai-sfx-082",
+      "license": "CC0 (Vidora original)",
+      "name": "Slide 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "slide"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "slide",
+      "id": "ai-sfx-083",
+      "license": "CC0 (Vidora original)",
+      "name": "Slide 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "slide"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "slide",
+      "id": "ai-sfx-084",
+      "license": "CC0 (Vidora original)",
+      "name": "Slide 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "slide"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "slide",
+      "id": "ai-sfx-085",
+      "license": "CC0 (Vidora original)",
+      "name": "Slide 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "slide"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "rumble",
+      "id": "ai-sfx-086",
+      "license": "CC0 (Vidora original)",
+      "name": "Rumble 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "rumble"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "rumble",
+      "id": "ai-sfx-087",
+      "license": "CC0 (Vidora original)",
+      "name": "Rumble 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "rumble"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "rumble",
+      "id": "ai-sfx-088",
+      "license": "CC0 (Vidora original)",
+      "name": "Rumble 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "rumble"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "rumble",
+      "id": "ai-sfx-089",
+      "license": "CC0 (Vidora original)",
+      "name": "Rumble 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "rumble"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "rumble",
+      "id": "ai-sfx-090",
+      "license": "CC0 (Vidora original)",
+      "name": "Rumble 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "rumble"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "twinkle",
+      "id": "ai-sfx-091",
+      "license": "CC0 (Vidora original)",
+      "name": "Twinkle 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "twinkle"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "twinkle",
+      "id": "ai-sfx-092",
+      "license": "CC0 (Vidora original)",
+      "name": "Twinkle 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "twinkle"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "twinkle",
+      "id": "ai-sfx-093",
+      "license": "CC0 (Vidora original)",
+      "name": "Twinkle 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "twinkle"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "twinkle",
+      "id": "ai-sfx-094",
+      "license": "CC0 (Vidora original)",
+      "name": "Twinkle 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "twinkle"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "twinkle",
+      "id": "ai-sfx-095",
+      "license": "CC0 (Vidora original)",
+      "name": "Twinkle 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "twinkle"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "boom",
+      "id": "ai-sfx-096",
+      "license": "CC0 (Vidora original)",
+      "name": "Boom 1",
+      "tags": [
+        "ai",
+        "sfx",
+        "boom"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "boom",
+      "id": "ai-sfx-097",
+      "license": "CC0 (Vidora original)",
+      "name": "Boom 2",
+      "tags": [
+        "ai",
+        "sfx",
+        "boom"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "boom",
+      "id": "ai-sfx-098",
+      "license": "CC0 (Vidora original)",
+      "name": "Boom 3",
+      "tags": [
+        "ai",
+        "sfx",
+        "boom"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "boom",
+      "id": "ai-sfx-099",
+      "license": "CC0 (Vidora original)",
+      "name": "Boom 4",
+      "tags": [
+        "ai",
+        "sfx",
+        "boom"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "boom",
+      "id": "ai-sfx-100",
+      "license": "CC0 (Vidora original)",
+      "name": "Boom 5",
+      "tags": [
+        "ai",
+        "sfx",
+        "boom"
+      ],
+      "type": "ai-sfx"
+    },
+    {
+      "category": "Aurora",
+      "id": "ai-clip-001",
+      "license": "CC0 (Vidora original)",
+      "name": "Amber Aurora",
+      "tags": [
+        "ai",
+        "clip",
+        "aurora",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Aurora",
+      "id": "ai-clip-002",
+      "license": "CC0 (Vidora original)",
+      "name": "Cosmic Aurora",
+      "tags": [
+        "ai",
+        "clip",
+        "aurora",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Aurora",
+      "id": "ai-clip-003",
+      "license": "CC0 (Vidora original)",
+      "name": "Silent Aurora",
+      "tags": [
+        "ai",
+        "clip",
+        "aurora",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Aurora",
+      "id": "ai-clip-004",
+      "license": "CC0 (Vidora original)",
+      "name": "Quiet Aurora",
+      "tags": [
+        "ai",
+        "clip",
+        "aurora",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Aurora",
+      "id": "ai-clip-005",
+      "license": "CC0 (Vidora original)",
+      "name": "Gentle Aurora",
+      "tags": [
+        "ai",
+        "clip",
+        "aurora",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Waves",
+      "id": "ai-clip-006",
+      "license": "CC0 (Vidora original)",
+      "name": "Neon Waves",
+      "tags": [
+        "ai",
+        "clip",
+        "waves",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Waves",
+      "id": "ai-clip-007",
+      "license": "CC0 (Vidora original)",
+      "name": "Electric Waves",
+      "tags": [
+        "ai",
+        "clip",
+        "waves",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Waves",
+      "id": "ai-clip-008",
+      "license": "CC0 (Vidora original)",
+      "name": "Bold Waves",
+      "tags": [
+        "ai",
+        "clip",
+        "waves",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Waves",
+      "id": "ai-clip-009",
+      "license": "CC0 (Vidora original)",
+      "name": "Velvet Waves",
+      "tags": [
+        "ai",
+        "clip",
+        "waves",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Waves",
+      "id": "ai-clip-010",
+      "license": "CC0 (Vidora original)",
+      "name": "Lunar Waves",
+      "tags": [
+        "ai",
+        "clip",
+        "waves",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Particles",
+      "id": "ai-clip-011",
+      "license": "CC0 (Vidora original)",
+      "name": "Dreamy Particles",
+      "tags": [
+        "ai",
+        "clip",
+        "particles",
+        "float"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Particles",
+      "id": "ai-clip-012",
+      "license": "CC0 (Vidora original)",
+      "name": "Crystal Particles",
+      "tags": [
+        "ai",
+        "clip",
+        "particles",
+        "float"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Particles",
+      "id": "ai-clip-013",
+      "license": "CC0 (Vidora original)",
+      "name": "Crimson Particles",
+      "tags": [
+        "ai",
+        "clip",
+        "particles",
+        "float"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Particles",
+      "id": "ai-clip-014",
+      "license": "CC0 (Vidora original)",
+      "name": "Hidden Particles",
+      "tags": [
+        "ai",
+        "clip",
+        "particles",
+        "float"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Particles",
+      "id": "ai-clip-015",
+      "license": "CC0 (Vidora original)",
+      "name": "Midnight Particles",
+      "tags": [
+        "ai",
+        "clip",
+        "particles",
+        "float"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Kaleidoscope",
+      "id": "ai-clip-016",
+      "license": "CC0 (Vidora original)",
+      "name": "Misty Kaleidoscope",
+      "tags": [
+        "ai",
+        "clip",
+        "kaleidoscope",
+        "rotate"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Kaleidoscope",
+      "id": "ai-clip-017",
+      "license": "CC0 (Vidora original)",
+      "name": "Bright Kaleidoscope",
+      "tags": [
+        "ai",
+        "clip",
+        "kaleidoscope",
+        "rotate"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Kaleidoscope",
+      "id": "ai-clip-018",
+      "license": "CC0 (Vidora original)",
+      "name": "Solar Kaleidoscope",
+      "tags": [
+        "ai",
+        "clip",
+        "kaleidoscope",
+        "rotate"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Kaleidoscope",
+      "id": "ai-clip-019",
+      "license": "CC0 (Vidora original)",
+      "name": "Urban Kaleidoscope",
+      "tags": [
+        "ai",
+        "clip",
+        "kaleidoscope",
+        "rotate"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Kaleidoscope",
+      "id": "ai-clip-020",
+      "license": "CC0 (Vidora original)",
+      "name": "Golden Kaleidoscope",
+      "tags": [
+        "ai",
+        "clip",
+        "kaleidoscope",
+        "rotate"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Sunrise",
+      "id": "ai-clip-021",
+      "license": "CC0 (Vidora original)",
+      "name": "Amber Sunrise",
+      "tags": [
+        "ai",
+        "clip",
+        "sunrise",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Sunrise",
+      "id": "ai-clip-022",
+      "license": "CC0 (Vidora original)",
+      "name": "Cosmic Sunrise",
+      "tags": [
+        "ai",
+        "clip",
+        "sunrise",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Sunrise",
+      "id": "ai-clip-023",
+      "license": "CC0 (Vidora original)",
+      "name": "Silent Sunrise",
+      "tags": [
+        "ai",
+        "clip",
+        "sunrise",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Sunrise",
+      "id": "ai-clip-024",
+      "license": "CC0 (Vidora original)",
+      "name": "Quiet Sunrise",
+      "tags": [
+        "ai",
+        "clip",
+        "sunrise",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Sunrise",
+      "id": "ai-clip-025",
+      "license": "CC0 (Vidora original)",
+      "name": "Gentle Sunrise",
+      "tags": [
+        "ai",
+        "clip",
+        "sunrise",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Ocean",
+      "id": "ai-clip-026",
+      "license": "CC0 (Vidora original)",
+      "name": "Neon Ocean",
+      "tags": [
+        "ai",
+        "clip",
+        "ocean",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Ocean",
+      "id": "ai-clip-027",
+      "license": "CC0 (Vidora original)",
+      "name": "Electric Ocean",
+      "tags": [
+        "ai",
+        "clip",
+        "ocean",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Ocean",
+      "id": "ai-clip-028",
+      "license": "CC0 (Vidora original)",
+      "name": "Bold Ocean",
+      "tags": [
+        "ai",
+        "clip",
+        "ocean",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Ocean",
+      "id": "ai-clip-029",
+      "license": "CC0 (Vidora original)",
+      "name": "Velvet Ocean",
+      "tags": [
+        "ai",
+        "clip",
+        "ocean",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Ocean",
+      "id": "ai-clip-030",
+      "license": "CC0 (Vidora original)",
+      "name": "Lunar Ocean",
+      "tags": [
+        "ai",
+        "clip",
+        "ocean",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bokeh",
+      "id": "ai-clip-031",
+      "license": "CC0 (Vidora original)",
+      "name": "Dreamy Bokeh",
+      "tags": [
+        "ai",
+        "clip",
+        "bokeh",
+        "float"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bokeh",
+      "id": "ai-clip-032",
+      "license": "CC0 (Vidora original)",
+      "name": "Crystal Bokeh",
+      "tags": [
+        "ai",
+        "clip",
+        "bokeh",
+        "float"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bokeh",
+      "id": "ai-clip-033",
+      "license": "CC0 (Vidora original)",
+      "name": "Crimson Bokeh",
+      "tags": [
+        "ai",
+        "clip",
+        "bokeh",
+        "float"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bokeh",
+      "id": "ai-clip-034",
+      "license": "CC0 (Vidora original)",
+      "name": "Hidden Bokeh",
+      "tags": [
+        "ai",
+        "clip",
+        "bokeh",
+        "float"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bokeh",
+      "id": "ai-clip-035",
+      "license": "CC0 (Vidora original)",
+      "name": "Midnight Bokeh",
+      "tags": [
+        "ai",
+        "clip",
+        "bokeh",
+        "float"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Nebula",
+      "id": "ai-clip-036",
+      "license": "CC0 (Vidora original)",
+      "name": "Misty Nebula",
+      "tags": [
+        "ai",
+        "clip",
+        "nebula",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Nebula",
+      "id": "ai-clip-037",
+      "license": "CC0 (Vidora original)",
+      "name": "Bright Nebula",
+      "tags": [
+        "ai",
+        "clip",
+        "nebula",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Nebula",
+      "id": "ai-clip-038",
+      "license": "CC0 (Vidora original)",
+      "name": "Solar Nebula",
+      "tags": [
+        "ai",
+        "clip",
+        "nebula",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Nebula",
+      "id": "ai-clip-039",
+      "license": "CC0 (Vidora original)",
+      "name": "Urban Nebula",
+      "tags": [
+        "ai",
+        "clip",
+        "nebula",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Nebula",
+      "id": "ai-clip-040",
+      "license": "CC0 (Vidora original)",
+      "name": "Golden Nebula",
+      "tags": [
+        "ai",
+        "clip",
+        "nebula",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Rain",
+      "id": "ai-clip-041",
+      "license": "CC0 (Vidora original)",
+      "name": "Amber Rain",
+      "tags": [
+        "ai",
+        "clip",
+        "rain",
+        "fall"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Rain",
+      "id": "ai-clip-042",
+      "license": "CC0 (Vidora original)",
+      "name": "Cosmic Rain",
+      "tags": [
+        "ai",
+        "clip",
+        "rain",
+        "fall"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Rain",
+      "id": "ai-clip-043",
+      "license": "CC0 (Vidora original)",
+      "name": "Silent Rain",
+      "tags": [
+        "ai",
+        "clip",
+        "rain",
+        "fall"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Rain",
+      "id": "ai-clip-044",
+      "license": "CC0 (Vidora original)",
+      "name": "Quiet Rain",
+      "tags": [
+        "ai",
+        "clip",
+        "rain",
+        "fall"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Rain",
+      "id": "ai-clip-045",
+      "license": "CC0 (Vidora original)",
+      "name": "Gentle Rain",
+      "tags": [
+        "ai",
+        "clip",
+        "rain",
+        "fall"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Snow",
+      "id": "ai-clip-046",
+      "license": "CC0 (Vidora original)",
+      "name": "Neon Snow",
+      "tags": [
+        "ai",
+        "clip",
+        "snow",
+        "fall"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Snow",
+      "id": "ai-clip-047",
+      "license": "CC0 (Vidora original)",
+      "name": "Electric Snow",
+      "tags": [
+        "ai",
+        "clip",
+        "snow",
+        "fall"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Snow",
+      "id": "ai-clip-048",
+      "license": "CC0 (Vidora original)",
+      "name": "Bold Snow",
+      "tags": [
+        "ai",
+        "clip",
+        "snow",
+        "fall"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Snow",
+      "id": "ai-clip-049",
+      "license": "CC0 (Vidora original)",
+      "name": "Velvet Snow",
+      "tags": [
+        "ai",
+        "clip",
+        "snow",
+        "fall"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Snow",
+      "id": "ai-clip-050",
+      "license": "CC0 (Vidora original)",
+      "name": "Lunar Snow",
+      "tags": [
+        "ai",
+        "clip",
+        "snow",
+        "fall"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Embers",
+      "id": "ai-clip-051",
+      "license": "CC0 (Vidora original)",
+      "name": "Dreamy Embers",
+      "tags": [
+        "ai",
+        "clip",
+        "embers",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Embers",
+      "id": "ai-clip-052",
+      "license": "CC0 (Vidora original)",
+      "name": "Crystal Embers",
+      "tags": [
+        "ai",
+        "clip",
+        "embers",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Embers",
+      "id": "ai-clip-053",
+      "license": "CC0 (Vidora original)",
+      "name": "Crimson Embers",
+      "tags": [
+        "ai",
+        "clip",
+        "embers",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Embers",
+      "id": "ai-clip-054",
+      "license": "CC0 (Vidora original)",
+      "name": "Hidden Embers",
+      "tags": [
+        "ai",
+        "clip",
+        "embers",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Embers",
+      "id": "ai-clip-055",
+      "license": "CC0 (Vidora original)",
+      "name": "Midnight Embers",
+      "tags": [
+        "ai",
+        "clip",
+        "embers",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Light streaks",
+      "id": "ai-clip-056",
+      "license": "CC0 (Vidora original)",
+      "name": "Misty Light streaks",
+      "tags": [
+        "ai",
+        "clip",
+        "light streaks",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Light streaks",
+      "id": "ai-clip-057",
+      "license": "CC0 (Vidora original)",
+      "name": "Bright Light streaks",
+      "tags": [
+        "ai",
+        "clip",
+        "light streaks",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Light streaks",
+      "id": "ai-clip-058",
+      "license": "CC0 (Vidora original)",
+      "name": "Solar Light streaks",
+      "tags": [
+        "ai",
+        "clip",
+        "light streaks",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Light streaks",
+      "id": "ai-clip-059",
+      "license": "CC0 (Vidora original)",
+      "name": "Urban Light streaks",
+      "tags": [
+        "ai",
+        "clip",
+        "light streaks",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Light streaks",
+      "id": "ai-clip-060",
+      "license": "CC0 (Vidora original)",
+      "name": "Golden Light streaks",
+      "tags": [
+        "ai",
+        "clip",
+        "light streaks",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Grid pulse",
+      "id": "ai-clip-061",
+      "license": "CC0 (Vidora original)",
+      "name": "Amber Grid pulse",
+      "tags": [
+        "ai",
+        "clip",
+        "grid pulse",
+        "pulse"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Grid pulse",
+      "id": "ai-clip-062",
+      "license": "CC0 (Vidora original)",
+      "name": "Cosmic Grid pulse",
+      "tags": [
+        "ai",
+        "clip",
+        "grid pulse",
+        "pulse"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Grid pulse",
+      "id": "ai-clip-063",
+      "license": "CC0 (Vidora original)",
+      "name": "Silent Grid pulse",
+      "tags": [
+        "ai",
+        "clip",
+        "grid pulse",
+        "pulse"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Grid pulse",
+      "id": "ai-clip-064",
+      "license": "CC0 (Vidora original)",
+      "name": "Quiet Grid pulse",
+      "tags": [
+        "ai",
+        "clip",
+        "grid pulse",
+        "pulse"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Grid pulse",
+      "id": "ai-clip-065",
+      "license": "CC0 (Vidora original)",
+      "name": "Gentle Grid pulse",
+      "tags": [
+        "ai",
+        "clip",
+        "grid pulse",
+        "pulse"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bubbles",
+      "id": "ai-clip-066",
+      "license": "CC0 (Vidora original)",
+      "name": "Neon Bubbles",
+      "tags": [
+        "ai",
+        "clip",
+        "bubbles",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bubbles",
+      "id": "ai-clip-067",
+      "license": "CC0 (Vidora original)",
+      "name": "Electric Bubbles",
+      "tags": [
+        "ai",
+        "clip",
+        "bubbles",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bubbles",
+      "id": "ai-clip-068",
+      "license": "CC0 (Vidora original)",
+      "name": "Bold Bubbles",
+      "tags": [
+        "ai",
+        "clip",
+        "bubbles",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bubbles",
+      "id": "ai-clip-069",
+      "license": "CC0 (Vidora original)",
+      "name": "Velvet Bubbles",
+      "tags": [
+        "ai",
+        "clip",
+        "bubbles",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bubbles",
+      "id": "ai-clip-070",
+      "license": "CC0 (Vidora original)",
+      "name": "Lunar Bubbles",
+      "tags": [
+        "ai",
+        "clip",
+        "bubbles",
+        "rise"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Clouds",
+      "id": "ai-clip-071",
+      "license": "CC0 (Vidora original)",
+      "name": "Dreamy Clouds",
+      "tags": [
+        "ai",
+        "clip",
+        "clouds",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Clouds",
+      "id": "ai-clip-072",
+      "license": "CC0 (Vidora original)",
+      "name": "Crystal Clouds",
+      "tags": [
+        "ai",
+        "clip",
+        "clouds",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Clouds",
+      "id": "ai-clip-073",
+      "license": "CC0 (Vidora original)",
+      "name": "Crimson Clouds",
+      "tags": [
+        "ai",
+        "clip",
+        "clouds",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Clouds",
+      "id": "ai-clip-074",
+      "license": "CC0 (Vidora original)",
+      "name": "Hidden Clouds",
+      "tags": [
+        "ai",
+        "clip",
+        "clouds",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Clouds",
+      "id": "ai-clip-075",
+      "license": "CC0 (Vidora original)",
+      "name": "Midnight Clouds",
+      "tags": [
+        "ai",
+        "clip",
+        "clouds",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Lava",
+      "id": "ai-clip-076",
+      "license": "CC0 (Vidora original)",
+      "name": "Misty Lava",
+      "tags": [
+        "ai",
+        "clip",
+        "lava",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Lava",
+      "id": "ai-clip-077",
+      "license": "CC0 (Vidora original)",
+      "name": "Bright Lava",
+      "tags": [
+        "ai",
+        "clip",
+        "lava",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Lava",
+      "id": "ai-clip-078",
+      "license": "CC0 (Vidora original)",
+      "name": "Solar Lava",
+      "tags": [
+        "ai",
+        "clip",
+        "lava",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Lava",
+      "id": "ai-clip-079",
+      "license": "CC0 (Vidora original)",
+      "name": "Urban Lava",
+      "tags": [
+        "ai",
+        "clip",
+        "lava",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Lava",
+      "id": "ai-clip-080",
+      "license": "CC0 (Vidora original)",
+      "name": "Golden Lava",
+      "tags": [
+        "ai",
+        "clip",
+        "lava",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Starfield",
+      "id": "ai-clip-081",
+      "license": "CC0 (Vidora original)",
+      "name": "Amber Starfield",
+      "tags": [
+        "ai",
+        "clip",
+        "starfield",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Starfield",
+      "id": "ai-clip-082",
+      "license": "CC0 (Vidora original)",
+      "name": "Cosmic Starfield",
+      "tags": [
+        "ai",
+        "clip",
+        "starfield",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Starfield",
+      "id": "ai-clip-083",
+      "license": "CC0 (Vidora original)",
+      "name": "Silent Starfield",
+      "tags": [
+        "ai",
+        "clip",
+        "starfield",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Starfield",
+      "id": "ai-clip-084",
+      "license": "CC0 (Vidora original)",
+      "name": "Quiet Starfield",
+      "tags": [
+        "ai",
+        "clip",
+        "starfield",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Starfield",
+      "id": "ai-clip-085",
+      "license": "CC0 (Vidora original)",
+      "name": "Gentle Starfield",
+      "tags": [
+        "ai",
+        "clip",
+        "starfield",
+        "drift"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Caustics",
+      "id": "ai-clip-086",
+      "license": "CC0 (Vidora original)",
+      "name": "Neon Caustics",
+      "tags": [
+        "ai",
+        "clip",
+        "caustics",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Caustics",
+      "id": "ai-clip-087",
+      "license": "CC0 (Vidora original)",
+      "name": "Electric Caustics",
+      "tags": [
+        "ai",
+        "clip",
+        "caustics",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Caustics",
+      "id": "ai-clip-088",
+      "license": "CC0 (Vidora original)",
+      "name": "Bold Caustics",
+      "tags": [
+        "ai",
+        "clip",
+        "caustics",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Caustics",
+      "id": "ai-clip-089",
+      "license": "CC0 (Vidora original)",
+      "name": "Velvet Caustics",
+      "tags": [
+        "ai",
+        "clip",
+        "caustics",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Caustics",
+      "id": "ai-clip-090",
+      "license": "CC0 (Vidora original)",
+      "name": "Lunar Caustics",
+      "tags": [
+        "ai",
+        "clip",
+        "caustics",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Ribbons",
+      "id": "ai-clip-091",
+      "license": "CC0 (Vidora original)",
+      "name": "Dreamy Ribbons",
+      "tags": [
+        "ai",
+        "clip",
+        "ribbons",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Ribbons",
+      "id": "ai-clip-092",
+      "license": "CC0 (Vidora original)",
+      "name": "Crystal Ribbons",
+      "tags": [
+        "ai",
+        "clip",
+        "ribbons",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Ribbons",
+      "id": "ai-clip-093",
+      "license": "CC0 (Vidora original)",
+      "name": "Crimson Ribbons",
+      "tags": [
+        "ai",
+        "clip",
+        "ribbons",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Ribbons",
+      "id": "ai-clip-094",
+      "license": "CC0 (Vidora original)",
+      "name": "Hidden Ribbons",
+      "tags": [
+        "ai",
+        "clip",
+        "ribbons",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Ribbons",
+      "id": "ai-clip-095",
+      "license": "CC0 (Vidora original)",
+      "name": "Midnight Ribbons",
+      "tags": [
+        "ai",
+        "clip",
+        "ribbons",
+        "flow"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bloom",
+      "id": "ai-clip-096",
+      "license": "CC0 (Vidora original)",
+      "name": "Misty Bloom",
+      "tags": [
+        "ai",
+        "clip",
+        "bloom",
+        "pulse"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bloom",
+      "id": "ai-clip-097",
+      "license": "CC0 (Vidora original)",
+      "name": "Bright Bloom",
+      "tags": [
+        "ai",
+        "clip",
+        "bloom",
+        "pulse"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bloom",
+      "id": "ai-clip-098",
+      "license": "CC0 (Vidora original)",
+      "name": "Solar Bloom",
+      "tags": [
+        "ai",
+        "clip",
+        "bloom",
+        "pulse"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bloom",
+      "id": "ai-clip-099",
+      "license": "CC0 (Vidora original)",
+      "name": "Urban Bloom",
+      "tags": [
+        "ai",
+        "clip",
+        "bloom",
+        "pulse"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "Bloom",
+      "id": "ai-clip-100",
+      "license": "CC0 (Vidora original)",
+      "name": "Golden Bloom",
+      "tags": [
+        "ai",
+        "clip",
+        "bloom",
+        "pulse"
+      ],
+      "type": "ai-clip"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-01",
+      "license": "CC0 (Vidora original)",
+      "name": "Thin Line Frame 1",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "thin-line"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-02",
+      "license": "CC0 (Vidora original)",
+      "name": "Double Line Frame 1",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "double-line"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-03",
+      "license": "CC0 (Vidora original)",
+      "name": "Rounded Frame 1",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "rounded"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-04",
+      "license": "CC0 (Vidora original)",
+      "name": "Corner Flourish Frame 1",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "corner-flourish"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-05",
+      "license": "CC0 (Vidora original)",
+      "name": "Vignette Frame 1",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "vignette"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-06",
+      "license": "CC0 (Vidora original)",
+      "name": "Film Strip Frame 1",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "film-strip"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-07",
+      "license": "CC0 (Vidora original)",
+      "name": "Polaroid Frame 1",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "polaroid"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-08",
+      "license": "CC0 (Vidora original)",
+      "name": "Neon Glow Frame 1",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "neon-glow"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-09",
+      "license": "CC0 (Vidora original)",
+      "name": "Gold Foil Frame 1",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "gold-foil"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-10",
+      "license": "CC0 (Vidora original)",
+      "name": "Torn Edge Frame 1",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "torn-edge"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-11",
+      "license": "CC0 (Vidora original)",
+      "name": "Thin Line Frame 2",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "thin-line"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-12",
+      "license": "CC0 (Vidora original)",
+      "name": "Double Line Frame 2",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "double-line"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-13",
+      "license": "CC0 (Vidora original)",
+      "name": "Rounded Frame 2",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "rounded"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-14",
+      "license": "CC0 (Vidora original)",
+      "name": "Corner Flourish Frame 2",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "corner-flourish"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-15",
+      "license": "CC0 (Vidora original)",
+      "name": "Vignette Frame 2",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "vignette"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-16",
+      "license": "CC0 (Vidora original)",
+      "name": "Film Strip Frame 2",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "film-strip"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-17",
+      "license": "CC0 (Vidora original)",
+      "name": "Polaroid Frame 2",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "polaroid"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-18",
+      "license": "CC0 (Vidora original)",
+      "name": "Neon Glow Frame 2",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "neon-glow"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-19",
+      "license": "CC0 (Vidora original)",
+      "name": "Gold Foil Frame 2",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "gold-foil"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "frame",
+      "id": "ai-frame-20",
+      "license": "CC0 (Vidora original)",
+      "name": "Torn Edge Frame 2",
+      "tags": [
+        "ai",
+        "image",
+        "frame",
+        "torn-edge"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-01",
+      "license": "CC0 (Vidora original)",
+      "name": "Star Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "star"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-02",
+      "license": "CC0 (Vidora original)",
+      "name": "Heart Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "heart"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-03",
+      "license": "CC0 (Vidora original)",
+      "name": "Bolt Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "bolt"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-04",
+      "license": "CC0 (Vidora original)",
+      "name": "Arrow Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "arrow"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-05",
+      "license": "CC0 (Vidora original)",
+      "name": "Badge Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "badge"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-06",
+      "license": "CC0 (Vidora original)",
+      "name": "Flower Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "flower"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-07",
+      "license": "CC0 (Vidora original)",
+      "name": "Sun Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "sun"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-08",
+      "license": "CC0 (Vidora original)",
+      "name": "Moon Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "moon"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-09",
+      "license": "CC0 (Vidora original)",
+      "name": "Crown Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "crown"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-10",
+      "license": "CC0 (Vidora original)",
+      "name": "Gem Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "gem"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-11",
+      "license": "CC0 (Vidora original)",
+      "name": "Leaf Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "leaf"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-12",
+      "license": "CC0 (Vidora original)",
+      "name": "Drop Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "drop"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-13",
+      "license": "CC0 (Vidora original)",
+      "name": "Cloud Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "cloud"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-14",
+      "license": "CC0 (Vidora original)",
+      "name": "Flame Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "flame"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-15",
+      "license": "CC0 (Vidora original)",
+      "name": "Music Note Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "music-note"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-16",
+      "license": "CC0 (Vidora original)",
+      "name": "Camera Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "camera"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-17",
+      "license": "CC0 (Vidora original)",
+      "name": "Rocket Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "rocket"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-18",
+      "license": "CC0 (Vidora original)",
+      "name": "Diamond Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "diamond"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-19",
+      "license": "CC0 (Vidora original)",
+      "name": "Shield Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "shield"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-20",
+      "license": "CC0 (Vidora original)",
+      "name": "Key Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "key"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-21",
+      "license": "CC0 (Vidora original)",
+      "name": "Bell Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "bell"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-22",
+      "license": "CC0 (Vidora original)",
+      "name": "Gift Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "gift"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-23",
+      "license": "CC0 (Vidora original)",
+      "name": "Trophy Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "trophy"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-24",
+      "license": "CC0 (Vidora original)",
+      "name": "Anchor Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "anchor"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-25",
+      "license": "CC0 (Vidora original)",
+      "name": "Compass Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "compass"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-26",
+      "license": "CC0 (Vidora original)",
+      "name": "Feather Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "feather"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-27",
+      "license": "CC0 (Vidora original)",
+      "name": "Butterfly Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "butterfly"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-28",
+      "license": "CC0 (Vidora original)",
+      "name": "Snowflake Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "snowflake"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-29",
+      "license": "CC0 (Vidora original)",
+      "name": "Shell Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "shell"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-30",
+      "license": "CC0 (Vidora original)",
+      "name": "Pearl Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "pearl"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-31",
+      "license": "CC0 (Vidora original)",
+      "name": "Lantern Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "lantern"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-32",
+      "license": "CC0 (Vidora original)",
+      "name": "Kite Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "kite"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-33",
+      "license": "CC0 (Vidora original)",
+      "name": "Balloon Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "balloon"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-34",
+      "license": "CC0 (Vidora original)",
+      "name": "Cactus Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "cactus"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-35",
+      "license": "CC0 (Vidora original)",
+      "name": "Wave Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "wave"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-36",
+      "license": "CC0 (Vidora original)",
+      "name": "Mountain Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "mountain"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-37",
+      "license": "CC0 (Vidora original)",
+      "name": "Planet Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "planet"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-38",
+      "license": "CC0 (Vidora original)",
+      "name": "Comet Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "comet"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-39",
+      "license": "CC0 (Vidora original)",
+      "name": "Prism Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "prism"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-40",
+      "license": "CC0 (Vidora original)",
+      "name": "Mask Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "mask"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-41",
+      "license": "CC0 (Vidora original)",
+      "name": "Scroll Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "scroll"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-42",
+      "license": "CC0 (Vidora original)",
+      "name": "Wand Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "wand"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-43",
+      "license": "CC0 (Vidora original)",
+      "name": "Coin Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "coin"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-44",
+      "license": "CC0 (Vidora original)",
+      "name": "Cup Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "cup"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-45",
+      "license": "CC0 (Vidora original)",
+      "name": "Book Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "book"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-46",
+      "license": "CC0 (Vidora original)",
+      "name": "Pen Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "pen"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-47",
+      "license": "CC0 (Vidora original)",
+      "name": "Globe Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "globe"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-48",
+      "license": "CC0 (Vidora original)",
+      "name": "Hourglass Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "hourglass"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-49",
+      "license": "CC0 (Vidora original)",
+      "name": "Puzzle Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "puzzle"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "sticker",
+      "id": "ai-sticker-50",
+      "license": "CC0 (Vidora original)",
+      "name": "Ribbon Sticker",
+      "tags": [
+        "ai",
+        "image",
+        "sticker",
+        "ribbon"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-01",
+      "license": "CC0 (Vidora original)",
+      "name": "Gradient Mesh 1",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "gradient-mesh"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-02",
+      "license": "CC0 (Vidora original)",
+      "name": "Noise Grain 1",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "noise-grain"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-03",
+      "license": "CC0 (Vidora original)",
+      "name": "Stripes 1",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "stripes"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-04",
+      "license": "CC0 (Vidora original)",
+      "name": "Dots 1",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "dots"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-05",
+      "license": "CC0 (Vidora original)",
+      "name": "Waves 1",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "waves"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-06",
+      "license": "CC0 (Vidora original)",
+      "name": "Marble 1",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "marble"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-07",
+      "license": "CC0 (Vidora original)",
+      "name": "Grid 1",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "grid"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-08",
+      "license": "CC0 (Vidora original)",
+      "name": "Hex 1",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "hex"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-09",
+      "license": "CC0 (Vidora original)",
+      "name": "Checker 1",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "checker"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-10",
+      "license": "CC0 (Vidora original)",
+      "name": "Radial 1",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "radial"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-11",
+      "license": "CC0 (Vidora original)",
+      "name": "Gradient Mesh 2",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "gradient-mesh"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-12",
+      "license": "CC0 (Vidora original)",
+      "name": "Noise Grain 2",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "noise-grain"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-13",
+      "license": "CC0 (Vidora original)",
+      "name": "Stripes 2",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "stripes"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-14",
+      "license": "CC0 (Vidora original)",
+      "name": "Dots 2",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "dots"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-15",
+      "license": "CC0 (Vidora original)",
+      "name": "Waves 2",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "waves"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-16",
+      "license": "CC0 (Vidora original)",
+      "name": "Marble 2",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "marble"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-17",
+      "license": "CC0 (Vidora original)",
+      "name": "Grid 2",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "grid"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-18",
+      "license": "CC0 (Vidora original)",
+      "name": "Hex 2",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "hex"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-19",
+      "license": "CC0 (Vidora original)",
+      "name": "Checker 2",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "checker"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-20",
+      "license": "CC0 (Vidora original)",
+      "name": "Radial 2",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "radial"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-21",
+      "license": "CC0 (Vidora original)",
+      "name": "Gradient Mesh 3",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "gradient-mesh"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-22",
+      "license": "CC0 (Vidora original)",
+      "name": "Noise Grain 3",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "noise-grain"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-23",
+      "license": "CC0 (Vidora original)",
+      "name": "Stripes 3",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "stripes"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-24",
+      "license": "CC0 (Vidora original)",
+      "name": "Dots 3",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "dots"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-25",
+      "license": "CC0 (Vidora original)",
+      "name": "Waves 3",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "waves"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-26",
+      "license": "CC0 (Vidora original)",
+      "name": "Marble 3",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "marble"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-27",
+      "license": "CC0 (Vidora original)",
+      "name": "Grid 3",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "grid"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-28",
+      "license": "CC0 (Vidora original)",
+      "name": "Hex 3",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "hex"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-29",
+      "license": "CC0 (Vidora original)",
+      "name": "Checker 3",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "checker"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-30",
+      "license": "CC0 (Vidora original)",
+      "name": "Radial 3",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "radial"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-31",
+      "license": "CC0 (Vidora original)",
+      "name": "Gradient Mesh 4",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "gradient-mesh"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-32",
+      "license": "CC0 (Vidora original)",
+      "name": "Noise Grain 4",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "noise-grain"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-33",
+      "license": "CC0 (Vidora original)",
+      "name": "Stripes 4",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "stripes"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-34",
+      "license": "CC0 (Vidora original)",
+      "name": "Dots 4",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "dots"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-35",
+      "license": "CC0 (Vidora original)",
+      "name": "Waves 4",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "waves"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-36",
+      "license": "CC0 (Vidora original)",
+      "name": "Marble 4",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "marble"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-37",
+      "license": "CC0 (Vidora original)",
+      "name": "Grid 4",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "grid"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-38",
+      "license": "CC0 (Vidora original)",
+      "name": "Hex 4",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "hex"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-39",
+      "license": "CC0 (Vidora original)",
+      "name": "Checker 4",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "checker"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "texture",
+      "id": "ai-texture-40",
+      "license": "CC0 (Vidora original)",
+      "name": "Radial 4",
+      "tags": [
+        "ai",
+        "image",
+        "texture",
+        "radial"
+      ],
+      "type": "ai-image"
+    },
+    {
+      "category": "English",
+      "id": "voice-english-narrator",
+      "license": "CC0 (Vidora original)",
+      "name": "English Narrator",
+      "tags": [
+        "ai",
+        "voice",
+        "english",
+        "narrator"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "English",
+      "id": "voice-english-warm",
+      "license": "CC0 (Vidora original)",
+      "name": "English Warm",
+      "tags": [
+        "ai",
+        "voice",
+        "english",
+        "warm"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "English",
+      "id": "voice-english-energetic",
+      "license": "CC0 (Vidora original)",
+      "name": "English Energetic",
+      "tags": [
+        "ai",
+        "voice",
+        "english",
+        "energetic"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "English",
+      "id": "voice-english-calm",
+      "license": "CC0 (Vidora original)",
+      "name": "English Calm",
+      "tags": [
+        "ai",
+        "voice",
+        "english",
+        "calm"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "Urdu",
+      "id": "voice-urdu-narrator",
+      "license": "CC0 (Vidora original)",
+      "name": "Urdu Narrator",
+      "tags": [
+        "ai",
+        "voice",
+        "urdu",
+        "narrator"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "Urdu",
+      "id": "voice-urdu-warm",
+      "license": "CC0 (Vidora original)",
+      "name": "Urdu Warm",
+      "tags": [
+        "ai",
+        "voice",
+        "urdu",
+        "warm"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "Urdu",
+      "id": "voice-urdu-energetic",
+      "license": "CC0 (Vidora original)",
+      "name": "Urdu Energetic",
+      "tags": [
+        "ai",
+        "voice",
+        "urdu",
+        "energetic"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "Urdu",
+      "id": "voice-urdu-calm",
+      "license": "CC0 (Vidora original)",
+      "name": "Urdu Calm",
+      "tags": [
+        "ai",
+        "voice",
+        "urdu",
+        "calm"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "Hindi",
+      "id": "voice-hindi-narrator",
+      "license": "CC0 (Vidora original)",
+      "name": "Hindi Narrator",
+      "tags": [
+        "ai",
+        "voice",
+        "hindi",
+        "narrator"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "Hindi",
+      "id": "voice-hindi-warm",
+      "license": "CC0 (Vidora original)",
+      "name": "Hindi Warm",
+      "tags": [
+        "ai",
+        "voice",
+        "hindi",
+        "warm"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "Hindi",
+      "id": "voice-hindi-energetic",
+      "license": "CC0 (Vidora original)",
+      "name": "Hindi Energetic",
+      "tags": [
+        "ai",
+        "voice",
+        "hindi",
+        "energetic"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "Hindi",
+      "id": "voice-hindi-calm",
+      "license": "CC0 (Vidora original)",
+      "name": "Hindi Calm",
+      "tags": [
+        "ai",
+        "voice",
+        "hindi",
+        "calm"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "Arabic",
+      "id": "voice-arabic-narrator",
+      "license": "CC0 (Vidora original)",
+      "name": "Arabic Narrator",
+      "tags": [
+        "ai",
+        "voice",
+        "arabic",
+        "narrator"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "Arabic",
+      "id": "voice-arabic-warm",
+      "license": "CC0 (Vidora original)",
+      "name": "Arabic Warm",
+      "tags": [
+        "ai",
+        "voice",
+        "arabic",
+        "warm"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "Arabic",
+      "id": "voice-arabic-energetic",
+      "license": "CC0 (Vidora original)",
+      "name": "Arabic Energetic",
+      "tags": [
+        "ai",
+        "voice",
+        "arabic",
+        "energetic"
+      ],
+      "type": "ai-voice"
+    },
+    {
+      "category": "Arabic",
+      "id": "voice-arabic-calm",
+      "license": "CC0 (Vidora original)",
+      "name": "Arabic Calm",
+      "tags": [
+        "ai",
+        "voice",
+        "arabic",
+        "calm"
+      ],
+      "type": "ai-voice"
     }
   ],
-  "generated": "2026-11-23T06:13:23.064Z",
-  "generatedBy": "npm run build:assets (Phase 5)",
-  "version": "0.6.0"
+  "generated": "2026-11-23T08:08:19.379Z",
+  "generatedBy": "npm run build:assets (Phase 6)",
+  "version": "0.7.0"
 }

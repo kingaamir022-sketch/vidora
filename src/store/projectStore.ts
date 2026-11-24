@@ -29,6 +29,7 @@ import {
   allClipIds,
   addClipToAudioTrack,
   addClipToTextTrack,
+  addClipToVideoTrack,
   deleteClip,
   detachAudio,
   duplicateClip,
@@ -317,6 +318,10 @@ interface ProjectState {
   addVoiceoverClip: (blob: Blob, name: string, durationSeconds?: number) => Promise<void>;
   addAudioClip: (mediaId: string, start?: number) => void;
   addMediaItem: (item: MediaItem) => void;
+  /** Phase 6 (O) — place an AI video/image media item as a clip at the
+   * playhead on the first free video track (overlays land over the video
+   * under the playhead). */
+  addAiMediaClip: (mediaId: string) => void;
   // media library
   addFolder: (name: string) => void;
   // view / misc
@@ -1188,6 +1193,18 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const base = baseClip('audio', media.name, duration, start ?? s.playhead);
       const clip: Clip = { ...base, mediaId: media.id, src: media.src, sourceDuration: duration };
       commit((p) => addClipToAudioTrack(p, clip));
+      set({ selectedClipIds: [clip.id] });
+    },
+    addAiMediaClip: (mediaId) => {
+      const s = get();
+      if (!s.project) return;
+      const media = s.project.media.find((m) => m.id === mediaId);
+      if (!media || media.kind === 'audio') return;
+      const duration = media.kind === 'image' || media.kind === 'gif' ? 5 : media.duration && media.duration > 0 ? media.duration : 5;
+      const type = media.kind === 'image' || media.kind === 'gif' ? 'image' : 'video';
+      const base = baseClip(type, media.name, duration, s.playhead);
+      const clip: Clip = { ...base, mediaId: media.id, src: media.src, sourceDuration: duration };
+      commit((p) => addClipToVideoTrack(p, clip));
       set({ selectedClipIds: [clip.id] });
     },
     addMediaItem: (item) => {

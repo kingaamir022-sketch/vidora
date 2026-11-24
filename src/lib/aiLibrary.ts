@@ -1,0 +1,139 @@
+/**
+ * AI library catalog (Phase 6, Section O).
+ * Runtime source of truth is `assets/ai-manifest.json`, written by
+ * `python3 generation/render_all.py` (100 AI tracks, 100 AI SFX,
+ * 100 AI clips, 110 AI images — all Vidora Originals, CC0).
+ * Media files live in `public/ai-library/` and ship in the Drive release
+ * zip; a text-only checkout has the catalog but not the files, so every
+ * entry is checked for availability before use and music falls back to
+ * in-browser Web Audio rendering of the same pattern (audio.ts).
+ */
+import aiManifest from '../../assets/ai-manifest.json' with { type: 'json' };
+import { ORIGINAL_SFX, renderAiTrack, type AiTrackPattern, type RenderedOriginal } from './audio';
+
+export interface AiMusicEntry {
+  bpm: number;
+  duration: number;
+  file: string;
+  id: string;
+  key: string;
+  loopable: boolean;
+  mood: string;
+  name: string;
+  pattern: AiTrackPattern;
+  peak: number;
+  peaks: number[];
+  rms: number;
+  seed: number;
+  size: number;
+  style: string;
+  tags: string[];
+}
+
+export interface AiSfxEntry {
+  duration: number;
+  family: string;
+  file: string;
+  id: string;
+  name: string;
+  peaks: number[];
+  rms: number;
+  seed: number;
+  size: number;
+  tags: string[];
+}
+
+export interface AiClipEntry {
+  duration: number;
+  file: string;
+  fps: number;
+  height: number;
+  id: string;
+  motion: string;
+  name: string;
+  poster: string;
+  scene: string;
+  seed: number;
+  size: number;
+  tags: string[];
+  width: number;
+}
+
+export interface AiImageEntry {
+  design: string;
+  file: string;
+  height: number;
+  id: string;
+  kind: 'frame' | 'sticker' | 'texture';
+  name: string;
+  seed: number;
+  size: number;
+  tags: string[];
+  width: number;
+}
+
+export interface AiManifest {
+  counts: { clips: number; images: number; music: number; sfx: number };
+  entries: {
+    clips: AiClipEntry[];
+    images: AiImageEntry[];
+    music: AiMusicEntry[];
+    sfx: AiSfxEntry[];
+  };
+  generated: string;
+  generatedBy: string;
+  license: string;
+  version: string;
+}
+
+const manifest = aiManifest as unknown as AiManifest;
+
+export const AI_MUSIC_TRACKS: AiMusicEntry[] = manifest.entries.music ?? [];
+export const AI_SFX: AiSfxEntry[] = manifest.entries.sfx ?? [];
+export const AI_CLIPS: AiClipEntry[] = manifest.entries.clips ?? [];
+export const AI_IMAGES: AiImageEntry[] = manifest.entries.images ?? [];
+export const AI_MANIFEST_VERSION = manifest.version;
+
+export const AI_MUSIC_STYLES: string[] = [...new Set(AI_MUSIC_TRACKS.map((t) => t.style))].sort();
+export const AI_CLIP_SCENES: string[] = [...new Set(AI_CLIPS.map((c) => c.scene))].sort();
+export const AI_SFX_FAMILIES: string[] = [...new Set(AI_SFX.map((s) => s.family))].sort();
+
+/** Total AI SFX in the library: Phase 6 WAV effects + Phase 5
+ * Web Audio effects (src/lib/audio.ts ORIGINAL_SFX). */
+export const AI_SFX_TOTAL = AI_SFX.length + ORIGINAL_SFX.length;
+
+/** Probe whether one library file is actually served (HEAD request).
+ * False when the file is absent (text-only checkout) or on any error. */
+export async function aiFileAvailable(path: string): Promise<boolean> {
+  try {
+    const res = await fetch(path, { method: 'HEAD' });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/** Probe one file per kind to decide whether the full library is
+ * installed at all (one HEAD per kind, not one per row). */
+export async function aiLibraryInstalled(): Promise<{ clips: boolean; images: boolean; music: boolean; sfx: boolean }> {
+  const [music, sfx, clips, images] = await Promise.all([
+    AI_MUSIC_TRACKS.length > 0 ? aiFileAvailable(AI_MUSIC_TRACKS[0].file) : Promise.resolve(false),
+    AI_SFX.length > 0 ? aiFileAvailable(AI_SFX[0].file) : Promise.resolve(false),
+    AI_CLIPS.length > 0 ? aiFileAvailable(AI_CLIPS[0].file) : Promise.resolve(false),
+    AI_IMAGES.length > 0 ? aiFileAvailable(AI_IMAGES[0].file) : Promise.resolve(false),
+  ]);
+  return { clips, images, music, sfx };
+}
+
+/** Render an AI track in the browser (fallback when its MP3 is absent,
+ * and the engine behind the Generate tab). Returns a WAV RenderedOriginal. */
+export async function renderAiTrackEntry(entry: AiMusicEntry): Promise<RenderedOriginal> {
+  return renderAiTrack(entry.pattern, entry.bpm, entry.duration, entry.seed);
+}
+
+/** Search helper shared by the panel: name/tags/style/scene match. */
+export function aiMatches(haystack: string[], query: string): boolean {
+  const q = query.trim().toLowerCase();
+  if (!q) return true;
+  return haystack.some((h) => h.toLowerCase().includes(q));
+}

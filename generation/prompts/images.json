@@ -1,0 +1,2142 @@
+[
+  {
+    "id": "ai-texture-01",
+    "name": "Gradient Mesh 1",
+    "kind": "texture",
+    "design": "gradient-mesh",
+    "palette": [
+      "#7c3aed",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20000,
+    "tags": [
+      "texture",
+      "gradient-mesh",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: gradient-mesh, palette #7c3aed to #06b6d4. No photos."
+  },
+  {
+    "id": "ai-texture-02",
+    "name": "Noise Grain 1",
+    "kind": "texture",
+    "design": "noise-grain",
+    "palette": [
+      "#f59e0b",
+      "#ef4444"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20017,
+    "tags": [
+      "texture",
+      "noise-grain",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: noise-grain, palette #f59e0b to #ef4444. No photos."
+  },
+  {
+    "id": "ai-texture-03",
+    "name": "Stripes 1",
+    "kind": "texture",
+    "design": "stripes",
+    "palette": [
+      "#10b981",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20034,
+    "tags": [
+      "texture",
+      "stripes",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: stripes, palette #10b981 to #06b6d4. No photos."
+  },
+  {
+    "id": "ai-texture-04",
+    "name": "Dots 1",
+    "kind": "texture",
+    "design": "dots",
+    "palette": [
+      "#ec4899",
+      "#8b5cf6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20051,
+    "tags": [
+      "texture",
+      "dots",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: dots, palette #ec4899 to #8b5cf6. No photos."
+  },
+  {
+    "id": "ai-texture-05",
+    "name": "Waves 1",
+    "kind": "texture",
+    "design": "waves",
+    "palette": [
+      "#facc15",
+      "#f97316"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20068,
+    "tags": [
+      "texture",
+      "waves",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: waves, palette #facc15 to #f97316. No photos."
+  },
+  {
+    "id": "ai-texture-06",
+    "name": "Marble 1",
+    "kind": "texture",
+    "design": "marble",
+    "palette": [
+      "#22d3ee",
+      "#3b82f6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20085,
+    "tags": [
+      "texture",
+      "marble",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: marble, palette #22d3ee to #3b82f6. No photos."
+  },
+  {
+    "id": "ai-texture-07",
+    "name": "Grid 1",
+    "kind": "texture",
+    "design": "grid",
+    "palette": [
+      "#a78bfa",
+      "#f472b6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20102,
+    "tags": [
+      "texture",
+      "grid",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: grid, palette #a78bfa to #f472b6. No photos."
+  },
+  {
+    "id": "ai-texture-08",
+    "name": "Hex 1",
+    "kind": "texture",
+    "design": "hex",
+    "palette": [
+      "#34d399",
+      "#fbbf24"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20119,
+    "tags": [
+      "texture",
+      "hex",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: hex, palette #34d399 to #fbbf24. No photos."
+  },
+  {
+    "id": "ai-texture-09",
+    "name": "Checker 1",
+    "kind": "texture",
+    "design": "checker",
+    "palette": [
+      "#7c3aed",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20136,
+    "tags": [
+      "texture",
+      "checker",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: checker, palette #7c3aed to #06b6d4. No photos."
+  },
+  {
+    "id": "ai-texture-10",
+    "name": "Radial 1",
+    "kind": "texture",
+    "design": "radial",
+    "palette": [
+      "#f59e0b",
+      "#ef4444"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20153,
+    "tags": [
+      "texture",
+      "radial",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: radial, palette #f59e0b to #ef4444. No photos."
+  },
+  {
+    "id": "ai-texture-11",
+    "name": "Gradient Mesh 2",
+    "kind": "texture",
+    "design": "gradient-mesh",
+    "palette": [
+      "#10b981",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20170,
+    "tags": [
+      "texture",
+      "gradient-mesh",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: gradient-mesh, palette #10b981 to #06b6d4. No photos."
+  },
+  {
+    "id": "ai-texture-12",
+    "name": "Noise Grain 2",
+    "kind": "texture",
+    "design": "noise-grain",
+    "palette": [
+      "#ec4899",
+      "#8b5cf6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20187,
+    "tags": [
+      "texture",
+      "noise-grain",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: noise-grain, palette #ec4899 to #8b5cf6. No photos."
+  },
+  {
+    "id": "ai-texture-13",
+    "name": "Stripes 2",
+    "kind": "texture",
+    "design": "stripes",
+    "palette": [
+      "#facc15",
+      "#f97316"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20204,
+    "tags": [
+      "texture",
+      "stripes",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: stripes, palette #facc15 to #f97316. No photos."
+  },
+  {
+    "id": "ai-texture-14",
+    "name": "Dots 2",
+    "kind": "texture",
+    "design": "dots",
+    "palette": [
+      "#22d3ee",
+      "#3b82f6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20221,
+    "tags": [
+      "texture",
+      "dots",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: dots, palette #22d3ee to #3b82f6. No photos."
+  },
+  {
+    "id": "ai-texture-15",
+    "name": "Waves 2",
+    "kind": "texture",
+    "design": "waves",
+    "palette": [
+      "#a78bfa",
+      "#f472b6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20238,
+    "tags": [
+      "texture",
+      "waves",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: waves, palette #a78bfa to #f472b6. No photos."
+  },
+  {
+    "id": "ai-texture-16",
+    "name": "Marble 2",
+    "kind": "texture",
+    "design": "marble",
+    "palette": [
+      "#34d399",
+      "#fbbf24"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20255,
+    "tags": [
+      "texture",
+      "marble",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: marble, palette #34d399 to #fbbf24. No photos."
+  },
+  {
+    "id": "ai-texture-17",
+    "name": "Grid 2",
+    "kind": "texture",
+    "design": "grid",
+    "palette": [
+      "#7c3aed",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20272,
+    "tags": [
+      "texture",
+      "grid",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: grid, palette #7c3aed to #06b6d4. No photos."
+  },
+  {
+    "id": "ai-texture-18",
+    "name": "Hex 2",
+    "kind": "texture",
+    "design": "hex",
+    "palette": [
+      "#f59e0b",
+      "#ef4444"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20289,
+    "tags": [
+      "texture",
+      "hex",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: hex, palette #f59e0b to #ef4444. No photos."
+  },
+  {
+    "id": "ai-texture-19",
+    "name": "Checker 2",
+    "kind": "texture",
+    "design": "checker",
+    "palette": [
+      "#10b981",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20306,
+    "tags": [
+      "texture",
+      "checker",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: checker, palette #10b981 to #06b6d4. No photos."
+  },
+  {
+    "id": "ai-texture-20",
+    "name": "Radial 2",
+    "kind": "texture",
+    "design": "radial",
+    "palette": [
+      "#ec4899",
+      "#8b5cf6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20323,
+    "tags": [
+      "texture",
+      "radial",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: radial, palette #ec4899 to #8b5cf6. No photos."
+  },
+  {
+    "id": "ai-texture-21",
+    "name": "Gradient Mesh 3",
+    "kind": "texture",
+    "design": "gradient-mesh",
+    "palette": [
+      "#facc15",
+      "#f97316"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20340,
+    "tags": [
+      "texture",
+      "gradient-mesh",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: gradient-mesh, palette #facc15 to #f97316. No photos."
+  },
+  {
+    "id": "ai-texture-22",
+    "name": "Noise Grain 3",
+    "kind": "texture",
+    "design": "noise-grain",
+    "palette": [
+      "#22d3ee",
+      "#3b82f6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20357,
+    "tags": [
+      "texture",
+      "noise-grain",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: noise-grain, palette #22d3ee to #3b82f6. No photos."
+  },
+  {
+    "id": "ai-texture-23",
+    "name": "Stripes 3",
+    "kind": "texture",
+    "design": "stripes",
+    "palette": [
+      "#a78bfa",
+      "#f472b6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20374,
+    "tags": [
+      "texture",
+      "stripes",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: stripes, palette #a78bfa to #f472b6. No photos."
+  },
+  {
+    "id": "ai-texture-24",
+    "name": "Dots 3",
+    "kind": "texture",
+    "design": "dots",
+    "palette": [
+      "#34d399",
+      "#fbbf24"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20391,
+    "tags": [
+      "texture",
+      "dots",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: dots, palette #34d399 to #fbbf24. No photos."
+  },
+  {
+    "id": "ai-texture-25",
+    "name": "Waves 3",
+    "kind": "texture",
+    "design": "waves",
+    "palette": [
+      "#7c3aed",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20408,
+    "tags": [
+      "texture",
+      "waves",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: waves, palette #7c3aed to #06b6d4. No photos."
+  },
+  {
+    "id": "ai-texture-26",
+    "name": "Marble 3",
+    "kind": "texture",
+    "design": "marble",
+    "palette": [
+      "#f59e0b",
+      "#ef4444"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20425,
+    "tags": [
+      "texture",
+      "marble",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: marble, palette #f59e0b to #ef4444. No photos."
+  },
+  {
+    "id": "ai-texture-27",
+    "name": "Grid 3",
+    "kind": "texture",
+    "design": "grid",
+    "palette": [
+      "#10b981",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20442,
+    "tags": [
+      "texture",
+      "grid",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: grid, palette #10b981 to #06b6d4. No photos."
+  },
+  {
+    "id": "ai-texture-28",
+    "name": "Hex 3",
+    "kind": "texture",
+    "design": "hex",
+    "palette": [
+      "#ec4899",
+      "#8b5cf6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20459,
+    "tags": [
+      "texture",
+      "hex",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: hex, palette #ec4899 to #8b5cf6. No photos."
+  },
+  {
+    "id": "ai-texture-29",
+    "name": "Checker 3",
+    "kind": "texture",
+    "design": "checker",
+    "palette": [
+      "#facc15",
+      "#f97316"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20476,
+    "tags": [
+      "texture",
+      "checker",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: checker, palette #facc15 to #f97316. No photos."
+  },
+  {
+    "id": "ai-texture-30",
+    "name": "Radial 3",
+    "kind": "texture",
+    "design": "radial",
+    "palette": [
+      "#22d3ee",
+      "#3b82f6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20493,
+    "tags": [
+      "texture",
+      "radial",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: radial, palette #22d3ee to #3b82f6. No photos."
+  },
+  {
+    "id": "ai-texture-31",
+    "name": "Gradient Mesh 4",
+    "kind": "texture",
+    "design": "gradient-mesh",
+    "palette": [
+      "#a78bfa",
+      "#f472b6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20510,
+    "tags": [
+      "texture",
+      "gradient-mesh",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: gradient-mesh, palette #a78bfa to #f472b6. No photos."
+  },
+  {
+    "id": "ai-texture-32",
+    "name": "Noise Grain 4",
+    "kind": "texture",
+    "design": "noise-grain",
+    "palette": [
+      "#34d399",
+      "#fbbf24"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20527,
+    "tags": [
+      "texture",
+      "noise-grain",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: noise-grain, palette #34d399 to #fbbf24. No photos."
+  },
+  {
+    "id": "ai-texture-33",
+    "name": "Stripes 4",
+    "kind": "texture",
+    "design": "stripes",
+    "palette": [
+      "#7c3aed",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20544,
+    "tags": [
+      "texture",
+      "stripes",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: stripes, palette #7c3aed to #06b6d4. No photos."
+  },
+  {
+    "id": "ai-texture-34",
+    "name": "Dots 4",
+    "kind": "texture",
+    "design": "dots",
+    "palette": [
+      "#f59e0b",
+      "#ef4444"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20561,
+    "tags": [
+      "texture",
+      "dots",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: dots, palette #f59e0b to #ef4444. No photos."
+  },
+  {
+    "id": "ai-texture-35",
+    "name": "Waves 4",
+    "kind": "texture",
+    "design": "waves",
+    "palette": [
+      "#10b981",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20578,
+    "tags": [
+      "texture",
+      "waves",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: waves, palette #10b981 to #06b6d4. No photos."
+  },
+  {
+    "id": "ai-texture-36",
+    "name": "Marble 4",
+    "kind": "texture",
+    "design": "marble",
+    "palette": [
+      "#ec4899",
+      "#8b5cf6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20595,
+    "tags": [
+      "texture",
+      "marble",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: marble, palette #ec4899 to #8b5cf6. No photos."
+  },
+  {
+    "id": "ai-texture-37",
+    "name": "Grid 4",
+    "kind": "texture",
+    "design": "grid",
+    "palette": [
+      "#facc15",
+      "#f97316"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20612,
+    "tags": [
+      "texture",
+      "grid",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: grid, palette #facc15 to #f97316. No photos."
+  },
+  {
+    "id": "ai-texture-38",
+    "name": "Hex 4",
+    "kind": "texture",
+    "design": "hex",
+    "palette": [
+      "#22d3ee",
+      "#3b82f6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20629,
+    "tags": [
+      "texture",
+      "hex",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: hex, palette #22d3ee to #3b82f6. No photos."
+  },
+  {
+    "id": "ai-texture-39",
+    "name": "Checker 4",
+    "kind": "texture",
+    "design": "checker",
+    "palette": [
+      "#a78bfa",
+      "#f472b6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20646,
+    "tags": [
+      "texture",
+      "checker",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: checker, palette #a78bfa to #f472b6. No photos."
+  },
+  {
+    "id": "ai-texture-40",
+    "name": "Radial 4",
+    "kind": "texture",
+    "design": "radial",
+    "palette": [
+      "#34d399",
+      "#fbbf24"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 20663,
+    "tags": [
+      "texture",
+      "radial",
+      "ai"
+    ],
+    "prompt": "Original procedural texture: radial, palette #34d399 to #fbbf24. No photos."
+  },
+  {
+    "id": "ai-frame-01",
+    "name": "Thin Line Frame 1",
+    "kind": "frame",
+    "design": "thin-line",
+    "palette": [
+      "#10b981",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30000,
+    "tags": [
+      "frame",
+      "thin-line",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: thin-line, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-02",
+    "name": "Double Line Frame 1",
+    "kind": "frame",
+    "design": "double-line",
+    "palette": [
+      "#ec4899",
+      "#8b5cf6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30019,
+    "tags": [
+      "frame",
+      "double-line",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: double-line, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-03",
+    "name": "Rounded Frame 1",
+    "kind": "frame",
+    "design": "rounded",
+    "palette": [
+      "#facc15",
+      "#f97316"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30038,
+    "tags": [
+      "frame",
+      "rounded",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: rounded, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-04",
+    "name": "Corner Flourish Frame 1",
+    "kind": "frame",
+    "design": "corner-flourish",
+    "palette": [
+      "#22d3ee",
+      "#3b82f6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30057,
+    "tags": [
+      "frame",
+      "corner-flourish",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: corner-flourish, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-05",
+    "name": "Vignette Frame 1",
+    "kind": "frame",
+    "design": "vignette",
+    "palette": [
+      "#a78bfa",
+      "#f472b6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30076,
+    "tags": [
+      "frame",
+      "vignette",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: vignette, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-06",
+    "name": "Film Strip Frame 1",
+    "kind": "frame",
+    "design": "film-strip",
+    "palette": [
+      "#34d399",
+      "#fbbf24"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30095,
+    "tags": [
+      "frame",
+      "film-strip",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: film-strip, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-07",
+    "name": "Polaroid Frame 1",
+    "kind": "frame",
+    "design": "polaroid",
+    "palette": [
+      "#7c3aed",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30114,
+    "tags": [
+      "frame",
+      "polaroid",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: polaroid, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-08",
+    "name": "Neon Glow Frame 1",
+    "kind": "frame",
+    "design": "neon-glow",
+    "palette": [
+      "#f59e0b",
+      "#ef4444"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30133,
+    "tags": [
+      "frame",
+      "neon-glow",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: neon-glow, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-09",
+    "name": "Gold Foil Frame 1",
+    "kind": "frame",
+    "design": "gold-foil",
+    "palette": [
+      "#10b981",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30152,
+    "tags": [
+      "frame",
+      "gold-foil",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: gold-foil, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-10",
+    "name": "Torn Edge Frame 1",
+    "kind": "frame",
+    "design": "torn-edge",
+    "palette": [
+      "#ec4899",
+      "#8b5cf6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30171,
+    "tags": [
+      "frame",
+      "torn-edge",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: torn-edge, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-11",
+    "name": "Thin Line Frame 2",
+    "kind": "frame",
+    "design": "thin-line",
+    "palette": [
+      "#facc15",
+      "#f97316"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30190,
+    "tags": [
+      "frame",
+      "thin-line",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: thin-line, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-12",
+    "name": "Double Line Frame 2",
+    "kind": "frame",
+    "design": "double-line",
+    "palette": [
+      "#22d3ee",
+      "#3b82f6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30209,
+    "tags": [
+      "frame",
+      "double-line",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: double-line, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-13",
+    "name": "Rounded Frame 2",
+    "kind": "frame",
+    "design": "rounded",
+    "palette": [
+      "#a78bfa",
+      "#f472b6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30228,
+    "tags": [
+      "frame",
+      "rounded",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: rounded, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-14",
+    "name": "Corner Flourish Frame 2",
+    "kind": "frame",
+    "design": "corner-flourish",
+    "palette": [
+      "#34d399",
+      "#fbbf24"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30247,
+    "tags": [
+      "frame",
+      "corner-flourish",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: corner-flourish, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-15",
+    "name": "Vignette Frame 2",
+    "kind": "frame",
+    "design": "vignette",
+    "palette": [
+      "#7c3aed",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30266,
+    "tags": [
+      "frame",
+      "vignette",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: vignette, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-16",
+    "name": "Film Strip Frame 2",
+    "kind": "frame",
+    "design": "film-strip",
+    "palette": [
+      "#f59e0b",
+      "#ef4444"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30285,
+    "tags": [
+      "frame",
+      "film-strip",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: film-strip, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-17",
+    "name": "Polaroid Frame 2",
+    "kind": "frame",
+    "design": "polaroid",
+    "palette": [
+      "#10b981",
+      "#06b6d4"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30304,
+    "tags": [
+      "frame",
+      "polaroid",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: polaroid, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-18",
+    "name": "Neon Glow Frame 2",
+    "kind": "frame",
+    "design": "neon-glow",
+    "palette": [
+      "#ec4899",
+      "#8b5cf6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30323,
+    "tags": [
+      "frame",
+      "neon-glow",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: neon-glow, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-19",
+    "name": "Gold Foil Frame 2",
+    "kind": "frame",
+    "design": "gold-foil",
+    "palette": [
+      "#facc15",
+      "#f97316"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30342,
+    "tags": [
+      "frame",
+      "gold-foil",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: gold-foil, transparent centre. No photos."
+  },
+  {
+    "id": "ai-frame-20",
+    "name": "Torn Edge Frame 2",
+    "kind": "frame",
+    "design": "torn-edge",
+    "palette": [
+      "#22d3ee",
+      "#3b82f6"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "seed": 30361,
+    "tags": [
+      "frame",
+      "torn-edge",
+      "ai"
+    ],
+    "prompt": "Original transparent frame border: torn-edge, transparent centre. No photos."
+  },
+  {
+    "id": "ai-sticker-01",
+    "name": "Star Sticker",
+    "kind": "sticker",
+    "design": "star",
+    "palette": [
+      "#7c3aed",
+      "#06b6d4"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40000,
+    "tags": [
+      "sticker",
+      "star",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a star drawn in flat vector style, palette #7c3aed / #06b6d4. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-02",
+    "name": "Heart Sticker",
+    "kind": "sticker",
+    "design": "heart",
+    "palette": [
+      "#f59e0b",
+      "#ef4444"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40023,
+    "tags": [
+      "sticker",
+      "heart",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a heart drawn in flat vector style, palette #f59e0b / #ef4444. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-03",
+    "name": "Bolt Sticker",
+    "kind": "sticker",
+    "design": "bolt",
+    "palette": [
+      "#10b981",
+      "#06b6d4"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40046,
+    "tags": [
+      "sticker",
+      "bolt",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a bolt drawn in flat vector style, palette #10b981 / #06b6d4. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-04",
+    "name": "Arrow Sticker",
+    "kind": "sticker",
+    "design": "arrow",
+    "palette": [
+      "#ec4899",
+      "#8b5cf6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40069,
+    "tags": [
+      "sticker",
+      "arrow",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a arrow drawn in flat vector style, palette #ec4899 / #8b5cf6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-05",
+    "name": "Badge Sticker",
+    "kind": "sticker",
+    "design": "badge",
+    "palette": [
+      "#facc15",
+      "#f97316"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40092,
+    "tags": [
+      "sticker",
+      "badge",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a badge drawn in flat vector style, palette #facc15 / #f97316. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-06",
+    "name": "Flower Sticker",
+    "kind": "sticker",
+    "design": "flower",
+    "palette": [
+      "#22d3ee",
+      "#3b82f6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40115,
+    "tags": [
+      "sticker",
+      "flower",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a flower drawn in flat vector style, palette #22d3ee / #3b82f6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-07",
+    "name": "Sun Sticker",
+    "kind": "sticker",
+    "design": "sun",
+    "palette": [
+      "#a78bfa",
+      "#f472b6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40138,
+    "tags": [
+      "sticker",
+      "sun",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a sun drawn in flat vector style, palette #a78bfa / #f472b6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-08",
+    "name": "Moon Sticker",
+    "kind": "sticker",
+    "design": "moon",
+    "palette": [
+      "#34d399",
+      "#fbbf24"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40161,
+    "tags": [
+      "sticker",
+      "moon",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a moon drawn in flat vector style, palette #34d399 / #fbbf24. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-09",
+    "name": "Crown Sticker",
+    "kind": "sticker",
+    "design": "crown",
+    "palette": [
+      "#7c3aed",
+      "#06b6d4"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40184,
+    "tags": [
+      "sticker",
+      "crown",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a crown drawn in flat vector style, palette #7c3aed / #06b6d4. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-10",
+    "name": "Gem Sticker",
+    "kind": "sticker",
+    "design": "gem",
+    "palette": [
+      "#f59e0b",
+      "#ef4444"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40207,
+    "tags": [
+      "sticker",
+      "gem",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a gem drawn in flat vector style, palette #f59e0b / #ef4444. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-11",
+    "name": "Leaf Sticker",
+    "kind": "sticker",
+    "design": "leaf",
+    "palette": [
+      "#10b981",
+      "#06b6d4"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40230,
+    "tags": [
+      "sticker",
+      "leaf",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a leaf drawn in flat vector style, palette #10b981 / #06b6d4. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-12",
+    "name": "Drop Sticker",
+    "kind": "sticker",
+    "design": "drop",
+    "palette": [
+      "#ec4899",
+      "#8b5cf6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40253,
+    "tags": [
+      "sticker",
+      "drop",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a drop drawn in flat vector style, palette #ec4899 / #8b5cf6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-13",
+    "name": "Cloud Sticker",
+    "kind": "sticker",
+    "design": "cloud",
+    "palette": [
+      "#facc15",
+      "#f97316"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40276,
+    "tags": [
+      "sticker",
+      "cloud",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a cloud drawn in flat vector style, palette #facc15 / #f97316. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-14",
+    "name": "Flame Sticker",
+    "kind": "sticker",
+    "design": "flame",
+    "palette": [
+      "#22d3ee",
+      "#3b82f6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40299,
+    "tags": [
+      "sticker",
+      "flame",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a flame drawn in flat vector style, palette #22d3ee / #3b82f6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-15",
+    "name": "Music Note Sticker",
+    "kind": "sticker",
+    "design": "music-note",
+    "palette": [
+      "#a78bfa",
+      "#f472b6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40322,
+    "tags": [
+      "sticker",
+      "music-note",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a music-note drawn in flat vector style, palette #a78bfa / #f472b6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-16",
+    "name": "Camera Sticker",
+    "kind": "sticker",
+    "design": "camera",
+    "palette": [
+      "#34d399",
+      "#fbbf24"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40345,
+    "tags": [
+      "sticker",
+      "camera",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a camera drawn in flat vector style, palette #34d399 / #fbbf24. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-17",
+    "name": "Rocket Sticker",
+    "kind": "sticker",
+    "design": "rocket",
+    "palette": [
+      "#7c3aed",
+      "#06b6d4"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40368,
+    "tags": [
+      "sticker",
+      "rocket",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a rocket drawn in flat vector style, palette #7c3aed / #06b6d4. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-18",
+    "name": "Diamond Sticker",
+    "kind": "sticker",
+    "design": "diamond",
+    "palette": [
+      "#f59e0b",
+      "#ef4444"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40391,
+    "tags": [
+      "sticker",
+      "diamond",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a diamond drawn in flat vector style, palette #f59e0b / #ef4444. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-19",
+    "name": "Shield Sticker",
+    "kind": "sticker",
+    "design": "shield",
+    "palette": [
+      "#10b981",
+      "#06b6d4"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40414,
+    "tags": [
+      "sticker",
+      "shield",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a shield drawn in flat vector style, palette #10b981 / #06b6d4. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-20",
+    "name": "Key Sticker",
+    "kind": "sticker",
+    "design": "key",
+    "palette": [
+      "#ec4899",
+      "#8b5cf6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40437,
+    "tags": [
+      "sticker",
+      "key",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a key drawn in flat vector style, palette #ec4899 / #8b5cf6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-21",
+    "name": "Bell Sticker",
+    "kind": "sticker",
+    "design": "bell",
+    "palette": [
+      "#facc15",
+      "#f97316"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40460,
+    "tags": [
+      "sticker",
+      "bell",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a bell drawn in flat vector style, palette #facc15 / #f97316. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-22",
+    "name": "Gift Sticker",
+    "kind": "sticker",
+    "design": "gift",
+    "palette": [
+      "#22d3ee",
+      "#3b82f6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40483,
+    "tags": [
+      "sticker",
+      "gift",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a gift drawn in flat vector style, palette #22d3ee / #3b82f6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-23",
+    "name": "Trophy Sticker",
+    "kind": "sticker",
+    "design": "trophy",
+    "palette": [
+      "#a78bfa",
+      "#f472b6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40506,
+    "tags": [
+      "sticker",
+      "trophy",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a trophy drawn in flat vector style, palette #a78bfa / #f472b6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-24",
+    "name": "Anchor Sticker",
+    "kind": "sticker",
+    "design": "anchor",
+    "palette": [
+      "#34d399",
+      "#fbbf24"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40529,
+    "tags": [
+      "sticker",
+      "anchor",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a anchor drawn in flat vector style, palette #34d399 / #fbbf24. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-25",
+    "name": "Compass Sticker",
+    "kind": "sticker",
+    "design": "compass",
+    "palette": [
+      "#7c3aed",
+      "#06b6d4"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40552,
+    "tags": [
+      "sticker",
+      "compass",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a compass drawn in flat vector style, palette #7c3aed / #06b6d4. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-26",
+    "name": "Feather Sticker",
+    "kind": "sticker",
+    "design": "feather",
+    "palette": [
+      "#f59e0b",
+      "#ef4444"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40575,
+    "tags": [
+      "sticker",
+      "feather",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a feather drawn in flat vector style, palette #f59e0b / #ef4444. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-27",
+    "name": "Butterfly Sticker",
+    "kind": "sticker",
+    "design": "butterfly",
+    "palette": [
+      "#10b981",
+      "#06b6d4"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40598,
+    "tags": [
+      "sticker",
+      "butterfly",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a butterfly drawn in flat vector style, palette #10b981 / #06b6d4. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-28",
+    "name": "Snowflake Sticker",
+    "kind": "sticker",
+    "design": "snowflake",
+    "palette": [
+      "#ec4899",
+      "#8b5cf6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40621,
+    "tags": [
+      "sticker",
+      "snowflake",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a snowflake drawn in flat vector style, palette #ec4899 / #8b5cf6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-29",
+    "name": "Shell Sticker",
+    "kind": "sticker",
+    "design": "shell",
+    "palette": [
+      "#facc15",
+      "#f97316"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40644,
+    "tags": [
+      "sticker",
+      "shell",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a shell drawn in flat vector style, palette #facc15 / #f97316. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-30",
+    "name": "Pearl Sticker",
+    "kind": "sticker",
+    "design": "pearl",
+    "palette": [
+      "#22d3ee",
+      "#3b82f6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40667,
+    "tags": [
+      "sticker",
+      "pearl",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a pearl drawn in flat vector style, palette #22d3ee / #3b82f6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-31",
+    "name": "Lantern Sticker",
+    "kind": "sticker",
+    "design": "lantern",
+    "palette": [
+      "#a78bfa",
+      "#f472b6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40690,
+    "tags": [
+      "sticker",
+      "lantern",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a lantern drawn in flat vector style, palette #a78bfa / #f472b6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-32",
+    "name": "Kite Sticker",
+    "kind": "sticker",
+    "design": "kite",
+    "palette": [
+      "#34d399",
+      "#fbbf24"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40713,
+    "tags": [
+      "sticker",
+      "kite",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a kite drawn in flat vector style, palette #34d399 / #fbbf24. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-33",
+    "name": "Balloon Sticker",
+    "kind": "sticker",
+    "design": "balloon",
+    "palette": [
+      "#7c3aed",
+      "#06b6d4"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40736,
+    "tags": [
+      "sticker",
+      "balloon",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a balloon drawn in flat vector style, palette #7c3aed / #06b6d4. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-34",
+    "name": "Cactus Sticker",
+    "kind": "sticker",
+    "design": "cactus",
+    "palette": [
+      "#f59e0b",
+      "#ef4444"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40759,
+    "tags": [
+      "sticker",
+      "cactus",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a cactus drawn in flat vector style, palette #f59e0b / #ef4444. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-35",
+    "name": "Wave Sticker",
+    "kind": "sticker",
+    "design": "wave",
+    "palette": [
+      "#10b981",
+      "#06b6d4"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40782,
+    "tags": [
+      "sticker",
+      "wave",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a wave drawn in flat vector style, palette #10b981 / #06b6d4. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-36",
+    "name": "Mountain Sticker",
+    "kind": "sticker",
+    "design": "mountain",
+    "palette": [
+      "#ec4899",
+      "#8b5cf6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40805,
+    "tags": [
+      "sticker",
+      "mountain",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a mountain drawn in flat vector style, palette #ec4899 / #8b5cf6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-37",
+    "name": "Planet Sticker",
+    "kind": "sticker",
+    "design": "planet",
+    "palette": [
+      "#facc15",
+      "#f97316"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40828,
+    "tags": [
+      "sticker",
+      "planet",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a planet drawn in flat vector style, palette #facc15 / #f97316. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-38",
+    "name": "Comet Sticker",
+    "kind": "sticker",
+    "design": "comet",
+    "palette": [
+      "#22d3ee",
+      "#3b82f6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40851,
+    "tags": [
+      "sticker",
+      "comet",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a comet drawn in flat vector style, palette #22d3ee / #3b82f6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-39",
+    "name": "Prism Sticker",
+    "kind": "sticker",
+    "design": "prism",
+    "palette": [
+      "#a78bfa",
+      "#f472b6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40874,
+    "tags": [
+      "sticker",
+      "prism",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a prism drawn in flat vector style, palette #a78bfa / #f472b6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-40",
+    "name": "Mask Sticker",
+    "kind": "sticker",
+    "design": "mask",
+    "palette": [
+      "#34d399",
+      "#fbbf24"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40897,
+    "tags": [
+      "sticker",
+      "mask",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a mask drawn in flat vector style, palette #34d399 / #fbbf24. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-41",
+    "name": "Scroll Sticker",
+    "kind": "sticker",
+    "design": "scroll",
+    "palette": [
+      "#7c3aed",
+      "#06b6d4"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40920,
+    "tags": [
+      "sticker",
+      "scroll",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a scroll drawn in flat vector style, palette #7c3aed / #06b6d4. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-42",
+    "name": "Wand Sticker",
+    "kind": "sticker",
+    "design": "wand",
+    "palette": [
+      "#f59e0b",
+      "#ef4444"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40943,
+    "tags": [
+      "sticker",
+      "wand",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a wand drawn in flat vector style, palette #f59e0b / #ef4444. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-43",
+    "name": "Coin Sticker",
+    "kind": "sticker",
+    "design": "coin",
+    "palette": [
+      "#10b981",
+      "#06b6d4"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40966,
+    "tags": [
+      "sticker",
+      "coin",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a coin drawn in flat vector style, palette #10b981 / #06b6d4. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-44",
+    "name": "Cup Sticker",
+    "kind": "sticker",
+    "design": "cup",
+    "palette": [
+      "#ec4899",
+      "#8b5cf6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 40989,
+    "tags": [
+      "sticker",
+      "cup",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a cup drawn in flat vector style, palette #ec4899 / #8b5cf6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-45",
+    "name": "Book Sticker",
+    "kind": "sticker",
+    "design": "book",
+    "palette": [
+      "#facc15",
+      "#f97316"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 41012,
+    "tags": [
+      "sticker",
+      "book",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a book drawn in flat vector style, palette #facc15 / #f97316. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-46",
+    "name": "Pen Sticker",
+    "kind": "sticker",
+    "design": "pen",
+    "palette": [
+      "#22d3ee",
+      "#3b82f6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 41035,
+    "tags": [
+      "sticker",
+      "pen",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a pen drawn in flat vector style, palette #22d3ee / #3b82f6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-47",
+    "name": "Globe Sticker",
+    "kind": "sticker",
+    "design": "globe",
+    "palette": [
+      "#a78bfa",
+      "#f472b6"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 41058,
+    "tags": [
+      "sticker",
+      "globe",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a globe drawn in flat vector style, palette #a78bfa / #f472b6. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-48",
+    "name": "Hourglass Sticker",
+    "kind": "sticker",
+    "design": "hourglass",
+    "palette": [
+      "#34d399",
+      "#fbbf24"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 41081,
+    "tags": [
+      "sticker",
+      "hourglass",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a hourglass drawn in flat vector style, palette #34d399 / #fbbf24. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-49",
+    "name": "Puzzle Sticker",
+    "kind": "sticker",
+    "design": "puzzle",
+    "palette": [
+      "#7c3aed",
+      "#06b6d4"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 41104,
+    "tags": [
+      "sticker",
+      "puzzle",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a puzzle drawn in flat vector style, palette #7c3aed / #06b6d4. No copied artwork."
+  },
+  {
+    "id": "ai-sticker-50",
+    "name": "Ribbon Sticker",
+    "kind": "sticker",
+    "design": "ribbon",
+    "palette": [
+      "#f59e0b",
+      "#ef4444"
+    ],
+    "width": 512,
+    "height": 512,
+    "seed": 41127,
+    "tags": [
+      "sticker",
+      "ribbon",
+      "ai",
+      "transparent"
+    ],
+    "prompt": "Original transparent PNG sticker: a ribbon drawn in flat vector style, palette #f59e0b / #ef4444. No copied artwork."
+  }
+]

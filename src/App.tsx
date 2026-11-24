@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import Dashboard from './components/Dashboard';
 import AudioPanel from './components/AudioPanel';
+import AILibraryPanel from './components/AILibraryPanel';
 import CaptionsPanel from './components/CaptionsPanel';
 import ColorPanel from './components/ColorPanel';
 import EffectsPanel from './components/EffectsPanel';
@@ -11,7 +12,6 @@ import TemplatesPanel from './components/TemplatesPanel';
 import TransitionsPanel from './components/TransitionsPanel';
 import LeftTabs from './components/LeftTabs';
 import MediaBrowser from './components/MediaBrowser';
-import PlaceholderPanel from './components/PlaceholderPanel';
 import PreviewArea from './components/PreviewArea';
 import PropertiesPanel from './components/PropertiesPanel';
 import ShortcutsPanel from './components/ShortcutsPanel';
@@ -78,7 +78,7 @@ export default function App() {
         {activeTab === 'Audio' && <AudioPanel />}
         {activeTab === 'Adjustment' && <ColorPanel />}
         {activeTab === 'Templates' && <TemplatesPanel />}
-        {activeTab === 'AI Tools' && <PlaceholderPanel tab={activeTab} />}
+        {activeTab === 'AI Tools' && <AILibraryPanel />}
         <PreviewArea />
         <PropertiesPanel />
       </div>

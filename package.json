@@ -8,6 +8,7 @@
   "description": "Vidora — Create. Cut. Shine. A professional video editor. Phase 3 (text, stickers, captions).",
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.11",
+    "@types/node": "^26.6.6",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.4.1",
@@ -34,8 +35,9 @@
     "audit": "npm run build && node audit/run-audit.mjs",
     "audit:phase3": "npm run build && node audit/run-audit-phase3.mjs",
     "audit:phase4": "npm run build && node audit/run-audit-phase4.mjs",
-    "audit:phase5": "npm run build && node audit/run-audit-phase5.mjs"
+    "audit:phase5": "npm run build && node audit/run-audit-phase5.mjs",
+    "audit:phase6": "npm run build && node audit/run-audit-phase6.mjs"
   },
   "type": "module",
-  "version": "0.6.0"
+  "version": "0.7.0"
 }

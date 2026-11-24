@@ -1,0 +1,2402 @@
+[
+  {
+    "id": "ai-clip-001",
+    "name": "Amber Aurora",
+    "kind": "clip",
+    "scene": "Aurora",
+    "palette": [
+      "#0b1026",
+      "#22d3ee",
+      "#a78bfa"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9029,
+    "tags": [
+      "aurora",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Aurora bands drifting across a night sky. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-002",
+    "name": "Cosmic Aurora",
+    "kind": "clip",
+    "scene": "Aurora",
+    "palette": [
+      "#0b1026",
+      "#22d3ee",
+      "#a78bfa"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9058,
+    "tags": [
+      "aurora",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Aurora bands drifting across a night sky. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-003",
+    "name": "Silent Aurora",
+    "kind": "clip",
+    "scene": "Aurora",
+    "palette": [
+      "#0b1026",
+      "#22d3ee",
+      "#a78bfa"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9087,
+    "tags": [
+      "aurora",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Aurora bands drifting across a night sky. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-004",
+    "name": "Quiet Aurora",
+    "kind": "clip",
+    "scene": "Aurora",
+    "palette": [
+      "#0b1026",
+      "#22d3ee",
+      "#a78bfa"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9116,
+    "tags": [
+      "aurora",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Aurora bands drifting across a night sky. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-005",
+    "name": "Gentle Aurora",
+    "kind": "clip",
+    "scene": "Aurora",
+    "palette": [
+      "#0b1026",
+      "#22d3ee",
+      "#a78bfa"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9145,
+    "tags": [
+      "aurora",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Aurora bands drifting across a night sky. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-006",
+    "name": "Neon Waves",
+    "kind": "clip",
+    "scene": "Waves",
+    "palette": [
+      "#0c4a6e",
+      "#38bdf8",
+      "#e0f2fe"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9174,
+    "tags": [
+      "waves",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Slow ocean waves, top-down. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-007",
+    "name": "Electric Waves",
+    "kind": "clip",
+    "scene": "Waves",
+    "palette": [
+      "#0c4a6e",
+      "#38bdf8",
+      "#e0f2fe"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9203,
+    "tags": [
+      "waves",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Slow ocean waves, top-down. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-008",
+    "name": "Bold Waves",
+    "kind": "clip",
+    "scene": "Waves",
+    "palette": [
+      "#0c4a6e",
+      "#38bdf8",
+      "#e0f2fe"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9232,
+    "tags": [
+      "waves",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Slow ocean waves, top-down. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-009",
+    "name": "Velvet Waves",
+    "kind": "clip",
+    "scene": "Waves",
+    "palette": [
+      "#0c4a6e",
+      "#38bdf8",
+      "#e0f2fe"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9261,
+    "tags": [
+      "waves",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Slow ocean waves, top-down. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-010",
+    "name": "Lunar Waves",
+    "kind": "clip",
+    "scene": "Waves",
+    "palette": [
+      "#0c4a6e",
+      "#38bdf8",
+      "#e0f2fe"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9290,
+    "tags": [
+      "waves",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Slow ocean waves, top-down. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-011",
+    "name": "Dreamy Particles",
+    "kind": "clip",
+    "scene": "Particles",
+    "palette": [
+      "#111827",
+      "#f59e0b",
+      "#fde68a"
+    ],
+    "motion": "float",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9319,
+    "tags": [
+      "particles",
+      "float",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Golden dust particles floating upward. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-012",
+    "name": "Crystal Particles",
+    "kind": "clip",
+    "scene": "Particles",
+    "palette": [
+      "#111827",
+      "#f59e0b",
+      "#fde68a"
+    ],
+    "motion": "float",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9348,
+    "tags": [
+      "particles",
+      "float",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Golden dust particles floating upward. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-013",
+    "name": "Crimson Particles",
+    "kind": "clip",
+    "scene": "Particles",
+    "palette": [
+      "#111827",
+      "#f59e0b",
+      "#fde68a"
+    ],
+    "motion": "float",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9377,
+    "tags": [
+      "particles",
+      "float",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Golden dust particles floating upward. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-014",
+    "name": "Hidden Particles",
+    "kind": "clip",
+    "scene": "Particles",
+    "palette": [
+      "#111827",
+      "#f59e0b",
+      "#fde68a"
+    ],
+    "motion": "float",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9406,
+    "tags": [
+      "particles",
+      "float",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Golden dust particles floating upward. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-015",
+    "name": "Midnight Particles",
+    "kind": "clip",
+    "scene": "Particles",
+    "palette": [
+      "#111827",
+      "#f59e0b",
+      "#fde68a"
+    ],
+    "motion": "float",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9435,
+    "tags": [
+      "particles",
+      "float",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Golden dust particles floating upward. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-016",
+    "name": "Misty Kaleidoscope",
+    "kind": "clip",
+    "scene": "Kaleidoscope",
+    "palette": [
+      "#1e1b4b",
+      "#ec4899",
+      "#facc15"
+    ],
+    "motion": "rotate",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9464,
+    "tags": [
+      "kaleidoscope",
+      "rotate",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Geometric kaleidoscope turning slowly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-017",
+    "name": "Bright Kaleidoscope",
+    "kind": "clip",
+    "scene": "Kaleidoscope",
+    "palette": [
+      "#1e1b4b",
+      "#ec4899",
+      "#facc15"
+    ],
+    "motion": "rotate",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9493,
+    "tags": [
+      "kaleidoscope",
+      "rotate",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Geometric kaleidoscope turning slowly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-018",
+    "name": "Solar Kaleidoscope",
+    "kind": "clip",
+    "scene": "Kaleidoscope",
+    "palette": [
+      "#1e1b4b",
+      "#ec4899",
+      "#facc15"
+    ],
+    "motion": "rotate",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9522,
+    "tags": [
+      "kaleidoscope",
+      "rotate",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Geometric kaleidoscope turning slowly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-019",
+    "name": "Urban Kaleidoscope",
+    "kind": "clip",
+    "scene": "Kaleidoscope",
+    "palette": [
+      "#1e1b4b",
+      "#ec4899",
+      "#facc15"
+    ],
+    "motion": "rotate",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9551,
+    "tags": [
+      "kaleidoscope",
+      "rotate",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Geometric kaleidoscope turning slowly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-020",
+    "name": "Golden Kaleidoscope",
+    "kind": "clip",
+    "scene": "Kaleidoscope",
+    "palette": [
+      "#1e1b4b",
+      "#ec4899",
+      "#facc15"
+    ],
+    "motion": "rotate",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9580,
+    "tags": [
+      "kaleidoscope",
+      "rotate",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Geometric kaleidoscope turning slowly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-021",
+    "name": "Amber Sunrise",
+    "kind": "clip",
+    "scene": "Sunrise",
+    "palette": [
+      "#7c2d12",
+      "#fb923c",
+      "#fde68a"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9609,
+    "tags": [
+      "sunrise",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Sun rising over a gradient horizon. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-022",
+    "name": "Cosmic Sunrise",
+    "kind": "clip",
+    "scene": "Sunrise",
+    "palette": [
+      "#7c2d12",
+      "#fb923c",
+      "#fde68a"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9638,
+    "tags": [
+      "sunrise",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Sun rising over a gradient horizon. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-023",
+    "name": "Silent Sunrise",
+    "kind": "clip",
+    "scene": "Sunrise",
+    "palette": [
+      "#7c2d12",
+      "#fb923c",
+      "#fde68a"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9667,
+    "tags": [
+      "sunrise",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Sun rising over a gradient horizon. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-024",
+    "name": "Quiet Sunrise",
+    "kind": "clip",
+    "scene": "Sunrise",
+    "palette": [
+      "#7c2d12",
+      "#fb923c",
+      "#fde68a"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9696,
+    "tags": [
+      "sunrise",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Sun rising over a gradient horizon. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-025",
+    "name": "Gentle Sunrise",
+    "kind": "clip",
+    "scene": "Sunrise",
+    "palette": [
+      "#7c2d12",
+      "#fb923c",
+      "#fde68a"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9725,
+    "tags": [
+      "sunrise",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Sun rising over a gradient horizon. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-026",
+    "name": "Neon Ocean",
+    "kind": "clip",
+    "scene": "Ocean",
+    "palette": [
+      "#082f49",
+      "#0ea5e9",
+      "#67e8f9"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9754,
+    "tags": [
+      "ocean",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Deep ocean swell, gentle motion. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-027",
+    "name": "Electric Ocean",
+    "kind": "clip",
+    "scene": "Ocean",
+    "palette": [
+      "#082f49",
+      "#0ea5e9",
+      "#67e8f9"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9783,
+    "tags": [
+      "ocean",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Deep ocean swell, gentle motion. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-028",
+    "name": "Bold Ocean",
+    "kind": "clip",
+    "scene": "Ocean",
+    "palette": [
+      "#082f49",
+      "#0ea5e9",
+      "#67e8f9"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9812,
+    "tags": [
+      "ocean",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Deep ocean swell, gentle motion. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-029",
+    "name": "Velvet Ocean",
+    "kind": "clip",
+    "scene": "Ocean",
+    "palette": [
+      "#082f49",
+      "#0ea5e9",
+      "#67e8f9"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9841,
+    "tags": [
+      "ocean",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Deep ocean swell, gentle motion. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-030",
+    "name": "Lunar Ocean",
+    "kind": "clip",
+    "scene": "Ocean",
+    "palette": [
+      "#082f49",
+      "#0ea5e9",
+      "#67e8f9"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9870,
+    "tags": [
+      "ocean",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Deep ocean swell, gentle motion. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-031",
+    "name": "Dreamy Bokeh",
+    "kind": "clip",
+    "scene": "Bokeh",
+    "palette": [
+      "#18181b",
+      "#f472b6",
+      "#fbbf24"
+    ],
+    "motion": "float",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9899,
+    "tags": [
+      "bokeh",
+      "float",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft out-of-focus city lights. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-032",
+    "name": "Crystal Bokeh",
+    "kind": "clip",
+    "scene": "Bokeh",
+    "palette": [
+      "#18181b",
+      "#f472b6",
+      "#fbbf24"
+    ],
+    "motion": "float",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9928,
+    "tags": [
+      "bokeh",
+      "float",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft out-of-focus city lights. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-033",
+    "name": "Crimson Bokeh",
+    "kind": "clip",
+    "scene": "Bokeh",
+    "palette": [
+      "#18181b",
+      "#f472b6",
+      "#fbbf24"
+    ],
+    "motion": "float",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9957,
+    "tags": [
+      "bokeh",
+      "float",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft out-of-focus city lights. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-034",
+    "name": "Hidden Bokeh",
+    "kind": "clip",
+    "scene": "Bokeh",
+    "palette": [
+      "#18181b",
+      "#f472b6",
+      "#fbbf24"
+    ],
+    "motion": "float",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 9986,
+    "tags": [
+      "bokeh",
+      "float",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft out-of-focus city lights. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-035",
+    "name": "Midnight Bokeh",
+    "kind": "clip",
+    "scene": "Bokeh",
+    "palette": [
+      "#18181b",
+      "#f472b6",
+      "#fbbf24"
+    ],
+    "motion": "float",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10015,
+    "tags": [
+      "bokeh",
+      "float",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft out-of-focus city lights. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-036",
+    "name": "Misty Nebula",
+    "kind": "clip",
+    "scene": "Nebula",
+    "palette": [
+      "#1e1b4b",
+      "#8b5cf6",
+      "#f472b6"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10044,
+    "tags": [
+      "nebula",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Colourful nebula clouds drifting. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-037",
+    "name": "Bright Nebula",
+    "kind": "clip",
+    "scene": "Nebula",
+    "palette": [
+      "#1e1b4b",
+      "#8b5cf6",
+      "#f472b6"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10073,
+    "tags": [
+      "nebula",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Colourful nebula clouds drifting. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-038",
+    "name": "Solar Nebula",
+    "kind": "clip",
+    "scene": "Nebula",
+    "palette": [
+      "#1e1b4b",
+      "#8b5cf6",
+      "#f472b6"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10102,
+    "tags": [
+      "nebula",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Colourful nebula clouds drifting. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-039",
+    "name": "Urban Nebula",
+    "kind": "clip",
+    "scene": "Nebula",
+    "palette": [
+      "#1e1b4b",
+      "#8b5cf6",
+      "#f472b6"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10131,
+    "tags": [
+      "nebula",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Colourful nebula clouds drifting. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-040",
+    "name": "Golden Nebula",
+    "kind": "clip",
+    "scene": "Nebula",
+    "palette": [
+      "#1e1b4b",
+      "#8b5cf6",
+      "#f472b6"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10160,
+    "tags": [
+      "nebula",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Colourful nebula clouds drifting. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-041",
+    "name": "Amber Rain",
+    "kind": "clip",
+    "scene": "Rain",
+    "palette": [
+      "#0f172a",
+      "#64748b",
+      "#bae6fd"
+    ],
+    "motion": "fall",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10189,
+    "tags": [
+      "rain",
+      "fall",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Rain streaks on a dark window. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-042",
+    "name": "Cosmic Rain",
+    "kind": "clip",
+    "scene": "Rain",
+    "palette": [
+      "#0f172a",
+      "#64748b",
+      "#bae6fd"
+    ],
+    "motion": "fall",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10218,
+    "tags": [
+      "rain",
+      "fall",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Rain streaks on a dark window. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-043",
+    "name": "Silent Rain",
+    "kind": "clip",
+    "scene": "Rain",
+    "palette": [
+      "#0f172a",
+      "#64748b",
+      "#bae6fd"
+    ],
+    "motion": "fall",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10247,
+    "tags": [
+      "rain",
+      "fall",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Rain streaks on a dark window. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-044",
+    "name": "Quiet Rain",
+    "kind": "clip",
+    "scene": "Rain",
+    "palette": [
+      "#0f172a",
+      "#64748b",
+      "#bae6fd"
+    ],
+    "motion": "fall",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10276,
+    "tags": [
+      "rain",
+      "fall",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Rain streaks on a dark window. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-045",
+    "name": "Gentle Rain",
+    "kind": "clip",
+    "scene": "Rain",
+    "palette": [
+      "#0f172a",
+      "#64748b",
+      "#bae6fd"
+    ],
+    "motion": "fall",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10305,
+    "tags": [
+      "rain",
+      "fall",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Rain streaks on a dark window. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-046",
+    "name": "Neon Snow",
+    "kind": "clip",
+    "scene": "Snow",
+    "palette": [
+      "#1e293b",
+      "#e2e8f0",
+      "#ffffff"
+    ],
+    "motion": "fall",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10334,
+    "tags": [
+      "snow",
+      "fall",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Snowflakes falling softly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-047",
+    "name": "Electric Snow",
+    "kind": "clip",
+    "scene": "Snow",
+    "palette": [
+      "#1e293b",
+      "#e2e8f0",
+      "#ffffff"
+    ],
+    "motion": "fall",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10363,
+    "tags": [
+      "snow",
+      "fall",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Snowflakes falling softly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-048",
+    "name": "Bold Snow",
+    "kind": "clip",
+    "scene": "Snow",
+    "palette": [
+      "#1e293b",
+      "#e2e8f0",
+      "#ffffff"
+    ],
+    "motion": "fall",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10392,
+    "tags": [
+      "snow",
+      "fall",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Snowflakes falling softly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-049",
+    "name": "Velvet Snow",
+    "kind": "clip",
+    "scene": "Snow",
+    "palette": [
+      "#1e293b",
+      "#e2e8f0",
+      "#ffffff"
+    ],
+    "motion": "fall",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10421,
+    "tags": [
+      "snow",
+      "fall",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Snowflakes falling softly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-050",
+    "name": "Lunar Snow",
+    "kind": "clip",
+    "scene": "Snow",
+    "palette": [
+      "#1e293b",
+      "#e2e8f0",
+      "#ffffff"
+    ],
+    "motion": "fall",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10450,
+    "tags": [
+      "snow",
+      "fall",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Snowflakes falling softly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-051",
+    "name": "Dreamy Embers",
+    "kind": "clip",
+    "scene": "Embers",
+    "palette": [
+      "#1c0a00",
+      "#f97316",
+      "#fbbf24"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10479,
+    "tags": [
+      "embers",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Glowing embers rising in the dark. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-052",
+    "name": "Crystal Embers",
+    "kind": "clip",
+    "scene": "Embers",
+    "palette": [
+      "#1c0a00",
+      "#f97316",
+      "#fbbf24"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10508,
+    "tags": [
+      "embers",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Glowing embers rising in the dark. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-053",
+    "name": "Crimson Embers",
+    "kind": "clip",
+    "scene": "Embers",
+    "palette": [
+      "#1c0a00",
+      "#f97316",
+      "#fbbf24"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10537,
+    "tags": [
+      "embers",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Glowing embers rising in the dark. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-054",
+    "name": "Hidden Embers",
+    "kind": "clip",
+    "scene": "Embers",
+    "palette": [
+      "#1c0a00",
+      "#f97316",
+      "#fbbf24"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10566,
+    "tags": [
+      "embers",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Glowing embers rising in the dark. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-055",
+    "name": "Midnight Embers",
+    "kind": "clip",
+    "scene": "Embers",
+    "palette": [
+      "#1c0a00",
+      "#f97316",
+      "#fbbf24"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10595,
+    "tags": [
+      "embers",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Glowing embers rising in the dark. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-056",
+    "name": "Misty Light streaks",
+    "kind": "clip",
+    "scene": "Light streaks",
+    "palette": [
+      "#020617",
+      "#22d3ee",
+      "#a5f3fc"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10624,
+    "tags": [
+      "light streaks",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Fast light streaks racing past. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-057",
+    "name": "Bright Light streaks",
+    "kind": "clip",
+    "scene": "Light streaks",
+    "palette": [
+      "#020617",
+      "#22d3ee",
+      "#a5f3fc"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10653,
+    "tags": [
+      "light streaks",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Fast light streaks racing past. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-058",
+    "name": "Solar Light streaks",
+    "kind": "clip",
+    "scene": "Light streaks",
+    "palette": [
+      "#020617",
+      "#22d3ee",
+      "#a5f3fc"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10682,
+    "tags": [
+      "light streaks",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Fast light streaks racing past. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-059",
+    "name": "Urban Light streaks",
+    "kind": "clip",
+    "scene": "Light streaks",
+    "palette": [
+      "#020617",
+      "#22d3ee",
+      "#a5f3fc"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10711,
+    "tags": [
+      "light streaks",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Fast light streaks racing past. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-060",
+    "name": "Golden Light streaks",
+    "kind": "clip",
+    "scene": "Light streaks",
+    "palette": [
+      "#020617",
+      "#22d3ee",
+      "#a5f3fc"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10740,
+    "tags": [
+      "light streaks",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Fast light streaks racing past. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-061",
+    "name": "Amber Grid pulse",
+    "kind": "clip",
+    "scene": "Grid pulse",
+    "palette": [
+      "#09090b",
+      "#22c55e",
+      "#a3e635"
+    ],
+    "motion": "pulse",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10769,
+    "tags": [
+      "grid pulse",
+      "pulse",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Neon grid pulsing with light. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-062",
+    "name": "Cosmic Grid pulse",
+    "kind": "clip",
+    "scene": "Grid pulse",
+    "palette": [
+      "#09090b",
+      "#22c55e",
+      "#a3e635"
+    ],
+    "motion": "pulse",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10798,
+    "tags": [
+      "grid pulse",
+      "pulse",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Neon grid pulsing with light. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-063",
+    "name": "Silent Grid pulse",
+    "kind": "clip",
+    "scene": "Grid pulse",
+    "palette": [
+      "#09090b",
+      "#22c55e",
+      "#a3e635"
+    ],
+    "motion": "pulse",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10827,
+    "tags": [
+      "grid pulse",
+      "pulse",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Neon grid pulsing with light. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-064",
+    "name": "Quiet Grid pulse",
+    "kind": "clip",
+    "scene": "Grid pulse",
+    "palette": [
+      "#09090b",
+      "#22c55e",
+      "#a3e635"
+    ],
+    "motion": "pulse",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10856,
+    "tags": [
+      "grid pulse",
+      "pulse",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Neon grid pulsing with light. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-065",
+    "name": "Gentle Grid pulse",
+    "kind": "clip",
+    "scene": "Grid pulse",
+    "palette": [
+      "#09090b",
+      "#22c55e",
+      "#a3e635"
+    ],
+    "motion": "pulse",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10885,
+    "tags": [
+      "grid pulse",
+      "pulse",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Neon grid pulsing with light. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-066",
+    "name": "Neon Bubbles",
+    "kind": "clip",
+    "scene": "Bubbles",
+    "palette": [
+      "#0c4a6e",
+      "#7dd3fc",
+      "#ffffff"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10914,
+    "tags": [
+      "bubbles",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Bubbles rising through blue water. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-067",
+    "name": "Electric Bubbles",
+    "kind": "clip",
+    "scene": "Bubbles",
+    "palette": [
+      "#0c4a6e",
+      "#7dd3fc",
+      "#ffffff"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10943,
+    "tags": [
+      "bubbles",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Bubbles rising through blue water. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-068",
+    "name": "Bold Bubbles",
+    "kind": "clip",
+    "scene": "Bubbles",
+    "palette": [
+      "#0c4a6e",
+      "#7dd3fc",
+      "#ffffff"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 10972,
+    "tags": [
+      "bubbles",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Bubbles rising through blue water. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-069",
+    "name": "Velvet Bubbles",
+    "kind": "clip",
+    "scene": "Bubbles",
+    "palette": [
+      "#0c4a6e",
+      "#7dd3fc",
+      "#ffffff"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11001,
+    "tags": [
+      "bubbles",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Bubbles rising through blue water. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-070",
+    "name": "Lunar Bubbles",
+    "kind": "clip",
+    "scene": "Bubbles",
+    "palette": [
+      "#0c4a6e",
+      "#7dd3fc",
+      "#ffffff"
+    ],
+    "motion": "rise",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11030,
+    "tags": [
+      "bubbles",
+      "rise",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Bubbles rising through blue water. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-071",
+    "name": "Dreamy Clouds",
+    "kind": "clip",
+    "scene": "Clouds",
+    "palette": [
+      "#e0f2fe",
+      "#ffffff",
+      "#bae6fd"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11059,
+    "tags": [
+      "clouds",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft clouds drifting in a bright sky. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-072",
+    "name": "Crystal Clouds",
+    "kind": "clip",
+    "scene": "Clouds",
+    "palette": [
+      "#e0f2fe",
+      "#ffffff",
+      "#bae6fd"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11088,
+    "tags": [
+      "clouds",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft clouds drifting in a bright sky. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-073",
+    "name": "Crimson Clouds",
+    "kind": "clip",
+    "scene": "Clouds",
+    "palette": [
+      "#e0f2fe",
+      "#ffffff",
+      "#bae6fd"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11117,
+    "tags": [
+      "clouds",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft clouds drifting in a bright sky. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-074",
+    "name": "Hidden Clouds",
+    "kind": "clip",
+    "scene": "Clouds",
+    "palette": [
+      "#e0f2fe",
+      "#ffffff",
+      "#bae6fd"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11146,
+    "tags": [
+      "clouds",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft clouds drifting in a bright sky. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-075",
+    "name": "Midnight Clouds",
+    "kind": "clip",
+    "scene": "Clouds",
+    "palette": [
+      "#e0f2fe",
+      "#ffffff",
+      "#bae6fd"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11175,
+    "tags": [
+      "clouds",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft clouds drifting in a bright sky. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-076",
+    "name": "Misty Lava",
+    "kind": "clip",
+    "scene": "Lava",
+    "palette": [
+      "#450a0a",
+      "#ef4444",
+      "#fbbf24"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11204,
+    "tags": [
+      "lava",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Molten lava flowing slowly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-077",
+    "name": "Bright Lava",
+    "kind": "clip",
+    "scene": "Lava",
+    "palette": [
+      "#450a0a",
+      "#ef4444",
+      "#fbbf24"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11233,
+    "tags": [
+      "lava",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Molten lava flowing slowly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-078",
+    "name": "Solar Lava",
+    "kind": "clip",
+    "scene": "Lava",
+    "palette": [
+      "#450a0a",
+      "#ef4444",
+      "#fbbf24"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11262,
+    "tags": [
+      "lava",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Molten lava flowing slowly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-079",
+    "name": "Urban Lava",
+    "kind": "clip",
+    "scene": "Lava",
+    "palette": [
+      "#450a0a",
+      "#ef4444",
+      "#fbbf24"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11291,
+    "tags": [
+      "lava",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Molten lava flowing slowly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-080",
+    "name": "Golden Lava",
+    "kind": "clip",
+    "scene": "Lava",
+    "palette": [
+      "#450a0a",
+      "#ef4444",
+      "#fbbf24"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11320,
+    "tags": [
+      "lava",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Molten lava flowing slowly. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-081",
+    "name": "Amber Starfield",
+    "kind": "clip",
+    "scene": "Starfield",
+    "palette": [
+      "#020617",
+      "#ffffff",
+      "#93c5fd"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11349,
+    "tags": [
+      "starfield",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Stars drifting through deep space. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-082",
+    "name": "Cosmic Starfield",
+    "kind": "clip",
+    "scene": "Starfield",
+    "palette": [
+      "#020617",
+      "#ffffff",
+      "#93c5fd"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11378,
+    "tags": [
+      "starfield",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Stars drifting through deep space. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-083",
+    "name": "Silent Starfield",
+    "kind": "clip",
+    "scene": "Starfield",
+    "palette": [
+      "#020617",
+      "#ffffff",
+      "#93c5fd"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11407,
+    "tags": [
+      "starfield",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Stars drifting through deep space. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-084",
+    "name": "Quiet Starfield",
+    "kind": "clip",
+    "scene": "Starfield",
+    "palette": [
+      "#020617",
+      "#ffffff",
+      "#93c5fd"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11436,
+    "tags": [
+      "starfield",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Stars drifting through deep space. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-085",
+    "name": "Gentle Starfield",
+    "kind": "clip",
+    "scene": "Starfield",
+    "palette": [
+      "#020617",
+      "#ffffff",
+      "#93c5fd"
+    ],
+    "motion": "drift",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11465,
+    "tags": [
+      "starfield",
+      "drift",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Stars drifting through deep space. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-086",
+    "name": "Neon Caustics",
+    "kind": "clip",
+    "scene": "Caustics",
+    "palette": [
+      "#082f49",
+      "#2dd4bf",
+      "#a7f3d0"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11494,
+    "tags": [
+      "caustics",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Water caustics shimmering on a pool floor. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-087",
+    "name": "Electric Caustics",
+    "kind": "clip",
+    "scene": "Caustics",
+    "palette": [
+      "#082f49",
+      "#2dd4bf",
+      "#a7f3d0"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11523,
+    "tags": [
+      "caustics",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Water caustics shimmering on a pool floor. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-088",
+    "name": "Bold Caustics",
+    "kind": "clip",
+    "scene": "Caustics",
+    "palette": [
+      "#082f49",
+      "#2dd4bf",
+      "#a7f3d0"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11552,
+    "tags": [
+      "caustics",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Water caustics shimmering on a pool floor. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-089",
+    "name": "Velvet Caustics",
+    "kind": "clip",
+    "scene": "Caustics",
+    "palette": [
+      "#082f49",
+      "#2dd4bf",
+      "#a7f3d0"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11581,
+    "tags": [
+      "caustics",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Water caustics shimmering on a pool floor. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-090",
+    "name": "Lunar Caustics",
+    "kind": "clip",
+    "scene": "Caustics",
+    "palette": [
+      "#082f49",
+      "#2dd4bf",
+      "#a7f3d0"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11610,
+    "tags": [
+      "caustics",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Water caustics shimmering on a pool floor. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-091",
+    "name": "Dreamy Ribbons",
+    "kind": "clip",
+    "scene": "Ribbons",
+    "palette": [
+      "#111827",
+      "#c084fc",
+      "#f0abfc"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11639,
+    "tags": [
+      "ribbons",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Silk ribbons flowing in the wind. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-092",
+    "name": "Crystal Ribbons",
+    "kind": "clip",
+    "scene": "Ribbons",
+    "palette": [
+      "#111827",
+      "#c084fc",
+      "#f0abfc"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11668,
+    "tags": [
+      "ribbons",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Silk ribbons flowing in the wind. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-093",
+    "name": "Crimson Ribbons",
+    "kind": "clip",
+    "scene": "Ribbons",
+    "palette": [
+      "#111827",
+      "#c084fc",
+      "#f0abfc"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11697,
+    "tags": [
+      "ribbons",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Silk ribbons flowing in the wind. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-094",
+    "name": "Hidden Ribbons",
+    "kind": "clip",
+    "scene": "Ribbons",
+    "palette": [
+      "#111827",
+      "#c084fc",
+      "#f0abfc"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11726,
+    "tags": [
+      "ribbons",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Silk ribbons flowing in the wind. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-095",
+    "name": "Midnight Ribbons",
+    "kind": "clip",
+    "scene": "Ribbons",
+    "palette": [
+      "#111827",
+      "#c084fc",
+      "#f0abfc"
+    ],
+    "motion": "flow",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11755,
+    "tags": [
+      "ribbons",
+      "flow",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Silk ribbons flowing in the wind. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-096",
+    "name": "Misty Bloom",
+    "kind": "clip",
+    "scene": "Bloom",
+    "palette": [
+      "#3b0764",
+      "#e879f9",
+      "#fde68a"
+    ],
+    "motion": "pulse",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11784,
+    "tags": [
+      "bloom",
+      "pulse",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft flowers of light blooming. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-097",
+    "name": "Bright Bloom",
+    "kind": "clip",
+    "scene": "Bloom",
+    "palette": [
+      "#3b0764",
+      "#e879f9",
+      "#fde68a"
+    ],
+    "motion": "pulse",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11813,
+    "tags": [
+      "bloom",
+      "pulse",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft flowers of light blooming. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-098",
+    "name": "Solar Bloom",
+    "kind": "clip",
+    "scene": "Bloom",
+    "palette": [
+      "#3b0764",
+      "#e879f9",
+      "#fde68a"
+    ],
+    "motion": "pulse",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11842,
+    "tags": [
+      "bloom",
+      "pulse",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft flowers of light blooming. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-099",
+    "name": "Urban Bloom",
+    "kind": "clip",
+    "scene": "Bloom",
+    "palette": [
+      "#3b0764",
+      "#e879f9",
+      "#fde68a"
+    ],
+    "motion": "pulse",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11871,
+    "tags": [
+      "bloom",
+      "pulse",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft flowers of light blooming. No filmed footage, no real faces, 1080p, 6 seconds."
+  },
+  {
+    "id": "ai-clip-100",
+    "name": "Golden Bloom",
+    "kind": "clip",
+    "scene": "Bloom",
+    "palette": [
+      "#3b0764",
+      "#e879f9",
+      "#fde68a"
+    ],
+    "motion": "pulse",
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seed": 11900,
+    "tags": [
+      "bloom",
+      "pulse",
+      "ai",
+      "1080p"
+    ],
+    "prompt": "Original procedural stock clip: Soft flowers of light blooming. No filmed footage, no real faces, 1080p, 6 seconds."
+  }
+]

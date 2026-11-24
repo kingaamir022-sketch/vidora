@@ -338,6 +338,38 @@ export function addClipToAudioTrack(project: VidoraProject, clip: Clip): VidoraP
 }
 
 /**
+ * Phase 6 (O) — append a video/image clip to the first unlocked video
+ * track where its time range is free, else open a new video track (same
+ * placement rule as addClipToAudioTrack, for video clips). AI clips and
+ * images land at the playhead so a frame/sticker overlay sits over the
+ * video under the playhead.
+ */
+export function addClipToVideoTrack(project: VidoraProject, clip: Clip): VidoraProject {
+  const start = clip.start;
+  const end = start + clip.duration;
+  const overlaps = (t: { clips: Clip[] }) =>
+    t.clips.some((c) => c.start < end && start < c.start + c.duration);
+  let track = project.tracks.find((t) => t.kind === 'video' && !t.locked && !overlaps(t));
+  let tracks = project.tracks;
+  if (!track) {
+    track = {
+      clips: [],
+      hidden: false,
+      id: newId('track'),
+      kind: 'video',
+      locked: false,
+      muted: false,
+      name: `Video ${tracks.filter((t) => t.kind === 'video').length + 1}`,
+      solo: false,
+      volume: 1,
+    };
+    tracks = [...tracks, track];
+  }
+  const placed = { ...clip, trackId: track.id };
+  return { ...project, tracks: tracks.map((t) => (t.id === track!.id ? { ...t, clips: [...t.clips, placed] } : t)) };
+}
+
+/**
  * Phase 4 (J-DETACH) — separate a video clip's audio onto its own audio
  * clip. Returns null when the clip is not a video clip, has no audio
  * (no media), or its audio was already separated. The new audio clip

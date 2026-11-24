@@ -17,6 +17,8 @@ import { ORIGINAL_LOOPS, ORIGINAL_SFX } from './audio';
 import { BACKGROUND_CATALOG } from './backgrounds';
 import { EFFECT_CATALOG } from './effects';
 import { animationKindSchema, loopAnimationSchema } from '../schema/project';
+import { AI_CLIPS, AI_IMAGES, AI_MUSIC_TRACKS, AI_SFX, AI_SFX_TOTAL } from './aiLibrary';
+import { AI_VOICES } from './voices';
 
 /** Text animations: in/out kinds + loop kinds, excluding 'none' and the
  * 28 `motion-*` kinds (those belong to the sticker motion specs). */
@@ -27,6 +29,10 @@ export function textAnimationCount(): number {
 }
 
 export interface AssetLibraryCounts {
+  aiClips: number;
+  aiImages: number;
+  aiSfx: number;
+  aiTracks: number;
   backgrounds: number;
   captionPresets: number;
   cssEffects: number;
@@ -42,10 +48,15 @@ export interface AssetLibraryCounts {
   textPresets: number;
   total: number;
   transitions: number;
+  voices: number;
 }
 
 export function assetLibraryCounts(): AssetLibraryCounts {
   const counts: AssetLibraryCounts = {
+    aiClips: AI_CLIPS.length,
+    aiImages: AI_IMAGES.length,
+    aiSfx: AI_SFX.length,
+    aiTracks: AI_MUSIC_TRACKS.length,
     backgrounds: BACKGROUND_CATALOG.length,
     captionPresets: CAPTION_STYLE_PRESETS.length,
     cssEffects: EFFECT_CATALOG.length,
@@ -53,7 +64,7 @@ export function assetLibraryCounts(): AssetLibraryCounts {
     glslEffects: GLSL_EFFECT_CATALOG.length,
     loops: ORIGINAL_LOOPS.length,
     luts: BUILTIN_LUTS.length,
-    sfx: ORIGINAL_SFX.length,
+    sfx: AI_SFX_TOTAL,
     shapes: SHAPE_DEFS.length,
     stickers: STICKER_CATALOG.length,
     templates: TEMPLATE_CATALOG.length,
@@ -61,11 +72,13 @@ export function assetLibraryCounts(): AssetLibraryCounts {
     textPresets: TEXT_STYLE_PRESETS.length,
     total: 0,
     transitions: TRANSITION_TYPES.length,
+    voices: AI_VOICES.length,
   };
   counts.total =
+    counts.aiClips + counts.aiImages + counts.aiSfx + counts.aiTracks +
     counts.backgrounds + counts.captionPresets + counts.cssEffects + counts.fonts + counts.glslEffects +
     counts.loops + counts.luts + counts.sfx + counts.shapes + counts.stickers + counts.templates +
-    counts.textAnimations + counts.textPresets + counts.transitions;
+    counts.textAnimations + counts.textPresets + counts.transitions + counts.voices;
   return counts;
 }
 
@@ -116,6 +129,22 @@ export function assetManifestEntries(): ManifestEntry[] {
   }
   for (const b of BACKGROUND_CATALOG) {
     entries.push({ category: b.category, id: b.id, license: 'CC0 (Vidora original)', name: b.name, tags: ['background', b.category.toLowerCase()], type: 'background' });
+  }
+  // Phase 6 (Section O) — AI-generated library (assets/ai-manifest.json).
+  for (const t of AI_MUSIC_TRACKS) {
+    entries.push({ category: t.style, id: t.id, license: 'CC0 (Vidora original)', name: t.name, tags: ['ai', 'music', 'track', t.style.toLowerCase(), t.mood], type: 'ai-track' });
+  }
+  for (const s of AI_SFX) {
+    entries.push({ category: s.family, id: s.id, license: 'CC0 (Vidora original)', name: s.name, tags: ['ai', 'sfx', s.family], type: 'ai-sfx' });
+  }
+  for (const c of AI_CLIPS) {
+    entries.push({ category: c.scene, id: c.id, license: 'CC0 (Vidora original)', name: c.name, tags: ['ai', 'clip', c.scene.toLowerCase(), c.motion], type: 'ai-clip' });
+  }
+  for (const im of AI_IMAGES) {
+    entries.push({ category: im.kind, id: im.id, license: 'CC0 (Vidora original)', name: im.name, tags: ['ai', 'image', im.kind, im.design], type: 'ai-image' });
+  }
+  for (const v of AI_VOICES) {
+    entries.push({ category: v.lang, id: v.id, license: 'CC0 (Vidora original)', name: v.name, tags: ['ai', 'voice', v.lang.toLowerCase(), v.role.toLowerCase()], type: 'ai-voice' });
   }
   return entries;
 }

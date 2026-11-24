@@ -24,8 +24,8 @@ const COMING: Record<string, { phase: string; items: string }> = {
     items: 'Template system with replaceable media slots (vlog, intro/outro, slideshow, promo, reel, product, birthday, travel, quote, countdown, lyric-style). Templates are built in Phase 5 and wired up in Phase 8.',
   },
   'AI Tools': {
-    phase: 'Phase 7',
-    items: 'Background removal, auto reframe, smart cut, upscaler to 4K, low-light enhance, retouch, auto highlights, script-to-video, AI image generation.',
+    phase: 'Phase 6 — built',
+    items: 'AI Library: Generate (prompt → image, video, music, dialogue scene, all local, no credits), 100 AI music tracks, 100 AI clips, 110 AI images, 16 narration voices. Open the AI Tools tab to use it.',
   },
 };
 

@@ -189,6 +189,73 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   Verified by the Phase 5 audit (BUG-P5-001 pixel check: 24,569
   colourful video pixels under the text + 3,457 near-white text
   pixels, `audit/phase5/N-GLSL/video-plus-text.png`).
+- BUG-P6-001 | Phase 6 | AI clips | FIXED 2026-11-23 (found in the
+  pilot quality review) — The 5 variants of one scene looked nearly
+  identical (same palette, same motion direction). Fix: each variant
+  now gets a per-seed palette hue jitter (±22°) in `render_clips.py`
+  so variants are visually distinct; verified in the pilot re-review
+  (frames at t=0.5 vs t=3.0 differ, scenes distinct).
+- BUG-P6-002 | Phase 6 | AI clips | FIXED 2026-11-23 (found in the
+  pilot quality review) — Sunrise scene was washed out: pale sky, sun
+  barely visible. Fix: darker sky gradient + a solid sun disc on the
+  horizon in `painters.py`; verified in the pilot re-review.
+- BUG-P6-003 | Phase 6 | Generation pipeline | FIXED 2026-11-23
+  (found during generation) — 15 s tracks at 120 BPM are not
+  bar-aligned (7.5 bars), so a "loopable" track would click on repeat.
+  Fix: `make_prompts.py` falls back to 96 BPM when a style's BPM does
+  not divide the duration; verified by `phase6.test.ts`
+  (bar-alignment check on all 100 tracks).
+- BUG-P6-004 | Phase 6 | Generation pipeline | FIXED 2026-11-23
+  (found during the pilot) — `random.Random.randint` has no `size`
+  kwarg (noise-grain crashed on the first texture); and the renderers'
+  `--only` runs OVERWROTE `generation/state.json`, losing entries.
+  Fix: grain uses a numpy RandomState; all four renderers merge state
+  by id (`_merge_state`).
+- BUG-P6-005 | Phase 6 | AI music | FIXED 2026-11-23 (found by the
+  quality filter after the full render) — ALL 8 Acoustic + ALL 8 Jazz
+  tracks failed the silence check (11–15% of samples below −60 dBFS,
+  longest gap only ~190 ms — micro-gaps between decaying tones, not
+  dead air). Cause: both styles had `pad: False` + `arp: False`, so
+  nothing sounded continuously between sparse melody notes. Fix: pad
+  bed enabled for Acoustic + Jazz in `generation/make_prompts.py`
+  (prompts regenerated — diff confirms only the 16 `pad` flips);
+  silence now 4–5%. The in-browser fallback renders the same pattern,
+  so it matches the MP3s.
+- BUG-P6-006 | Phase 6 | AI music | FIXED 2026-11-23 (found by the
+  quality filter) — ALL 8 Jazz tracks failed BPM detection (estimator
+  read 127.7 or 63.8 instead of 96 — ratios 4/3, 2/3). Cause: the
+  syncopated "break" kicks at steps 0/7/10 make 3-step onset intervals
+  dominate the autocorrelation; the beat lag (62) trailed the winner
+  by 3%. Fix: accented hats on every beat were NOT enough (kicks
+  dominate onsets) — soft kicks added on beats 2/3/4, gain 0.4
+  (measured: 0.3 still fails, 0.4 passes at 96.8). Same change mirrored
+  in the TS fallback (`src/lib/audio.ts`).
+- BUG-P6-007 | Phase 6 | AI SFX | FIXED 2026-11-23 (found by the
+  quality filter) — 6 SFX decoded from MP3 at peak 1.00–1.06 (clipping)
+  although the float mix was normalized to 0.89: MP3 encoding overshoots
+  sharp transients by up to ~19%. Fix: SFX normalized to peak 0.80 in
+  `generation/render_sfx.py`; all 100 SFX re-rendered, filter passes.
+- BUG-P6-008 | Phase 6 | AI clips | FIXED 2026-11-23 (found by the
+  quality filter) — ALL 10 "pulse" clips (Grid 061–065, Bloom 096–100)
+  showed no motion (frame diff 0.01–0.04): the pulse motion graph used
+  a STATIC crop — only the overlay drifted. Fix: the crop now
+  oscillates (±48 px x, ±27 px y over the 6 s cycle) in
+  `generation/render_clips.py`; 10 clips re-rendered, filter passes.
+- BUG-P6-009 | Phase 6 | AI images | FIXED 2026-11-23 (found by the
+  quality filter) — Both vignette frames (ai-frame-05, ai-frame-15)
+  failed the transparent+opaque check. Cause (two layers): the mask
+  fill was 170, so no pixel reached alpha 255 — fixed to 255 — and
+  then GaussianBlur darkened the canvas edge to 245 anyway. Fix: a
+  solid 12 px rim drawn at the edge after the paste (visually the
+  darkest part of the vignette); frames re-rendered, filter passes.
+- BUG-P6-010 | Phase 6 | Build tooling | FIXED 2026-11-23 (found by
+  `npm run build:assets`) — Two Phase 6 edits broke the asset build:
+  (1) a `\\'` escape in the provenance string in
+  `scripts/build-assets.mjs` (SyntaxError); (2) `src/lib/aiLibrary.ts`
+  imported `assets/ai-manifest.json` without an import attribute, which
+  Node 24 type-stripping rejects (`ERR_IMPORT_ATTRIBUTE_MISSING`).
+  Fix: double-quoted string; `with { type: 'json' }` on the import
+  (valid for Vite too). `build:assets` passes (1,089 entries).
 - BUG-D5 | Phase 1 → Phase 8 | Export | DEFERRED — Export is realtime
   canvas capture only: no audio mix, no 4K, no H.265/VP9 choice, no
   bitrate control, no GIF, no background queue. Stated in the panel

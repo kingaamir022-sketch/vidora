@@ -1,7 +1,6 @@
 # O-MEDIA-GENERATE — Media panel Generate section (reference card, Phase 5/6)
-- **Phase:** 5/6 (reference evidence only — NOT built)
-- **Reference behaviour:** In the Media panel, the Generate (AI) section has Prompt + Showcase tabs, AI image / AI video / AI dialogue scene options, a prompt box ("Describe your image and how many results to generate (1–10)"), a model dropdown (Seedream 4.3 shown) and a Generate button. UNKNOWN — full check pending: what the Showcase tab shows; how the AI image / AI video / AI dialogue scene options differ; what happens after Generate (results grid? insert into timeline?); the full model list; whether generation needs sign-in or credits. Model names shown are CapCut content — Vidora's AI generation (Phase 6) follows this shape with original models.
-- **Where it lives:** Phase 5/6 — in-editor AI generation (not built; the Media panel's Generate section currently opens the honest placeholder text in Vidora's Media panel structure).
+- **Phase:** 6 — BUILT as the Generate sub-tab of the AI Library (O-AI-GENERATE). The reference behaviour (Media panel Generate section, Prompt/Showcase tabs, AI image / AI video / AI dialogue scene options, prompt box "Describe your image and how many results to generate (1–10)", model dropdown, Generate button) was UNKNOWN when this card was written — the result flow was never observed. Phase 6 follows the observed shape (prompt box, type options, count 1–10, model select, Generate button) with original Vidora models and local in-browser generation; the Showcase tab has no Vidora equivalent (generated results appear in the results grid instead). Model names shown in the reference are CapCut content — Vidora's models are original (Vidora Canvas / Vidora Motion / Vidora Synth).
+- **Where it lives:** Phase 6 — Generate sub-tab in `src/components/AILibraryPanel.tsx` (see O-AI-GENERATE).
 
 ## Controls
 | Type | Label | Min | Max | Default | Step | Notes |

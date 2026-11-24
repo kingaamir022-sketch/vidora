@@ -110,7 +110,7 @@ async function main() {
   await fs.mkdir(path.join(AUDIT, 'N-ASSETS'), { recursive: true });
   try {
     const manifest = JSON.parse(await fs.readFile(path.join(ROOT, 'assets', 'manifest.json'), 'utf8'));
-    check('N-ASSETS', 'assets/manifest.json has 663 entries', manifest.entries.length === 663, `entries: ${manifest.entries.length}`);
+    check('N-ASSETS', 'assets/manifest.json has 1089 entries (663 Phase 5 + 426 Phase 6 AI rows)', manifest.entries.length === 1089, `entries: ${manifest.entries.length}`);
     check('N-ASSETS', 'manifest counts meet every floor', manifest.counts.glslEffects >= 60 && manifest.counts.transitions >= 30 && manifest.counts.luts >= 30 && manifest.counts.stickers >= 200 && manifest.counts.fonts >= 40 && manifest.counts.textPresets >= 50 && manifest.counts.captionPresets >= 20 && manifest.counts.templates >= 25 && manifest.counts.loops >= 30 && manifest.counts.sfx >= 100 && manifest.counts.backgrounds >= 30, JSON.stringify(manifest.counts));
   } catch (e) {
     check('N-ASSETS', 'assets/manifest.json readable', false, String(e));

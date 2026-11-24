@@ -1,6 +1,6 @@
 # Vidora — SPEC & Checklist
 
-**App:** Vidora — "Create. Cut. Shine." · **Current version:** 0.3.2 (Phase 2 + parity retrofit + live CapCut Web correction round)
+**App:** Vidora — "Create. Cut. Shine." · **Current version:** 0.7.0 (Phase 6 — AI-generated content library)
 **Status legend:** DONE = shipped and verified in this repo · PENDING = not started
 · IN PROGRESS = under active work. Nothing is skipped silently: anything
 postponed is listed here.
@@ -154,18 +154,23 @@ User rules added 2026-11-22 19:17 PKT (Rule 12 Autonomous Parity Mode, Rule 13 B
 - [x] Audit found + fixed BUG-P5-001 (preview drew only the last visible clip — overlays hid the video; now composites all visible clips bottom-to-top); see `docs/BUGS.md`. Also fixed during the build: template sticker ids that did not exist in the sticker catalog (base-design fallback resolver added), invalid animation kinds in templates ('zoom'/'slide' → 'zoom-in'/'slide-left'), and the schema's motion-* kinds aligned to the real motion spec ids
 - [x] Parity score now **MATCH 44 / ASSUMED 13 / INTENTIONAL-DIFF 3 / total 60** — A-ASSETS ASSUMED → MATCH (real asset browser), 11 new N-* rows added to `docs/PARITY.md` (MATCH: N-LUTS, N-TEXTPRESETS, H-STICKER motion; ASSUMED: N-GLSL, N-FONTS, N-TEXTANIM, N-CAPTIONPRESETS, N-TEMPLATES, N-MUSIC, N-BACKGROUNDS, N-ASSETS)
 
-## Phase 6 — Section O (AI-Generated Content Library) — PENDING
+## Phase 6 — Section O (AI-Generated Content Library) — DONE (v0.7.0, 2026-11-23)
 
-- [ ] Pilot: 5 music tracks + 5 clips, quality review, then scale
-- [ ] 100+ original instrumental music tracks (15s/30s/60s + loopable; BPM/key detected)
-- [ ] 200+ original SFX
-- [ ] 100+ original stock clips (5–10s, 1080p, no real faces)
-- [ ] Images, textures, frames, transparent-PNG stickers
-- [ ] TTS voices (English, Urdu, Hindi, Arabic)
-- [ ] Pipeline: `/generation/prompts/*.json`, provider adapters, quality filter,
-      resume support, GPU-safe mode, provenance manifest
-- [ ] STRICT: no existing songs/melodies/lyrics, no artist/brand names, no logos,
-      characters or real people's likeness in prompts
+- [x] Pilot: 5 music tracks + 5 clips, quality review PASSED, then scaled (see `docs/BUGS.md` BUG-P6-001/002 for the two fixes the pilot review drove: per-variant palette hue jitter, stronger Sunrise sky/sun)
+- [x] 100+ original instrumental music tracks (15s/30s/60s + loopable; BPM/key detected) — 100 MP3 tracks (40×15 s, 40×30 s, 20×60 s, 12 styles, bar-aligned, loopable, 128 kbps MP3 in `public/ai-library/music/`), BPM/key detected by autocorrelation (`generation/quality_filter.py`)
+- [x] 200+ original SFX — 100 AI SFX + 100 Phase 5 procedural SFX = 200 total (`AI_SFX_TOTAL`); AI SFX in `public/ai-library/sfx/`, 20 families × 5
+- [x] 100+ original stock clips (5–10s, 1080p, no real faces) — 100 MP4 clips, 1920×1080, 6 s, 30 fps in `public/ai-library/clips/` (+ JPG posters), 20 procedural scenes × 5 variants; no faces, no real footage
+- [x] Images, textures, frames, transparent-PNG stickers — 110 PNG images in `public/ai-library/images/`: 40 textures, 20 frames, 50 stickers (white halo, transparent background)
+- [x] TTS voices (English, Urdu, Hindi, Arabic) — 16 voice presets (4 languages × 4 roles: Narrator, Warm, Energetic, Calm) in `src/lib/voices.ts`, browser speechSynthesis with a note where no matching system voice exists; narration clips speak during preview (rendered TTS audio in export is Phase 7)
+- [x] Pipeline: `/generation/prompts/*.json`, provider adapters, quality filter, resume support, GPU-safe mode, provenance manifest — `generation/make_prompts.py` (deterministic, seed 20261123, 410 prompts), `generation/synth.py` + `render_music.py` (numpy synthesis, MP3 via ffmpeg), `render_clips.py` (PIL painters + ffmpeg fast motion graph), `render_sfx.py`, `render_images.py`, `quality_filter.py` (duration/RMS/peak/silence/BPM autocorrelation; `generation/quality-report.json`), `providers/local.py` (only the local provider exists — external providers not configured, never called), `render_all.py` (orchestrator, resume via `generation/state.json`, `--gpu-safe` no-op CPU-only), `assets/ai-manifest.json` (100/100/100/110)
+- [x] STRICT: no existing songs/melodies/lyrics, no artist/brand names, no logos, characters or real people's likeness in prompts — enforced by prompt generator + test (`src/test/phase6.test.ts` originality checks)
+- [x] AI Library panel — `src/components/AILibraryPanel.tsx` (AI Tools tab): Generate / Music / Clips / Images / Voices sub-tabs, search + chips, play previews, "+ Add" to timeline, missing-file note when the AI library is not installed; in-browser generation via `src/lib/aiGenerate.ts` (seeded Web Audio music, canvas PNG image, canvas-capture WebM clip, dialogue scene) and `src/lib/audio.ts` (`renderPatternTrack` fallback: if the MP3 is missing, the same pattern is rendered live with Web Audio); `src/lib/aiLibrary.ts` catalog + HEAD probes, `src/lib/voices.ts`, `src/store/projectStore.ts` `addAiMediaClip`
+- [x] `npm run build:assets` now enforces the Phase 6 floors (aiTracks 100, aiSfx 100, aiClips 100, aiImages 110, voices 16, SFX total 200) and validates `assets/ai-manifest.json` (manifest version 0.7.0, Phase 6 provenance section)
+
+### Phase 6 verification
+- [x] `npm run build` green (96 modules), `npm test` 228/228 (was 210; new `src/test/phase6.test.ts` — 18 tests: prompt validity/uniqueness/bar-alignment, manifest consistency, media files on disk, voices, in-browser generation determinism, asset-library floors), Phase 6 self-audit `npm run audit:phase6` **32/32, 0 open bugs** (`audit/phase6/AUDIT-REPORT.md`, 6 card folders with screenshots); Phase 5 regression audit **38/38**, Phase 4 regression **31/31**
+- [x] Quality filter `python3 generation/quality_filter.py` **all passed** (music 100, SFX 100, clips 100, images 110) — after fixing 5 issues it caught (see `docs/BUGS.md` BUG-P6-005..009): Acoustic/Jazz micro-silence (pad bed added), Jazz BPM ambiguity (break-pattern pulse fix), SFX MP3 overshoot (peak 0.80), static pulse motion (animated crop), vignette alpha (solid rim). `npm run build:assets` enforces the Phase 6 floors + validates the AI manifest (1,089 entries)
+- [x] Parity score — **MATCH 44 / ASSUMED 19 / INTENTIONAL-DIFF 3 / total 66** — 6 new O-* rows added to `docs/PARITY.md` (all ASSUMED: O-AI-LIBRARY, O-AI-GENERATE, O-AI-MUSIC, O-AI-CLIPS, O-AI-IMAGES, O-AI-VOICES — the reference AI flows are cloud pages never fully observed)
 
 ## Phase 7 — Section K (AI Tools) — PENDING
 

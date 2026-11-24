@@ -32,7 +32,7 @@
 > Web evidence; H-DRAW and I-TRANSLATE stay UNKNOWN — no draw/pen
 > tool or translation UI was found in any check).
 
-One row per feature/panel/screen for Phases 0–5 (Phase 3 H/I cards are
+One row per feature/panel/screen for Phases 0–6 (Phase 3 H/I cards are
 behaviour cards + audit only, not matrix rows yet). Status legend:
 **MATCH** — implemented and behaving like the reference;
 **ASSUMED** — reference behaviour was not certain, so the most common
@@ -106,15 +106,21 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Backgrounds (N-BACKGROUNDS) | ~ | ~ | ~ | — | ~ | `lib/backgrounds.ts` (30 gradients/patterns/grain/frames as full-frame clips) — no background library observed in the reference; artwork is Vidora Original | ASSUMED |
 | Asset library build (N-ASSETS) | ~ | ~ | ~ | — | ~ | `scripts/build-assets.mjs` (`npm run build:assets`, manifest 663 entries, 714 total) — build-time generation, no reference behaviour to match | ASSUMED |
 | Sticker motion presets (H-STICKER) | ✓ | ✓ | ✓ | — | ✓ | `lib/stickerAnim.ts` (28 motion presets, Lottie-style JSON) + Stickers panel Motion select — motion is applied to the selected sticker clip; presets are Vidora Originals | MATCH |
+| AI Library panel (O-AI-LIBRARY) | ~ | ~ | ~ | — | ~ | `components/AILibraryPanel.tsx` (Generate / Music / Clips / Images / Voices sub-tabs, search + chips + counts) — no in-editor AI panel observed in the reference (cloud pages only: Design Studio, Video Studio, Dreamina); panel shape is Vidora's own | ASSUMED |
+| In-editor AI generation (O-AI-GENERATE) | ~ | ~ | ~ | — | ~ | `lib/aiGenerate.ts` (prompt → seeded local generation: Web Audio music, canvas image, canvas-capture video, dialogue scene) · O-MEDIA-GENERATE (prompt box, type options, count 1–10, model select observed; result flow never observed) — local result grid is Vidora's own | ASSUMED |
+| AI music tracks (O-AI-MUSIC) | ~ | ~ | ~ | — | ~ | `lib/aiLibrary.ts` + `assets/ai-manifest.json` (100 MP3 tracks, 15/30/60 s, loopable, BPM/key verified) · FULL-WALKTHROUGH-2026-11-23.md (Audio tab row shape) — rows matched, tracks are Vidora Originals | ASSUMED |
+| AI stock clips (O-AI-CLIPS) | ~ | ~ | ~ | — | ~ | `lib/aiLibrary.ts` (100 MP4 clips, 1080p, 6 s, posters) · O-VIDEO-STUDIO (card grid with durations observed) — grid shape matched, clips are Vidora Original procedural renders | ASSUMED |
+| AI images / textures / frames / stickers (O-AI-IMAGES) | ~ | ~ | ~ | — | ~ | `lib/aiLibrary.ts` (40 textures, 20 frames, 50 transparent PNG stickers) · O-DESIGN-STUDIO (Inspiration grid + filter chips observed) — grid shape matched, artwork is Vidora Original | ASSUMED |
+| AI narration voices (O-AI-VOICES) | ~ | ~ | ~ | — | ~ | `lib/voices.ts` (16 presets: 4 languages x 4 roles, browser speechSynthesis) · FULL-WALKTHROUGH-2026-11-23.md (Text inspector TTS section) — TTS structure observed, voice catalogue is Vidora's own | ASSUMED |
 
-## Parity score (correction round v0.3.2 + signed-in export check 2026-11-23 + Phase 3 v0.4.0 + Phase 4 v0.5.0 + Phase 5 v0.6.0)
+## Parity score (correction round v0.3.2 + signed-in export check 2026-11-23 + Phase 3 v0.4.0 + Phase 4 v0.5.0 + Phase 5 v0.6.0 + Phase 6 v0.7.0)
 
-- **MATCH: 44 / 60**
-- **ASSUMED: 13 / 60** — J-AUDIO, J-MIXER, J-VOICE, J-BEAT, J-VOICEOVER, N-GLSL, N-FONTS, N-TEXTANIM, N-CAPTIONPRESETS, N-TEMPLATES, N-MUSIC, N-BACKGROUNDS, N-ASSETS
-- **DIFF-FIXING: 0 / 60**
-- **INTENTIONAL-DIFF: 3 / 60** — B-MARKER, B-GROUP, F-WHEELS (spec-required extras CapCut Web lacks; awaiting desktop screenshots)
+- **MATCH: 44 / 66**
+- **ASSUMED: 19 / 66** — J-AUDIO, J-MIXER, J-VOICE, J-BEAT, J-VOICEOVER, N-GLSL, N-FONTS, N-TEXTANIM, N-CAPTIONPRESETS, N-TEMPLATES, N-MUSIC, N-BACKGROUNDS, N-ASSETS, O-AI-LIBRARY, O-AI-GENERATE, O-AI-MUSIC, O-AI-CLIPS, O-AI-IMAGES, O-AI-VOICES
+- **DIFF-FIXING: 0 / 66**
+- **INTENTIONAL-DIFF: 3 / 66** — B-MARKER, B-GROUP, F-WHEELS (spec-required extras CapCut Web lacks; awaiting desktop screenshots)
 - **Gate result: PASS** — every Phase 0–2 feature is MATCH, ASSUMED or INTENTIONAL-DIFF,
-  `npm run build` is green (92 modules), `npm test` is 210/210, and the
+  `npm run build` is green (96 modules), `npm test` is 228/228, and the
   Playwright self-audits pass: Phase 2 (`audit/phase2/AUDIT-REPORT.md`)
   40/40 checks with 0 open bugs (29 screenshots in `audit/phase2/<ID>/`,
   layout re-measured at 1440×900 with 0px drift), Phase 3
@@ -123,7 +129,9 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
   (`audit/phase4/AUDIT-REPORT.md`) 31/31 checks with 0 open bugs
   (8 card folders with screenshots in `audit/phase4/<ID>/`), Phase 5
   (`audit/phase5/AUDIT-REPORT.md`) 38/38 checks with 0 open bugs
-  (12 card folders with screenshots in `audit/phase5/<ID>/`). The Phase 2
+  (12 card folders with screenshots in `audit/phase5/<ID>/`), Phase 6
+  (`audit/phase6/AUDIT-REPORT.md`) 32/32 checks with 0 open bugs
+  (6 card folders with screenshots in `audit/phase6/<ID>/`). The Phase 2
   audit suite predates v0.3.2; the F-BLEND row is covered by the new Vitest tests
   (blend mapping, live compositing path) and the updated F-WHEELS
   audit screenshots.
@@ -137,15 +145,18 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
   in Phase 4 (browser `preservesPitch` + Web Audio voice shifter). Blend
   modes now apply live in the preview (v0.3.2), so they no longer belong
   in this list.
-- Tabs whose phases have not started (AI Tools → Phase 7) open an
+- Tabs whose phases have not started (AI avatar → Phase 7) open an
   honest placeholder panel; they are not scored as features here. The
+  AI Tools tab is implemented in v0.7.0 (AI Library, O rows above) and
+  scored above; Phase 7 adds background removal, camera tracking,
+  auto captions (Whisper), auto tracking and the remaining AI tools.
   Templates tab is implemented in v0.6.0 (25 original layouts, N-TEMPLATES)
   and scored above; Phase 8 adds replaceable media slots + sharing.
   Audio (Phase 4) is implemented in v0.5.0 and scored above (J rows).
   Text/Stickers/Captions (Phase 3) are implemented in v0.4.0 — their
   behaviour cards carry the status (MATCH / ASSUMED /
   UNKNOWN) and the Phase 3 audit covers them; they are not yet rows in
-  this matrix, which now scores Phases 0–2 + Phase 4 + Phase 5 (60 rows).
+  this matrix, which now scores Phases 0–2 + Phase 4 + Phase 5 + Phase 6 (66 rows).
 - Light-theme editor styling is Phase 9; the dashboard toggle exists
   and the editor remains dark until then.
 - CapCut Web's left rail differs from desktop (Elements/Transcript/

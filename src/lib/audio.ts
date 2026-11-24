@@ -1029,6 +1029,134 @@ export function renderOriginal(recipe: OriginalRecipe): Promise<RenderedOriginal
 }
 
 // ---------------------------------------------------------------------------
+// Phase 6 — AI track pattern renderer (Section O).
+// Renders an AI track's compact pattern spec (the same spec the offline
+// Python renderer uses in generation/render_music.py) with the Phase 5
+// helpers above, so a track still plays when its MP3 file is absent
+// (text-only checkout) and so the Generate tab can compose new tracks
+// from a prompt. The melody walk mirrors the Python rules (seeded,
+// 8th-note grid, rests by energy); the exact note sequence is not
+// bit-identical to numpy's RandomState, but the structure is the same.
+// ---------------------------------------------------------------------------
+
+/** Compact pattern spec for one AI music track (stored in assets/ai-manifest.json). */
+export interface AiTrackPattern {
+  arp: boolean;
+  bars: number;
+  bass: 'off' | 'root' | 'walk';
+  drums: 'break' | 'four' | 'none' | 'soft';
+  energy: number;
+  melody: boolean;
+  pad: boolean;
+  progression: number[];
+  rootMidi: number;
+  scale: number[];
+}
+
+/** mulberry32 seeded RNG (deterministic per track seed). */
+export function mulberry32(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Render one AI track pattern into an OfflineAudioContext. */
+export function renderPatternTrack(
+  ctx: OfflineAudioContext,
+  pattern: AiTrackPattern,
+  bpm: number,
+  duration: number,
+  seed: number,
+): void {
+  const barLen = 240 / bpm;
+  const step16 = 15 / bpm;
+  const step8 = 30 / bpm;
+  const { energy, progression, root, scale } = { energy: pattern.energy, progression: pattern.progression, root: pattern.rootMidi, scale: pattern.scale };
+  const third = scale.includes(3) ? 3 : 4;
+  const chordTones = (chordRoot: number): number[] => [chordRoot, chordRoot + third, chordRoot + 7];
+  // Drums.
+  for (let bar = 0; bar < pattern.bars; bar += 1) {
+    const t0 = bar * barLen;
+    if (pattern.drums === 'four') {
+      for (const s of [0, 4, 8, 12]) kick(ctx, t0 + s * step16);
+      for (const s of [4, 12]) snare(ctx, t0 + s * step16);
+      for (let s = 0; s < 16; s += 2) hat(ctx, t0 + s * step16);
+    } else if (pattern.drums === 'soft') {
+      for (const s of [0, 8]) kick(ctx, t0 + s * step16, 0.45);
+      snare(ctx, t0 + 4 * step16, 0.2);
+      for (const s of [2, 6, 10, 14]) hat(ctx, t0 + s * step16, 0.07);
+    } else if (pattern.drums === 'break') {
+      // Syncopated kicks (0/7/10) + soft kicks on beats 2/3/4 + accented
+      // hats on every beat, so the quarter-note pulse stays detectable
+      // (matches the offline renderer, BUG-P6-006).
+      for (const s of [0, 7, 10]) kick(ctx, t0 + s * step16, 0.5);
+      for (const s of [4, 8, 12]) kick(ctx, t0 + s * step16, 0.4);
+      for (const s of [4, 12]) snare(ctx, t0 + s * step16, 0.25);
+      for (let s = 0; s < 16; s += 1) hat(ctx, t0 + s * step16, s % 4 === 0 ? 0.12 : 0.05);
+    }
+    // Chords / bass / arp per bar.
+    const chordRoot = root + progression[bar % progression.length];
+    const tones = chordTones(chordRoot);
+    if (pattern.pad) chordPad(ctx, tones, t0, barLen, 0.1 + 0.08 * energy);
+    if (pattern.bass === 'root') {
+      bassNote(ctx, chordRoot - 12, t0, barLen * 0.5, 0.3);
+      bassNote(ctx, chordRoot - 12, t0 + barLen * 0.5, barLen * 0.5, 0.26);
+    } else if (pattern.bass === 'walk') {
+      const walk = [chordRoot - 12, chordRoot - 5, chordRoot - 7, chordRoot - 4];
+      walk.forEach((m, i) => bassNote(ctx, m, t0 + (i * barLen) / 4, barLen / 4, 0.28));
+    }
+    if (pattern.arp) {
+      const seq = [...tones, tones[0] + 12, tones[2] + 12, tones[1] + 12];
+      const notes = Array.from({ length: 16 }, (_, i) => seq[i % seq.length] + 12);
+      arpLine(ctx, notes, t0, step16, 0.09 + 0.05 * energy);
+    }
+  }
+  // Melody: seeded walk on the scale, 8th-note grid, rests by energy.
+  // The seed is the track seed from the manifest (same value the offline
+  // renderer uses), so a fallback render follows the same walk.
+  if (pattern.melody) {
+    const rng = mulberry32(seed);
+    let degree = 4;
+    const nSteps = Math.floor(duration / step8);
+    const moves = [-2, -1, -1, 0, 1, 1, 2];
+    for (let i = 0; i < nSteps; i += 1) {
+      if (rng() < 0.3) continue;
+      degree = Math.min(2 * scale.length - 1, Math.max(0, degree + moves[Math.floor(rng() * moves.length)]));
+      const octave = 12 * Math.floor(degree / scale.length);
+      const midi = root + 12 + octave + scale[degree % scale.length];
+      pluck(ctx, i * step8, midi, 0.1 + 0.06 * energy);
+    }
+  }
+}
+
+/** Render an AI track pattern to a WAV blob (same shape as renderOriginal). */
+export async function renderAiTrack(
+  pattern: AiTrackPattern,
+  bpm: number,
+  duration: number,
+  seed: number,
+): Promise<RenderedOriginal> {
+  const Ctor =
+    typeof window !== 'undefined'
+      ? window.OfflineAudioContext ?? (window as unknown as { webkitOfflineAudioContext?: typeof OfflineAudioContext }).webkitOfflineAudioContext
+      : undefined;
+  if (!Ctor) throw new Error('OfflineAudioContext is not available in this environment.');
+  const sampleRate = 44100;
+  const ctx = new Ctor(1, Math.max(1, Math.floor(duration * sampleRate)), sampleRate);
+  renderPatternTrack(ctx, { ...pattern }, bpm, duration, seed);
+  const buffer = await ctx.startRendering();
+  const samples = buffer.getChannelData(0);
+  let peak = 0;
+  for (let i = 0; i < samples.length; i += 1) peak = Math.max(peak, Math.abs(samples[i]));
+  const blob = encodeWav(samples, sampleRate);
+  return { blob, duration, peakLevel: peak, peaks: peaksFromSamples(samples, 64), url: URL.createObjectURL(blob) };
+}
+
+// ---------------------------------------------------------------------------
 // Voiceover recording (J-VOICEOVER) + preview playback (J-AUDIO).
 // ---------------------------------------------------------------------------
 
