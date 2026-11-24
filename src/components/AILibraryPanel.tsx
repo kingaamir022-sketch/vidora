@@ -30,6 +30,7 @@ import {
 import { playPreview, stopPreview } from '../lib/audio';
 import { formatDuration } from '../lib/media';
 import { newId, type MediaItem } from '../schema/project';
+import AIToolsPanel from './AIToolsPanel';
 
 /**
  * AI Library panel (Phase 6, SPEC O — O-AI-LIBRARY, O-AI-GENERATE,
@@ -41,7 +42,7 @@ import { newId, type MediaItem } from '../schema/project';
  * still work via in-browser Web Audio synthesis of the same pattern.
  */
 
-type SubTab = 'clips' | 'generate' | 'images' | 'music' | 'voices';
+type SubTab = 'clips' | 'generate' | 'images' | 'music' | 'tools' | 'voices';
 
 function swatchFor(id: string): string {
   const palette = ['#7C3AED', '#06B6D4', '#F59E0B', '#10B981', '#EF4444', '#EC4899'];
@@ -257,13 +258,13 @@ export default function AILibraryPanel() {
           Vidora Originals — generated locally, no sign-in, no credits. {AI_MUSIC_TRACKS.length} tracks · {AI_CLIPS.length} clips · {AI_IMAGES.length} images · {AI_VOICES.length} voices.
         </p>
         <div className="mt-2 flex flex-wrap gap-1" role="tablist" aria-label="AI Library sections">
-          {(['generate', 'music', 'clips', 'images', 'voices'] as SubTab[]).map((t) => (
+          {(['tools', 'generate', 'music', 'clips', 'images', 'voices'] as SubTab[]).map((t) => (
             <button key={t} type="button" role="tab" aria-selected={subTab === t} onClick={() => setSubTab(t)} className={chipCls(subTab === t)}>
-              {t === 'generate' ? 'Generate' : t === 'music' ? 'Music' : t === 'clips' ? 'Clips' : t === 'images' ? 'Images' : 'Voices'}
+              {t === 'generate' ? 'Generate' : t === 'music' ? 'Music' : t === 'clips' ? 'Clips' : t === 'images' ? 'Images' : t === 'tools' ? 'Tools' : 'Voices'}
             </button>
           ))}
         </div>
-        {subTab !== 'generate' && subTab !== 'voices' && (
+        {subTab !== 'generate' && subTab !== 'voices' && subTab !== 'tools' && (
           <>
             <input
               value={query}
@@ -286,6 +287,7 @@ export default function AILibraryPanel() {
       </div>
 
       <div className="flex-1 overflow-y-auto p-3">
+        {subTab === 'tools' && <AIToolsPanel />}
         {subTab === 'generate' && (
           <GenerateSection
             onAddAudio={(item) => {

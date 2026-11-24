@@ -530,6 +530,26 @@ export const clipSchema = z.object({
   /** Smooth slow-mo switch (CapCut Speed panel). Stored flag; the
    * optical-flow slow-motion engine is Phase 7 work. */
   smoothSlowMo: z.boolean().default(false),
+  /** Phase 7 (K-ENHANCE): AI enhance amounts 0–1 (low-light, retouch, relight). */
+  aiLowLight: z.number().min(0).max(1).default(0),
+  aiRetouch: z.number().min(0).max(1).default(0),
+  aiRelight: z.number().min(0).max(1).default(0),
+  /** Phase 7 (K-BGREMOVE): heuristic background removal + edge tolerance. */
+  aiBgRemove: z.boolean().default(false),
+  aiBgThreshold: z.number().min(5).max(80).default(25),
+  /** Phase 7 (K-STABILIZE): translation stabilisation; samples at 4 Hz. */
+  aiStabilize: z.boolean().default(false),
+  aiStabilization: z.array(z.object({ dx: z.number(), dy: z.number() })).default([]),
+  aiStabilizeSmooth: z.number().min(0).max(1).default(0.6),
+  aiStabilizeZoom: z.number().min(1).max(1.2).default(1.05),
+  /** Phase 7 (K-REFRAME): crop windows, one per second, normalised. */
+  aiReframe: z.object({ ratio: z.string(), windows: z.array(cropSchema) }).optional(),
+  /** Phase 7 (K-MOVEMENT): camera-move kind ('none' = no move). */
+  aiMovement: z.string().default('none'),
+  /** Phase 7 (K-OPTFLOW): render slowed playback with interpolated frames. */
+  aiOpticalFlow: z.boolean().default(false),
+  /** Phase 7 (K-VOCAL): stem mode for audio clips ('none' | 'voice' | 'music'). */
+  aiVocalMode: z.enum(['none', 'voice', 'music']).default('none'),
   positionX: z.number().default(0),
   positionY: z.number().default(0),
   reversed: z.boolean().default(false),
@@ -599,7 +619,7 @@ export const projectSchema = z.object({
   resolution: z.object({ height: z.number().int().positive(), width: z.number().int().positive() }),
   tracks: z.array(trackSchema).default([]),
   updatedAt: z.string().datetime(),
-  version: z.enum(['0.1.0', '0.2.0', '0.3.0', '0.4.0', '0.5.0']),
+  version: z.enum(['0.1.0', '0.2.0', '0.3.0', '0.4.0', '0.5.0', '0.6.0', '0.7.0', '0.8.0']),
 });
 export type VidoraProject = z.infer<typeof projectSchema>;
 
@@ -612,10 +632,10 @@ export function parseProject(data: unknown): VidoraProject {
 }
 
 /**
- * Migrate a v0.1.0 / v0.2.0 / v0.3.0 / v0.4.0 document to v0.5.0 (fills new
- * fields with defaults). Old keyframes (no `id`) gain one; old effects keep
- * working. Captions default to [] and new clip fields are optional, so
- * old documents validate unchanged.
+ * Migrate a v0.1.0 / v0.2.0 / v0.3.0 / v0.4.0 / v0.5.0 / v0.6.0 / v0.7.0
+ * document to v0.8.0 (fills new fields with defaults). Old keyframes
+ * (no `id`) gain one; old effects keep working. Captions default to []
+ * and new clip fields are optional, so old documents validate unchanged.
  */
 export function migrateProject(data: unknown): VidoraProject {
   const raw = data as Record<string, unknown>;
@@ -634,7 +654,7 @@ export function migrateProject(data: unknown): VidoraProject {
     };
   });
   const parsed = projectSchema.parse({ ...raw, tracks: migratedTracks });
-  return { ...parsed, version: '0.5.0' };
+  return { ...parsed, version: '0.8.0' };
 }
 
 /** Resolution for an aspect ratio, given a custom size when ratio is 'custom'. */
@@ -736,6 +756,18 @@ export const SAMPLE_PROJECT: VidoraProject = {
           rotation: 0,
           scale: 1,
           smoothSlowMo: false,
+          aiLowLight: 0,
+          aiRetouch: 0,
+          aiRelight: 0,
+          aiBgRemove: false,
+          aiBgThreshold: 25,
+          aiStabilize: false,
+          aiStabilization: [],
+          aiStabilizeSmooth: 0.6,
+          aiStabilizeZoom: 1.05,
+          aiMovement: 'none',
+          aiOpticalFlow: false,
+          aiVocalMode: 'none',
           sourceDuration: 10,
           sourceStart: 0,
           speed: 1,
@@ -768,5 +800,5 @@ export const SAMPLE_PROJECT: VidoraProject = {
     },
   ],
   updatedAt: '2026-11-22T00:00:00.000Z',
-  version: '0.5.0',
+  version: '0.8.0',
 };

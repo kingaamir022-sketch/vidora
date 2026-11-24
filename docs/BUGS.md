@@ -133,10 +133,6 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
 
 ## Deferred (not bugs — scheduled engine work, honestly labelled in the UI)
 
-- BUG-D1 | Phase 2 → Phase 7 | Colour | DEFERRED — The Stabilize
-  toggle is now visible in the Cleanup panel (v0.3.2, matching
-  CapCut's Pro toggle) but remains a stored flag only; the UI says the
-  real motion stabilization needs whole-clip motion analysis (Phase 7).
 - BUG-D2 | Phase 2 → Phase 8 | Colour | DEFERRED — Lens correction
   is a stored flag only; the UI labels it "(deferred)". Needs a
   camera/lens profile (Phase 8). Not found in CapCut Web either.
@@ -260,8 +256,6 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   canvas capture only: no audio mix, no 4K, no H.265/VP9 choice, no
   bitrate control, no GIF, no background queue. Stated in the panel
   and in SPEC.md.
-- BUG-D6 | Phase 2 → Phase 7 | Speed | DEFERRED — Optical-flow slow
-  motion needs a model/GPU path (Phase 7).
 - BUG-D7 | Phase 1 → Phase 2 retrofit | Timeline | FIXED 2026-11-22 —
   Audio waveform on timeline clips: implemented in the parity retrofit.
   `probeAudioPeaks` decodes imported audio with `AudioContext` and
@@ -270,28 +264,9 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   `TimelineShell` draws the peaks as white bars inside audio clips.
   Decode failure is tolerated (clip renders without a waveform).
   Unit-tested (`src/test/media.test.ts`).
-- BUG-D8 | Phase 3 → Phase 7 | Captions | DEFERRED — Real speech-to-text
-  (Whisper) is not in this build: Auto captions times a transcript the
-  user pastes (words spread evenly, word-level timing). The panel says
-  so; the language picker is a UI choice for now.
-- BUG-D9 | Phase 3 → Phase 7 | Motion tracking | DEFERRED — Automatic
-  motion detection is not in this build: Vidora has manual track points
-  (click the preview at different playhead times). The reference has
-  Camera tracking (Pro, Smart tools, follows a selected subject — full
-  walkthrough 2026-11-23); the panel says automatic detection is Phase 7.
-- BUG-D10 | Phase 3 → Phase 4/7 | Text-to-speech | DEFERRED — Narration
-  clips speak during preview only (browser speechSynthesis); rendered
-  TTS audio in export needs an offline TTS engine. The panel says so.
 - BUG-D11 | Phase 3 | Captions | DEFERRED — .ass caption files are not
   imported (no parser in this build); .srt/.vtt import and export work.
   The panel says so plainly.
-- BUG-D12 | Phase 4 → Phase 7 | Audio | DEFERRED — Vocal isolation /
-  stem separation (splitting a mixed track into voice and music) needs
-  an ML model and is NOT in this build; it is not faked. Noise
-  reduction in the inspector is only a high-pass filter (low rumble)
-  plus a compressor (evens out loud peaks) — the panel says plainly
-  that it does not remove background voices or room noise, and that
-  real voice isolation is Phase 7.
 - BUG-P3-003 | Phase 3 audit harness | FIXED 2026-11-23 (main-agent
   verification) — `npm run audit:phase3` crashed on a fresh machine:
   it wrote its SRT fixture into /tmp/audit-media without creating the
@@ -300,3 +275,93 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   Fix: the script now creates /tmp/audit-media itself and regenerates
   test.mp4 with ffmpeg (2s test pattern) when missing. Audit re-ran
   31/31 PASS after the fix.
+- BUG-D1 | Phase 2 → Phase 7 | Colour | FIXED 2026-11-24 (v0.8.0) —
+  Real translation-only stabilization: radix-2 FFT phase correlation
+  on sampled frames gives a per-frame camera translation, the
+  trajectory is low-pass smoothed, and the inverse translation is
+  applied in the preview (zoom-in hides the borders). Honest scope:
+  rotation, scale and rolling-shutter wobble are NOT corrected and the
+  panel says so. Verified by `src/test/phase7.test.ts` (FFT round-trip,
+  phase correlation recovers a known +5/+3 shift, growing camera path)
+  and `npm run audit:phase7` 61/61 (shaky fixture analysed, toggle on).
+- BUG-D6 | Phase 2 → Phase 7 | Speed | FIXED 2026-11-24 (v0.8.0) —
+  Real optical-flow slow motion: block-matching motion estimation
+  (16×16 blocks, sum-of-absolute-differences search) + motion-
+  compensated warp renders a new 2× frame-rate copy. Honest scope:
+  it is block matching, not a neural flow model; fast/complex motion
+  can smear, and the preview slow-mo itself stays frame-blend (the
+  panel says so). Verified by phase7 tests (translating-square midpoint
+  + motion-vector direction) and the Phase 7 audit (rendered copy
+  lands on the timeline).
+- BUG-D8 | Phase 3 → Phase 7 | Captions | FIXED 2026-11-24 (v0.8.0) —
+  Real speech-to-text now exists in two honest paths: in-app dictation
+  via browser speech recognition (microphone — the browser cannot
+  listen to a clip file, and the panel says so) and the offline Vosk
+  pipeline `tools/transcribe.py` (vosk-model-small-en-us-0.15,
+  Apache-2.0, CPU-only) that transcribes a file to word-timed SRT +
+  `.words.json`, importable with the existing SRT import. Honest scope:
+  Whisper itself is NOT used — Vosk small model instead (it hears
+  "Vidora" as "vid aura"; the pipeline loop test avoids that word).
+  The pasted-transcript path remains. Verified by the Piper→Vosk loop
+  test (`tools/test_pipeline.sh` → "PIPELINE LOOP OK") and the Phase 7
+  audit (both paths named in the panel).
+- BUG-D9 | Phase 3 → Phase 7 | Motion tracking | FIXED 2026-11-24
+  (v0.8.0) — Automatic tracking: normalised cross-correlation template
+  matching follows the subject frame by frame from one click (or the
+  frame centre) and writes the same `tracking.points` the manual tool
+  uses, so points stay editable by hand. Honest scope: fast motion,
+  occlusion or a changing shape can lose the lock — points stop at the
+  last good match and the panel says at which time. Verified by phase7
+  tests (dot tracked across 5 frames) and the Phase 7 audit (Track
+  button correctly disabled until a target clip is chosen).
+- BUG-D10 | Phase 3 → Phase 4/7 | Text-to-speech | FIXED 2026-11-24
+  (v0.8.0, partial — see D5) — Real TTS audio now exists: the offline
+  Piper pipeline `tools/narrate.py` (en_US-lessac-medium, CC-BY,
+  22050 Hz WAV) renders narration to a real audio clip on the timeline
+  (volume, fades, EQ, ducking all work). Remaining gap: rendered export
+  still has no audio mix at all (BUG-D5, Phase 8), so the WAV plays on
+  the timeline and in preview but is not yet in exported files. The
+  panel says both parts plainly.
+- BUG-D12 | Phase 4 → Phase 7 | Audio | FIXED 2026-11-24 (v0.8.0) —
+  Real vocal isolation: centre-channel (mid/side) separation — "Isolate
+  voice" renders the mid stem, "Remove voice" renders the side stem,
+  both as new WAV audio clips. Honest scope: this is the standard
+  karaoke/centre-extraction technique, NOT ML stem separation; it works
+  best on centre-panned vocals and the panel says so. Verified by
+  phase7 tests (centre 440 Hz vs side 880 Hz split exactly) and the
+  Phase 7 audit (voice stem renders as a new clip).
+- BUG-P7-001 | Phase 7 | Stabilization | FIXED 2026-11-24 — The
+  phase-correlation cross-power spectrum used Fa·conj(Fb), which peaks
+  at the NEGATIVE shift (test: expected +5, got −5). Fix: conj(Fa)·Fb
+  (see the comment in `phaseCorrelation`); the returned (dx, dy) is now
+  the shift of B's content relative to A. Unit-tested.
+- BUG-P7-002 | Phase 7 | Stabilization | FIXED 2026-11-24 — The
+  correlation peak was divided by n a second time (`best / n`) even
+  though the inverse FFT already scales by 1/n, so the peak read
+  ~0.0005 and fell below the 0.05 motion threshold — stabilization
+  never detected any motion. Fix: return `best` directly (peak 0.96 on
+  the dot-pattern test). Unit-tested.
+- BUG-P7-003 | Phase 7 | Stabilization | FIXED 2026-11-24 — The
+  compositor drew the stabilized frame with `sx + dx`, which shifts
+  the image the WRONG way: moving the image right by c means the source
+  window must start c to the LEFT. Fix: `sx - dx` / `sy - dy` with the
+  geometry noted in the comment.
+- BUG-P7-004 | Phase 7 | Stabilization | FIXED 2026-11-24 — The
+  panel's "average shake" was the mean |path| (distance from frame 0),
+  so a smooth pan read as huge shake. Fix: mean |raw − smoothed|
+  deviation — a smooth pan now correctly reads ~0 shake.
+- BUG-P7-005 | Phase 7 audit harness | FIXED 2026-11-24 — The audit
+  expected 0–100 values on the Enhance sliders (range is 0–1) and a
+  3-clip script project (3 scenes build 3 image clips + 3 text overlays
+  = 6 clips; narration is a TTS flag on the text clips, not a separate
+  audio clip). Fixed the audit expectations; the app was correct.
+- BUG-P7-006 | Phase 7 audit harness | FIXED 2026-11-24 — The
+  Stabilize and Remove-background checkboxes had no `id`, so the audit
+  could not address them. Added `id="ai-stabilize"` and
+  `id="ai-bgremove"` to `AIToolsPanel.tsx`.
+- BUG-P7-007 | Phase 7 behaviour card | FIXED 2026-11-24 — K-STT.md
+  said the in-app path was "browser speech recognition on the selected
+  clip" — wrong: `webkitSpeechRecognition` is microphone-based only and
+  cannot listen to a clip file. Card corrected: dictation (mic) +
+  the Vosk script for file transcription; the panel already said this
+  plainly.

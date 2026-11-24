@@ -112,15 +112,30 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | AI stock clips (O-AI-CLIPS) | ~ | ~ | ~ | — | ~ | `lib/aiLibrary.ts` (100 MP4 clips, 1080p, 6 s, posters) · O-VIDEO-STUDIO (card grid with durations observed) — grid shape matched, clips are Vidora Original procedural renders | ASSUMED |
 | AI images / textures / frames / stickers (O-AI-IMAGES) | ~ | ~ | ~ | — | ~ | `lib/aiLibrary.ts` (40 textures, 20 frames, 50 transparent PNG stickers) · O-DESIGN-STUDIO (Inspiration grid + filter chips observed) — grid shape matched, artwork is Vidora Original | ASSUMED |
 | AI narration voices (O-AI-VOICES) | ~ | ~ | ~ | — | ~ | `lib/voices.ts` (16 presets: 4 languages x 4 roles, browser speechSynthesis) · FULL-WALKTHROUGH-2026-11-23.md (Text inspector TTS section) — TTS structure observed, voice catalogue is Vidora's own | ASSUMED |
+| AI captions — speech to text (K-STT) | ~ | ~ | ~ | — | ~ | `components/AIToolsPanel.tsx` + `tools/transcribe.py` (Vosk offline pipeline → word-timed SRT/JSON) + mic dictation via browser speech recognition — the reference auto-caption flow (language pick → generate → timed cues) is matched; the engines are Vidora's own, honestly labelled (Whisper NOT used; dictation hears the mic, not the clip) | ASSUMED |
+| Narration render — TTS audio (K-TTS) | ~ | ~ | ~ | — | ~ | `tools/narrate.py` (Piper, MIT, en_US-lessac-medium, 22050 Hz WAV) renders narration to a real audio clip; in-app preview still uses browser speechSynthesis — the reference TTS flow (pick voice → narration clip) is matched; the render engine is Vidora's own | ASSUMED |
+| Smart Cut — silence & filler removal (K-SMARTCUT) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (RMS per 50 ms + filler-word ranges) + `AIToolsPanel.tsx` (analyse → review → cut, nothing deleted without confirmation) — the reference flow (analyse → review → cut) is the standard shape; thresholds and the filler list are Vidora's own | ASSUMED |
+| Auto Reframe (K-REFRAME) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (motion + saliency heuristic, per-second crop windows) + `compositor.ts` (crop applied in preview) — the reference flow (pick ratio → subject stays framed) is matched; the subject finder is Vidora's own heuristic, honestly labelled | ASSUMED |
+| Background Removal (K-BGREMOVE) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (edge flood-fill segmentation, feathered alpha mask) + `compositor.ts` — the reference flow (toggle → subject isolated) is matched; the engine is a heuristic, not an ML person model, and the panel says so | ASSUMED |
+| Camera Tracking — automatic (K-TRACK) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (NCC template matching, writes the same `tracking.points` as manual tracking) — the reference flow (pick subject → camera follows) is matched; the tracker is Vidora's own, honestly labelled (fast motion/occlusion can lose the lock) | ASSUMED |
+| Stabilize — real motion correction (K-STABILIZE) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (radix-2 FFT phase correlation, smoothed trajectory) + `compositor.ts` (inverse translate + zoom) — the reference flow (toggle → steadier footage) is matched; the engine is Vidora's own phase-correlation stabiliser, translation-only (rotation/scale NOT corrected, panel says so) | ASSUMED |
+| Enhance — Low-light, Retouch, Relight (K-ENHANCE) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (gamma lift + histogram stretch; skin-tone mask + blur; local-contrast lift) live in the preview per clip — the reference flow (open tool → adjust → preview updates) is matched; the pixel engines are Vidora's own | ASSUMED |
+| AI Movement — camera moves (K-MOVEMENT) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (7 deterministic moves → ordinary scale/position keyframes) — the reference flow (pick a move → clip moves) is matched; the move paths are Vidora's own keyframe presets, no ML camera claimed | ASSUMED |
+| Optical Flow — smooth slow motion (K-OPTFLOW) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (16×16 block matching, motion-compensated warp) renders a real 2× frame-rate copy — the reference flow (smooth slow-mo → smoother motion) is matched; the estimator is Vidora's own block matcher, honestly labelled (not a neural flow model) | ASSUMED |
+| Vocal Isolation — stems (K-VOCAL) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (centre-channel mid/side split) renders real WAV stems — no vocal-isolation UI was observed in the reference; the method is the standard karaoke/centre-extraction technique, honestly labelled (not ML stem separation) | ASSUMED |
+| Auto Highlights (K-HIGHLIGHTS) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (2-second segments scored by loudness + motion + speech) + reel builder / keep-only — the reference flow (analyse → best moments → reel) is the standard shape; the scoring weights are Vidora's own | ASSUMED |
+| Script-to-Video (K-SCRIPT) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (script → scenes) + Phase 6 `lib/aiGenerate.ts` visuals + text overlays with narration cues — the reference flow (write → scenes → video) is the standard shape; the assembly is Vidora's own composition of its generators | ASSUMED |
+| Upscale to 4K (K-UPSCALE) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (canvas resample + unsharp-mask sharpen) renders a 2K/4K copy via MediaRecorder — the reference flow (upscale → 4K file) is matched; the engine is Vidora's own resample, honestly labelled (no detail recovery, not AI upscaling) | ASSUMED |
+| AI Providers (K-PROVIDERS) | ~ | ~ | ~ | — | ~ | `lib/aiProviders.ts` (Local provider ready; OpenAI/Stability/Replicate stubs, not configured) — no reference provider UI was observed; the adapter shape is Vidora's own, no cloud call is made | ASSUMED |
 
-## Parity score (correction round v0.3.2 + signed-in export check 2026-11-23 + Phase 3 v0.4.0 + Phase 4 v0.5.0 + Phase 5 v0.6.0 + Phase 6 v0.7.0)
+## Parity score (correction round v0.3.2 + signed-in export check 2026-11-23 + Phase 3 v0.4.0 + Phase 4 v0.5.0 + Phase 5 v0.6.0 + Phase 6 v0.7.0 + Phase 7 v0.8.0)
 
-- **MATCH: 44 / 66**
-- **ASSUMED: 19 / 66** — J-AUDIO, J-MIXER, J-VOICE, J-BEAT, J-VOICEOVER, N-GLSL, N-FONTS, N-TEXTANIM, N-CAPTIONPRESETS, N-TEMPLATES, N-MUSIC, N-BACKGROUNDS, N-ASSETS, O-AI-LIBRARY, O-AI-GENERATE, O-AI-MUSIC, O-AI-CLIPS, O-AI-IMAGES, O-AI-VOICES
-- **DIFF-FIXING: 0 / 66**
-- **INTENTIONAL-DIFF: 3 / 66** — B-MARKER, B-GROUP, F-WHEELS (spec-required extras CapCut Web lacks; awaiting desktop screenshots)
+- **MATCH: 44 / 81**
+- **ASSUMED: 34 / 81** — J-AUDIO, J-MIXER, J-VOICE, J-BEAT, J-VOICEOVER, N-GLSL, N-FONTS, N-TEXTANIM, N-CAPTIONPRESETS, N-TEMPLATES, N-MUSIC, N-BACKGROUNDS, N-ASSETS, O-AI-LIBRARY, O-AI-GENERATE, O-AI-MUSIC, O-AI-CLIPS, O-AI-IMAGES, O-AI-VOICES, K-STT, K-TTS, K-SMARTCUT, K-REFRAME, K-BGREMOVE, K-TRACK, K-STABILIZE, K-ENHANCE, K-MOVEMENT, K-OPTFLOW, K-VOCAL, K-HIGHLIGHTS, K-SCRIPT, K-UPSCALE, K-PROVIDERS
+- **DIFF-FIXING: 0 / 81**
+- **INTENTIONAL-DIFF: 3 / 81** — B-MARKER, B-GROUP, F-WHEELS (spec-required extras CapCut Web lacks; awaiting desktop screenshots)
 - **Gate result: PASS** — every Phase 0–2 feature is MATCH, ASSUMED or INTENTIONAL-DIFF,
-  `npm run build` is green (96 modules), `npm test` is 228/228, and the
+  `npm run build` is green (99 modules), `npm test` is 256/256, and the
   Playwright self-audits pass: Phase 2 (`audit/phase2/AUDIT-REPORT.md`)
   40/40 checks with 0 open bugs (29 screenshots in `audit/phase2/<ID>/`,
   layout re-measured at 1440×900 with 0px drift), Phase 3
@@ -131,32 +146,36 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
   (`audit/phase5/AUDIT-REPORT.md`) 38/38 checks with 0 open bugs
   (12 card folders with screenshots in `audit/phase5/<ID>/`), Phase 6
   (`audit/phase6/AUDIT-REPORT.md`) 32/32 checks with 0 open bugs
-  (6 card folders with screenshots in `audit/phase6/<ID>/`). The Phase 2
+  (6 card folders with screenshots in `audit/phase6/<ID>/`), Phase 7
+  (`audit/phase7/AUDIT-REPORT.md`) 61/61 checks with 0 open bugs
+  (15 card folders with screenshots in `audit/phase7/<ID>/`). The Phase 2
   audit suite predates v0.3.2; the F-BLEND row is covered by the new Vitest tests
   (blend mapping, live compositing path) and the updated F-WHEELS
   audit screenshots.
 
 ## What the score does not cover
 
-- Deferred engine work (real motion stabilization → Phase 7, lens
-  correction → Phase 8, optical flow → Phase 7, 4K/H.265 export → Phase 8)
-  is honestly labelled in the UI and logged in `docs/BUGS.md` as deferred,
-  not counted as a parity failure. Pitch-preserving speed playback is DONE
-  in Phase 4 (browser `preservesPitch` + Web Audio voice shifter). Blend
-  modes now apply live in the preview (v0.3.2), so they no longer belong
-  in this list.
-- Tabs whose phases have not started (AI avatar → Phase 7) open an
-  honest placeholder panel; they are not scored as features here. The
-  AI Tools tab is implemented in v0.7.0 (AI Library, O rows above) and
-  scored above; Phase 7 adds background removal, camera tracking,
-  auto captions (Whisper), auto tracking and the remaining AI tools.
+- Deferred engine work (lens correction → Phase 8, 4K/H.265 export →
+  Phase 8) is honestly labelled in the UI and logged in `docs/BUGS.md`
+  as deferred, not counted as a parity failure. Real motion
+  stabilization and optical flow are DONE in Phase 7 (v0.8.0), as are
+  auto captions, auto tracking, vocal isolation and TTS audio — see the
+  K rows above. Pitch-preserving speed playback is DONE in Phase 4
+  (browser `preservesPitch` + Web Audio voice shifter). Blend modes now
+  apply live in the preview (v0.3.2), so they no longer belong in this
+  list.
+- The AI avatar tab (K-AI-AVATAR) is reference evidence only — NOT built;
+  Vidora's 11th tab is "AI Tools" and it now opens the full AI Tools
+  panel (AI Library sub-tabs + the 15 K tools). The avatar wizard is not
+  scored as a feature here. The AI Tools tab is implemented in v0.7.0
+  (AI Library, O rows above) and extended in v0.8.0 (K rows above).
   Templates tab is implemented in v0.6.0 (25 original layouts, N-TEMPLATES)
   and scored above; Phase 8 adds replaceable media slots + sharing.
   Audio (Phase 4) is implemented in v0.5.0 and scored above (J rows).
   Text/Stickers/Captions (Phase 3) are implemented in v0.4.0 — their
   behaviour cards carry the status (MATCH / ASSUMED /
   UNKNOWN) and the Phase 3 audit covers them; they are not yet rows in
-  this matrix, which now scores Phases 0–2 + Phase 4 + Phase 5 + Phase 6 (66 rows).
+  this matrix, which now scores Phases 0–2 + Phase 4 + Phase 5 + Phase 6 + Phase 7 (81 rows).
 - Light-theme editor styling is Phase 9; the dashboard toggle exists
   and the editor remains dark until then.
 - CapCut Web's left rail differs from desktop (Elements/Transcript/

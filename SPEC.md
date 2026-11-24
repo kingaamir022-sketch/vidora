@@ -1,6 +1,6 @@
 # Vidora — SPEC & Checklist
 
-**App:** Vidora — "Create. Cut. Shine." · **Current version:** 0.7.0 (Phase 6 — AI-generated content library)
+**App:** Vidora — "Create. Cut. Shine." · **Current version:** 0.8.0 (Phase 7 — AI tools)
 **Status legend:** DONE = shipped and verified in this repo · PENDING = not started
 · IN PROGRESS = under active work. Nothing is skipped silently: anything
 postponed is listed here.
@@ -42,7 +42,7 @@ postponed is listed here.
 ### C. Speed
 - [x] Constant 0.1x–100x, speed presets (0.25/0.5/1/1.5/2/4/8x); timeline length = sourceDuration / speed (tested)
 - [ ] Speed curve (bezier points + presets) — PENDING, moved to Phase 2 scope (keyframes engine); not silently skipped, listed here
-- [ ] Optical-flow slow motion — PENDING (needs model/GPU work, Phase 7)
+- [x] Optical-flow slow motion — DONE (Phase 7, v0.8.0): real block-matching motion estimation (16×16 blocks, SAD search) + motion-compensated warp renders a new 2× frame-rate copy; the preview slow-mo itself stays frame-blend and the panel says so
 - [x] Pitch preservation — DONE in Phase 4 (v0.5.0): the audio engine sets `preservesPitch` on every media element (browser pitch-preserving rate control) and the Web Audio modulated-delay pitch shifter drives the voice-changer presets. The Speed section note describes the real behaviour.
 
 ### Core export (Phase 1 scope)
@@ -66,7 +66,7 @@ postponed is listed here.
 - [x] Curves: working RGB curves editor (click to add points, per-channel R/G/B, reset); HSL (hue/saturation/lightness); colour wheels (lift/gamma/gain, per-channel)
 - [x] Scopes (waveform/vectorscope/histogram): real, drawn from the current preview frame via "Capture frame scopes" (+ avg luma, clipped black/white %)
 - [x] Blend modes: stored per clip (normal/multiply/screen/overlay/darken/lighten/soft-light/hard-light/difference); applied in the full export render (Phase 8) — the panel states this, the preview composites normally
-- [x] Denoise: real light spatial soften in the preview (blur amount). Stabilization and lens correction: stored as flags ONLY, honestly labelled deferred in the UI (stabilization needs motion analysis, Phase 7; lens correction needs a camera profile, Phase 8) — never faked
+- [x] Denoise: real light spatial soften in the preview (blur amount). Stabilization: REAL in Phase 7 (v0.8.0) — translation-only phase-correlation motion correction, applied in the preview with a zoom to hide borders (rotation/scale/rolling-shutter NOT corrected, panel says so). Lens correction: stored as a flag ONLY, honestly labelled deferred in the UI (needs a camera profile, Phase 8) — never faked
 
 ### G. Masks & Compositing
 - [x] Linear, mirror, circle, rectangle, heart, star, custom pen mask (click points on the preview in pen mode); feather, invert, mask keyframes (maskFeather property)
@@ -105,13 +105,13 @@ User rules added 2026-11-22 19:17 PKT (Rule 12 Autonomous Parity Mode, Rule 13 B
 
 ### H. Text & Graphics
 - [x] Text tool (system fonts + custom upload via FontFace API), size 8–200, color, gradient fill, stroke, shadow, glow, background box; alignment, line spacing, text templates (14 original presets), animated text (In/Out/Loop)
-- [x] Stickers (224 original procedural SVG: 28 designs × 8 palettes), shapes (10 original SVG + fill colour), drawing/pen tool (freehand strokes on the preview), motion tracking (manual track points; automatic detection is Phase 7 — reference has Camera tracking, Pro, in Smart tools)
+- [x] Stickers (224 original procedural SVG: 28 designs × 8 palettes), shapes (10 original SVG + fill colour), drawing/pen tool (freehand strokes on the preview), motion tracking (manual track points + automatic NCC template tracking in Phase 7, v0.8.0 — click the subject once, points stay editable by hand)
 - [x] Behaviour cards updated from the full signed-in CapCut Web walkthrough 2026-11-23 (07:16–07:28 PKT): Text tab has a third sub-tab "AI text FX" (Vidora: honest Phase 7 note); H-DRAW and H-TRACK/H-TRACK evidence resolved as noted in the cards
 
 ### I. Captions & Speech
-- [x] Auto captions (honest substitute: times a pasted transcript with word-level highlight; real Whisper STT is Phase 7), 8 original caption style presets, Auto lyrics noted (reference: recognize lyrics in songs)
+- [x] Auto captions (real speech-to-text in Phase 7, v0.8.0: mic dictation via browser speech recognition + offline Vosk pipeline `tools/transcribe.py` → word-timed SRT/JSON; Whisper itself is NOT used and the panel says so), 8 original caption style presets, Auto lyrics noted (reference: recognize lyrics in songs)
 - [x] SRT/VTT import/export (real parser, readable errors, round-trip tested); .ass NOT supported (panel says so); manual translation per cue (machine translation is Phase 7)
-- [x] Text-to-speech (browser speechSynthesis: voice, rate, pitch, preview, narration clips that speak during preview; rendered TTS audio in export is Phase 7), text-based editing via the in-panel transcript (click a word to seek; reference Web has a separate Transcript tab — desktop has none)
+- [x] Text-to-speech (browser speechSynthesis: voice, rate, pitch, preview, narration clips that speak during preview; rendered TTS audio is real in Phase 7, v0.8.0 — offline Piper pipeline `tools/narrate.py` renders a WAV that imports as a normal audio clip; the WAV is not yet in exported files because export has no audio mix — Phase 8), text-based editing via the in-panel transcript (click a word to seek; reference Web has a separate Transcript tab — desktop has none)
 
 ### Phase 3 verification
 - [x] `npm run build` green (80 modules), `npm test` 147/147, Phase 3 self-audit `npm run audit:phase3` **31/31, 0 open bugs** (`audit/phase3/AUDIT-REPORT.md`, 14 card folders with screenshots)
@@ -127,7 +127,7 @@ User rules added 2026-11-22 19:17 PKT (Rule 12 Autonomous Parity Mode, Rule 13 B
 - [x] Audio engine (`src/lib/audioEngine.ts`): one AudioContext; every sounding clip (audio clips + video clips' embedded audio) routed through per-clip chains (pitch shifter for voice presets, 3-band EQ, bandpass, noise reduction, echo/robot AM) with per-tick effective gain (fades, keyframes, ducking, mute/solo, master); falls back to plain element volume when Web Audio is unavailable; pitch-preserving speed via browser `preservesPitch`
 - [x] Beat detection (energy onsets, BPM estimate, labelled as an estimate) with Add beat markers + Cut at beats (multi-split)
 - [x] Voiceover recording (getUserMedia + MediaRecorder, tested with the fake media device) with a recorded-seconds fallback for webm files whose duration cannot be probed (BUG-P4-001)
-- [ ] Vocal isolation / stem separation — DEFERRED to Phase 7 (needs an ML model; not faked; see `docs/BUGS.md` BUG-D12)
+- [x] Vocal isolation / stem separation — DONE in Phase 7 (v0.8.0): real centre-channel (mid/side) split — "Isolate voice" renders the mid stem, "Remove voice" renders the side stem, both as WAV clips. NOT ML stem separation and the panel says so (works best on centre-panned vocals).
 
 ### Phase 4 verification
 - [x] `npm run build` green (84 modules), `npm test` 184/184, Phase 4 self-audit `npm run audit:phase4` **31/31, 0 open bugs** (`audit/phase4/AUDIT-REPORT.md`, 8 card folders with screenshots)
@@ -161,7 +161,7 @@ User rules added 2026-11-22 19:17 PKT (Rule 12 Autonomous Parity Mode, Rule 13 B
 - [x] 200+ original SFX — 100 AI SFX + 100 Phase 5 procedural SFX = 200 total (`AI_SFX_TOTAL`); AI SFX in `public/ai-library/sfx/`, 20 families × 5
 - [x] 100+ original stock clips (5–10s, 1080p, no real faces) — 100 MP4 clips, 1920×1080, 6 s, 30 fps in `public/ai-library/clips/` (+ JPG posters), 20 procedural scenes × 5 variants; no faces, no real footage
 - [x] Images, textures, frames, transparent-PNG stickers — 110 PNG images in `public/ai-library/images/`: 40 textures, 20 frames, 50 stickers (white halo, transparent background)
-- [x] TTS voices (English, Urdu, Hindi, Arabic) — 16 voice presets (4 languages × 4 roles: Narrator, Warm, Energetic, Calm) in `src/lib/voices.ts`, browser speechSynthesis with a note where no matching system voice exists; narration clips speak during preview (rendered TTS audio in export is Phase 7)
+- [x] TTS voices (English, Urdu, Hindi, Arabic) — 16 voice presets (4 languages × 4 roles: Narrator, Warm, Energetic, Calm) in `src/lib/voices.ts`, browser speechSynthesis with a note where no matching system voice exists; narration clips speak during preview (rendered TTS audio is real in Phase 7, v0.8.0 — Piper pipeline `tools/narrate.py`)
 - [x] Pipeline: `/generation/prompts/*.json`, provider adapters, quality filter, resume support, GPU-safe mode, provenance manifest — `generation/make_prompts.py` (deterministic, seed 20261123, 410 prompts), `generation/synth.py` + `render_music.py` (numpy synthesis, MP3 via ffmpeg), `render_clips.py` (PIL painters + ffmpeg fast motion graph), `render_sfx.py`, `render_images.py`, `quality_filter.py` (duration/RMS/peak/silence/BPM autocorrelation; `generation/quality-report.json`), `providers/local.py` (only the local provider exists — external providers not configured, never called), `render_all.py` (orchestrator, resume via `generation/state.json`, `--gpu-safe` no-op CPU-only), `assets/ai-manifest.json` (100/100/100/110)
 - [x] STRICT: no existing songs/melodies/lyrics, no artist/brand names, no logos, characters or real people's likeness in prompts — enforced by prompt generator + test (`src/test/phase6.test.ts` originality checks)
 - [x] AI Library panel — `src/components/AILibraryPanel.tsx` (AI Tools tab): Generate / Music / Clips / Images / Voices sub-tabs, search + chips, play previews, "+ Add" to timeline, missing-file note when the AI library is not installed; in-browser generation via `src/lib/aiGenerate.ts` (seeded Web Audio music, canvas PNG image, canvas-capture WebM clip, dialogue scene) and `src/lib/audio.ts` (`renderPatternTrack` fallback: if the MP3 is missing, the same pattern is rendered live with Web Audio); `src/lib/aiLibrary.ts` catalog + HEAD probes, `src/lib/voices.ts`, `src/store/projectStore.ts` `addAiMediaClip`
@@ -172,12 +172,16 @@ User rules added 2026-11-22 19:17 PKT (Rule 12 Autonomous Parity Mode, Rule 13 B
 - [x] Quality filter `python3 generation/quality_filter.py` **all passed** (music 100, SFX 100, clips 100, images 110) — after fixing 5 issues it caught (see `docs/BUGS.md` BUG-P6-005..009): Acoustic/Jazz micro-silence (pad bed added), Jazz BPM ambiguity (break-pattern pulse fix), SFX MP3 overshoot (peak 0.80), static pulse motion (animated crop), vignette alpha (solid rim). `npm run build:assets` enforces the Phase 6 floors + validates the AI manifest (1,089 entries)
 - [x] Parity score — **MATCH 44 / ASSUMED 19 / INTENTIONAL-DIFF 3 / total 66** — 6 new O-* rows added to `docs/PARITY.md` (all ASSUMED: O-AI-LIBRARY, O-AI-GENERATE, O-AI-MUSIC, O-AI-CLIPS, O-AI-IMAGES, O-AI-VOICES — the reference AI flows are cloud pages never fully observed)
 
-## Phase 7 — Section K (AI Tools) — PENDING
+## Phase 7 — Section K (AI Tools) — DONE (v0.8.0, 2026-11-24)
 
-- [ ] Background removal (no green screen), auto reframe
-- [ ] Smart cut (silence and filler-word removal), upscaler to 4K
-- [ ] Low-light enhance, retouch, auto highlights, script-to-video
-- [ ] AI image generation (provider adapters with free/open-source alternatives)
+- [x] Background removal (heuristic edge flood-fill segmentation, feathered alpha mask, live in preview; NOT an ML person model — the panel says so), auto reframe (motion + saliency heuristic, per-second crop windows, 9:16/16:9/1:1/4:5)
+- [x] Smart cut (real RMS silence detection + filler-word ranges from captions, review before cutting, ripple-delete), upscaler to 4K (honest resample + sharpen, NOT AI detail recovery — the panel says so)
+- [x] Low-light enhance, retouch (skin-tone mask + blur), relight (local-contrast lift), auto highlights (2-second segments scored by loudness + motion + speech → reel or keep-only), script-to-video (one line = one scene, Phase 6 generator visuals + text overlays + narration cues)
+- [x] AI image generation (provider adapters with free/open-source alternatives): `src/lib/aiProviders.ts` — Local provider ready (Phase 6 in-browser generators); OpenAI/Stability/Replicate stubs, not configured, no API keys stored, no cloud call made (cloud settings are Phase 9)
+- [x] AI captions (Vosk offline pipeline + mic dictation, word-timed SRT/JSON), text-to-speech render (Piper offline pipeline → WAV audio clip), voice changer (Phase 4, 8 presets), video studio / long video to shorts (Auto Highlights reel + Script-to-Video)
+- [x] Real stabilization (FFT phase correlation, translation-only), real optical flow (block matching, 2× render), automatic camera tracking (NCC template matching), vocal isolation (centre-channel stems)
+- [x] Behaviour cards: 15 new K cards (K-STT, K-TTS, K-SMARTCUT, K-REFRAME, K-BGREMOVE, K-TRACK, K-STABILIZE, K-ENHANCE, K-MOVEMENT, K-OPTFLOW, K-VOCAL, K-HIGHLIGHTS, K-SCRIPT, K-UPSCALE, K-PROVIDERS) + K-AI-AVATAR reference-only card (avatar wizard NOT built — desktop screenshot evidence only). Parity score now **MATCH 44 / ASSUMED 34 / INTENTIONAL-DIFF 3 / total 81**.
+- [x] Offline pipelines under `tools/` (Vosk `transcribe.py`, Piper `narrate.py`, `download-models.sh`, `test_pipeline.sh`, `README.md`; models download-on-demand, NOT in the GitHub snapshot or the Drive zip). Verification: build 99 modules, tests 256/256, Phase 7 audit 61/61, Phase 6 regression 32/32, Phase 5 regression 38/38, Phase 4 regression 31/31, 0 open bugs.
 
 ## Phase 8 — Section L (Templates, Export, Share) — PENDING
 

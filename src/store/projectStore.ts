@@ -174,6 +174,18 @@ function baseClip(type: Clip['type'], name: string, duration: number, start: num
     rotation: 0,
     scale: 1,
     smoothSlowMo: false,
+    aiLowLight: 0,
+    aiRetouch: 0,
+    aiRelight: 0,
+    aiBgRemove: false,
+    aiBgThreshold: 25,
+    aiStabilize: false,
+    aiStabilization: [],
+    aiStabilizeSmooth: 0.6,
+    aiStabilizeZoom: 1.05,
+    aiMovement: 'none',
+    aiOpticalFlow: false,
+    aiVocalMode: 'none',
     sourceDuration: duration,
     sourceStart: 0,
     speed: 1,
@@ -322,6 +334,15 @@ interface ProjectState {
    * playhead on the first free video track (overlays land over the video
    * under the playhead). */
   addAiMediaClip: (mediaId: string) => void;
+  // Phase 7 — AI tools (Section K)
+  addRenderedMedia: (blob: Blob, name: string, durationSeconds?: number) => Promise<void>;
+  smartCutRanges: (ranges: { end: number; start: number }[]) => void;
+  buildReelProject: (name: string, mediaId: string, segments: { duration: number; start: number }[]) => void;
+  buildScriptProject: (
+    name: string,
+    scenes: { duration: number; imageDataUrl: string | null; line: string }[],
+    withNarration: boolean,
+  ) => void;
   // media library
   addFolder: (name: string) => void;
   // view / misc
@@ -522,6 +543,18 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
         rotation: 0,
         scale: 1,
         smoothSlowMo: false,
+        aiLowLight: 0,
+        aiRetouch: 0,
+        aiRelight: 0,
+        aiBgRemove: false,
+        aiBgThreshold: 25,
+        aiStabilize: false,
+        aiStabilization: [],
+        aiStabilizeSmooth: 0.6,
+        aiStabilizeZoom: 1.05,
+        aiMovement: 'none',
+        aiOpticalFlow: false,
+        aiVocalMode: 'none',
         sourceDuration: duration,
         sourceStart: 0,
         speed: 1,
@@ -1206,6 +1239,121 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const clip: Clip = { ...base, mediaId: media.id, src: media.src, sourceDuration: duration };
       commit((p) => addClipToVideoTrack(p, clip));
       set({ selectedClipIds: [clip.id] });
+    },
+    // Phase 7 — AI tools (Section K)
+    addRenderedMedia: async (blob, name, durationSeconds) => {
+      const s = get();
+      if (!s.project) return;
+      const file = new File([blob], name, { type: blob.type || 'video/webm' });
+      const item = await importFile(file);
+      if (!item) return;
+      const duration = item.duration && item.duration > 0 ? item.duration : durationSeconds;
+      if (!duration || duration <= 0) return;
+      const timedItem = { ...item, duration };
+      const state = get();
+      if (!state.project) return;
+      const kind = timedItem.kind === 'audio' ? 'audio' : 'video';
+      const base = baseClip(kind, timedItem.name, timedItem.duration, state.playhead);
+      const clip: Clip = { ...base, mediaId: timedItem.id, src: timedItem.src, sourceDuration: timedItem.duration };
+      const add = kind === 'audio' ? addClipToAudioTrack : addClipToVideoTrack;
+      commit((p) => add({ ...p, media: [...p.media, timedItem] }, clip));
+      set({ selectedClipIds: [clip.id] });
+    },
+    smartCutRanges: (ranges) => {
+      const s = get();
+      if (!s.project || s.selectedClipIds.length === 0 || ranges.length === 0) return;
+      const found = findClip(s.project, s.selectedClipIds[0]);
+      if (!found) return;
+      const clip = found.clip;
+      const abs = ranges
+        .map((r) => ({ end: clip.start + r.end, start: clip.start + r.start }))
+        .filter((r) => r.end > clip.start + 0.05 && r.start < clip.start + clip.duration - 0.05)
+        .map((r) => ({ end: Math.min(clip.start + clip.duration, r.end), start: Math.max(clip.start, r.start) }));
+      if (abs.length === 0) return;
+      const edges = [...new Set(abs.flatMap((r) => [r.start, r.end]))].sort((a, b) => a - b);
+      commit((p) => {
+        let next = splitClipAtTimes(p, clip.id, edges);
+        const track = next.tracks.find((t) => t.id === clip.trackId);
+        if (!track) return next;
+        const victims = track.clips
+          .filter((c) => abs.some((r) => c.start >= r.start - 0.01 && c.start + c.duration <= r.end + 0.01))
+          .map((c) => c.id);
+        for (const id of victims) next = rippleDeleteClip(next, id);
+        return next;
+      });
+      set({ selectedClipIds: [] });
+    },
+    buildReelProject: (name, mediaId, segments) => {
+      const s = get();
+      if (!s.project) return;
+      const media = s.project.media.find((m) => m.id === mediaId);
+      if (!media || segments.length === 0) return;
+      get().createProject(name);
+      const state = get();
+      const project = state.project;
+      if (!project) return;
+      const item: MediaItem = { ...media, id: newId('media') };
+      const kind = media.kind === 'audio' ? 'audio' : 'video';
+      const track = project.tracks.find((t) => t.kind === kind);
+      if (!track) return;
+      let t = 0;
+      const clips = segments.map((seg) => {
+        const base = baseClip(kind, media.name, seg.duration, t);
+        const clip: Clip = { ...base, mediaId: item.id, src: item.src, sourceDuration: media.duration ?? seg.duration, sourceStart: seg.start, trackId: track.id };
+        t += seg.duration;
+        return clip;
+      });
+      applyProject({ ...project, media: [item], tracks: project.tracks.map((tr) => (tr.id === track.id ? { ...tr, clips } : tr)) }, false);
+      set({ playhead: 0, selectedClipIds: [] });
+    },
+    buildScriptProject: (name, scenes, withNarration) => {
+      if (scenes.length === 0) return;
+      get().createProject(name);
+      const state = get();
+      if (!state.project) return;
+      let t = 0;
+      const mediaItems: MediaItem[] = [];
+      const videoClips: Clip[] = [];
+      const textClips: Clip[] = [];
+      for (let i = 0; i < scenes.length; i++) {
+        const scene = scenes[i];
+        if (scene.imageDataUrl) {
+          const item: MediaItem = {
+            createdAt: new Date().toISOString(),
+            duration: scene.duration,
+            folderId: 'folder-all',
+            height: 1080,
+            id: newId('media'),
+            kind: 'image',
+            mime: 'image/png',
+            name: `Scene ${i + 1}`,
+            size: scene.imageDataUrl.length,
+            src: scene.imageDataUrl,
+            width: 1920,
+          };
+          mediaItems.push(item);
+          const base = baseClip('image', item.name, scene.duration, t);
+          videoClips.push({ ...base, mediaId: item.id, src: item.src, sourceDuration: scene.duration });
+        }
+        const style = defaultTextStyle(scene.line);
+        const base = baseClip('text', `Scene ${i + 1} text`, scene.duration, t);
+        textClips.push({
+          ...base,
+          text: {
+            content: scene.line,
+            style,
+            tts: withNarration ? { pitch: 1, rate: 1, voice: 'Narrator' } : null,
+          },
+        });
+        t += scene.duration;
+      }
+      commit((p) => {
+        let next: VidoraProject = { ...p, media: [...p.media, ...mediaItems] };
+        for (const c of videoClips) next = addClipToVideoTrack(next, c);
+        for (const c of textClips) next = addClipToTextTrack(next, c);
+        return next;
+      });
+      set({ playhead: 0, selectedClipIds: [] });
     },
     addMediaItem: (item) => {
       const s = get();

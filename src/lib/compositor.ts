@@ -5,6 +5,17 @@ import { renderGlslFrame } from './glsl';
 import { combinedAnimationState, valueAtKeyframes } from './keyframes';
 import { applyLutToPixels } from './lut';
 import { applyChromaKey, layoutRects, maskPath } from './masks';
+import {
+  applyAlphaMask,
+  applyLowLight,
+  applyRelight,
+  applyRetouch,
+  reframeWindowAt,
+  segmentBackground,
+  smoothTrajectory,
+  stabilizationAt,
+  type ImageFrame,
+} from './aiTools';
 
 /** Canvas compositor (Phase 2). Renders one clip frame to an offscreen
  * canvas, applying keyframes, animations, CSS effects, pixel effects,
@@ -238,6 +249,50 @@ export function renderClipFrame(
       sharpenPixels(img.data, w, h, clip.adjustment.sharpen);
     }
     ctx.putImageData(img, 0, 0);
+  }
+
+  // 5. AI tools (Phase 7, Section K): enhance pixel ops, background
+  // removal, reframe crop, stabilisation translate.
+  const needsAiPixels =
+    clip.aiLowLight > 0 || clip.aiRetouch > 0 || clip.aiRelight > 0 || clip.aiBgRemove;
+  if (needsAiPixels) {
+    const img = ctx.getImageData(0, 0, w, h);
+    const frameData: ImageFrame = { data: img.data, height: h, width: w };
+    if (clip.aiLowLight > 0) applyLowLight(img.data, clip.aiLowLight);
+    if (clip.aiRetouch > 0) applyRetouch(frameData, clip.aiRetouch);
+    if (clip.aiRelight > 0) applyRelight(frameData, clip.aiRelight);
+    if (clip.aiBgRemove) {
+      const mask = segmentBackground(frameData, clip.aiBgThreshold, 3);
+      applyAlphaMask(frameData, mask);
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+  const reframe = clip.aiReframe ? reframeWindowAt(clip.aiReframe.windows, localTime) : null;
+  const stab =
+    clip.aiStabilize && clip.aiStabilization.length > 0
+      ? stabilizationAt(clip.aiStabilization, smoothTrajectory(clip.aiStabilization), localTime, clip.aiStabilizeSmooth)
+      : null;
+  if (reframe || stab) {
+    const shifted = makeCanvas(w, h);
+    const sctx = shifted.getContext('2d');
+    if (sctx) {
+      const zoom = stab ? clip.aiStabilizeZoom : 1;
+      const sx = reframe ? reframe.x * w : 0;
+      const sy = reframe ? reframe.y * h : 0;
+      const sw = reframe ? reframe.width * w : w;
+      const sh = reframe ? reframe.height * h : h;
+      const dx = stab ? (stab.dx * w) / 128 : 0;
+      const dy = stab ? (stab.dy * h) / 64 : 0;
+      sctx.translate(w / 2, h / 2);
+      sctx.scale(zoom, zoom);
+      sctx.translate(-w / 2, -h / 2);
+      // Correction = smoothed path minus raw path = how far the image
+      // must move. Moving the image right by c means the source window
+      // starts c to the LEFT, hence sx - dx / sy - dy.
+      sctx.drawImage(frame, sx - dx, sy - dy, sw, sh, 0, 0, w, h);
+      ctx.clearRect(0, 0, w, h);
+      ctx.drawImage(shifted, 0, 0);
+    }
   }
   return frame;
 }
