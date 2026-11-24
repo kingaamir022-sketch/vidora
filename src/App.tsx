@@ -17,17 +17,23 @@ import PropertiesPanel from './components/PropertiesPanel';
 import ShortcutsPanel from './components/ShortcutsPanel';
 import TimelineShell from './components/TimelineShell';
 import TopBar from './components/TopBar';
+import SettingsDialog from './components/SettingsDialog';
+import UserGuideDialog from './components/UserGuideDialog';
+import OnboardingTour from './components/OnboardingTour';
 import { startAutosave, useProjectStore } from './store/projectStore';
 import { actionForCombo, eventToCombo } from './lib/shortcuts';
+import { isRtl } from './lib/i18n';
 
-/** Vidora Phase 1 app: dashboard <-> editor layout (SPEC Section 3) with real editing. */
+/** Vidora Phase 1 app: dashboard <-> editor layout (SPEC Section 3) with real editing. Phase 9: locale/RTL, dialogs, sidebar visibility. */
 export default function App() {
   const view = useProjectStore((s) => s.view);
   const theme = useProjectStore((s) => s.theme);
+  const locale = useProjectStore((s) => s.locale);
   const activeTab = useProjectStore((s) => s.activeTab);
   const presentMode = useProjectStore((s) => s.presentMode);
   const setPresentMode = useProjectStore((s) => s.setPresentMode);
   const setPlaying = useProjectStore((s) => s.setPlaying);
+  const showSidebar = useProjectStore((s) => s.showSidebar);
 
   useEffect(() => startAutosave(), []);
 
@@ -43,6 +49,15 @@ export default function App() {
         return;
       }
       const s = useProjectStore.getState();
+      // Phase 9 (M-AUTH): a signed-in CUSTOMER is read-only — editing
+      // shortcuts do nothing (the store also blocks the mutations).
+      if (s.account?.role === 'customer') {
+        if (e.key === ' ' || e.code === 'Space') {
+          e.preventDefault();
+          s.setPlaying(!s.playing);
+        }
+        return;
+      }
       const action = actionForCombo(s.shortcuts, eventToCombo(e));
       if (!action) return;
       e.preventDefault();
@@ -63,10 +78,23 @@ export default function App() {
     return () => window.removeEventListener('keydown', handler);
   }, [view]);
 
+  const dir = isRtl(locale) ? 'rtl' : 'ltr';
+
+  // Phase 9 (M-LOCALE): dir/lang belong on <html> so the browser lays
+  // out scrollbars, form controls and text natively in RTL languages.
+  // The app root div carries the same attributes as a fallback.
+  useEffect(() => {
+    document.documentElement.dir = dir;
+    document.documentElement.lang = locale;
+  }, [dir, locale]);
+
   if (view === 'dashboard') {
     return (
-      <div data-theme={theme}>
+      <div data-theme={theme} dir={dir} lang={locale}>
         <Dashboard />
+        <SettingsDialog />
+        <UserGuideDialog />
+        <OnboardingTour />
       </div>
     );
   }
@@ -75,7 +103,7 @@ export default function App() {
   // no editing UI. Esc or the button exits.
   if (presentMode) {
     return (
-      <div data-theme={theme} className="flex h-screen flex-col overflow-hidden bg-black text-zinc-100">
+      <div data-theme={theme} dir={dir} lang={locale} className="flex h-screen flex-col overflow-hidden bg-black text-zinc-100">
         <div className="flex flex-1 items-center justify-center overflow-hidden">
           <PreviewArea />
         </div>
@@ -97,10 +125,10 @@ export default function App() {
   }
 
   return (
-    <div data-theme={theme} className="flex h-screen flex-col overflow-hidden bg-zinc-950 text-zinc-100">
+    <div data-theme={theme} dir={dir} lang={locale} className="flex h-screen flex-col overflow-hidden bg-zinc-950 text-zinc-100">
       <TopBar />
       <div className="flex min-h-0 flex-1">
-        <LeftTabs />
+        {showSidebar && <LeftTabs />}
         {activeTab === 'Media' && <MediaBrowser />}
         {activeTab === 'Text' && <TextPanel />}
         {activeTab === 'Stickers' && <StickersPanel />}
@@ -118,6 +146,9 @@ export default function App() {
       <TimelineShell />
       <ExportPanel />
       <ShortcutsPanel />
+      <SettingsDialog />
+      <UserGuideDialog />
+      <OnboardingTour />
     </div>
   );
 }

@@ -1,0 +1,8 @@
+# Vidora compose file (Phase 9, Section M — M-DOCKER).
+# Serves the built app on http://localhost:4173.
+# Run: docker compose up --build
+services:
+  vidora:
+    build: .
+    ports:
+      - "4173:80"

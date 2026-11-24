@@ -40,8 +40,9 @@
     "audit:phase5": "npm run build && node audit/run-audit-phase5.mjs",
     "audit:phase6": "npm run build && node audit/run-audit-phase6.mjs",
     "audit:phase7": "npm run build && node audit/run-audit-phase7.mjs",
-    "audit:phase8": "npm run build && node audit/run-audit-phase8.mjs"
+    "audit:phase8": "npm run build && node audit/run-audit-phase8.mjs",
+    "audit:phase9": "npm run build && node audit/run-audit-phase9.mjs"
   },
   "type": "module",
-  "version": "0.9.0"
+  "version": "1.0.0"
 }

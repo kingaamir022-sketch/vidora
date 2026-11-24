@@ -3,6 +3,8 @@ import { useProjectStore } from '../store/projectStore';
 import { IconClock, IconFolder, IconPlus } from './icons';
 import { buildBundle, bundleFileName, bundleToText, deleteBackupRecord, loadBackupRecords, saveBackupRecords, type BackupRecord } from '../lib/cloudBackup';
 import { downloadBlob, formatBytesShort } from '../lib/exportEngine';
+import { formatDate, t } from '../lib/i18n';
+import AccountPanel from './AccountPanel';
 
 /** Dashboard (SPEC A, Phase 1): new / recent / drafts with rename, duplicate, delete.
  * Phase 8 (L-CLOUD): project backups — a .vidora file you keep anywhere
@@ -30,6 +32,9 @@ export default function Dashboard() {
   const dismissRecovery = useProjectStore((s) => s.dismissRecovery);
   const theme = useProjectStore((s) => s.theme);
   const setTheme = useProjectStore((s) => s.setTheme);
+  const locale = useProjectStore((s) => s.locale);
+  const account = useProjectStore((s) => s.account);
+  const readOnly = account?.role === 'customer';
 
   const sorted = useMemo(() => [...projects].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()), [projects]);
   const drafts = useMemo(() => sorted.filter((p) => p.isDraft || p.tracks.every((t) => t.clips.length === 0)), [sorted]);
@@ -45,9 +50,17 @@ export default function Dashboard() {
           type="button"
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           className="ml-auto rounded-md border border-zinc-700 px-3 py-1.5 text-xs text-zinc-300 hover:bg-zinc-800"
-          title="Theme toggle (full light-theme styling lands in Phase 9 polish)"
+          title="Theme toggle"
         >
           Theme: {theme}
+        </button>
+        <button
+          type="button"
+          onClick={() => useProjectStore.getState().setSettingsOpen(true)}
+          className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs text-zinc-300 hover:bg-zinc-800"
+          title="Settings"
+        >
+          {t(locale, 'settings.title')}
         </button>
       </header>
       <main className="mx-auto max-w-4xl px-5 py-10">
@@ -59,32 +72,40 @@ export default function Dashboard() {
             </button>
           </div>
         )}
-        <h1 className="text-3xl font-bold">Your projects</h1>
+        <h1 className="text-3xl font-bold">{t(locale, 'dashboard.title')}</h1>
         <p className="mt-2 text-sm text-zinc-400">Start a new edit or pick up where you left off. Projects autosave every few seconds.</p>
+        {readOnly && (
+          <p className="mt-3 rounded-lg border border-amber-500/50 bg-amber-500/10 px-3 py-2 text-xs text-amber-200" role="status">
+            {t(locale, 'auth.readOnly')}
+          </p>
+        )}
         <div className="mt-6 flex flex-wrap items-center gap-2">
           <input
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === 'Enter' && !readOnly) {
                 createProject(newName || undefined);
                 setNewName('');
               }
             }}
             placeholder="New project name (optional)"
             aria-label="New project name"
-            className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2.5 text-sm"
+            disabled={readOnly}
+            className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2.5 text-sm disabled:opacity-40"
           />
           <button
             type="button"
+            disabled={readOnly}
+            title={readOnly ? t(locale, 'auth.readOnly') : undefined}
             onClick={() => {
               createProject(newName || undefined);
               setNewName('');
             }}
-            className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-5 py-2.5 text-sm font-semibold text-white"
+            className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-40"
           >
             <IconPlus size={18} />
-            New Project
+            {t(locale, 'dashboard.newProject')}
           </button>
         </div>
         <div className="mt-10 flex gap-2 border-b border-zinc-800" role="tablist" aria-label="Project lists">
@@ -143,22 +164,24 @@ export default function Dashboard() {
                       <span className="mt-0.5 flex items-center gap-1 text-xs text-zinc-400">
                         <IconClock size={12} />
                         {p.aspectRatio} · {p.fps} fps · {p.tracks.length} tracks · {clipCount} clips · {p.media.length} media · updated{' '}
-                        {new Date(p.updatedAt).toLocaleString()}
+                        {formatDate(locale, new Date(p.updatedAt))}
                       </span>
                     </span>
                   </button>
                   <span className="flex shrink-0 gap-1">
                     <button
                       type="button"
+                      disabled={readOnly}
+                      title={readOnly ? t(locale, 'auth.readOnly') : undefined}
                       onClick={() => {
                         setRenamingId(p.id);
                         setRenameValue(p.name);
                       }}
-                      className="rounded-md border border-zinc-700 px-2 py-1 text-xs hover:bg-zinc-800"
+                      className="rounded-md border border-zinc-700 px-2 py-1 text-xs hover:bg-zinc-800 disabled:opacity-40"
                     >
                       Rename
                     </button>
-                    <button type="button" onClick={() => duplicateProject(p.id)} className="rounded-md border border-zinc-700 px-2 py-1 text-xs hover:bg-zinc-800">
+                    <button type="button" disabled={readOnly} title={readOnly ? t(locale, 'auth.readOnly') : undefined} onClick={() => duplicateProject(p.id)} className="rounded-md border border-zinc-700 px-2 py-1 text-xs hover:bg-zinc-800 disabled:opacity-40">
                       Duplicate
                     </button>
                     {confirmDeleteId === p.id ? (
@@ -173,7 +196,7 @@ export default function Dashboard() {
                         Confirm delete
                       </button>
                     ) : (
-                      <button type="button" onClick={() => setConfirmDeleteId(p.id)} className="rounded-md border border-zinc-700 px-2 py-1 text-xs hover:bg-zinc-800">
+                      <button type="button" disabled={readOnly} title={readOnly ? t(locale, 'auth.readOnly') : undefined} onClick={() => setConfirmDeleteId(p.id)} className="rounded-md border border-zinc-700 px-2 py-1 text-xs hover:bg-zinc-800 disabled:opacity-40">
                         Delete
                       </button>
                     )}
@@ -183,8 +206,9 @@ export default function Dashboard() {
             })}
           </ul>
         )}
+        <AccountPanel />
         <section className="mt-10 rounded-xl border border-zinc-800 bg-zinc-900 p-4" aria-label="Backups">
-          <h2 className="text-lg font-semibold">Backups</h2>
+          <h2 className="text-lg font-semibold">{t(locale, 'dashboard.backups')}</h2>
           <p className="mt-1 text-sm text-zinc-400">
             Back up a project to a .vidora file and keep it anywhere — Google Drive, a USB stick, a message to yourself. The file holds the project and the
             names of its media files; when you restore it, Vidora asks you to point at the media again. Media is never inside the backup file (too large).

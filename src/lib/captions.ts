@@ -104,12 +104,74 @@ export function parseVtt(text: string): CaptionCue[] {
   return cues.sort((a, b) => a.start - b.start);
 }
 
+/**
+ * Parse an .ass (Advanced SubStation Alpha) file. Reads the [Events]
+ * Format line for the column order (never assumed), takes Dialogue
+ * lines only (Comment lines are ignored), strips {\...} override
+ * tags, turns \N into a line break and \h into a space. Styles are
+ * NOT imported — cues use the current caption style (the panel says
+ * so). Throws with a readable message on bad input.
+ */
+export function parseAss(text: string): CaptionCue[] {
+  const normalized = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = normalized.split('\n').map((l) => l.trim());
+  let inEvents = false;
+  let format: string[] | null = null;
+  const cues: CaptionCue[] = [];
+  // .ass times are H:MM:SS.cc (centiseconds).
+  const parseAssTime = (raw: string): number | null => {
+    const m = raw.trim().match(/^(\d+):(\d{1,2}):(\d{1,2})\.(\d{1,2})$/);
+    if (!m) return null;
+    return Number(m[1]) * 3600 + Number(m[2]) * 60 + Number(m[3]) + Number(m[4]) / 100;
+  };
+  for (const line of lines) {
+    if (line.startsWith('[')) {
+      inEvents = line.toLowerCase() === '[events]';
+      continue;
+    }
+    if (!inEvents || !line) continue;
+    if (line.toLowerCase().startsWith('format:')) {
+      format = line.slice('format:'.length).split(',').map((c) => c.trim().toLowerCase());
+      continue;
+    }
+    if (!line.toLowerCase().startsWith('dialogue:')) continue;
+    if (!format) throw new Error('This .ass file has Dialogue lines but no Format line in [Events].');
+    const startIdx = format.indexOf('start');
+    const endIdx = format.indexOf('end');
+    const textIdx = format.indexOf('text');
+    if (startIdx < 0 || endIdx < 0 || textIdx < 0) {
+      throw new Error('This .ass Format line has no Start, End or Text column.');
+    }
+    const body = line.slice('dialogue:'.length);
+    const parts = body.split(',');
+    if (parts.length <= textIdx) continue; // malformed line — skipped, not fatal
+    const start = parseAssTime(parts[startIdx]);
+    const end = parseAssTime(parts[endIdx]);
+    if (start === null || end === null || end <= start) continue; // bad time — skipped
+    // Text is usually the last column (then it may contain commas);
+    // if a later column follows it, take only the text column.
+    const rawText =
+      textIdx === format.length - 1 ? parts.slice(textIdx).join(',') : (parts[textIdx] ?? '');
+    const cueText = rawText
+      .replace(/\{[^}]*\}/g, '')
+      .replace(/\\N/g, '\n')
+      .replace(/\\n/g, '\n')
+      .replace(/\\h/g, ' ')
+      .trim();
+    if (!cueText) continue; // empty dialogue — skipped
+    cues.push(makeCue(start, end, cueText));
+  }
+  if (cues.length === 0) throw new Error('No dialogue lines found in this .ass file.');
+  return cues.sort((a, b) => a.start - b.start);
+}
+
 /** Parse a caption file by extension. Returns cues or throws. */
 export function parseCaptionFile(name: string, text: string): CaptionCue[] {
   const lower = name.toLowerCase();
   if (lower.endsWith('.srt')) return parseSrt(text);
   if (lower.endsWith('.vtt')) return parseVtt(text);
-  throw new Error('Unsupported caption file — use .srt or .vtt. (.ass is not supported in this build.)');
+  if (lower.endsWith('.ass')) return parseAss(text);
+  throw new Error('Unsupported caption file — use .srt, .vtt or .ass. (.lrc is not supported in this build.)');
 }
 
 /** Serialize cues to .srt text. */

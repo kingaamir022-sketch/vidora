@@ -11,8 +11,8 @@ import { clampTtsRatePitch, pickVoice, voiceInfos, type TtsVoiceInfo } from '../
  * Word), "Auto lyrics", bottom bar "Delete current captions" +
  * "Generate captions". Manual captions + .srt/.ass/.lrc upload are
  * supplemented from WEB-CHECK-2026-11-23 §4 (desktop is silent there).
- * All caption styles are ORIGINAL Vidora designs. (.ass import is not
- * supported — the panel says so; .srt/.vtt are.)
+ * All caption styles are ORIGINAL Vidora designs. (.ass import works
+ * since Phase 9; .lrc is not supported — the panel says so.)
  */
 export default function CaptionsPanel() {
   const project = useProjectStore((s) => s.project);
@@ -241,10 +241,10 @@ export default function CaptionsPanel() {
       <section className="mt-4 space-y-2 border-t border-zinc-800 pt-3">
         <h3 className="text-xs font-semibold text-zinc-300">Import / export</h3>
         <label className="block text-xs">
-          <span className="text-zinc-400">Import caption file (.srt / .vtt)</span>
-          <input type="file" accept=".srt,.vtt" onChange={(e) => void onImport(e.target.files?.[0])} className="mt-1 block w-full text-[11px] text-zinc-400" />
+          <span className="text-zinc-400">Import caption file (.srt / .vtt / .ass)</span>
+          <input type="file" accept=".srt,.vtt,.ass" onChange={(e) => void onImport(e.target.files?.[0])} className="mt-1 block w-full text-[11px] text-zinc-400" />
         </label>
-        <p className="text-[11px] text-zinc-500">.ass files are not supported in this build — convert them to .srt first.</p>
+        <p className="text-[11px] text-zinc-500">.ass styles are not imported — cues use the current caption style. .lrc is not supported in this build.</p>
         {importError && <p className="text-[11px] text-red-400">{importError}</p>}
         {importInfo && <p className="text-[11px] text-emerald-400">{importInfo}</p>}
         <div className="flex gap-2">

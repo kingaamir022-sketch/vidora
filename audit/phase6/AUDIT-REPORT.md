@@ -1,6 +1,6 @@
 # Vidora Phase 6 audit report
 
-Run: 2026-11-24T07:31:10.079Z
+Run: 2026-11-24T10:47:26.194Z
 Result: 32/32 checks passed, 0 failed.
 
 - PASS [O-AI-LIBRARY] ai-manifest counts are 100/100/100/110 — {"music":100,"sfx":100,"clips":100,"images":110}

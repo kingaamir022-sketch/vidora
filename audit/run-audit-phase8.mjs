@@ -165,6 +165,14 @@ async function main() {
 
     await page.goto(URL, { waitUntil: 'networkidle' });
     await page.waitForTimeout(800);
+    // Phase 9 (M-ONBOARD): a first-run tour covers the dashboard on a
+    // fresh profile — dismiss it before doing anything else.
+    const tour = page.locator('[role="dialog"][aria-labelledby="tour-heading"]');
+    if (await tour.isVisible().catch(() => false)) {
+      await tour.getByRole('button', { name: 'Skip tour' }).click();
+      await page.waitForTimeout(400);
+    }
+
 
     // ================= L-CLOUD (dashboard, first — before any project) =================
     const backups = page.locator('section[aria-label="Backups"]');

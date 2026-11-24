@@ -260,14 +260,30 @@ export default function ColorPanel() {
               Stabilize
             </label>
             <p className="text-[11px] text-zinc-500">
-              CapCut marks Stabilize as Pro. Real motion stabilization needs whole-clip motion analysis (Phase 7); for now the toggle is stored as a flag and is not faked in the preview.
+              Real stabilization lives in AI Tools → Stabilize (motion analysis, Phase 7). This toggle is kept for compatibility and does not change the preview.
             </p>
             <label className="flex items-center gap-2 text-xs">
               <input type="checkbox" checked={adj.lensCorrection} onChange={(e) => updateAdjustment({ lensCorrection: e.target.checked })} />
-              Lens correction (deferred)
+              Lens correction
             </label>
+            {adj.lensCorrection && (
+              <label className="flex items-center gap-2 text-xs">
+                Strength
+                <input
+                  type="range"
+                  min={-1}
+                  max={1}
+                  step={0.05}
+                  value={adj.lensStrength ?? 0}
+                  onChange={(e) => updateAdjustment({ lensStrength: Number(e.target.value) })}
+                  className="flex-1"
+                  aria-label="Lens correction strength"
+                />
+                <span className="w-10 text-right font-mono">{(adj.lensStrength ?? 0).toFixed(2)}</span>
+              </label>
+            )}
             <p className="text-[11px] text-zinc-500">
-              Lens correction was not found in CapCut Web either. Stored as a flag only: it needs a camera/lens profile (Phase 8). It is not faked in the preview.
+              Generic correction — no camera profile; adjust by eye. Negative straightens bulging (barrel) lines, positive fixes pinched (pincushion) lines. Applies in the preview and in export.
             </p>
             <button
               type="button"
@@ -276,7 +292,7 @@ export default function ColorPanel() {
                   blendMode: 'normal', brightness: 0, contrast: 0,
                   curves: { b: [{ x: 0, y: 0 }, { x: 1, y: 1 }], g: [{ x: 0, y: 0 }, { x: 1, y: 1 }], r: [{ x: 0, y: 0 }, { x: 1, y: 1 }] },
                   denoise: 0, exposure: 0, gain: { b: 0, g: 0, r: 0 }, gamma: { b: 0, g: 0, r: 0 },
-                  highlights: 0, hslHue: 0, hslLightness: 0, hslSaturation: 0, hue: 0, lensCorrection: false,
+                  highlights: 0, hslHue: 0, hslLightness: 0, hslSaturation: 0, hue: 0, lensCorrection: false, lensStrength: 0,
                   lift: { b: 0, g: 0, r: 0 }, saturation: 0, shadows: 0, sharpen: 0, stabilization: false, temperature: 0, tint: 0,
                 };
                 updateAdjustment(clean);

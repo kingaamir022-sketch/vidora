@@ -55,6 +55,9 @@ import { applyTemplate, applyTemplateWithSlots } from '../lib/templates';
 import { addComment, mergeComments, setCommentResolved } from '../lib/collab';
 import { parseBundle, relinkMedia } from '../lib/cloudBackup';
 import { normalizeGain } from '../lib/audio';
+import { loadLocale, saveLocale, type Locale } from '../lib/i18n';
+import { createAccount, currentAccount, signIn, signOut, type VidoraAccount } from '../lib/auth';
+import { logEvent, setTelemetryOptIn as saveTelemetryOptIn, telemetryOptIn as loadTelemetryOptIn } from '../lib/telemetry';
 import {
   parseCaptionFile,
   retimeWords,
@@ -224,6 +227,16 @@ interface ProjectState {
   shortcuts: Record<ShortcutAction, string>;
   shortcutsOpen: boolean;
   theme: 'dark' | 'light';
+  // Phase 9 — settings, locale, accounts, onboarding (Section M)
+  locale: Locale;
+  account: VidoraAccount | null;
+  settingsOpen: boolean;
+  guideOpen: boolean;
+  showOnboarding: boolean;
+  showTaskBar: boolean;
+  showSidebar: boolean;
+  inputPreference: 'default' | 'left-handed';
+  analyticsOptIn: boolean;
   undoStack: string[];
   view: View;
   zoom: number;
@@ -364,6 +377,22 @@ interface ProjectState {
   setShortcut: (action: ShortcutAction, combo: string) => void;
   resetShortcuts: () => void;
   setTheme: (theme: 'dark' | 'light') => void;
+  // Phase 9 — settings, locale, accounts, onboarding (Section M)
+  setLocale: (locale: Locale) => void;
+  setSettingsOpen: (v: boolean) => void;
+  setGuideOpen: (v: boolean) => void;
+  dismissOnboarding: () => void;
+  replayOnboarding: () => void;
+  setShowTaskBar: (v: boolean) => void;
+  setShowSidebar: (v: boolean) => void;
+  setInputPreference: (v: 'default' | 'left-handed') => void;
+  setAnalyticsOptIn: (v: boolean) => void;
+  /** Sign up; returns an error message or null on success. */
+  signUp: (name: string, email: string, password: string) => Promise<string | null>;
+  /** Sign in; returns an error message or null on success. */
+  signInAccount: (email: string, password: string) => Promise<string | null>;
+  signOutAccount: () => void;
+  resetSettings: () => void;
   dismissRecovery: () => void;
   snapshot: () => void;
   saveNow: () => void;
@@ -371,10 +400,65 @@ interface ProjectState {
   redo: () => void;
 }
 
+/** Phase 9 (M-ONBOARD): the tour is done once the flag exists. */
+const ONBOARDING_KEY = 'vidora.onboarding.v1';
+function onboardingDone(): boolean {
+  try {
+    return localStorage.getItem(ONBOARDING_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+function markOnboardingDone(): void {
+  try {
+    localStorage.setItem(ONBOARDING_KEY, '1');
+  } catch {
+    /* session-only */
+  }
+}
+
+/** Phase 9 (M-SETTINGS): theme / task bar / sidebar / input prefs. */
+const SETTINGS_KEY = 'vidora.settings.v1';
+interface PersistedSettings {
+  inputPreference?: 'default' | 'left-handed';
+  showSidebar?: boolean;
+  showTaskBar?: boolean;
+  theme?: 'dark' | 'light';
+}
+function loadSettings(): PersistedSettings {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as unknown;
+    return typeof parsed === 'object' && parsed !== null ? (parsed as PersistedSettings) : {};
+  } catch {
+    return {};
+  }
+}
+
+const savedSettings = loadSettings();
+
 export const useProjectStore = create<ProjectState>()((set, get) => {
-  const applyProject = (next: VidoraProject, pushUndo = true) => {
+  const persistSettings = () => {
+    const s = get();
+    try {
+      localStorage.setItem(
+        SETTINGS_KEY,
+        JSON.stringify({ inputPreference: s.inputPreference, showSidebar: s.showSidebar, showTaskBar: s.showTaskBar, theme: s.theme }),
+      );
+    } catch {
+      /* session-only */
+    }
+  };
+
+  /** Phase 9 (M-AUTH): a signed-in CUSTOMER is read-only. Comments and
+   * shares are the exception — a customer may review (allowWhenReadOnly).
+   * Signed out = full access, as before accounts existed. */
+  const isReadOnly = () => get().account?.role === 'customer';
+  const applyProject = (next: VidoraProject, pushUndo = true, allowWhenReadOnly = false) => {
     const s = get();
     if (!s.project) return;
+    if (!allowWhenReadOnly && isReadOnly()) return;
     const stamped: VidoraProject = { ...next, updatedAt: new Date().toISOString() };
     const undoStack = pushUndo ? [...s.undoStack, JSON.stringify(s.project)].slice(-100) : s.undoStack;
     const projects = s.projects.map((p) => (p.id === stamped.id ? stamped : p));
@@ -413,13 +497,23 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     selectedTrackId: null,
     shortcuts: loadShortcuts(),
     shortcutsOpen: false,
-    theme: 'dark',
+    theme: savedSettings.theme ?? 'dark',
+    locale: loadLocale(),
+    account: currentAccount(),
+    settingsOpen: false,
+    guideOpen: false,
+    showOnboarding: !onboardingDone(),
+    showTaskBar: savedSettings.showTaskBar ?? true,
+    showSidebar: savedSettings.showSidebar ?? true,
+    inputPreference: savedSettings.inputPreference ?? 'default',
+    analyticsOptIn: loadTelemetryOptIn(),
     trackingMode: false,
     undoStack: [],
     view: 'dashboard',
     zoom: 24,
 
     createProject: (name) => {
+      if (isReadOnly()) return;
       const now = new Date().toISOString();
       const project: VidoraProject = {
         ...structuredClone(SAMPLE_PROJECT),
@@ -439,8 +533,11 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const projects = [project, ...get().projects];
       writeProjects(projects);
       set({ aspectRatio: '16:9', playhead: 0, project, projects, redoStack: [], selectedClipIds: [], undoStack: [], view: 'editor' });
+      // Phase 9 (M-TELEMETRY): count created projects locally (opt-in only, no-op otherwise).
+      logEvent('projects');
     },
     deleteProject: (id) => {
+      if (isReadOnly()) return;
       const projects = get().projects.filter((p) => p.id !== id);
       writeProjects(projects);
       try {
@@ -451,6 +548,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       set({ projects, project: get().project?.id === id ? null : get().project, view: get().project?.id === id ? 'dashboard' : get().view });
     },
     duplicateProject: (id) => {
+      if (isReadOnly()) return;
       const src = get().projects.find((p) => p.id === id);
       if (!src) return;
       const now = new Date().toISOString();
@@ -479,6 +577,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       }
     },
     renameProject: (id, name) => {
+      if (isReadOnly()) return;
       const clean = name.trim().slice(0, 120);
       if (!clean) return;
       const projects = get().projects.map((p) => (p.id === id ? { ...p, name: clean, updatedAt: new Date().toISOString() } : p));
@@ -1005,19 +1104,19 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       if (!s.project) return;
       const comments = addComment(s.project.comments ?? [], author, s.playhead, text);
       if (comments.length === (s.project.comments ?? []).length) return;
-      applyProject({ ...s.project, comments });
+      applyProject({ ...s.project, comments }, true, true);
     },
     setCommentResolved: (id, resolved) => {
       const s = get();
       if (!s.project) return;
-      applyProject({ ...s.project, comments: setCommentResolved(s.project.comments ?? [], id, resolved) });
+      applyProject({ ...s.project, comments: setCommentResolved(s.project.comments ?? [], id, resolved) }, true, true);
     },
     shareWith: (name) => {
       const s = get();
       if (!s.project) return;
       const trimmed = name.trim();
       if (!trimmed || (s.project.sharedWith ?? []).includes(trimmed)) return;
-      applyProject({ ...s.project, sharedWith: [...(s.project.sharedWith ?? []), trimmed] });
+      applyProject({ ...s.project, sharedWith: [...(s.project.sharedWith ?? []), trimmed] }, true, true);
     },
     importBundle: (bundleText) => {
       let bundle;
@@ -1450,7 +1549,74 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       saveShortcuts({ ...DEFAULT_SHORTCUTS });
       set({ shortcuts: { ...DEFAULT_SHORTCUTS } });
     },
-    setTheme: (theme) => set({ theme }),
+    setTheme: (theme) => {
+      set({ theme });
+      persistSettings();
+    },
+    // Phase 9 — settings, locale, accounts, onboarding (Section M)
+    setLocale: (locale) => {
+      saveLocale(locale);
+      set({ locale });
+    },
+    setSettingsOpen: (v) => set({ settingsOpen: v }),
+    setGuideOpen: (v) => set({ guideOpen: v }),
+    dismissOnboarding: () => {
+      markOnboardingDone();
+      set({ showOnboarding: false });
+    },
+    replayOnboarding: () => {
+      try {
+        localStorage.removeItem(ONBOARDING_KEY);
+      } catch {
+        /* ignore */
+      }
+      set({ settingsOpen: false, showOnboarding: true });
+    },
+    setShowTaskBar: (v) => {
+      set({ showTaskBar: v });
+      persistSettings();
+    },
+    setShowSidebar: (v) => {
+      set({ showSidebar: v });
+      persistSettings();
+    },
+    setInputPreference: (v) => {
+      set({ inputPreference: v });
+      persistSettings();
+    },
+    setAnalyticsOptIn: (v) => {
+      saveTelemetryOptIn(v);
+      set({ analyticsOptIn: v });
+    },
+    signUp: async (name, email, password) => {
+      const result = await createAccount(name, email, password);
+      if (result.error || !result.account) return result.error ?? 'Could not create the account.';
+      set({ account: result.account });
+      return null;
+    },
+    signInAccount: async (email, password) => {
+      const result = await signIn(email, password);
+      if (result.error || !result.account) return result.error ?? 'Wrong email or password.';
+      set({ account: result.account });
+      return null;
+    },
+    signOutAccount: () => {
+      signOut();
+      set({ account: null });
+    },
+    resetSettings: () => {
+      saveLocale('en');
+      set({
+        guideOpen: false,
+        inputPreference: 'default',
+        locale: 'en',
+        settingsOpen: false,
+        showSidebar: true,
+        showTaskBar: true,
+        theme: 'dark',
+      });
+      persistSettings();
+    },
     dismissRecovery: () => set({ recoveredNotice: null }),
     snapshot: () => {
       const s = get();
@@ -1470,6 +1636,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     },
     undo: () => {
       const s = get();
+      if (isReadOnly()) return;
       if (s.undoStack.length === 0 || !s.project) return;
       const prev = s.undoStack[s.undoStack.length - 1];
       const project = parseProject(JSON.parse(prev) as unknown);
@@ -1478,6 +1645,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     },
     redo: () => {
       const s = get();
+      if (isReadOnly()) return;
       if (s.redoStack.length === 0 || !s.project) return;
       const nextRaw = s.redoStack[s.redoStack.length - 1];
       const project = parseProject(JSON.parse(nextRaw) as unknown);

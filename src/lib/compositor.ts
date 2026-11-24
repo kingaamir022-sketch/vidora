@@ -4,6 +4,7 @@ import { cssFilterForEffects, effectParams, glitchSlices, glslEffectInstances, p
 import { renderGlslFrame } from './glsl';
 import { combinedAnimationState, valueAtKeyframes } from './keyframes';
 import { applyLutToPixels } from './lut';
+import { lensGrid } from './lens';
 import { applyChromaKey, layoutRects, maskPath } from './masks';
 import {
   applyAlphaMask,
@@ -173,6 +174,56 @@ export function renderClipFrame(
     if (out) {
       ctx.clearRect(0, 0, w, h);
       ctx.drawImage(out, 0, 0, w, h);
+    }
+  }
+
+  // 2c. Lens correction (Phase 9, M-LENS — closes BUG-D2): remap the
+  // frame through a 12×12 tile mesh using the generic radial model.
+  // Each tile is drawn with the affine map from its (distorted) source
+  // quad to its output rect, clipped to that rect. k = 0 is identity.
+  const lensK = clip.adjustment.lensCorrection ? clip.adjustment.lensStrength ?? 0 : 0;
+  if (lensK !== 0) {
+    const remapped = makeCanvas(w, h);
+    const rctx = remapped.getContext('2d');
+    if (rctx) {
+      const grid = lensGrid(w, h, lensK, 12, 12);
+      const cw = w / 12;
+      const ch = h / 12;
+      for (let row = 0; row < 12; row++) {
+        for (let col = 0; col < 12; col++) {
+          const p0 = grid[row][col];
+          const p1 = grid[row][col + 1];
+          const p2 = grid[row + 1][col];
+          const q0 = { x: col * cw, y: row * ch };
+          const q1 = { x: (col + 1) * cw, y: row * ch };
+          const q2 = { x: col * cw, y: (row + 1) * ch };
+          const ux = p1.sx - p0.sx;
+          const uy = p1.sy - p0.sy;
+          const vx = p2.sx - p0.sx;
+          const vy = p2.sy - p0.sy;
+          const det = ux * vy - vx * uy;
+          if (det === 0) continue;
+          const Ux = q1.x - q0.x;
+          const Uy = q1.y - q0.y;
+          const Vx = q2.x - q0.x;
+          const Vy = q2.y - q0.y;
+          const a = (Ux * vy - Vx * uy) / det;
+          const b = (Uy * vy - Vy * uy) / det;
+          const c = (Vx * ux - Ux * vx) / det;
+          const d = (Vy * ux - Uy * vx) / det;
+          const e = q0.x - a * p0.sx - c * p0.sy;
+          const f = q0.y - b * p0.sx - d * p0.sy;
+          rctx.save();
+          rctx.beginPath();
+          rctx.rect(q0.x, q0.y, cw + 1, ch + 1);
+          rctx.clip();
+          rctx.setTransform(a, b, c, d, e, f);
+          rctx.drawImage(frame, 0, 0);
+          rctx.restore();
+        }
+      }
+      ctx.clearRect(0, 0, w, h);
+      ctx.drawImage(remapped, 0, 0);
     }
   }
 

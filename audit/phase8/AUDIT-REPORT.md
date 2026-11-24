@@ -1,6 +1,6 @@
 # Vidora Phase 8 audit report
 
-Run: 2026-11-24T07:28:19.295Z
+Run: 2026-11-24T10:45:46.000Z
 Result: 61/61 checks passed, 0 failed.
 
 - PASS [L-EXPORT] behaviour card docs/behavior/L-EXPORT.md exists

@@ -1,14 +1,19 @@
 import { useMemo, useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { formatBytes, formatDuration } from '../lib/media';
+import { t } from '../lib/i18n';
 import { assetLibraryCounts } from '../lib/assetLibrary';
 import { BACKGROUND_CATALOG, BACKGROUND_CATEGORIES, backgroundThumbnail, type BackgroundCategory } from '../lib/backgrounds';
 
 /** Media panel (SPEC A, Phase 1; Phase 5 adds the built-in asset library
  * counts and the procedural Backgrounds section). Import, folders,
- * search, thumbnails, metadata. */
+ * search, thumbnails, metadata. Phase 9 (M-AUTH): import is disabled
+ * for a signed-in CUSTOMER. */
 export default function MediaBrowser() {
   const project = useProjectStore((s) => s.project);
+  const account = useProjectStore((s) => s.account);
+  const readOnly = account?.role === 'customer';
+  const locale = useProjectStore((s) => s.locale);
   const addMediaFiles = useProjectStore((s) => s.addMediaFiles);
   const addMediaToTimeline = useProjectStore((s) => s.addMediaToTimeline);
   const addFolder = useProjectStore((s) => s.addFolder);
@@ -94,7 +99,8 @@ export default function MediaBrowser() {
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
-          disabled={importing}
+          disabled={importing || readOnly}
+          title={readOnly ? t(locale, 'auth.readOnly') : undefined}
           className="mt-2 w-full rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"
         >
           {importing ? 'Importing…' : 'Import video / image / audio / GIF'}

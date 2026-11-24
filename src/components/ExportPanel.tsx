@@ -175,7 +175,7 @@ export default function ExportPanel() {
   const finishedJobs = jobs.filter((j) => j.status === 'done');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-4" role="dialog" aria-label="Export and share">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-4" role="dialog" aria-modal="true" aria-label="Export and share">
       <div className="w-full max-w-lg rounded-xl border border-zinc-700 bg-zinc-950 p-5 text-zinc-100">
         <div className="flex items-start justify-between gap-3">
           <div>

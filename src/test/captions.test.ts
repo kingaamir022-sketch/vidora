@@ -74,10 +74,12 @@ describe('VTT parsing (Phase 3, I-SRT)', () => {
     expect(again.map((c) => [c.start, c.end, c.text])).toEqual(cues.map((c) => [c.start, c.end, c.text]));
   });
 
-  it('parseCaptionFile routes by extension and rejects .ass', () => {
+  it('parseCaptionFile routes by extension and rejects .lrc', () => {
     expect(parseCaptionFile('subs.srt', SRT_SAMPLE)).toHaveLength(2);
     expect(parseCaptionFile('subs.vtt', VTT_SAMPLE)).toHaveLength(2);
-    expect(() => parseCaptionFile('subs.ass', 'anything')).toThrow(/\.srt or \.vtt/i);
+    // Phase 9 (M-ASS): .ass parses now.
+    expect(parseCaptionFile('subs.ass', '[Events]\nFormat: Layer, Start, End, Text\nDialogue: 0,0:00:01.00,0:00:02.00,Hi\n')).toHaveLength(1);
+    expect(() => parseCaptionFile('subs.lrc', '[00:01.00] hi')).toThrow(/\.lrc is not supported/);
   });
 });
 

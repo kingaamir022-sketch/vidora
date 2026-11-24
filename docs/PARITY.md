@@ -134,15 +134,27 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Cloud backup (L-CLOUD) | ~ | ~ | ~ | — | ~ | `lib/cloudBackup.ts` (.vidora bundle: project JSON + media list, media files NOT inside) + Backups section in `Dashboard.tsx` — no reference cloud UI was observed; Drive is the user's cloud (bundle downloads, user saves it to Drive), honestly labelled, no rented server | ASSUMED |
 | Review comments (L-COLLAB) | ~ | ~ | ~ | — | ~ | `lib/collab.ts` (time-anchored comments, resolve/reopen) + review tab in `ExportPanel.tsx` + amber markers on the timeline ruler — the review flow mirrors CapCut's "Share for review" (people can add comments); the local-first storage (comments live in the project file) is Vidora's own, honestly labelled | ASSUMED |
 | Share (L-SHARE) | ~ | ~ | ~ | — | ~ | `lib/share.ts` (YouTube/Shorts, TikTok, TikTok Ads Manager, Facebook Page upload links; Instagram Reels has no web upload, honestly labelled) + share tabs in `ExportPanel.tsx` + presentation mode — matches the signed-in Web share menu (WEB-CHECK-2026-11-23.md §3) link for link; Free Schedule is disabled with a reason (no scheduler service) | ASSUMED |
+| Onboarding tour (M-ONBOARD) | ~ | ~ | ~ | Esc | ~ | `components/OnboardingTour.tsx` (5 plain-language steps, dashboard-only, Esc/Skip, remembered in `vidora.onboarding.v1`, replay from Settings) — no reference tour was observed; the first-run tour shape is the standard editor pattern | ASSUMED |
+| Localization (M-LOCALE) | ~ | ~ | ~ | — | ~ | `lib/i18n.ts` (en/ur/hi/ar, 45 chrome keys, `t()`, `formatDate`, `formatNumber`, `isRtl`) + `dir`/`lang` on `<html>` in `App.tsx` — the Language setting itself matches the reference "…" menu (FULL-WALKTHROUGH-2026-11-23.md § top bar); the four languages and RTL are Vidora's own scope, honestly labelled as a product feature | ASSUMED |
+| Settings (M-SETTINGS) | ✓ | ✓ | ✓ | Esc | ✓ | `components/SettingsDialog.tsx` (Language/Theme/Input prefs/task bar/sidebar/tour replay/reset/Feature usage/Diagnostics) — the "…" menu and its Settings items match the reference (FULL-WALKTHROUGH-2026-11-23.md § top bar: Feature usage, Task bar, Sidebar, Help, Settings Language/Theme/Input preferences); Esc closes | MATCH |
+| Local accounts (M-AUTH) | ~ | ~ | ~ | — | ~ | `lib/auth.ts` (local-only, SHA-256 salted hash, first account OWNER, later CUSTOMER read-only, signed out = full access) + `components/AccountPanel.tsx` + read-only gate in `store/projectStore.ts` — no reference account UI was observed; the OWNER/CUSTOMER shape follows the PageCommand Pro pattern the user knows, honestly labelled (no cloud sign-in) | ASSUMED |
+| Subscription hooks (M-SUBS) | ~ | ~ | ~ | — | ~ | `lib/subscription.ts` (Free/Pro, durations 7/30/90/180/365/lifetime, `daysRemaining`) + plans list in `AccountPanel.tsx` — Pro is honestly "Not available in this build. Nothing is charged."; no payment provider, no cloud | ASSUMED |
+| Accessibility (M-ACCESS) | ~ | ~ | ~ | — | ~ | `:focus-visible` rings in `src/index.css` (both themes), `aria-modal="true"` on Export/Shortcuts/Settings dialogs, labelled controls — no reference accessibility audit was observed; the standard practice is followed, keyboard focus is visibly outlined (audit-verified) | ASSUMED |
+| Performance + light theme (M-PERF) | ~ | ~ | ~ | — | ~ | `lib/mediaCache.ts` (LRU, 200 entries: probe results by `name:size`, thumbnails by media id, wired into `lib/media.ts` import path) + finished light theme in `src/index.css` (zinc ramp remapped under `data-theme="light"`) — the light theme finishes the Phase 0 promise; the cache is standard practice | ASSUMED |
+| Lens correction (M-LENS) | ~ | ~ | ~ | — | ~ | `lib/lens.ts` (radial distortion k1 model: `distortPoint`, `lensGrid` 12×12, `clampLensStrength`) + Strength slider −1…1 in `ColorPanel.tsx` + `lensStrength` in the schema + compositor remap step — CapCut Web has no lens correction (WEB-CHECK-2026-11-22.md); the generic correction is Vidora's own, honestly labelled (no camera profile, adjust by eye). Closes BUG-D2 | ASSUMED |
+| .ass import (M-ASS) | ✓ | ✓ | ✓ | — | ✓ | `lib/captions.ts` `parseAss` (reads the Format line for column order, Dialogue lines only, strips `{...}` tags, `\N` → newline, `\h` → space) + `.ass` in the CaptionsPanel file picker — matches the reference: CapCut Web accepts .ass upload (WEB-CHECK-2026-11-23.md §4); .ass styles are not imported (cues use the current style, honestly labelled); .lrc still not supported. Closes BUG-D11 | MATCH |
+| Local diagnostics (M-TELEMETRY) | ~ | ~ | ~ | — | ~ | `lib/telemetry.ts` (local-only event/error log, opt-in default off, 50-error cap) + Diagnostics section in Settings + `window.onerror` → `logError` in `main.tsx` — no reference diagnostics UI was observed; the local-only, opt-in shape is Vidora's own, honestly labelled (nothing leaves this computer) | ASSUMED |
+| CI (M-CI) | ~ | ~ | ~ | — | ~ | `.github/workflows/ci.yml` (Node 20, `npm ci`, build, test, lint) — no reference; Playwright audits are NOT in CI (documented in the workflow: they need the headless shell + ffmpeg) | ASSUMED |
+| Docker (M-DOCKER) | ~ | ~ | ~ | — | ~ | `Dockerfile` (node:20-alpine build → nginx:alpine serve) + `docker-compose.yml` (4173:80) + `.dockerignore` — no reference; the image was NOT built on this VM (docker not installed), honestly noted in the Dockerfile and the audit | ASSUMED |
 
-## Parity score (correction round v0.3.2 + signed-in export check 2026-11-23 + Phase 3 v0.4.0 + Phase 4 v0.5.0 + Phase 5 v0.6.0 + Phase 6 v0.7.0 + Phase 7 v0.8.0 + Phase 8 v0.9.0)
+## Parity score (correction round v0.3.2 + signed-in export check 2026-11-23 + Phase 3 v0.4.0 + Phase 4 v0.5.0 + Phase 5 v0.6.0 + Phase 6 v0.7.0 + Phase 7 v0.8.0 + Phase 8 v0.9.0 + Phase 9 v1.0.0)
 
-- **MATCH: 45 / 88**
-- **ASSUMED: 40 / 88** — J-AUDIO, J-MIXER, J-VOICE, J-BEAT, J-VOICEOVER, N-GLSL, N-FONTS, N-TEXTANIM, N-CAPTIONPRESETS, N-TEMPLATES, N-MUSIC, N-BACKGROUNDS, N-ASSETS, O-AI-LIBRARY, O-AI-GENERATE, O-AI-MUSIC, O-AI-CLIPS, O-AI-IMAGES, O-AI-VOICES, K-STT, K-TTS, K-SMARTCUT, K-REFRAME, K-BGREMOVE, K-TRACK, K-STABILIZE, K-ENHANCE, K-MOVEMENT, K-OPTFLOW, K-VOCAL, K-HIGHLIGHTS, K-SCRIPT, K-UPSCALE, K-PROVIDERS, L-EXPORT-QUEUE, L-EXPORT-AUDIO, L-TEMPLATES-SLOTS, L-CLOUD, L-COLLAB, L-SHARE
-- **DIFF-FIXING: 0 / 88**
-- **INTENTIONAL-DIFF: 3 / 88** — B-MARKER, B-GROUP, F-WHEELS (spec-required extras CapCut Web lacks; awaiting desktop screenshots)
+- **MATCH: 47 / 100**
+- **ASSUMED: 50 / 100** — J-AUDIO, J-MIXER, J-VOICE, J-BEAT, J-VOICEOVER, N-GLSL, N-FONTS, N-TEXTANIM, N-CAPTIONPRESETS, N-TEMPLATES, N-MUSIC, N-BACKGROUNDS, N-ASSETS, O-AI-LIBRARY, O-AI-GENERATE, O-AI-MUSIC, O-AI-CLIPS, O-AI-IMAGES, O-AI-VOICES, K-STT, K-TTS, K-SMARTCUT, K-REFRAME, K-BGREMOVE, K-TRACK, K-STABILIZE, K-ENHANCE, K-MOVEMENT, K-OPTFLOW, K-VOCAL, K-HIGHLIGHTS, K-SCRIPT, K-UPSCALE, K-PROVIDERS, L-EXPORT-QUEUE, L-EXPORT-AUDIO, L-TEMPLATES-SLOTS, L-CLOUD, L-COLLAB, L-SHARE, M-ONBOARD, M-LOCALE, M-AUTH, M-SUBS, M-ACCESS, M-PERF, M-LENS, M-TELEMETRY, M-CI, M-DOCKER
+- **DIFF-FIXING: 0 / 100**
+- **INTENTIONAL-DIFF: 3 / 100** — B-MARKER, B-GROUP, F-WHEELS (spec-required extras CapCut Web lacks; awaiting desktop screenshots)
 - **Gate result: PASS** — every Phase 0–2 feature is MATCH, ASSUMED or INTENTIONAL-DIFF,
-  `npm run build` is green (176 modules), `npm test` is 282/282, and the
+  `npm run build` is green (186 modules), `npm test` is 308/308, and the
   Playwright self-audits pass: Phase 2 (`audit/phase2/AUDIT-REPORT.md`)
   40/40 checks with 0 open bugs (29 screenshots in `audit/phase2/<ID>/`,
   layout re-measured at 1440×900 with 0px drift), Phase 3
@@ -157,7 +169,9 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
   (`audit/phase7/AUDIT-REPORT.md`) 61/61 checks with 0 open bugs
   (15 card folders with screenshots in `audit/phase7/<ID>/`), Phase 8
   (`audit/phase8/AUDIT-REPORT.md`) 61/61 checks with 0 open bugs
-  (7 card folders with screenshots in `audit/phase8/<ID>/`). The Phase 2
+  (7 card folders with screenshots in `audit/phase8/<ID>/`), Phase 9
+  (`audit/phase9/AUDIT-REPORT.md`) 66/66 checks with 0 open bugs
+  (12 card folders with screenshots in `audit/phase9/<ID>/`). The Phase 2
   audit suite predates v0.3.2; the F-BLEND row is covered by the new Vitest tests
   (blend mapping, live compositing path) and the updated F-WHEELS
   audit screenshots.
@@ -187,9 +201,10 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
   Text/Stickers/Captions (Phase 3) are implemented in v0.4.0 — their
   behaviour cards carry the status (MATCH / ASSUMED /
   UNKNOWN) and the Phase 3 audit covers them; they are not yet rows in
-  this matrix, which now scores Phases 0–2 + Phase 4 + Phase 5 + Phase 6 + Phase 7 + Phase 8 (88 rows).
-- Light-theme editor styling is Phase 9; the dashboard toggle exists
-  and the editor remains dark until then.
+  this matrix, which now scores Phases 0–2 + Phase 4 + Phase 5 + Phase 6 + Phase 7 + Phase 8 + Phase 9 (100 rows).
+- Light-theme editor styling is DONE in Phase 9 (v1.0.0): the zinc ramp
+  is remapped under `data-theme="light"` in `src/index.css`, verified by
+  the Phase 9 audit (token flip + dashboard screenshots in light).
 - CapCut Web's left rail differs from desktop (Elements/Transcript/
   Brand kit, no Stickers) — the desktop screenshots the user is
   sending remain the main reference; Web is only a check for panel

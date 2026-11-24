@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 /* Vidora design tokens (Phase 0) — see design/tokens.json for the source of truth.
-   Dark theme is the default; light-theme variables are applied when
-   data-theme="light" is set on the app root (full light styling: Phase 9). */
+   Dark theme is the default. Phase 9 finished the light theme: the zinc
+   palette is remapped under data-theme="light" so every panel, the
+   timeline, dialogs and inputs flip together (the video canvas itself
+   is unchanged — video pixels stay video pixels). */
 
 @theme {
   --color-vidora-violet: #7c3aed;
@@ -12,6 +14,14 @@
 
 :root {
   color-scheme: dark;
+}
+
+/* Phase 9 (M-ACCESS): a visible focus ring on every keyboard focus,
+   in both themes. */
+:focus-visible {
+  outline: 2px solid #8b5cf6;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 html,
@@ -28,6 +38,20 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Phase 9 (M-PERF): full light theme — the zinc ramp is inverted so
+   dark surfaces become light and light text becomes dark, everywhere
+   at once. Accent colours (violet/cyan) are unchanged. */
 [data-theme="light"] {
   color-scheme: light;
+  --color-zinc-50: #18181b;
+  --color-zinc-100: #27272a;
+  --color-zinc-200: #3f3f46;
+  --color-zinc-300: #52525b;
+  --color-zinc-400: #71717a;
+  --color-zinc-500: #a1a1aa;
+  --color-zinc-600: #d4d4d8;
+  --color-zinc-700: #e4e4e7;
+  --color-zinc-800: #f4f4f5;
+  --color-zinc-900: #ffffff;
+  --color-zinc-950: #fafafa;
 }

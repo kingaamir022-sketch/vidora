@@ -6,7 +6,7 @@ describe('project JSON schema (v0.8.0)', () => {
     const result = validateProject(SAMPLE_PROJECT);
     expect(result.success).toBe(true);
     expect(parseProject(SAMPLE_PROJECT).name).toBe('Sunset Coast — Sample Project');
-    expect(parseProject(SAMPLE_PROJECT).version).toBe('0.9.0');
+    expect(parseProject(SAMPLE_PROJECT).version).toBe('1.0.0');
   });
 
   it('accepts a minimal valid project', () => {
@@ -23,10 +23,10 @@ describe('project JSON schema (v0.8.0)', () => {
     expect(validateProject(minimal).success).toBe(true);
   });
 
-  it('still accepts a v0.1.0 document and migrates it to 0.9.0', () => {
+  it('still accepts a v0.1.0 document and migrates it to 1.0.0', () => {
     const old = { ...SAMPLE_PROJECT, version: '0.1.0' as const };
     expect(validateProject(old).success).toBe(true);
-    expect(migrateProject(old).version).toBe('0.9.0');
+    expect(migrateProject(old).version).toBe('1.0.0');
     expect(migrateProject(old).media).toEqual([]);
   });
 
@@ -38,7 +38,7 @@ describe('project JSON schema (v0.8.0)', () => {
     delete clip.animationIn;
     clip.keyframes = [{ easing: 'linear', property: 'opacity', time: 0, value: 1 }];
     const migrated = migrateProject(old);
-    expect(migrated.version).toBe('0.9.0');
+    expect(migrated.version).toBe('1.0.0');
     const mclip = migrated.tracks[0].clips[0];
     expect(mclip.adjustment.brightness).toBe(0);
     expect(mclip.keyframes[0].id).toMatch(/^kf-/);
@@ -166,7 +166,7 @@ describe('project JSON schema — Phase 3 fields (v0.8.0)', () => {
     const clip = old.tracks[0].clips[0] as unknown as Record<string, unknown>;
     delete clip.animationLoop;
     const migrated = migrateProject(old);
-    expect(migrated.version).toBe('0.9.0');
+    expect(migrated.version).toBe('1.0.0');
     expect(migrated.captions).toEqual([]);
     expect(migrated.tracks[0].clips[0].animationLoop).toEqual({ duration: 2, kind: 'none' });
     expect(validateProject(migrated).success).toBe(true);
@@ -261,7 +261,7 @@ describe('project JSON schema — Phase 4 audio fields (v0.8.0)', () => {
     delete track.solo;
     delete track.volume;
     const migrated = migrateProject(old);
-    expect(migrated.version).toBe('0.9.0');
+    expect(migrated.version).toBe('1.0.0');
     expect(migrated.mixer).toEqual({ duckAmountDb: 12, ducking: false, masterVolume: 1 });
     const mclip = migrated.tracks[0].clips[0];
     expect(mclip.audioDetached).toBe(false);

@@ -130,12 +130,49 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   (default 24px/s — the Phase 2 audit's 36px guess only passed because
   its check accepted any 00:00:01:xx timecode). Re-run: split works
   (2 → 3), transcript word-click genuinely seeks (02:00 → 00:00).
+- BUG-P9-001 | Phase 9 | Settings / Diagnostics | FIXED 2026-11-24
+  (v1.0.0) — After enabling "Count how I use Vidora", the usage list
+  stayed empty until Settings was closed and reopened: the dialog
+  loaded telemetry only when it opened, so the event it had just
+  logged was never shown. Fix: the opt-in toggle now refreshes the
+  dialog's telemetry state right after logging (`setTelemetry(
+  loadTelemetry())`). Verified by the Phase 9 audit (M-TELEMETRY,
+  66/66).
+- BUG-P9-002 | Phase 9 | Captions (.ass) | FIXED 2026-11-24
+  (v1.0.0) — `parseAss` joined every column from the Text column
+  onward as the cue text, so a Format line with a column AFTER Text
+  (e.g. `Format: Start, End, Text, Layer`) produced "Reordered,0"
+  instead of "Reordered". Fix: join the remainder only when Text is
+  the last column; otherwise take the Text column exactly. Regression
+  test added in `src/test/phase9.test.ts`.
+- BUG-P9-003 | Phase 9 | Localization | FIXED 2026-11-24 (v1.0.0) —
+  Arabic set `dir="rtl"` only on the app root div, so the browser
+  itself never knew the page was RTL (scrollbars, form controls and
+  native text direction stayed LTR). Fix: `App.tsx` now also sets
+  `document.documentElement.dir` and `.lang` from the locale.
+  Verified by the Phase 9 audit (M-LOCALE, `dir=rtl` on `<html>`).
+- BUG-P9-004 | Phase 9 | Audit harnesses (regression, not a product
+  bug) | FIXED 2026-11-24 (v1.0.0) — The Phase 9 first-run tour is a
+  full-screen modal on a fresh profile, so the Phase 3–8 audits (all
+  written before the tour existed) crashed on their first dashboard
+  click: "…tour-heading… intercepts pointer events". The app behaved
+  as designed — the tour is meant to be dismissed first. Fix: every
+  older audit script now dismisses the tour ("Skip tour") right after
+  loading the dashboard when it is present. Re-ran the full sweep
+  after the fix (see SPEC.md Phase 9 verification).
 
 ## Deferred (not bugs — scheduled engine work, honestly labelled in the UI)
 
-- BUG-D2 | Phase 2 → Phase 8 | Colour | DEFERRED — Lens correction
-  is a stored flag only; the UI labels it "(deferred)". Needs a
-  camera/lens profile (Phase 8). Not found in CapCut Web either.
+- BUG-D2 | Phase 2 → Phase 9 | Colour | FIXED 2026-11-24 (v1.0.0) —
+  Generic lens correction is real now: `lib/lens.ts` implements a
+  radial-distortion k1 model (`distortPoint`, 12×12 `lensGrid`), the
+  compositor remaps each clip through the grid, and the Adjustment
+  panel has a Lens correction checkbox + Strength slider (−1…1, 0.05
+  steps). Honest scope: no camera/lens profile — adjust by eye;
+  negative straightens barrel lines, positive fixes pincushion. The
+  panel says so. Verified by the Phase 9 audit (M-LENS, slider sets
+  0.50 and it is stored in the project) and `src/test/phase9.test.ts`
+  (centre unchanged, k=0 identity, corner clamping).
 - BUG-D3 | Phase 2 | Colour | FIXED 2026-11-22 (v0.3.2) — Blend
   modes now apply live in the preview via `drawBlended` in
   `PreviewArea.tsx`; they are no longer deferred. (Was: stored per
@@ -276,9 +313,16 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   `TimelineShell` draws the peaks as white bars inside audio clips.
   Decode failure is tolerated (clip renders without a waveform).
   Unit-tested (`src/test/media.test.ts`).
-- BUG-D11 | Phase 3 | Captions | DEFERRED — .ass caption files are not
-  imported (no parser in this build); .srt/.vtt import and export work.
-  The panel says so plainly.
+- BUG-D11 | Phase 3 → Phase 9 | Captions | FIXED 2026-11-24 (v1.0.0) —
+  .ass import works now: `parseAss` in `lib/captions.ts` reads the
+  [Events] Format line for column order, parses Dialogue lines only,
+  strips `{...}` override tags, turns `\N` into a newline and `\h`
+  into a space, skips comments and malformed lines, and throws when a
+  file has no dialogue at all. The Captions panel accepts
+  .srt/.vtt/.ass. Honest scope: .ass styles are NOT imported — cues
+  use the current caption style; .lrc is still not supported (the
+  panel says so). Verified by the Phase 9 audit (M-ASS: two cues
+  imported from a real .ass file) and `src/test/phase9.test.ts`.
 - BUG-P3-003 | Phase 3 audit harness | FIXED 2026-11-23 (main-agent
   verification) — `npm run audit:phase3` crashed on a fresh machine:
   it wrote its SRT fixture into /tmp/audit-media without creating the

@@ -192,13 +192,29 @@ User rules added 2026-11-22 19:17 PKT (Rule 12 Autonomous Parity Mode, Rule 13 B
 - [x] Cloud — no server, budget zero: project backup is a `.vidora` bundle file (project JSON + comments + shared-with + media metadata) saved to Google Drive `All softwares / Vidora`; restore re-links media by file name + size. Dashboard Backups section (back up / import / records).
 - [x] Team collaboration — local-first by design: shared projects + comments travel in the `.vidora` file, merged by id on import. No live multi-user server is claimed (none exists).
 
-## Phase 9 — Section M (Polish) — PENDING
+## Phase 9 — Section M (Polish) — DONE (v1.0.0, 2026-11-24) — FINAL PHASE
 
-- [ ] Onboarding tour, tooltips
-- [ ] Localization (English, Urdu, Hindi, Arabic with RTL)
-- [ ] Auth (email/Google), subscription hooks, analytics, error logging
-- [ ] Accessibility, GPU optimization, caching
-- [ ] Full tests, CI/CD, Docker, documentation
+- [x] Onboarding tour — 5 plain-language steps on first launch (dashboard-only, Esc/Skip, remembered in `vidora.onboarding.v1`, "Show the tour again" in Settings). `src/components/OnboardingTour.tsx`. 10-step user guide dialog (`UserGuideDialog.tsx`, "Help" in the "…" menu).
+- [x] Localization (English, Urdu, Hindi, Arabic with RTL) — `src/lib/i18n.ts` (45 chrome string keys, `t()`, `formatDate`, `formatNumber`, `isRtl`), `dir`/`lang` on `<html>` in `App.tsx`, language picker in Settings, dashboard dates/numbers per locale. Left-tab labels translate; the video canvas is unchanged.
+- [x] Auth (local accounts, no cloud) — `src/lib/auth.ts` (SHA-256 salted hash via Web Crypto, first account OWNER, later CUSTOMER read-only, signed out = full access) + `AccountPanel.tsx` on the dashboard + read-only gate in `projectStore.ts` (edits, project create/rename/delete/duplicate, undo/redo, import and Export all blocked for a signed-in CUSTOMER; comments and sharing still work). Google sign-in is NOT available in this build — the panel says so.
+- [x] Subscription hooks (structure only) — `src/lib/subscription.ts` (Free/Pro, durations 7/30/90/180/365/lifetime, `daysRemaining`), plans list in the Account panel. Pro is "Not available in this build. Nothing is charged." No payment provider, no cloud, budget zero.
+- [x] Analytics + error logging (local only, opt-in) — `src/lib/telemetry.ts` (event/error log, opt-in default off, 50-error cap, clear/copy in Settings → Diagnostics) + `window.onerror` → `logEvent`/`logError` in `main.tsx`. Counted events: projects created, exports completed, analytics opt-in. Nothing leaves this computer.
+- [x] Accessibility — `:focus-visible` rings in `src/index.css` (both themes), `aria-modal="true"` on Export/Shortcuts/Settings dialogs, labelled controls, Esc closes dialogs and the tour.
+- [x] Performance + finished light theme — `src/lib/mediaCache.ts` (LRU, 200 entries: probe results keyed by `name:size`, thumbnails by media id, wired into `lib/media.ts` import path — re-importing the same file reuses the cached probe instead of re-decoding) + light theme in `src/index.css` (zinc ramp remapped under `data-theme="light"`, verified by the audit).
+- [x] Lens correction — closes BUG-D2: `src/lib/lens.ts` (radial k1 model, 12×12 grid), Strength slider −1…1 in the Adjustment panel, `lensStrength` in the schema, compositor remap step. Honest scope: no camera profile, adjust by eye.
+- [x] .ass import — closes BUG-D11: `parseAss` in `src/lib/captions.ts` (Format-line column order, Dialogue only, override-tag stripping, `\N`/`\h` handling), `.ass` in the Captions panel picker. Honest scope: .ass styles not imported; .lrc still not supported.
+- [x] Full tests — 308 tests (22 files), `src/test/phase9.test.ts` (26 tests: i18n, auth, subscription, telemetry, LRU cache, lens math, .ass parsing, schema v1.0.0 migration). `npm run build` green (186 modules), `npm test` 308/308.
+- [x] CI/CD — `.github/workflows/ci.yml` (Node 20, `npm ci`, build, test, lint; Playwright audits NOT in CI — documented in the workflow). Docker — `Dockerfile` (node:20-alpine build → nginx:alpine serve), `docker-compose.yml` (4173:80), `.dockerignore`. **Docker is not installed on this VM — the image has never been built here; the first real build needs a machine with Docker.**
+- [x] Documentation — `README.md` (final), `docs/USER-GUIDE.md` (simple language), `CHANGELOG.md` (v1.0.0), `docs/PARITY.md` (12 new M rows; score **MATCH 47 / ASSUMED 50 / INTENTIONAL-DIFF 3 / total 100**), `docs/BUGS.md` (D2 + D11 closed; BUG-P9-001/002/003 found by the audit and fixed).
+
+### Phase 9 verification
+
+- Build: `npm run build` green, 186 modules. Tests: `npm test` 308/308 (22 files).
+- Phase 9 self-audit `npm run audit:phase9` **66/66, 0 open bugs** (`audit/phase9/AUDIT-REPORT.md`, 12 card folders with screenshots, fixtures regenerated in-script: test-av.mp4 + test.ass).
+- Final regression sweep: audit:phase4 31/31, audit:phase5 38/38, audit:phase6 32/32, audit:phase7 61/61, audit:phase8 61/61 — all green, 0 open bugs.
+- Bugs found by the Phase 9 audit and fixed before release: BUG-P9-001 (Settings diagnostics list went stale after opt-in), BUG-P9-002 (.ass text column when Text is not last), BUG-P9-003 (`dir=rtl` only on the app root, not `<html>`).
+
+**Vidora is complete: Phases 0–9, v1.0.0. There is no Phase 10.**
 
 ## Manual test script — Phase 2 (run after `npm run dev`)
 

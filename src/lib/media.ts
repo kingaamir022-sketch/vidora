@@ -1,4 +1,5 @@
 import { newId, type MediaItem, type MediaKind } from '../schema/project';
+import { probeCache, thumbnailCache } from './mediaCache';
 
 /** Media import helpers (Phase 1, SPEC A). Probes real metadata from File objects. */
 
@@ -149,15 +150,28 @@ export async function importFile(file: File, folderId = 'folder-all'): Promise<M
     size: file.size,
     src,
   };
+  // Phase 9 (M-PERF): the same file (same name + size) reuses its
+  // cached probe result instead of being decoded again.
+  const cacheKey = `${file.name}:${file.size}`;
+  const cached = probeCache.get(cacheKey);
+  if (cached) {
+    if (cached.thumbnail) thumbnailCache.set(base.id, cached.thumbnail);
+    return { ...base, ...cached, ...(kind === 'image' ? { duration: 5 } : {}) };
+  }
+  let meta: { duration?: number; height?: number; thumbnail?: string; width?: number };
   if (kind === 'video' || kind === 'gif') {
-    const meta = kind === 'video' ? await probeVideo(src) : await probeImage(src);
-    return { ...base, ...meta };
+    meta = kind === 'video' ? await probeVideo(src) : await probeImage(src);
+  } else if (kind === 'image') {
+    meta = await probeImage(src);
+  } else {
+    const audioMeta = await probeAudio(src);
+    const peaks = await probeAudioPeaks(src);
+    return { ...base, ...audioMeta, ...peaks };
   }
-  if (kind === 'image') {
-    const meta = await probeImage(src);
-    return { ...base, ...meta, duration: 5 };
+  if (meta.thumbnail) {
+    thumbnailCache.set(base.id, meta.thumbnail);
+    probeCache.set(cacheKey, meta);
   }
-  const meta = await probeAudio(src);
-  const peaks = await probeAudioPeaks(src);
-  return { ...base, ...meta, ...peaks };
+  if (kind === 'image') return { ...base, ...meta, duration: 5 };
+  return { ...base, ...meta };
 }

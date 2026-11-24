@@ -382,8 +382,9 @@ export const adjustmentSchema = z.object({
   hslLightness: z.number().min(-1).max(1).default(0),
   hslSaturation: z.number().min(-1).max(1).default(0),
   hue: z.number().min(-180).max(180).default(0),
-  /** Lens correction: stored flag only. Full render needs a camera profile (Phase 8). */
+  /** Lens correction (Phase 9, M-LENS): real generic radial correction; strength −1…1, 0 = no change. No camera profiles. */
   lensCorrection: z.boolean().default(false),
+  lensStrength: z.number().min(-1).max(1).default(0),
   lift: colorWheelSchema.default({ b: 0, g: 0, r: 0 }),
   saturation: z.number().min(-1).max(1).default(0),
   shadows: z.number().min(-1).max(1).default(0),
@@ -411,6 +412,7 @@ export function defaultAdjustment(): Adjustment {
     hslSaturation: 0,
     hue: 0,
     lensCorrection: false,
+    lensStrength: 0,
     lift: { b: 0, g: 0, r: 0 },
     saturation: 0,
     shadows: 0,
@@ -634,7 +636,7 @@ export const projectSchema = z.object({
   sharedWith: z.array(z.string().min(1).max(80)).default([]),
   tracks: z.array(trackSchema).default([]),
   updatedAt: z.string().datetime(),
-  version: z.enum(['0.1.0', '0.2.0', '0.3.0', '0.4.0', '0.5.0', '0.6.0', '0.7.0', '0.8.0', '0.9.0']),
+  version: z.enum(['0.1.0', '0.2.0', '0.3.0', '0.4.0', '0.5.0', '0.6.0', '0.7.0', '0.8.0', '0.9.0', '1.0.0']),
 });
 export type VidoraProject = z.infer<typeof projectSchema>;
 
@@ -647,11 +649,12 @@ export function parseProject(data: unknown): VidoraProject {
 }
 
 /**
- * Migrate a v0.1.0 / v0.2.0 / v0.3.0 / v0.4.0 / v0.5.0 / v0.6.0 / v0.7.0 /
- * v0.8.0 document to v0.9.0 (fills new fields with defaults). Old
- * keyframes (no `id`) gain one; old effects keep working. Captions,
- * comments and sharedWith default to [] and new clip fields are
- * optional, so old documents validate unchanged.
+ * Migrate a v0.1.0 … v0.9.0 document to v1.0.0 (fills new fields with
+ * defaults). Old keyframes (no `id`) gain one; old effects keep
+ * working. Captions, comments and sharedWith default to [] and new
+ * clip fields are optional, so old documents validate unchanged.
+ * Lens correction migrates to off / strength 0 — nothing changes
+ * visually for old projects.
  */
 export function migrateProject(data: unknown): VidoraProject {
   const raw = data as Record<string, unknown>;
@@ -670,7 +673,7 @@ export function migrateProject(data: unknown): VidoraProject {
     };
   });
   const parsed = projectSchema.parse({ ...raw, tracks: migratedTracks });
-  return { ...parsed, version: '0.9.0' };
+  return { ...parsed, version: '1.0.0' };
 }
 
 /** Resolution for an aspect ratio, given a custom size when ratio is 'custom'. */
@@ -818,5 +821,5 @@ export const SAMPLE_PROJECT: VidoraProject = {
     },
   ],
   updatedAt: '2026-11-22T00:00:00.000Z',
-  version: '0.9.0',
+  version: '1.0.0',
 };
