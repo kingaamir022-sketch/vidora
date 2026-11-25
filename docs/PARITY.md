@@ -80,9 +80,9 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Keyframes (D-KEYFRAMES) | ✓ | ✓ | ✓ | — | ✓ | `KeyframesPanel.tsx`, `lib/keyframes.ts` | MATCH |
 | Easing & graph (D-EASING) | ✓ | ✓ | ✓ | — | ✓ | `KeyframesPanel.tsx` (bezier solver) | MATCH |
 | In/out animations (D-ANIM) | ✓ | ✓ | ✓ | — | ✓ | `KeyframesPanel.tsx` (11 kinds) | MATCH |
-| Transitions (E-TRANS) | ✓ | ✓ | ✓ | — | ✓ | `TransitionsPanel.tsx` (32 types, search + categories) · v1.0.2: search on top, tile grid always visible, tiles are real mid-transition stills with working PNG download, drag-and-drop onto clip boundaries + "+" apply | MATCH |
+| Transitions (E-TRANS) | ✓ | ✓ | ✓ | — | ✓ | `TransitionsPanel.tsx` (32 types, search + categories) · v1.0.2: search on top, tile grid always visible, tiles are real mid-transition stills with working PNG download, drag-and-drop onto clip boundaries + "+" apply · v1.0.3: "Pals" removed (not a CapCut category — Web check §4 + desktop #25); tiles now square ~70×70 | MATCH |
 | Effects (E-FX) | ✓ | ✓ | ✓ | — | ✓ | `EffectsPanel.tsx` (14 CSS/pixel effects + 62 GLSL effects, search + categories + auto thumbnails) · v1.0.2: applied-effects card above the grid (was below the fold), drag-and-drop + "+" apply, redirect to the video clip under the playhead when a sticker/text clip is selected, grid browsable with no clip | MATCH |
-| LUT import & looks (E-LUT) | ✓ | ✓ | ✓ | — | ✓ | `lib/lut.ts` (trilinear, 32 looks) · Filters tab real in Phase 5 · v1.0.2: filter tiles show a sample photo with the LUT actually applied + working `.cube` download | MATCH |
+| LUT import & looks (E-LUT) | ✓ | ✓ | ✓ | — | ✓ | `lib/lut.ts` (trilinear, 32 looks) · Filters tab real in Phase 5 · v1.0.2: filter tiles show a sample photo with the LUT actually applied + working `.cube` download · v1.0.3: Tools group (Enhance, 4K, HD Upscale, Quality Restoration, Night-view Color, HD Cam 2, HD Pet) now applies directly on click with Intensity only, per Web check §3; tiles now square ~70×70 | MATCH |
 | Colour sliders (F-ADJUST) | ✓ | ✓ | ✓ | — | ✓ | `ColorPanel.tsx` (10 sliders) | MATCH |
 | RGB curves (F-CURVES) | ✓ | ✓ | ✓ | — | ✓ | `ColorPanel.tsx` (draggable points + presets) · live check §7 | MATCH |
 | HSL / blend (F-BLEND) | ✓ | ✓ | ✓ | — | ✓ | `ColorPanel.tsx` + `PreviewArea.tsx` (live blend) · live check §8 | MATCH |

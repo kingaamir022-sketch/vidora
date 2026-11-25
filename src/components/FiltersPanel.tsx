@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { findClip } from '../lib/timeline';
 import { BUILTIN_LUTS, lutToCubeText, type BuiltinLut } from '../lib/lut';
+import { toolEffectDef } from '../lib/effects';
 import { FILTER_SAMPLE_SRC, downloadTextFile, loadSampleImage, lutPhotoDataUrl } from '../lib/tileThumbs';
 import { encodePanelDrag, PANEL_DRAG_MIME } from '../lib/panelDrag';
 import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from './PanelShell';
@@ -12,9 +13,20 @@ import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from
  * Filters ^ (Featured, NEW, Hits, Life, Landscape, Portrait, Mono),
  * Tools (Enhance, 4K, HD Upscale, Quality Restoration, Night-view
  * Color, HD Cam 2, HD Pet). 2-col grid of the 32 Vidora looks (D3).
- * The Tools entries open Vidora's Enhance / Upscale engines in the AI
- * tools overlay, labelled honestly (resample + sharpen, no detail
- * recovery).
+ *
+ * v1.0.3 (Web check 2026-11-25 §3): the Tools entries apply DIRECTLY
+ * on a single click — no dialog, no AI-tools overlay. Each tool is a
+ * clip effect (`tool-*` in lib/effects.ts, CSS lift, Intensity only)
+ * on the selected video clip (redirects to the video clip under the
+ * playhead, like filters/effects). The preview changes at once and
+ * the tool shows in the "Applied tools" card above the grid with ONLY
+ * an Intensity slider (100), like CapCut Web's Basic panel. The full
+ * Enhance/Upscale engines still live in the AI tools overlay
+ * (preview toolbar → Edit with AI / Smart tools). One documented
+ * divergence: CapCut Web puts a marker segment on a track above the
+ * clip at the playhead; Vidora applies the tool to the whole clip
+ * (clip-level effects, like everything else) — there are no segment
+ * tracks in this build.
  *
  * v1.0.2 (W4, D14): the applied-filter card (name + intensity + Clear)
  * renders ABOVE the tile grid — it used to sit below the grid, below
@@ -32,16 +44,20 @@ import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from
  * icon at bottom-right is REAL: it downloads the look as a .cube
  * preset. There is NO Pro badge — Vidora has no paid tier and every
  * look is included, so a Pro diamond would be misleading.
+ *
+ * v1.0.3 (Web check §5): tiles are square ~70×70 photo thumbnails —
+ * the grid is `repeat(auto-fill, minmax(68px, 1fr))` so tiles stay
+ * ~70px at 1920 and drop to 2 columns on narrow panels.
  */
 export const FILTER_NAV = ['Featured', 'NEW', 'Hits', 'Life', 'Landscape', 'Portrait', 'Mono'] as const;
-export const FILTER_TOOLS: { label: string; tool: string; note: string }[] = [
-  { label: 'Enhance', note: 'Low-light + retouch (local enhancement)', tool: 'enhance' },
-  { label: '4K', note: 'Upscale to 3840×2160 (resample + sharpen)', tool: 'upscale' },
-  { label: 'HD Upscale', note: 'Upscale to 1920×1080 (resample + sharpen)', tool: 'upscale' },
-  { label: 'Quality Restoration', note: 'Denoise + sharpen (no detail recovery)', tool: 'enhance' },
-  { label: 'Night-view Color', note: 'Low-light colour lift', tool: 'enhance' },
-  { label: 'HD Cam 2', note: 'Upscale + sharpen (resample, no detail recovery)', tool: 'upscale' },
-  { label: 'HD Pet', note: 'Pet-photo enhancement (local enhancement)', tool: 'enhance' },
+export const FILTER_TOOLS: { label: string; tool: string; note: string; effectId: string }[] = [
+  { label: 'Enhance', note: 'Low-light + retouch (local enhancement)', tool: 'enhance', effectId: 'tool-enhance' },
+  { label: '4K', note: 'Upscale to 3840×2160 (resample + sharpen)', tool: 'upscale', effectId: 'tool-4k' },
+  { label: 'HD Upscale', note: 'Upscale to 1920×1080 (resample + sharpen)', tool: 'upscale', effectId: 'tool-hd-upscale' },
+  { label: 'Quality Restoration', note: 'Denoise + sharpen (no detail recovery)', tool: 'enhance', effectId: 'tool-quality-restoration' },
+  { label: 'Night-view Color', note: 'Low-light colour lift', tool: 'enhance', effectId: 'tool-night-view' },
+  { label: 'HD Cam 2', note: 'Upscale + sharpen (resample, no detail recovery)', tool: 'upscale', effectId: 'tool-hd-cam-2' },
+  { label: 'HD Pet', note: 'Pet-photo enhancement (local enhancement)', tool: 'enhance', effectId: 'tool-hd-pet' },
 ];
 
 function filterNavFilter(nav: string): (l: { category: string }) => boolean {
@@ -76,9 +92,9 @@ function FilterPhotoThumb({ lut }: { lut: BuiltinLut }) {
     };
   }, [lut]);
   if (!src) {
-    return <span className="flex h-14 w-full items-center justify-center bg-[#1A1A1A] text-[11px] text-zinc-500">Loading photo…</span>;
+    return <span className="flex aspect-square w-full items-center justify-center bg-[#1A1A1A] text-[11px] text-zinc-500">Loading photo…</span>;
   }
-  return <img src={src} alt={`${lut.name} preview`} className="h-14 w-full object-cover" />;
+  return <img src={src} alt={`${lut.name} preview`} className="aspect-square w-full object-cover" />;
 }
 
 export default function FiltersPanel() {
@@ -87,12 +103,15 @@ export default function FiltersPanel() {
   const setBuiltinLut = useProjectStore((s) => s.setBuiltinLut);
   const setLut = useProjectStore((s) => s.setLut);
   const importLutFile = useProjectStore((s) => s.importLutFile);
-  const setAiToolsOverlay = useProjectStore((s) => s.setAiToolsOverlay);
+  const addEffect = useProjectStore((s) => s.addEffect);
+  const removeEffect = useProjectStore((s) => s.removeEffect);
+  const updateEffect = useProjectStore((s) => s.updateEffect);
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<string>('Featured');
   const [lutError, setLutError] = useState<string | null>(null);
   const [applyNote, setApplyNote] = useState<string | null>(null);
   const appliedRef = useRef<HTMLDivElement>(null);
+  const toolsRef = useRef<HTMLDivElement>(null);
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
       return JSON.parse(localStorage.getItem('vidora.filter-favorites.v1') ?? '[]') as string[];
@@ -135,6 +154,25 @@ export default function FiltersPanel() {
     requestAnimationFrame(() => appliedRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }));
   };
 
+  /** v1.0.3: a Tools click applies directly (Web check §3) — no dialog.
+   * Same redirect/blocked handling as filters/effects. */
+  const applyTool = (effectId: string, label: string) => {
+    const res = addEffect(effectId);
+    if (res.status === 'redirected') {
+      setApplyNote(`“${clip?.name ?? ''}” can't show “${label}” — applied to the video clip “${res.targetName ?? ''}” under the playhead instead.`);
+    } else if (res.status === 'blocked') {
+      setApplyNote('This clip can’t show this tool, and there is no video clip under the playhead to apply it to.');
+    } else if (res.status === 'already') {
+      setApplyNote(`“${label}” is already on this clip — adjust its Intensity below.`);
+    } else {
+      setApplyNote(null);
+    }
+    requestAnimationFrame(() => toolsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }));
+  };
+
+  /** Tools applied to the selected clip (Intensity only, like CapCut Web's Basic panel). */
+  const appliedTools = (clip?.effects ?? []).filter((e) => toolEffectDef(e.name));
+
   const downloadLut = (lut: BuiltinLut) => {
     const safe = lut.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
     downloadTextFile(`${safe}.cube`, lutToCubeText(lut.name, lut.size, lut.data));
@@ -151,7 +189,7 @@ export default function FiltersPanel() {
         </SubNavGroup>
         <SubNavGroup title="Tools">
           {FILTER_TOOLS.map((t) => (
-            <SubNavItem key={t.label} onClick={() => setAiToolsOverlay(t.tool)}>{t.label}</SubNavItem>
+            <SubNavItem key={t.label} active={appliedTools.some((e) => e.name === t.effectId)} onClick={() => applyTool(t.effectId, t.label)}>{t.label}</SubNavItem>
           ))}
         </SubNavGroup>
       </>}
@@ -188,9 +226,42 @@ export default function FiltersPanel() {
           </label>
         </div>
       )}
+      {/* v1.0.3: applied Tools — ONLY an Intensity slider, like CapCut
+          Web's Basic panel for a selected tool marker. */}
+      {appliedTools.length > 0 && (
+        <div ref={toolsRef} className="mt-3 space-y-2 rounded-md border border-zinc-800 bg-zinc-900 p-2 text-xs" aria-label="Applied tools">
+          <h3 className="text-xs font-semibold text-zinc-300">Applied tools</h3>
+          {appliedTools.map((effect) => {
+            const def = toolEffectDef(effect.name);
+            return (
+              <div key={effect.id}>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-semibold">{def?.name ?? effect.name}</span>
+                  <button type="button" onClick={() => removeEffect(effect.id)} aria-label={`Remove ${def?.name ?? effect.name}`} className="rounded border border-zinc-700 px-1.5 text-zinc-400">×</button>
+                </div>
+                <label className="mt-1.5 flex items-center gap-2">
+                  Intensity
+                  <input
+                    type="range"
+                    min={0}
+                    max={1}
+                    step={0.05}
+                    value={effect.intensity}
+                    onChange={(e) => updateEffect(effect.id, { intensity: Number(e.target.value) })}
+                    className="flex-1"
+                    aria-label={`${def?.name ?? effect.name} intensity`}
+                  />
+                  <span className="w-10 text-right font-mono">{Math.round(effect.intensity * 100)}</span>
+                </label>
+                <p className="mt-1 text-[11px] text-zinc-500">Local enhancement — no detail recovery.</p>
+              </div>
+            );
+          })}
+        </div>
+      )}
       <SectionHeading>{query ? `Results for "${query}"` : category}</SectionHeading>
       <p className="mt-1 text-[11px] text-zinc-500">Click a tile or its + to apply it — or drag a tile onto a video clip on the timeline or onto the preview.</p>
-      <div className="mt-2 grid grid-cols-2 gap-2">
+      <div className="mt-2 grid grid-cols-[repeat(auto-fill,minmax(68px,1fr))] gap-2">
         {results.map((lut) => {
           return (
             <div
@@ -214,7 +285,7 @@ export default function FiltersPanel() {
             </div>
           );
         })}
-        {results.length === 0 && <p className="col-span-2 text-[11px] text-zinc-500">No filters match.</p>}
+        {results.length === 0 && <p className="col-span-full text-[11px] text-zinc-500">No filters match.</p>}
       </div>
       <section className="mt-4 space-y-2 border-t border-zinc-800 pt-3">
         <h3 className="text-xs font-semibold text-zinc-300">Import .cube file</h3>
@@ -224,7 +295,7 @@ export default function FiltersPanel() {
         </label>
         {lutError && <p className="text-[11px] text-red-400">{lutError}</p>}
         <p className="text-[11px] leading-relaxed text-zinc-500">
-          All {BUILTIN_LUTS.length} looks are original Vidora designs. The Tools above open Vidora’s Enhance and Upscale engines — resample + sharpen, no detail recovery.
+          All {BUILTIN_LUTS.length} looks are original Vidora designs. The Tools above apply directly to the selected video clip (Intensity only) — a local enhancement, no detail recovery. The full Enhance and Upscale engines live in the AI tools overlay (preview toolbar → Edit with AI).
         </p>
       </section>
     </PanelShell>

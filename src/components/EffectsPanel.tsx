@@ -19,6 +19,10 @@ import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from
  * (L1). 2-col card grid (D3) with thumbnails + names below. Effect
  * names stay Vidora Originals.
  *
+ * v1.0.3 (Web check 2026-11-25 §5): tiles are square ~70×70 photo
+ * thumbnails — the grid is `repeat(auto-fill, minmax(68px, 1fr))` so
+ * tiles stay ~70px at 1920 and drop to 2 columns on narrow panels.
+ *
  * v1.0.2 (W4, D14): the "Applied effects" card renders ABOVE the tile
  * grid (it used to sit below the fold — rect y 836–938 while the panel
  * ends ~792 — so clicking a tile showed nothing) and applying an
@@ -275,7 +279,7 @@ export default function EffectsPanel() {
               <p className="mt-1 text-[11px] text-amber-400">WebGL2 is not available in this browser, so GLSL effects are disabled. The classic effects below still work.</p>
             )}
             <p className="mt-1 text-[11px] text-zinc-500">Click a tile or its + to apply it — or drag a tile onto a video clip on the timeline or onto the preview.</p>
-            <div className="mt-2 grid grid-cols-2 gap-2">
+            <div className="mt-2 grid grid-cols-[repeat(auto-fill,minmax(68px,1fr))] gap-2">
               {results.classic.map((def) => {
                 const active = showsEffects && Boolean(clip?.effects.some((e) => e.name === def.id));
                 return (
@@ -292,7 +296,7 @@ export default function EffectsPanel() {
                       title={def.description}
                       className="block w-full text-left disabled:opacity-60"
                     >
-                      <span className="flex h-14 w-full items-center justify-center bg-gradient-to-br from-[#3D3D3D] via-[#242424] to-[#141414] text-sm font-bold text-[#F2F2F2]">{def.name}</span>
+                      <span className="flex aspect-square w-full items-center justify-center bg-gradient-to-br from-[#3D3D3D] via-[#242424] to-[#141414] px-1 text-center text-[11px] font-bold leading-tight text-[#F2F2F2]">{def.name}</span>
                       <span className="block truncate py-1 pl-7 pr-2 text-[11px]">
                         {def.name}
                         {active && ' ✓'}
@@ -321,9 +325,9 @@ export default function EffectsPanel() {
                       className="block w-full text-left disabled:opacity-60"
                     >
                       {thumb ? (
-                        <img src={thumb} alt="" className="h-14 w-full object-cover" />
+                        <img src={thumb} alt="" className="aspect-square w-full object-cover" />
                       ) : (
-                        <span className="flex h-14 w-full items-center justify-center bg-gradient-to-br from-[#3D3D3D] via-[#242424] to-[#141414] text-sm font-bold text-[#F2F2F2]">{def.name}</span>
+                        <span className="flex aspect-square w-full items-center justify-center bg-gradient-to-br from-[#3D3D3D] via-[#242424] to-[#141414] px-1 text-center text-[11px] font-bold leading-tight text-[#F2F2F2]">{def.name}</span>
                       )}
                       <span className="block truncate py-1 pl-7 pr-2 text-[11px]">
                         {def.name}
@@ -336,7 +340,7 @@ export default function EffectsPanel() {
                 );
               })}
               {results.classic.length === 0 && results.glsl.length === 0 && (
-                <p className="col-span-2 text-[11px] text-zinc-500">No effects match{query ? ` “${query}”` : ''}.</p>
+                <p className="col-span-full text-[11px] text-zinc-500">No effects match{query ? ` “${query}”` : ''}.</p>
               )}
             </div>
           </section>

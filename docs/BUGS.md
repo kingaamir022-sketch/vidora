@@ -148,6 +148,54 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   counters predated the "+" / download buttons and the AI sections
   sharing the Audio row component. All updated to count the right
   things; Phase 5 audit passes 39/39 again.
+- BUG-CF-023 | CapCut-fix v1.0.3 | HelpCenter "What's new" stale | FIXED
+  2026-11-25 — The Help Center still said "What's new in v1.0.1"
+  after v1.0.2 shipped. Fix: the heading now says v1.0.2 and lists
+  the D1–D16 fixes in plain words (`HelpCenter.tsx`).
+- BUG-CF-024 | CapCut-fix v1.0.3 | Transitions "Pals" is not a CapCut category | FIXED
+  2026-11-25 — Vidora's Transitions nav had a "Pals" category. The
+  CapCut Web check (§4) lists 14 real categories with no Pals, and
+  desktop screenshot #25's rail has no Pals either. Fix: "Pals"
+  removed from `TRANSITION_NAV` and its filter case; the 'Shape'
+  family stays reachable via search + Trending.
+- BUG-CF-025 | CapCut-fix v1.0.3 | Filters Tools opened a dialog instead of applying | FIXED
+  2026-11-25 — Clicking a Filters Tools item (Enhance, 4K, HD Upscale,
+  Quality Restoration, Night-view Color, HD Cam 2, HD Pet) opened the
+  AI-tools overlay. CapCut Web (§3) applies on a single click: marker
+  above the clip at the playhead, preview changes, Basic panel with
+  ONLY an Intensity slider. Fix: each tool is now a clip effect
+  (`tool-*` in `lib/effects.ts`, CSS lift, Intensity only) applied
+  directly to the selected video clip, with an "Applied tools" card
+  (Intensity slider + Remove) above the grid. Documented divergence:
+  Web's marker segment on a track above the clip is not reproduced —
+  Vidora applies to the whole clip (clip-level effects).
+- BUG-CF-026 | CapCut-fix v1.0.3 | Tiles were wide strips, not ~70px squares | FIXED
+  2026-11-25 — CapCut Web tiles are square ~70×70 photo thumbnails;
+  Vidora's effect/filter/transition tiles were 184×56 wide strips.
+  Fix: all three grids are `repeat(auto-fill, minmax(68px, 1fr))`
+  with square thumbnails (~70px at 1920, 2 columns on narrow panels).
+  Note: desktop #25/#27 show larger 2-column tiles — this round
+  follows the Web measurement per the task.
+- BUG-CF-027 | CapCut-fix v1.0.3 | "CC" button in the preview toolbar is not CapCut's | FIXED
+  2026-11-25 — Vidora's floating preview toolbar had a "CC" button.
+  CapCut Web has no CC around the preview (§1), and CapCut desktop
+  doesn't either — v09 frame_010 (clip selected) shows a clean preview
+  with no floating pill and no CC, and none of the 30 desktop
+  screenshots shows one. Fix: the CC button is removed; Captions stay
+  in the left tab rail.
+- BUG-CF-028 | CapCut-fix v1.0.3 | Verify probe: Tools preview hash unchanged on the sample project | PROBE ARTIFACT — NOT AN APP BUG
+  2026-11-25 — `verify.mjs` asserted the preview canvas hash changes
+  after applying HD Cam 2 to the sample project's first clip; the hash
+  was identical (`eed4a407dfc3`) both times. Root cause: the sample
+  project's clip has NO media — it is a procedural gradient background
+  (`SAMPLE_PROJECT`, `media: []`), so the preview shows the clip name
+  as text and `renderClipFrame`'s `ctx.filter` (which carries the tool
+  CSS) has no source frame to affect. No app change needed. Proof the
+  tool CSS reaches the preview: `audit/capcut-fix/v103/probe-tools-preview.mjs`
+  imports a real image, adds it to the timeline, applies HD Cam 2 —
+  preview hash `8f2013c340b4` → `1fa1b14b7a26`, Applied tools card
+  present, 0 page errors. The hash check now lives in that probe;
+  `verify.mjs` keeps the card/slider checks (15/15 PASS).
 - BUG-CF-001 | CapCut-fix v1.0.1 | Audio / Cut at beats | FIXED
   2026-11-25 — "Cut at beats" silently did nothing whenever the
   selected audio clip did not start at 0: `AudioPanel.tsx` passed

@@ -1,6 +1,6 @@
 # Vidora — Create. Cut. Shine.
 
-A professional video editor. **v1.0.2 — user-reported fix round (D1–D16).** All nine build phases are done (Phases 0–9), verified by build + 355 tests + Playwright self-audits with zero open bugs. On 2026-11-25 the user ordered a complete CapCut clone — only the app name and logo stay Vidora; everything else matches CapCut desktop (layout, panels, tab order, controls, colours, shortcuts, menus, settings) as verified against her 30 desktop screenshots and 10 screen-recording videos. See [`docs/CAPCUT-FIX-2026-11-25.md`](docs/CAPCUT-FIX-2026-11-25.md) and [`docs/PARITY.md`](docs/PARITY.md) (MATCH 59 / ASSUMED 32 / INTENTIONAL-DIFF 0 / total 91).
+A professional video editor. **v1.0.3 — Web-check follow-up round.** All nine build phases are done (Phases 0–9), verified by build + 364 tests + Playwright self-audits with zero open bugs. On 2026-11-25 the user ordered a complete CapCut clone — only the app name and logo stay Vidora; everything else matches CapCut desktop (layout, panels, tab order, controls, colours, shortcuts, menus, settings) as verified against her 30 desktop screenshots and 10 screen-recording videos. See [`docs/CAPCUT-FIX-2026-11-25.md`](docs/CAPCUT-FIX-2026-11-25.md) and [`docs/PARITY.md`](docs/PARITY.md) (MATCH 59 / ASSUMED 32 / INTENTIONAL-DIFF 0 / total 91).
 
 **Try it live:** https://kingaamir022-sketch.github.io/vidora/ — no install needed, open the link in a browser and use it directly. (Deploy notes: [`docs/PAGES-DEPLOY.md`](docs/PAGES-DEPLOY.md).)
 
@@ -22,7 +22,7 @@ All branding, icons, fonts, effects, templates, stickers, music, clips and voice
 npm install
 npm run dev      # start the dev server (Vite) — open the URL it prints
 npm run build    # type-check + production build into dist/
-npm test         # run the Vitest suite (355 tests)
+npm test         # run the Vitest suite (364 tests)
 npm run preview  # serve the production build locally
 npm run build:assets  # regenerate the procedural asset library (manifest, .cube LUTs, animated stickers, fonts, licenses, provenance)
 ```
@@ -32,7 +32,7 @@ Requires **Node.js ≥ 20**. No server, no database, no account — projects liv
 ## Run it with Docker
 
 ```bash
-docker build -t vidora:1.0.2 .
+docker build -t vidora:1.0.3 .
 docker compose up   # serves on http://localhost:4173
 ```
 

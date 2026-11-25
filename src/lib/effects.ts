@@ -134,6 +134,78 @@ export const EFFECT_CATALOG: EffectDef[] = [
   },
 ];
 
+/**
+ * Filters-tab Tools (Web check 2026-11-25 §3; v1.0.3): the 7 AI
+ * enhancement tools (Enhance, 4K, HD Upscale, Quality Restoration,
+ * Night-view Color, HD Cam 2, HD Pet). On CapCut Web a single click
+ * applies one directly — a marker appears on a track above the clip at
+ * the playhead and the preview changes; selecting it shows a Basic
+ * panel with ONLY an Intensity slider (100). Vidora models effects
+ * clip-level (no segment tracks), so a tool applies as a clip effect
+ * with Intensity only — same click-to-apply, same visible preview
+ * change, same Intensity-only control (in the Applied tools card);
+ * the marker segment is the one documented divergence. The CSS below
+ * is a LOCAL approximation (brightness/contrast/saturation lift) —
+ * there is no detail recovery and no ML model, and the panel says so.
+ * These defs live outside EFFECT_CATALOG on purpose: they must NOT
+ * appear as tiles in the Effects panel.
+ */
+export const TOOL_EFFECT_DEFS: EffectDef[] = [
+  {
+    css: (_p, i) => `brightness(${(1 + 0.18 * i).toFixed(2)}) contrast(${(1 + 0.12 * i).toFixed(2)}) saturate(${(1 + 0.15 * i).toFixed(2)})`,
+    description: 'Low-light lift + retouch (local approximation, no detail recovery).',
+    id: 'tool-enhance',
+    name: 'Enhance',
+    params: {},
+  },
+  {
+    css: (_p, i) => `contrast(${(1 + 0.08 * i).toFixed(2)}) saturate(${(1 + 0.1 * i).toFixed(2)}) brightness(${(1 + 0.02 * i).toFixed(2)})`,
+    description: 'Upscale feel (resample + sharpen — no detail recovery).',
+    id: 'tool-4k',
+    name: '4K',
+    params: {},
+  },
+  {
+    css: (_p, i) => `contrast(${(1 + 0.06 * i).toFixed(2)}) saturate(${(1 + 0.08 * i).toFixed(2)})`,
+    description: 'Upscale feel (resample + sharpen — no detail recovery).',
+    id: 'tool-hd-upscale',
+    name: 'HD Upscale',
+    params: {},
+  },
+  {
+    css: (_p, i) => `brightness(${(1 + 0.05 * i).toFixed(2)}) contrast(${(1 + 0.1 * i).toFixed(2)}) saturate(${(1 + 0.05 * i).toFixed(2)})`,
+    description: 'Denoise + sharpen feel (no detail recovery).',
+    id: 'tool-quality-restoration',
+    name: 'Quality Restoration',
+    params: {},
+  },
+  {
+    css: (_p, i) => `brightness(${(1 + 0.28 * i).toFixed(2)}) saturate(${(1 + 0.3 * i).toFixed(2)}) contrast(${(1 + 0.08 * i).toFixed(2)})`,
+    description: 'Low-light colour lift (local approximation).',
+    id: 'tool-night-view',
+    name: 'Night-view Color',
+    params: {},
+  },
+  {
+    css: (_p, i) => `contrast(${(1 + 0.15 * i).toFixed(2)}) saturate(${(1 + 0.2 * i).toFixed(2)})`,
+    description: 'High-contrast cam look (local approximation).',
+    id: 'tool-hd-cam-2',
+    name: 'HD Cam 2',
+    params: {},
+  },
+  {
+    css: (_p, i) => `saturate(${(1 + 0.25 * i).toFixed(2)}) contrast(${(1 + 0.05 * i).toFixed(2)}) brightness(${(1 + 0.03 * i).toFixed(2)})`,
+    description: 'Pet-photo colour lift (local approximation).',
+    id: 'tool-hd-pet',
+    name: 'HD Pet',
+    params: {},
+  },
+];
+
+export function toolEffectDef(id: string): EffectDef | undefined {
+  return TOOL_EFFECT_DEFS.find((d) => d.id === id);
+}
+
 export function effectDef(id: string): EffectDef | undefined {
   return EFFECT_CATALOG.find((d) => d.id === id);
 }
@@ -143,9 +215,9 @@ export function glslDef(id: string): GlslEffectDef | undefined {
   return glslEffectDef(id);
 }
 
-/** Any effect definition (CSS/pixel catalog first, then the GLSL catalog). */
+/** Any effect definition (CSS/pixel catalog first, then the GLSL catalog, then the Filters Tools). */
 export function anyEffectDef(id: string): EffectDef | GlslEffectDef | undefined {
-  return effectDef(id) ?? glslEffectDef(id);
+  return effectDef(id) ?? glslEffectDef(id) ?? toolEffectDef(id);
 }
 
 export function defaultEffectParams(def: EffectDef | GlslEffectDef): Record<string, number> {
@@ -165,8 +237,8 @@ export function effectParams(effect: Effect): Record<string, number> {
 export function cssFilterForEffects(effects: Effect[]): string {
   const parts: string[] = [];
   for (const effect of effects) {
-    const def = effectDef(effect.name);
-    if (def?.css) parts.push(def.css(effectParams(effect), effect.intensity));
+    const def = anyEffectDef(effect.name);
+    if (def && 'css' in def && def.css) parts.push(def.css(effectParams(effect), effect.intensity));
   }
   return parts.length > 0 ? parts.join(' ') : 'none';
 }
@@ -175,8 +247,8 @@ export function cssFilterForEffects(effects: Effect[]): string {
 export function pixelEffects(effects: Effect[]): { def: EffectDef; effect: Effect }[] {
   const out: { def: EffectDef; effect: Effect }[] = [];
   for (const effect of effects) {
-    const def = effectDef(effect.name);
-    if (def?.pixel) out.push({ def, effect });
+    const def = anyEffectDef(effect.name);
+    if (def && 'pixel' in def && def.pixel) out.push({ def, effect });
   }
   return out;
 }

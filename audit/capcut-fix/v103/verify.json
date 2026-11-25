@@ -1,0 +1,21 @@
+{
+ "checks": {
+  "HelpCenter shows v1.0.2": "PASS",
+  "all 11 tabs clickable": "PASS",
+  "Transitions nav has no Pals": "PASS",
+  "transition thumb ~70x70 square": "PASS",
+  "filter thumb ~70x70 square": "PASS",
+  "effect tile ~70px wide": "PASS",
+  "no CC button (toolbar present)": "PASS",
+  "Tools HD Cam 2 in sub-nav": "PASS",
+  "Tools click shows Applied tools card": "PASS",
+  "Applied tools card has ONLY an Intensity slider at 100": "PASS",
+  "Intensity slider changes to 50": "PASS",
+  "template cards present": "PASS",
+  "hover shows Use template in viewport": "PASS",
+  "hover shows Edit more in viewport": "PASS",
+  "pageErrors": [],
+  "0 page errors": "PASS"
+ },
+ "fail": []
+}

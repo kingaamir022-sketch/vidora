@@ -24,10 +24,14 @@
  * PanelShell div (no aside[aria-label="Media library"]) with a hidden
  * file input and a card grid (button[title$="click to add to timeline"]).
  * The AI Tools panel is an overlay dialog ([role="dialog"][aria-label=
- * "AI tools"]) opened here via Filters tab -> Tools -> Enhance — there
- * is no "AI Tools" rail tab and no "Tools" sub-tab inside the overlay,
- * so the old sub-tab check is deleted. K-REFRAME waits on the current
- * status string ("Reframed to 9:16 …") instead of "window".
+ * "AI tools"]) opened here via the floating preview toolbar's
+ * "Edit with AI" button (a clip must be selected first). It used to
+ * open via Filters tab -> Tools -> Enhance, but CapCut-fix v1.0.3 made
+ * Tools clicks apply directly (CapCut Web behavior), so that route no
+ * longer opens the overlay. There is no "AI Tools" rail tab and no
+ * "Tools" sub-tab inside the overlay, so the old sub-tab check is
+ * deleted. K-REFRAME waits on the current status string
+ * ("Reframed to 9:16 …") instead of "window".
  */
 import { spawn } from 'node:child_process';
 import { promises as fs } from 'node:fs';
@@ -215,10 +219,14 @@ async function main() {
     }
     check('K-SMARTCUT', 'video + audio + shaky fixtures on the timeline', (await clipCount(page)) === 3, `clips: ${await clipCount(page)}`);
 
-    // ---- Open the AI Tools overlay (Filters tab -> Tools -> Enhance) ----
-    await tabBtn(page, 'Filters').click();
-    await page.waitForTimeout(400);
-    await leftCol(page).getByRole('button', { name: 'Enhance', exact: true }).click();
+    // ---- Open the AI Tools overlay via the preview toolbar ----
+    // CapCut-fix v1.0.3: Filters -> Tools -> Enhance now APPLIES the tool
+    // directly (CapCut Web behavior), so it no longer opens the overlay.
+    // The overlay opens from the floating preview toolbar's "Edit with AI"
+    // button (needs a selected clip).
+    await timelineClip(page, 0).click();
+    await page.waitForTimeout(500);
+    await page.locator('button[title="Edit with AI"]').first().click();
     await page.waitForTimeout(500);
     check('K-PROVIDERS', 'AI Tools overlay opens', (await aiPanel.count()) === 1);
     for (const title of [

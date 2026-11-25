@@ -45,7 +45,6 @@ export default function PreviewArea() {
   const setPlayhead = useProjectStore((s) => s.setPlayhead);
   const previewAxis = useProjectStore((s) => s.previewAxis);
   const previewTool = useProjectStore((s) => s.previewTool);
-  const setActiveTab = useProjectStore((s) => s.setActiveTab);
   const setAiToolsOverlay = useProjectStore((s) => s.setAiToolsOverlay);
   const addMediaFiles = useProjectStore((s) => s.addMediaFiles);
   const addEffect = useProjectStore((s) => s.addEffect);
@@ -601,9 +600,6 @@ export default function PreviewArea() {
             </button>
             <button type="button" onClick={() => setAiToolsOverlay('auto-reframe')} className="rounded-md px-2 py-1 text-xs hover:bg-[#242424]" title="Auto reframe">
               Auto reframe
-            </button>
-            <button type="button" onClick={() => setActiveTab('Captions')} className="rounded-md px-2 py-1 text-xs hover:bg-[#242424]" title="Captions" aria-label="Captions">
-              CC
             </button>
             <button type="button" onClick={() => setAiToolsOverlay('enhance')} className="flex items-center gap-1 rounded-md px-2 py-1 text-xs hover:bg-[#242424]" title="Smart tools">
               Smart tools <IconChevronDown size={12} />

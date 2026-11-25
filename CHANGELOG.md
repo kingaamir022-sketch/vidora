@@ -2,6 +2,26 @@
 
 All notable changes to Vidora. Format follows Keep a Changelog.
 
+## [1.0.3] — 2026-11-25 — Web-check follow-up round: HelpCenter version, Pals removal, Filters Tools direct-apply, square tiles, CC removal
+
+Evidence: `docs/reference/capcut/WEB-CHECK-2026-11-25.md` (CapCut Web online editor, checked 2026-11-25 13:35–13:50 UTC) — it answered all four open questions left by v1.0.2, and this round fixes what it found.
+
+**HelpCenter (item 1):** "What's new" finally says v1.0.2 (it still said v1.0.1) and lists the D1–D16 fixes in plain words. `package.json` is now 1.0.3; `package-lock.json` still says 0.8.0 at the root — it is not displayed anywhere in the app, so it was left alone.
+
+**Transitions "Pals" removed (item 2):** "Pals" is not a CapCut category — the Web check lists 14 real categories (Trending, Classic, Hits, B.Duck, Overlay, Light, Movement, 3D, Blur, Basic, Mask, Slide, Glitch, Distortion) with no Pals, and desktop screenshot #25's rail has no Pals either. The nav is now Trending / Classic / NEW / Hits / Overlay / Light. The 'Shape' transition family that lived under Pals stays reachable via search and the Trending slice. (CapCut's real "B.Duck" category is not used — it is character IP.)
+
+**Filters Tools now apply directly (item 3):** clicking Enhance / 4K / HD Upscale / Quality Restoration / Night-view Color / HD Cam 2 / HD Pet used to open the AI-tools overlay. On CapCut Web a single click applies the tool at once — a marker appears above the clip at the playhead and the preview changes, and selecting it shows a Basic panel with ONLY an Intensity slider (100). Vidora now does the same, in its own shape: each tool is a clip effect (`tool-*` in `lib/effects.ts`, CSS lift, no extra settings) applied to the selected video clip on one click (redirects to the video clip under the playhead, like filters/effects), the preview changes immediately, and the tool shows in an "Applied tools" card above the grid with ONLY an Intensity slider + Remove. The full Enhance/Upscale engines still live in the AI tools overlay (preview toolbar → Edit with AI). One documented divergence: CapCut Web puts a marker segment on a track above the clip at the playhead; Vidora applies the tool to the whole clip (clip-level effects, like everything else in this build) — there are no segment tracks. The CSS is a local approximation (brightness/contrast/saturation lift, no detail recovery, no ML) and the panel says so.
+
+**Tiles are square ~70×70 (item 4):** CapCut Web tiles are square ~70×70 photo thumbnails with truncated names. Vidora's effect/filter/transition tiles were wide 184×56 strips; the grids are now `repeat(auto-fill, minmax(68px, 1fr))` with square thumbnails, so tiles stay ~70px at 1920 and drop to 2 columns on narrow panels. Note: desktop screenshots #25/#27 show larger 2-column tiles — this round follows the Web-check measurement per the task; reverting to 2-column is a one-line grid change if the user prefers desktop's size.
+
+**Preview toolbar "CC" removed (item 5):** CapCut Web has no CC button around the preview, and CapCut desktop doesn't either — v09 frame_010 (image clip selected, Video Basic inspector open) shows a clean preview with no floating pill and no CC, and none of the 30 desktop screenshots shows one. The CC button is removed from Vidora's floating preview toolbar; Captions still live in the left tab rail, so nothing is lost. (The rest of Vidora's pill — Edit with AI / Crop / Auto reframe / Smart tools — stays: CapCut Web does have a floating pill, just with different contents.)
+
+**Verification (item 6):** Playwright at 1920×1080 / 100% (dev server, `audit/capcut-fix/v103/verify.mjs`): full editor screen + all 11 tabs, hover probe on a template card shows BOTH "Use template" and "Edit more" in the viewport, "Pals" absent from the Transitions nav, no "CC" button, tile thumbnails measure ~70px square, Tools click applies HD Cam 2 with an Intensity-only card. 0 page errors.
+
+### Tests
+
+- Suite now 364 tests (was 355): new `v103-tools.test.ts` (9) — the 7 tool defs + direct-apply + Intensity-only + no-duplicate-stack + Pals removal. `npx tsc --noEmit` clean, `npm run build` passes. Phase audits re-run green (see below).
+
 ## [1.0.2] — 2026-11-25 — User-reported fix round (D1–D16): layout at 100% zoom, hover templates, real thumbnails, working apply gestures
 
 The user opened the live site herself and reported every difference she found, screenshot by screenshot (editor empty project, Templates page, template-applied editor, Effects tab). The round fixed all 16 items plus everything the final self-audit found. The headline finding: **her screenshots were taken at 150% browser zoom** — at 1920×1080 / 100% zoom the tree already measured left 610 / preview 790 / Details 520 (CapCut's widths); the fix is responsive caps (`min(610px,32vw)` / `min(520px,28vw)`) so the layout survives narrow viewports, plus every remaining visual and functional difference below. Acceptance target is 1920×1080 at 100% browser zoom.

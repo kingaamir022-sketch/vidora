@@ -15,9 +15,12 @@ import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from
 
 /** Transitions panel (Phase 2, SPEC E; Phase 5: 32 transitions with
  * search + category filter). CapCut-fix (2026-11-25, J1–J3): sub-nav
- * Favorites + Transitions (Trending, Classic, NEW, Hits, Pals,
- * Overlay, Light). "Pals" is the original name in CapCut's "B.Duck"
- * slot (character IP — never used). v1.0.2 (D12.2): search on top,
+ * Favorites + Transitions (Trending, Classic, NEW, Hits,
+ * Overlay, Light). v1.0.3: "Pals" removed — it is not a CapCut
+ * category (Web check 2026-11-25 §4 lists 14 real categories with no
+ * Pals; desktop #25 rail also has no Pals). The old "Pals" slot mapped
+ * to the 'Shape' transition family; those transitions stay reachable
+ * via search and the Trending slice. v1.0.2 (D12.2): search on top,
  * then heading, then the 2-col tile grid — the grid renders even with
  * no clip selected (CapCut #25 shows tiles with an empty project).
  * No description paragraph, no hint banner, no "select a clip" text.
@@ -25,6 +28,10 @@ import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from
  * store returns early with no selection). Duration/Direction show only
  * when a transition is applied to the selected clip. Transition names
  * stay Vidora Originals.
+ *
+ * v1.0.3 (Web check 2026-11-25 §5): tiles are square ~70×70 photo
+ * thumbnails — the grid is `repeat(auto-fill, minmax(68px, 1fr))` so
+ * tiles stay ~70px at 1920 and drop to 2 columns on narrow panels.
  *
  * v1.0.2 (W4, D15): every tile is draggable onto a timeline clip
  * (applies the transition at that clip's start) or the preview, and
@@ -39,7 +46,7 @@ import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from
  * — Vidora has no paid tier and every transition is included, so a Pro
  * diamond would be misleading.
  */
-export const TRANSITION_NAV = ['Trending', 'Classic', 'NEW', 'Hits', 'Pals', 'Overlay', 'Light'] as const;
+export const TRANSITION_NAV = ['Trending', 'Classic', 'NEW', 'Hits', 'Overlay', 'Light'] as const;
 
 function transitionNavFilter(nav: string): (t: { category: string }) => boolean {
   switch (nav) {
@@ -49,8 +56,6 @@ function transitionNavFilter(nav: string): (t: { category: string }) => boolean 
       return (t) => t.category === 'Camera';
     case 'Hits':
       return (t) => t.category === 'Slide';
-    case 'Pals':
-      return (t) => t.category === 'Shape';
     case 'Overlay':
       return (t) => t.category === 'Wipe';
     case 'Light':
@@ -81,9 +86,9 @@ function TransitionThumb({ type, onStill }: { type: TransitionType; onStill?: (d
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
   if (!src) {
-    return <span className="flex h-14 w-full items-center justify-center bg-[#1A1A1A] text-[11px] text-zinc-500">Loading photo…</span>;
+    return <span className="flex aspect-square w-full items-center justify-center bg-[#1A1A1A] text-[11px] text-zinc-500">Loading photo…</span>;
   }
-  return <img src={src} alt={`${type} preview`} className="h-14 w-full object-cover" />;
+  return <img src={src} alt={`${type} preview`} className="aspect-square w-full object-cover" />;
 }
 
 export default function TransitionsPanel() {
@@ -137,7 +142,7 @@ export default function TransitionsPanel() {
         <PanelSearch value={query} onChange={setQuery} placeholder="People are searching transitions" />
         <SectionHeading>{query ? `Results for "${query}"` : category}</SectionHeading>
         <p className="text-[11px] text-zinc-500">Click a tile or its + to apply it to the selected clip — or drag a tile onto a clip on the timeline to put the transition at its start.</p>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(68px,1fr))] gap-2">
           {results.map((t) => (
             <div
               key={t.id}
@@ -176,7 +181,7 @@ export default function TransitionsPanel() {
               </button>
             </div>
           ))}
-          {results.length === 0 && <p className="col-span-2 text-[11px] text-zinc-500">No transitions match “{query}”.</p>}
+          {results.length === 0 && <p className="col-span-full text-[11px] text-zinc-500">No transitions match “{query}”.</p>}
           <button
             type="button"
             onClick={() => setTransition(null)}

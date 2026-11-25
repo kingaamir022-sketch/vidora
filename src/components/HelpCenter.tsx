@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 /**
  * Help Center (CapCut-fix 2026-11-25, B5). Replaces the 10-step user
- * guide dialog (Y2). Topics + "What's new" (v1.0.1 changes, S7).
+ * guide dialog (Y2). Topics + "What's new" (v1.0.2 changes, S7).
  * Rendered by App when the Help menu entry is used.
  */
 const TOPICS: { body: string; title: string }[] = [
@@ -33,12 +33,12 @@ const TOPICS: { body: string; title: string }[] = [
 ];
 
 const WHATS_NEW: string[] = [
-  'The editor now matches CapCut desktop: horizontal tab rail, sub-nav panels, Details inspector, icon-only timeline toolbar and the Export menu.',
-  'New AI avatar tab (was AI Tools): pick an avatar, add speech with one of 16 Vidora voices.',
-  'New Filters tab with the 32 Vidora looks, and an Adjustment tab that is a presets library.',
-  'Captions: .lrc import, a Word category of word-by-word styles, and a Templates view with a Generate captions bottom bar.',
-  'Shortcuts now match CapCut: Split is Ctrl+B, plus Preview axis (S), Attach (N), Hand (H), Move (V) and Zoom to fit (Shift+F).',
-  'The onboarding tour and the 10-step user guide are gone — this Help Center replaces them.',
+  'Layout now fits at normal 100% browser zoom (Ctrl+0): the left panel, preview and Details match CapCut’s widths — no more zooming out to see everything.',
+  'Templates: hover a card and “Use template” + “Edit more” appear at once, right under the enlarged preview — no click needed.',
+  'Template projects now land on separate tracks (video, text and stickers each on their own track), so the timeline looks complete.',
+  'Effects, filters and transitions now apply by drag-and-drop onto a clip, or with the “+” button on every tile — and they really change the clip.',
+  'Every effect, filter and transition tile shows a real photo preview instead of a colour fill or a letter.',
+  'Every button now does its job — Import, play, split, undo, transitions and the inspector controls were all checked end to end.',
 ];
 
 export default function HelpCenter({ onClose }: { onClose: () => void }) {
@@ -50,7 +50,7 @@ export default function HelpCenter({ onClose }: { onClose: () => void }) {
           <h2 className="text-base font-semibold">Help Center</h2>
           <button type="button" onClick={onClose} aria-label="Close Help Center" className="rounded-md border border-[#3D3D3D] px-2 py-0.5 text-[#A8A8A8] hover:text-[#F2F2F2]">×</button>
         </div>
-        <h3 className="mt-4 text-xs font-semibold text-[#00D9D9]">What’s new in v1.0.1</h3>
+        <h3 className="mt-4 text-xs font-semibold text-[#00D9D9]">What’s new in v1.0.2</h3>
         <ul className="mt-1 list-disc space-y-1 pl-4 text-[13px] leading-relaxed text-[#A8A8A8]">
           {WHATS_NEW.map((item) => (
             <li key={item}>{item}</li>
