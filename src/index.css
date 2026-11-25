@@ -9,6 +9,28 @@
 @theme {
   --color-vidora-violet: #7c3aed;
   --color-vidora-cyan: #06b6d4;
+  /* CapCut-fix (2026-11-25): teal is THE accent now (logo keeps violet/cyan). */
+  --color-vidora-teal: #00d9d9;
+  --color-vidora-teal-dark: #00b8c4;
+  /* CapCut-fix (2026-11-25, A1/A2): the violet utility ramp is remapped
+     to teal (violet-600 is NOT remapped — the Vidora wordmark gradient
+     uses from-violet-600 and the logo keeps violet/cyan), and the zinc
+     ramp is retuned to CapCut's near-black grays. */
+  --color-violet-200: #00d9d9;
+  --color-violet-300: #00d9d9;
+  --color-violet-400: #00d9d9;
+  --color-violet-500: #00d9d9;
+  --color-zinc-50: #f2f2f2;
+  --color-zinc-100: #f2f2f2;
+  --color-zinc-200: #f2f2f2;
+  --color-zinc-300: #d8d8d8;
+  --color-zinc-400: #a8a8a8;
+  --color-zinc-500: #6e6e6e;
+  --color-zinc-600: #3d3d3d;
+  --color-zinc-700: #3d3d3d;
+  --color-zinc-800: #2e2e2e;
+  --color-zinc-900: #1e1e1e;
+  --color-zinc-950: #141414;
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
@@ -17,9 +39,9 @@
 }
 
 /* Phase 9 (M-ACCESS): a visible focus ring on every keyboard focus,
-   in both themes. */
+   in both themes. CapCut-fix (2026-11-25): teal, not violet. */
 :focus-visible {
-  outline: 2px solid #8b5cf6;
+  outline: 2px solid #00d9d9;
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -32,8 +54,8 @@ body,
 
 body {
   margin: 0;
-  background: #0b0b12;
-  color: #f4f4f8;
+  background: #141414;
+  color: #f2f2f2;
   font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
 }

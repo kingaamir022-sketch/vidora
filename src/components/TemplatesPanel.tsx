@@ -1,27 +1,83 @@
 import { useMemo, useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
-import { TEMPLATE_CATEGORIES, TEMPLATE_CATALOG, searchTemplates, type TemplateCategory, type TemplateDef } from '../lib/templates';
+import { searchTemplates, type TemplateDef } from '../lib/templates';
+import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from './PanelShell';
 
 /** Templates panel (Phase 5, SPEC N — N-TEMPLATES; Phase 8 — L-TEMPLATES-SLOTS:
  * templates with media slots let you pick your own clip for each slot).
+ * CapCut-fix (2026-11-25, N1/N2): sub-nav Yours (Favorites) + Templates
+ * (For you, Pro, Daily life, Selfie, Velocity, AI, Lyrics); search
+ * "Search for templates"; filter dropdowns Orientation / Clips /
+ * Duration; "For you" heading; vertical cards with a "Featured" badge.
  * 35 original templates built only from Vidora's own assets. "Use template"
  * always creates a NEW project — it never overwrites the current one. A slot
  * with no media shows its label on the canvas until footage is added. */
+export const TEMPLATE_NAV = ['For you', 'Pro', 'Daily life', 'Selfie', 'Velocity', 'AI', 'Lyrics'] as const;
+
+function templateNavFilter(nav: string): (t: TemplateDef) => boolean {
+  switch (nav) {
+    case 'Pro':
+      return (t) => t.category === 'Promo';
+    case 'Daily life':
+      return (t) => t.category === 'Vlog';
+    case 'Selfie':
+      return (t) => t.category === 'Social';
+    case 'Velocity':
+      return (t) => t.category === 'Intro';
+    case 'AI':
+      return () => false;
+    case 'Lyrics':
+      return (t) => t.category === 'Outro';
+    default:
+      return () => true;
+  }
+}
+
 export default function TemplatesPanel() {
   const project = useProjectStore((s) => s.project);
   const useTemplate = useProjectStore((s) => s.useTemplate);
   const addMediaFiles = useProjectStore((s) => s.addMediaFiles);
   const [query, setQuery] = useState('');
-  const [category, setCategory] = useState<TemplateCategory | 'All'>('All');
+  const [category, setCategory] = useState<string>('For you');
+  const [orientation, setOrientation] = useState<string>('All');
+  const [clips, setClips] = useState<string>('No limit');
+  const [duration, setDuration] = useState<string>('No limit');
   const [usedId, setUsedId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [slotMedia, setSlotMedia] = useState<Record<string, Record<string, string>>>({});
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('vidora.template-favorites.v1') ?? '[]') as string[];
+    } catch {
+      return [];
+    }
+  });
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const toggleFavorite = (id: string) => {
+    setFavorites((f) => {
+      const next = f.includes(id) ? f.filter((x) => x !== id) : [...f, id];
+      localStorage.setItem('vidora.template-favorites.v1', JSON.stringify(next));
+      return next;
+    });
+  };
 
   const results = useMemo(() => {
     const found = searchTemplates(query);
-    return category === 'All' ? found : found.filter((t) => t.category === category);
-  }, [query, category]);
+    const byNav = category === 'Favorites' ? found.filter((t) => favorites.includes(t.id)) : found.filter(templateNavFilter(category));
+    return byNav.filter(
+      (t) =>
+        (orientation === 'All' || t.ratio === orientation) &&
+        (clips === 'No limit' ||
+          (clips === '1' && t.slots.length <= 1) ||
+          (clips === '2–3' && t.slots.length >= 2 && t.slots.length <= 3) ||
+          (clips === '4+' && t.slots.length >= 4)) &&
+        (duration === 'No limit' ||
+          (duration === 'Under 15s' && t.duration < 15) ||
+          (duration === '15–30s' && t.duration >= 15 && t.duration <= 30) ||
+          (duration === 'Over 30s' && t.duration > 30)),
+    );
+  }, [query, category, favorites, orientation, clips, duration]);
 
   const media = (project?.media ?? []).filter((m) => m.kind === 'video' || m.kind === 'image' || m.kind === 'gif');
 
@@ -32,32 +88,48 @@ export default function TemplatesPanel() {
   };
 
   return (
-    <div className="w-72 shrink-0 overflow-y-auto border-r border-zinc-800 bg-zinc-950 p-4 text-zinc-100" aria-label="Templates">
-      <h2 className="text-sm font-semibold">Templates ({TEMPLATE_CATALOG.length})</h2>
+    <PanelShell
+      subNav={<>
+        <SubNavGroup title="Yours">
+          <SubNavItem active={category === 'Favorites'} onClick={() => setCategory('Favorites')}>Favorites</SubNavItem>
+        </SubNavGroup>
+        <SubNavGroup title="Templates">
+          {TEMPLATE_NAV.map((n) => (
+            <SubNavItem key={n} active={category === n} onClick={() => setCategory(n)}>{n}</SubNavItem>
+          ))}
+        </SubNavGroup>
+      </>}
+    >
+      <PanelSearch value={query} onChange={setQuery} placeholder="Search for templates" />
+      <div className="mt-2 flex gap-1">
+        <label className="flex min-w-0 flex-1 items-center gap-1 text-[11px] text-zinc-400">
+          Orientation
+          <select value={orientation} onChange={(e) => setOrientation(e.target.value)} aria-label="Orientation filter" className="min-w-0 flex-1 rounded-md border border-zinc-700 bg-zinc-900 px-1 py-1 text-xs text-zinc-100">
+            {['All', '9:16', '16:9', '1:1'].map((o) => (
+              <option key={o} value={o}>{o === 'All' ? 'All' : o}</option>
+            ))}
+          </select>
+        </label>
+        <label className="flex min-w-0 flex-1 items-center gap-1 text-[11px] text-zinc-400">
+          Clips
+          <select value={clips} onChange={(e) => setClips(e.target.value)} aria-label="Clip count filter" className="min-w-0 flex-1 rounded-md border border-zinc-700 bg-zinc-900 px-1 py-1 text-xs text-zinc-100">
+            {['No limit', '1', '2–3', '4+'].map((o) => (
+              <option key={o} value={o}>{o}</option>
+            ))}
+          </select>
+        </label>
+        <label className="flex min-w-0 flex-1 items-center gap-1 text-[11px] text-zinc-400">
+          Duration
+          <select value={duration} onChange={(e) => setDuration(e.target.value)} aria-label="Duration filter" className="min-w-0 flex-1 rounded-md border border-zinc-700 bg-zinc-900 px-1 py-1 text-xs text-zinc-100">
+            {['No limit', 'Under 15s', '15–30s', 'Over 30s'].map((o) => (
+              <option key={o} value={o}>{o}</option>
+            ))}
+          </select>
+        </label>
+      </div>
       <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">
         Original Vidora layouts. “Use template” starts a new project from the template — your current project is kept. Templates with media slots let you pick your own clip for each slot first.
       </p>
-      <input
-        type="search"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search templates…"
-        aria-label="Search templates"
-        className="mt-2 w-full rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1 text-xs text-zinc-100"
-      />
-      <div className="mt-2 flex flex-wrap gap-1">
-        {(['All', ...TEMPLATE_CATEGORIES] as const).map((c) => (
-          <button
-            key={c}
-            type="button"
-            onClick={() => setCategory(c)}
-            aria-pressed={category === c}
-            className={`rounded-full border px-2 py-0.5 text-[11px] ${category === c ? 'border-violet-500 bg-violet-600/20 text-violet-200' : 'border-zinc-700 text-zinc-400'}`}
-          >
-            {c}
-          </button>
-        ))}
-      </div>
       <input
         ref={fileRef}
         type="file"
@@ -69,11 +141,15 @@ export default function TemplatesPanel() {
           e.target.value = '';
         }}
       />
+      <SectionHeading>{query ? `Results for "${query}"` : category}</SectionHeading>
       <div className="mt-3 space-y-2">
-        {results.map((def) => (
+        {results.map((def, i) => (
           <TemplateCard
             key={def.id}
             def={def}
+            featured={i < 3 && category === 'For you'}
+            favorite={favorites.includes(def.id)}
+            onToggleFavorite={() => toggleFavorite(def.id)}
             onUse={() => onUse(def)}
             used={usedId === def.id}
             hasProject={Boolean(project)}
@@ -87,14 +163,17 @@ export default function TemplatesPanel() {
             onImport={() => fileRef.current?.click()}
           />
         ))}
-        {results.length === 0 && <p className="text-[11px] text-zinc-500">No templates match “{query}”.</p>}
+        {results.length === 0 && <p className="text-[11px] text-zinc-500">{category === 'AI' ? 'No AI templates yet — templates built from Vidora’s AI clips are coming to this list.' : `No templates match “${query}”.`}</p>}
       </div>
-    </div>
+    </PanelShell>
   );
 }
 
 function TemplateCard({
   def,
+  featured,
+  favorite,
+  onToggleFavorite,
   onUse,
   used,
   hasProject,
@@ -106,6 +185,9 @@ function TemplateCard({
   onImport,
 }: {
   def: TemplateDef;
+  featured?: boolean;
+  favorite?: boolean;
+  onToggleFavorite?: () => void;
   onUse: () => void;
   used: boolean;
   hasProject: boolean;
@@ -121,7 +203,13 @@ function TemplateCard({
   const scaleX = W / def.duration;
   const allFilled = def.slots.every((s) => filled[s.id]);
   return (
-    <div className="rounded-md border border-zinc-800 bg-zinc-900 p-2">
+    <div className="relative rounded-md border border-zinc-800 bg-zinc-900 p-2">
+      {featured && (
+        <span className="absolute left-2 top-2 z-10 rounded bg-[#00D9D9] px-1.5 py-0.5 text-[10px] font-semibold text-[#062A2A]">Featured</span>
+      )}
+      {onToggleFavorite && (
+        <button type="button" onClick={onToggleFavorite} aria-pressed={favorite} aria-label={`Favorite ${def.name}`} className={`absolute right-2 top-2 z-10 rounded bg-black/50 px-1 text-[13px] ${favorite ? 'text-[#FFD34D]' : 'text-zinc-300 hover:text-white'}`}>★</button>
+      )}
       <button type="button" onClick={onToggleExpand} className="block w-full text-left" aria-expanded={expanded} aria-label={`${def.name} details`}>
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full rounded bg-zinc-950" role="img" aria-label={`${def.name} layout preview`}>
           {def.slots.map((s) => (
@@ -164,7 +252,7 @@ function TemplateCard({
                 ? 'Pick your media for each slot first'
                 : 'Start a new project from this template'
           }
-          className="shrink-0 rounded-md border border-violet-500 bg-violet-600/20 px-2 py-1 text-[11px] text-violet-200 disabled:cursor-not-allowed disabled:opacity-40"
+          className="shrink-0 rounded-md border border-violet-500 bg-[#00D9D9]/10 px-2 py-1 text-[11px] text-violet-200 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {used ? 'Used ✓' : def.slots.length > 0 && !expanded ? 'Choose media' : 'Use template'}
         </button>

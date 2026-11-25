@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { findClip } from '../lib/timeline';
 import { useProjectStore } from '../store/projectStore';
 import { newId, type Clip } from '../schema/project';
@@ -43,9 +43,9 @@ const inputCls =
   'mt-1 w-full rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-xs text-zinc-100';
 const labelCls = 'mt-2 block text-[11px] text-zinc-400';
 
-function Section({ children, note, title }: { children?: React.ReactNode; note?: string; title: string }) {
+function Section({ children, id, note, title }: { children?: React.ReactNode; id?: string; note?: string; title: string }) {
   return (
-    <section className={secCls} aria-label={title}>
+    <section id={id} className={secCls} aria-label={title}>
       <h3 className={h3Cls}>{title}</h3>
       {note && <p className={noteCls}>{note}</p>}
       {children}
@@ -133,7 +133,13 @@ function speechRecognitionCtor(): RecogCtor | null {
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 }
 
-export default function AIToolsPanel() {
+export default function AIToolsPanel({ focusTool }: { focusTool?: string }) {
+  // CapCut-fix (O3): when the overlay opens on one tool (Filters Tools,
+  // inspector Smart tools), scroll that section into view.
+  useEffect(() => {
+    if (!focusTool) return;
+    document.getElementById(focusTool)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [focusTool]);
   const project = useProjectStore((s) => s.project);
   const selectedClipIds = useProjectStore((s) => s.selectedClipIds);
   const updateSelectedClip = useProjectStore((s) => s.updateSelectedClip);
@@ -247,6 +253,7 @@ export default function AIToolsPanel() {
       </p>
 
       <Section
+        id="ai-captions"
         title="AI Captions — speech to text"
         note="Two honest paths: dictate into the microphone (browser speech recognition), or transcribe a file offline with the Vosk script (tools/transcribe.py) and import the SRT in the Captions tab. The browser cannot listen to a clip file directly."
       >
@@ -288,6 +295,7 @@ export default function AIToolsPanel() {
       </Section>
 
       <Section
+        id="narration"
         title="Narration — render to audio"
         note="Preview narration uses browser voices. A real audio file comes from the offline Piper script (tools/narrate.py) — the WAV imports as a normal audio clip. Rendered export audio is Phase 8."
       >
@@ -309,6 +317,7 @@ export default function AIToolsPanel() {
       </Section>
 
       <Section
+        id="smart-cut"
         title="Smart Cut — silence & filler removal"
         note="Analyses the selected clip's real audio (RMS per 50 ms) and the project captions for filler words. Nothing is cut without you pressing Cut."
       >
@@ -407,6 +416,7 @@ export default function AIToolsPanel() {
       </Section>
 
       <Section
+        id="auto-reframe"
         title="Auto Reframe"
         note="Motion + saliency heuristic finds the subject and keeps it in frame. A static subject with a busy background may drift — re-run or clear."
       >
@@ -463,6 +473,7 @@ export default function AIToolsPanel() {
       </Section>
 
       <Section
+        id="background-removal"
         title="Background Removal"
         note="Heuristic edge segmentation — works on plain backgrounds; a busy background will not cut cleanly. True ML person cutout needs a model. Green screen? Use Chroma key instead."
       >
@@ -494,6 +505,7 @@ export default function AIToolsPanel() {
       </Section>
 
       <Section
+        id="camera-tracking"
         title="Camera Tracking — automatic"
         note="Template matching follows the subject you pick. Fast motion, occlusion or a changing shape can lose the lock — the points stay editable by hand afterwards."
       >
@@ -574,6 +586,7 @@ export default function AIToolsPanel() {
       </Section>
 
       <Section
+        id="stabilize"
         title="Stabilize — real motion correction"
         note="Translation-only phase correlation. Rotation, scale and rolling-shutter wobble are NOT corrected."
       >
@@ -645,6 +658,7 @@ export default function AIToolsPanel() {
       </Section>
 
       <Section
+        id="enhance"
         title="Enhance — Low-light, Retouch, Relight"
         note="Real pixel operations on the selected clip. Retouch smooths skin-toned regions only; low-light cannot create detail that is not there."
       >
@@ -694,6 +708,7 @@ export default function AIToolsPanel() {
       </Section>
 
       <Section
+        id="ai-movement"
         title="AI Movement — camera moves"
         note="Keyframed camera path, not an ML camera. The move becomes ordinary scale/position keyframes — edit them afterwards."
       >
@@ -737,6 +752,7 @@ export default function AIToolsPanel() {
       </Section>
 
       <Section
+        id="optical-flow"
         title="Optical Flow — smooth slow motion"
         note="Block-match interpolation renders real in-between frames offline. Preview slow-mo itself stays frame-blend. Fast or complex motion can smear."
       >
@@ -815,6 +831,7 @@ export default function AIToolsPanel() {
       </Section>
 
       <Section
+        id="vocal-isolation"
         title="Vocal Isolation — stems"
         note="Centre-channel separation, not ML: the voice stem is the centred content, the music stem is the wide content. Works best on centre-panned vocals."
       >
@@ -859,6 +876,7 @@ export default function AIToolsPanel() {
       </Section>
 
       <Section
+        id="auto-highlights"
         title="Auto Highlights"
         note="Scores 2-second segments by loudness + motion + speech, then builds a reel of the best moments. Nothing is deleted without confirmation."
       >
@@ -962,6 +980,7 @@ export default function AIToolsPanel() {
       </Section>
 
       <Section
+        id="script-to-video"
         title="Script-to-Video"
         note="One line = one scene. Visuals come from Vidora's local generator; narration is preview voices unless rendered with the Piper pipeline."
       >
@@ -1031,6 +1050,7 @@ export default function AIToolsPanel() {
       </Section>
 
       <Section
+        id="upscale"
         title="Upscale to 4K"
         note="Detail-preserving resample + sharpen — NOT AI detail recovery. Video uses browser 4K scaling; still images get the full resample + sharpen pass."
       >
@@ -1115,6 +1135,7 @@ export default function AIToolsPanel() {
       </Section>
 
       <Section
+        id="ai-providers"
         title="AI Providers"
         note="Local only. Cloud providers need an API key (Phase 9 settings) — no key field is offered and no cloud call is made."
       >

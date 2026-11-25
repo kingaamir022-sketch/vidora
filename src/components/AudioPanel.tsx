@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { findClip } from '../lib/timeline';
 import {
@@ -12,8 +12,21 @@ import {
   type VoiceoverRecorder,
 } from '../lib/audio';
 import { formatDuration } from '../lib/media';
+import {
+  AI_MUSIC_TRACKS,
+  AI_SFX,
+  aiFileAvailable,
+  aiLibraryInstalled,
+  aiMatches,
+  aiMusicToMediaItem,
+  aiSfxToMediaItem,
+  renderAiTrackEntry,
+  type AiMusicEntry,
+  type AiSfxEntry,
+} from '../lib/aiLibrary';
 import { newId } from '../schema/project';
 import type { MediaItem } from '../schema/project';
+import PanelShell, { PanelSearch, SectionHeading, SubNavItem } from './PanelShell';
 
 /**
  * Audio panel (Phase 4, SPEC J — J-AUDIO, J-BEAT, J-VOICEOVER).
@@ -21,8 +34,11 @@ import type { MediaItem } from '../schema/project';
  * sub-tabs, search box, suggestion chips, Categories with "View all",
  * Recommended lists (cover, title, duration, author) with play + "+"
  * add buttons. Vidora's tracks are ORIGINAL: procedural loops/SFX
- * synthesized in-browser (src/lib/audio.ts) plus the user's imported
- * audio. No reference track/sound names are used anywhere.
+ * synthesized in-browser (src/lib/audio.ts), the 100 AI music tracks
+ * and 100 AI sound effects from the AI library (src/lib/aiLibrary.ts
+ * — added from the library files when installed, otherwise music
+ * renders in the browser), plus the user's imported audio. No
+ * reference track/sound names are used anywhere.
  */
 const MUSIC_CHIPS = ['calm', 'electronic', 'ambient', 'pop', 'beat', 'happy'];
 const SFX_CHIPS = ['ui', 'whoosh', 'impact', 'magic', 'transition', 'bell'];
@@ -39,7 +55,6 @@ export default function AudioPanel() {
   const selectedClipIds = useProjectStore((s) => s.selectedClipIds);
   const addMediaItem = useProjectStore((s) => s.addMediaItem);
   const addAudioClip = useProjectStore((s) => s.addAudioClip);
-  const addBeatMarkers = useProjectStore((s) => s.addBeatMarkers);
   const splitSelectedAtTimes = useProjectStore((s) => s.splitSelectedAtTimes);
   const addVoiceoverClip = useProjectStore((s) => s.addVoiceoverClip);
   const selectClip = useProjectStore((s) => s.selectClip);
@@ -48,6 +63,29 @@ export default function AudioPanel() {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<string>('All');
   const [showCategories, setShowCategories] = useState(false);
+  const [showFavorites, setShowFavorites] = useState(false);
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('vidora.audio-favorites.v1') ?? '[]') as string[];
+    } catch {
+      return [];
+    }
+  });
+
+  const toggleFavorite = (id: string) => {
+    setFavorites((f) => {
+      const next = f.includes(id) ? f.filter((x) => x !== id) : [...f, id];
+      localStorage.setItem('vidora.audio-favorites.v1', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  // Switching Music / Sound effects resets the search, like the tab switch did.
+  useEffect(() => {
+    setQuery('');
+    setCategory('All');
+    setBeatInfo(null);
+  }, [subTab]);
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [renderingId, setRenderingId] = useState<string | null>(null);
   const [beatInfo, setBeatInfo] = useState<{ bpm: number | null; times: number[] } | null>(null);
@@ -72,8 +110,30 @@ export default function AudioPanel() {
     if (!q) return true;
     return name.toLowerCase().includes(q) || tags.some((t) => t.toLowerCase().includes(q));
   };
-  const filteredOriginals = originals.filter((o) => matches(o.name, o.tags, o.category));
-  const filteredImported = importedAudio.filter((m) => matches(m.name, [], 'All'));
+  const filteredOriginals = originals.filter((o) => matches(o.name, o.tags, o.category) && (!showFavorites || favorites.includes(o.id)));
+  const filteredImported = importedAudio.filter((m) => matches(m.name, [], 'All') && (!showFavorites || favorites.includes(m.id)));
+
+  // AI library catalog (CapCut-fix 2026-11-25, O3 redistribution): the
+  // deleted AI Library panel's music/SFX now live here, with the same
+  // play + "+" add rows as the Originals above.
+  const [aiInstalled, setAiInstalled] = useState<{ music: boolean; sfx: boolean } | null>(null);
+  useEffect(() => {
+    let live = true;
+    void aiLibraryInstalled().then((r) => {
+      if (live) setAiInstalled({ music: r.music, sfx: r.sfx });
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
+  const filteredAiMusic = useMemo(
+    () => AI_MUSIC_TRACKS.filter((t) => aiMatches([t.name, t.style, t.mood, ...t.tags], query) && (!showFavorites || favorites.includes(t.id))),
+    [query, showFavorites, favorites],
+  );
+  const filteredAiSfx = useMemo(
+    () => AI_SFX.filter((s) => aiMatches([s.name, s.family, ...s.tags], query) && (!showFavorites || favorites.includes(s.id))),
+    [query, showFavorites, favorites],
+  );
 
   const selectedClip = project && selectedClipIds.length > 0 ? findClip(project, selectedClipIds[0])?.clip ?? null : null;
   const selectedMedia = selectedClip?.mediaId ? project?.media.find((m) => m.id === selectedClip.mediaId) ?? null : null;
@@ -121,6 +181,48 @@ export default function AudioPanel() {
     } finally {
       setRenderingId(null);
     }
+  };
+
+  const addAiMusic = async (entry: AiMusicEntry) => {
+    setRenderingId(entry.id);
+    try {
+      if (await aiFileAvailable(entry.file)) {
+        const item = aiMusicToMediaItem(entry, newId('media'));
+        addMediaItem(item);
+        addAudioClip(item.id);
+        return;
+      }
+      // Library files absent (text-only checkout): render the same
+      // pattern in the browser, like the Generate flow does.
+      const rendered = await renderAiTrackEntry(entry);
+      const item: MediaItem = {
+        createdAt: new Date().toISOString(),
+        duration: rendered.duration,
+        folderId: 'folder-all',
+        id: newId('media'),
+        kind: 'audio',
+        mime: 'audio/wav',
+        name: entry.name,
+        peakLevel: rendered.peakLevel,
+        peaks: rendered.peaks,
+        size: rendered.blob.size,
+        src: rendered.url,
+      };
+      addMediaItem(item);
+      addAudioClip(item.id);
+    } catch {
+      // OfflineAudioContext unavailable (e.g. headless test env) — the row stays usable.
+    } finally {
+      setRenderingId(null);
+    }
+  };
+
+  const addAiSfx = async (entry: AiSfxEntry) => {
+    // SFX have no in-browser render fallback, so they need the files.
+    if (!(await aiFileAvailable(entry.file))) return;
+    const item = aiSfxToMediaItem(entry, newId('media'));
+    addMediaItem(item);
+    addAudioClip(item.id);
   };
 
   const detectBeatsForSelected = () => {
@@ -196,6 +298,7 @@ export default function AudioPanel() {
       <button type="button" onClick={onPlay} aria-label={playingId === id ? `Stop preview ${name}` : `Preview ${name}`} className="rounded border border-zinc-700 px-1.5 py-0.5 text-[11px]" title={playingId === id ? 'Stop preview' : 'Preview'}>
         {playingId === id ? '■' : '▶'}
       </button>
+      <button type="button" onClick={() => toggleFavorite(id)} aria-pressed={favorites.includes(id)} aria-label={`Favorite ${name}`} className={`rounded px-1 text-[13px] ${favorites.includes(id) ? 'text-[#FFD34D]' : 'text-zinc-500 hover:text-zinc-200'}`}>★</button>
       <button type="button" onClick={onAdd} disabled={adding} aria-label={`Add ${name} to timeline`} className="rounded border border-zinc-700 px-1.5 py-0.5 text-[11px] disabled:opacity-50" title="Add to timeline">
         {adding ? '…' : '+'}
       </button>
@@ -203,35 +306,14 @@ export default function AudioPanel() {
   );
 
   return (
-    <div className="w-72 shrink-0 overflow-y-auto border-r border-zinc-800 bg-zinc-950 p-4 text-zinc-100" aria-label="Audio panel">
-      <h2 className="text-sm font-semibold">Audio</h2>
-
-      <div className="mt-2 flex gap-1" role="tablist" aria-label="Audio library">
-        {(['music', 'sfx'] as const).map((t) => (
-          <button
-            key={t}
-            type="button"
-            role="tab"
-            aria-selected={subTab === t}
-            onClick={() => { setSubTab(t); setQuery(''); setCategory('All'); setBeatInfo(null); }}
-            className={`flex-1 rounded-md border px-2 py-1 text-xs ${subTab === t ? 'border-violet-500 bg-violet-600/20' : 'border-zinc-700'}`}
-          >
-            {t === 'music' ? 'Music' : 'Sound effects'}
-          </button>
-        ))}
-      </div>
-
-      <label className="mt-2 block">
-        <span className="sr-only">{subTab === 'music' ? 'Search music' : 'Search sound effects'}</span>
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={subTab === 'music' ? 'Search music' : 'Search sound effects'}
-          aria-label={subTab === 'music' ? 'Search music' : 'Search sound effects'}
-          className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-xs"
-        />
-      </label>
+    <PanelShell
+      subNav={<>
+        <SubNavItem active={showFavorites} onClick={() => setShowFavorites(true)}>Favorites</SubNavItem>
+        <SubNavItem active={!showFavorites && subTab === 'music'} onClick={() => { setSubTab('music'); setShowFavorites(false); }}>Music</SubNavItem>
+        <SubNavItem active={!showFavorites && subTab === 'sfx'} onClick={() => { setSubTab('sfx'); setShowFavorites(false); }}>Sound effects</SubNavItem>
+      </>}
+    >
+      <PanelSearch value={query} onChange={setQuery} placeholder={subTab === 'music' ? 'People are searching music' : 'People are searching sound effects'} />
 
       <div className="mt-2 flex flex-wrap gap-1">
         {chips.map((c) => (
@@ -243,7 +325,7 @@ export default function AudioPanel() {
 
       <section className="mt-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs font-semibold text-zinc-300">Categories</h3>
+          <h3 className="text-xs font-semibold text-zinc-300">{showFavorites ? 'Favorites' : 'Categories'}</h3>
           <button type="button" onClick={() => setShowCategories((v) => !v)} className="text-[11px] text-violet-400">
             {showCategories ? 'Hide' : 'View all'}
           </button>
@@ -255,7 +337,7 @@ export default function AudioPanel() {
                 key={c}
                 type="button"
                 onClick={() => setCategory(c)}
-                className={`rounded-md border px-2 py-1 text-[11px] ${category === c ? 'border-violet-500 bg-violet-600/20' : 'border-zinc-700'}`}
+                className={`rounded-md border px-2 py-1 text-[11px] ${category === c ? 'border-violet-500 bg-[#00D9D9]/10' : 'border-zinc-700'}`}
               >
                 {c}
               </button>
@@ -267,8 +349,8 @@ export default function AudioPanel() {
       </section>
 
       <section className="mt-3">
-        <h3 className="text-xs font-semibold text-zinc-300">Vidora Originals — {subTab === 'music' ? 'Music' : 'Sound effects'}</h3>
-        <p className="mt-0.5 text-[11px] text-zinc-500">Synthesized in your browser. Original sounds, free to use in your videos.</p>
+        <SectionHeading>Recommended</SectionHeading>
+        <p className="mt-0.5 text-[11px] text-zinc-500">Vidora Originals — {subTab === 'music' ? 'Music' : 'Sound effects'}. Synthesized in your browser. Original sounds, free to use in your videos.</p>
         {filteredOriginals.length === 0 ? (
           <p className="mt-2 text-xs text-zinc-500">
             No tracks match “{query}”. <button type="button" className="text-violet-400" onClick={() => { setQuery(''); setCategory('All'); }}>Clear</button>
@@ -281,6 +363,46 @@ export default function AudioPanel() {
           </ul>
         )}
       </section>
+
+      {subTab === 'music' ? (
+        <section className="mt-3">
+          <SectionHeading>AI music</SectionHeading>
+          <p className="mt-0.5 text-[11px] text-zinc-500">100 original AI tracks. Added from the library when installed, otherwise rendered in your browser.</p>
+          {filteredAiMusic.length === 0 ? (
+            <p className="mt-2 text-xs text-zinc-500">
+              No AI tracks match “{query}”. <button type="button" className="text-violet-400" onClick={() => { setQuery(''); setCategory('All'); }}>Clear</button>
+            </p>
+          ) : (
+            <ul className="mt-2 space-y-1.5">
+              {filteredAiMusic.map((t) =>
+                row(t.id, t.name, t.duration, `AI · ${t.style}`, () => togglePreview(t.id, t.file), () => void addAiMusic(t), renderingId === t.id),
+              )}
+            </ul>
+          )}
+        </section>
+      ) : (
+        <section className="mt-3">
+          <SectionHeading>AI sound effects</SectionHeading>
+          {aiInstalled?.sfx === false ? (
+            <p className="mt-0.5 text-[11px] text-zinc-500">AI sound effects need the library files — they are not in this install.</p>
+          ) : (
+            <>
+              <p className="mt-0.5 text-[11px] text-zinc-500">100 original AI sound effects from the library.</p>
+              {filteredAiSfx.length === 0 ? (
+                <p className="mt-2 text-xs text-zinc-500">
+                  No AI sound effects match “{query}”. <button type="button" className="text-violet-400" onClick={() => { setQuery(''); setCategory('All'); }}>Clear</button>
+                </p>
+              ) : (
+                <ul className="mt-2 space-y-1.5">
+                  {filteredAiSfx.map((s) =>
+                    row(s.id, s.name, s.duration, `AI · ${s.family}`, () => togglePreview(s.id, s.file), () => void addAiSfx(s)),
+                  )}
+                </ul>
+              )}
+            </>
+          )}
+        </section>
+      )}
 
       <section className="mt-3">
         <h3 className="text-xs font-semibold text-zinc-300">Your imported audio</h3>
@@ -333,10 +455,11 @@ export default function AudioPanel() {
               {beatInfo.times.length} beats found{beatInfo.bpm ? ` (~${beatInfo.bpm} BPM estimate)` : ''}. Estimated from waveform energy — not true BPM analysis.
             </p>
             <div className="flex gap-1">
-              <button type="button" onClick={() => addBeatMarkers(beatInfo.times)} className="flex-1 rounded-md border border-zinc-700 px-2 py-1 text-[11px]">
-                Add beat markers
-              </button>
-              <button type="button" onClick={() => splitSelectedAtTimes(beatInfo.times)} className="flex-1 rounded-md border border-zinc-700 px-2 py-1 text-[11px]">
+              // CapCut-fix audit (2026-11-25): beat times are relative to
+              // the clip start, but splitClipAtTimes expects absolute
+              // timeline times — offset by the clip start or the cut
+              // silently does nothing whenever the clip starts after 0.
+              <button type="button" onClick={() => splitSelectedAtTimes(beatInfo.times.map((t) => t + (selectedClip?.start ?? 0)))} className="flex-1 rounded-md border border-zinc-700 px-2 py-1 text-[11px]">
                 Cut at beats
               </button>
             </div>
@@ -346,6 +469,6 @@ export default function AudioPanel() {
           Open mixer
         </button>
       </section>
-    </div>
+    </PanelShell>
   );
 }

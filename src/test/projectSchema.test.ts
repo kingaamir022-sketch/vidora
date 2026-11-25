@@ -61,6 +61,16 @@ describe('project JSON schema (v0.8.0)', () => {
     expect(validateProject(project).success).toBe(true);
   });
 
+  it('accepts the v1.0.1 Combo animation (optional, same shape as In/Out)', () => {
+    const project = structuredClone(SAMPLE_PROJECT);
+    const clip = project.tracks[0].clips[0];
+    clip.animationCombo = { duration: 0.5, kind: 'fade' };
+    expect(validateProject(project).success).toBe(true);
+    const without = structuredClone(SAMPLE_PROJECT);
+    delete (without.tracks[0].clips[0] as unknown as Record<string, unknown>).animationCombo;
+    expect(validateProject(without).success).toBe(true);
+  });
+
   it('rejects a LUT with the wrong data length for its size', () => {
     const project = structuredClone(SAMPLE_PROJECT);
     project.tracks[0].clips[0].lut = { data: [0, 0, 0], intensity: 1, name: 'Bad', size: 2, source: 'imported' };

@@ -8,7 +8,7 @@ import { z } from 'zod';
  * `migrateProject` (additive changes only — old documents keep validating).
  */
 
-export const aspectRatioSchema = z.enum(['9:16', '16:9', '1:1', '4:5', '21:9', 'custom']);
+export const aspectRatioSchema = z.enum(['9:16', '16:9', '1:1', '4:5', '21:9', '4:3', '2:1', '3:4', 'custom']);
 export type AspectRatio = z.infer<typeof aspectRatioSchema>;
 
 export const clipTypeSchema = z.enum(['video', 'audio', 'image', 'text', 'sticker']);
@@ -492,6 +492,10 @@ export const clipSchema = z.object({
   adjustment: adjustmentSchema.default(defaultAdjustment()),
   animationIn: animationSchema.default({ duration: 0.5, kind: 'none' }),
   animationOut: animationSchema.default({ duration: 0.5, kind: 'none' }),
+  /** CapCut-fix (Q3/Animation Combo): combined in+out preset, stored with
+   * the clip. Optional so old project files (without this field) still
+   * load; the preview plays the In/Out animations (see PropertiesPanel). */
+  animationCombo: animationSchema.optional(),
   /** Phase 4 (J-DETACH): true once this video clip's audio was separated onto its own track. */
   audioDetached: z.boolean().default(false),
   /** Phase 4 (J): Music / Voice / SFX — decides ducking. */
@@ -561,6 +565,13 @@ export const clipSchema = z.object({
   sourceStart: z.number().min(0).default(0),
   /** Timeline length in seconds. sourceDuration / speed = duration when speed changes. */
   speed: z.number().min(0.1).max(100).default(1),
+  /** CapCut-fix (Q3/Q-Speed): speed-curve preset. Stored with the clip;
+   * the preview/export play the constant speed above — variable-speed
+   * playback is not rendered in this build. */
+  speedCurve: z.enum(['none', 'custom', 'montage', 'hero', 'bullet', 'jump-cut', 'flash-in', 'flash-out']).default('none'),
+  /** CapCut-fix (Q3): "Remove flicker" switch (Pro). Stored with the
+   * clip; flicker removal is not rendered in this build. */
+  removeFlicker: z.boolean().default(false),
   src: z.string().optional(),
   start: z.number().min(0),
   trackId: z.string().min(1),
@@ -791,6 +802,8 @@ export const SAMPLE_PROJECT: VidoraProject = {
           aiVocalMode: 'none',
           sourceDuration: 10,
           sourceStart: 0,
+          speedCurve: 'none',
+          removeFlicker: false,
           speed: 1,
           start: 0,
           trackId: 'track-video-1',

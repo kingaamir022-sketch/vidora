@@ -1,7 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { findClip, projectDuration } from '../lib/timeline';
-import { IconPause, IconPlay } from './icons';
+import {
+  IconChevronDown,
+  IconCrop,
+  IconDots,
+  IconDownload,
+  IconFit,
+  IconFullscreen,
+  IconMenu,
+  IconPause,
+  IconPlay,
+  IconSparkles,
+} from './icons';
 import type { Clip, Track } from '../schema/project';
 import { shouldSpeak } from '../lib/tts';
 import { effectiveClipGainForProject } from '../lib/audio';
@@ -15,14 +26,32 @@ import {
 } from '../lib/renderFrame';
 
 /** Center preview (Phase 2): canvas compositor with keyframes, effects,
- * LUT, colour, masks, transitions, PiP / split-screen and backgrounds. */
+ * LUT, colour, masks, transitions, PiP / split-screen and backgrounds.
+ * CapCut-fix (P1–P4, v1.0.1): title "Player-Timeline 01" + ≡ menu,
+ * bottom bar (timecode / play / Full / fit / Ratio / fullscreen),
+ * floating clip toolbar, preview axis, hand/move tools, empty state. */
 export default function PreviewArea() {
   const project = useProjectStore((s) => s.project);
   const aspectRatio = useProjectStore((s) => s.aspectRatio);
+  const setAspectRatio = useProjectStore((s) => s.setAspectRatio);
   const playhead = useProjectStore((s) => s.playhead);
   const playing = useProjectStore((s) => s.playing);
   const setPlaying = useProjectStore((s) => s.setPlaying);
   const setPlayhead = useProjectStore((s) => s.setPlayhead);
+  const previewAxis = useProjectStore((s) => s.previewAxis);
+  const previewTool = useProjectStore((s) => s.previewTool);
+  const setActiveTab = useProjectStore((s) => s.setActiveTab);
+  const setAiToolsOverlay = useProjectStore((s) => s.setAiToolsOverlay);
+  const addMediaFiles = useProjectStore((s) => s.addMediaFiles);
+  const splitAtPlayhead = useProjectStore((s) => s.splitAtPlayhead);
+  const copySelected = useProjectStore((s) => s.copySelected);
+  const pasteClipboard = useProjectStore((s) => s.pasteClipboard);
+  const deleteSelected = useProjectStore((s) => s.deleteSelected);
+  const duplicateSelected = useProjectStore((s) => s.duplicateSelected);
+  const detachAudio = useProjectStore((s) => s.detachAudio);
+  const freezeSelected = useProjectStore((s) => s.freezeSelected);
+  const reverseSelected = useProjectStore((s) => s.reverseSelected);
+  const updateSelectedClip = useProjectStore((s) => s.updateSelectedClip);
   const maskEditing = useProjectStore((s) => s.maskEditing);
   const addPenPoint = useProjectStore((s) => s.addPenPoint);
   const selectedClipIds = useProjectStore((s) => s.selectedClipIds);
@@ -35,6 +64,14 @@ export default function PreviewArea() {
   const [loop, setLoop] = useState(false);
   const [showSafe, setShowSafe] = useState(false);
   const [showGrid, setShowGrid] = useState(false);
+  // CapCut-fix (P1–P4): ≡ menu, Ratio menu, clip "…" menu, pan/zoom.
+  const [topMenuOpen, setTopMenuOpen] = useState(false);
+  const [ratioOpen, setRatioOpen] = useState(false);
+  const [clipMenuOpen, setClipMenuOpen] = useState(false);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [viewZoom, setViewZoom] = useState(1);
+  const panDragRef = useRef<{ startX: number; startY: number; panX: number; panY: number } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const videoPoolRef = useRef(new Map<string, HTMLVideoElement>());
   const bgImageRef = useRef<HTMLImageElement | null>(null);
   // Shared frame renderer (Phase 8): the preview and the offline export
@@ -274,6 +311,13 @@ export default function PreviewArea() {
   };
 
   const onCanvasPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    // CapCut-fix (P4): hand tool (H) drags the preview to pan; move tool
+    // (V) is the default. Pan is a view transform only — it never edits.
+    if (previewTool === 'hand') {
+      (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
+      panDragRef.current = { panX: pan.x, panY: pan.y, startX: e.clientX, startY: e.clientY };
+      return;
+    }
     if (drawMode) {
       (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
       drawingStrokeRef.current = [canvasPoint(e)];
@@ -294,16 +338,38 @@ export default function PreviewArea() {
   };
 
   const onCanvasPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (panDragRef.current) {
+      setPan({
+        x: panDragRef.current.panX + (e.clientX - panDragRef.current.startX),
+        y: panDragRef.current.panY + (e.clientY - panDragRef.current.startY),
+      });
+      return;
+    }
     if (!drawMode || !drawingStrokeRef.current) return;
     drawingStrokeRef.current.push(canvasPoint(e));
   };
 
   const onCanvasPointerUp = () => {
+    if (panDragRef.current) {
+      panDragRef.current = null;
+      return;
+    }
     if (!drawMode || !drawingStrokeRef.current) return;
     const points = drawingStrokeRef.current;
     drawingStrokeRef.current = null;
     if (points.length >= 2) addDrawingStroke(points);
   };
+
+  // CapCut-fix (W1): Ctrl+Shift+F (fullscreen action) toggles the
+  // preview fullscreen from anywhere in the editor.
+  useEffect(() => {
+    const onFullscreenEvent = () => {
+      if (document.fullscreenElement) void document.exitFullscreen();
+      else void sectionRef.current?.requestFullscreen().catch(() => undefined);
+    };
+    window.addEventListener('vidora:preview-fullscreen', onFullscreenEvent);
+    return () => window.removeEventListener('vidora:preview-fullscreen', onFullscreenEvent);
+  }, []);
 
   const aspectClass =
     aspectRatio === '9:16'
@@ -314,24 +380,123 @@ export default function PreviewArea() {
           ? 'aspect-[4/5]'
           : aspectRatio === '21:9'
             ? 'aspect-[21/9]'
-            : 'aspect-video';
+            : aspectRatio === '4:3'
+              ? 'aspect-[4/3]'
+              : aspectRatio === '2:1'
+                ? 'aspect-[2/1]'
+                : aspectRatio === '3:4'
+                  ? 'aspect-[3/4]'
+                  : 'aspect-video';
 
   const stepFrame = (dir: 1 | -1) => setPlayhead(Math.max(0, Math.min(duration, playhead + dir / fps)));
   const toggleFullscreen = () => {
     if (document.fullscreenElement) void document.exitFullscreen();
     else void sectionRef.current?.requestFullscreen().catch(() => undefined);
   };
+  void stepFrame;
+
+  /** "Original" ratio = the project's own resolution, snapped to the nearest known ratio. */
+  const originalRatio = (): '9:16' | '16:9' | '1:1' | '4:5' | '21:9' | '4:3' | '2:1' | '3:4' | 'custom' => {
+    const w = project?.resolution.width ?? 1920;
+    const h = project?.resolution.height ?? 1080;
+    const r = w / h;
+    const candidates: { ratio: number; value: '9:16' | '16:9' | '1:1' | '4:5' | '21:9' | '4:3' | '2:1' | '3:4' }[] = [
+      { ratio: 16 / 9, value: '16:9' },
+      { ratio: 9 / 16, value: '9:16' },
+      { ratio: 1, value: '1:1' },
+      { ratio: 4 / 3, value: '4:3' },
+      { ratio: 2, value: '2:1' },
+      { ratio: 3 / 4, value: '3:4' },
+      { ratio: 4 / 5, value: '4:5' },
+      { ratio: 21 / 9, value: '21:9' },
+    ];
+    let best = candidates[0];
+    for (const c of candidates) if (Math.abs(c.ratio - r) < Math.abs(best.ratio - r)) best = c;
+    return Math.abs(best.ratio - r) < 0.02 ? best.value : 'custom';
+  };
+
+  // CapCut-fix (2026-11-25, P3): the upload prompt shows only when the
+  // timeline is completely empty — a text-only timeline still renders
+  // its clips on the canvas, so media presence alone is not the test.
+  const hasClips = project?.tracks.some((t) => t.clips.length > 0) ?? false;
+  const selectedClip = selectedClipIds.length > 0 && project ? findClip(project, selectedClipIds[0])?.clip ?? null : null;
+
+  const clipMenuItem = (label: string, shortcut: string, onClick: () => void) => (
+    <button type="button" onClick={() => { setClipMenuOpen(false); onClick(); }} className="flex w-full items-center justify-between px-3 py-1.5 text-left text-[13px] hover:bg-[#242424]">
+      <span>{label}</span>
+      <span className="text-[11px] text-[#6E6E6E]">{shortcut}</span>
+    </button>
+  );
 
   return (
-    <section ref={sectionRef} className="flex min-w-0 flex-1 flex-col bg-zinc-900" aria-label="Preview">
-      <div className="flex flex-1 items-center justify-center overflow-hidden p-4">
-        <div className={`${aspectClass} relative max-h-full max-w-full overflow-hidden rounded-lg border border-zinc-700 bg-black shadow-2xl`} style={{ width: aspectRatio === '9:16' || aspectRatio === '4:5' ? 'auto' : '100%', height: aspectRatio === '9:16' || aspectRatio === '4:5' ? '100%' : 'auto' }}>
+    <section
+      ref={sectionRef}
+      className="flex min-w-0 flex-1 flex-col bg-[#141414]"
+      aria-label="Preview"
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={(e) => {
+        e.preventDefault();
+        if (e.dataTransfer.files.length > 0) void addMediaFiles(e.dataTransfer.files);
+      }}
+    >
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="video/*,image/*,audio/*"
+        multiple
+        className="hidden"
+        onChange={(e) => {
+          if (e.target.files && e.target.files.length > 0) void addMediaFiles(e.target.files);
+          e.target.value = '';
+        }}
+      />
+      {/* CapCut-fix (P1): preview title top-left, ≡ menu top-right. */}
+      <div className="flex h-10 shrink-0 items-center justify-between px-3">
+        <span className="truncate text-[13px] font-medium text-[#F2F2F2]">{project?.name ?? 'Player-Timeline 01'}</span>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setTopMenuOpen((v) => !v)}
+            aria-label="Preview options"
+            aria-expanded={topMenuOpen}
+            className="rounded-md p-1.5 text-[#A8A8A8] hover:bg-[#242424] hover:text-[#F2F2F2]"
+          >
+            <IconMenu size={18} />
+          </button>
+          {topMenuOpen && (
+            <div className="absolute right-0 top-9 z-40 w-48 rounded-lg border border-[#3D3D3D] bg-[#1E1E1E] py-1 text-sm shadow-xl">
+              <button type="button" onClick={() => { setLoop(!loop); }} aria-pressed={loop} className="block w-full px-3 py-1.5 text-left hover:bg-[#242424]">
+                Loop {loop ? '✓' : ''}
+              </button>
+              <button type="button" onClick={() => { setShowSafe(!showSafe); }} aria-pressed={showSafe} className="block w-full px-3 py-1.5 text-left hover:bg-[#242424]">
+                Safe zones {showSafe ? '✓' : ''}
+              </button>
+              <button type="button" onClick={() => { setShowGrid(!showGrid); }} aria-pressed={showGrid} aria-label="Thirds grid" className="block w-full px-3 py-1.5 text-left hover:bg-[#242424]">
+                Thirds grid {showGrid ? '✓' : ''}
+              </button>
+              <button type="button" onClick={() => { setTopMenuOpen(false); toggleFullscreen(); }} className="block w-full px-3 py-1.5 text-left hover:bg-[#242424]">
+                Fullscreen
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden p-4">
+        <div
+          className={`${aspectClass} relative max-h-full max-w-full overflow-hidden rounded-lg border border-[#2E2E2E] bg-black shadow-2xl`}
+          style={{
+            transform: `translate(${pan.x}px, ${pan.y}px) scale(${viewZoom})`,
+            width: aspectRatio === '9:16' || aspectRatio === '4:5' || aspectRatio === '3:4' ? 'auto' : '100%',
+            height: aspectRatio === '9:16' || aspectRatio === '4:5' || aspectRatio === '3:4' ? '100%' : 'auto',
+          }}
+        >
           <canvas
             id="vidora-export-canvas"
             ref={canvasRef}
             width={project?.resolution.width ?? 1920}
             height={project?.resolution.height ?? 1080}
-            className={`h-full w-full ${maskEditing || drawMode || trackingMode ? 'cursor-crosshair' : ''}`}
+            className={`h-full w-full ${maskEditing || drawMode || trackingMode ? 'cursor-crosshair' : previewTool === 'hand' ? 'cursor-grab' : ''}`}
             aria-label="Preview canvas"
             onPointerDown={onCanvasPointerDown}
             onPointerMove={onCanvasPointerMove}
@@ -351,51 +516,119 @@ export default function PreviewArea() {
               <div className="absolute right-0 left-0 border-t border-white/40" style={{ top: '66.66%' }} />
             </div>
           )}
+          {previewAxis && (
+            <div className="pointer-events-none absolute top-0 bottom-0 left-1/2 w-px bg-[#00D9D9]" aria-label="Preview axis" />
+          )}
+          {!hasClips && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/70">
+              <button type="button" onClick={() => fileInputRef.current?.click()} className="rounded-lg bg-[#00D9D9] px-5 py-2 text-sm font-semibold text-[#062A2A]">
+                Click to upload
+              </button>
+              <span className="text-xs text-[#A8A8A8]">Or drag and drop file here</span>
+            </div>
+          )}
         </div>
+
+        {/* CapCut-fix (P3): floating toolbar when a clip is selected. */}
+        {selectedClip && (
+          <div className="absolute top-2 left-1/2 z-30 flex -translate-x-1/2 items-center gap-1 rounded-lg border border-[#3D3D3D] bg-[#1E1E1E]/95 px-1 py-1 shadow-xl">
+            <button type="button" onClick={() => setAiToolsOverlay('enhance')} className="flex items-center gap-1 rounded-md px-2 py-1 text-xs hover:bg-[#242424]" title="Edit with AI">
+              <IconSparkles size={14} /> Edit with AI
+            </button>
+            <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('vidora:open-inspector-basic'))} className="flex items-center gap-1 rounded-md px-2 py-1 text-xs hover:bg-[#242424]" title="Crop">
+              <IconCrop size={14} /> Crop
+            </button>
+            <button type="button" onClick={() => setAiToolsOverlay('auto-reframe')} className="rounded-md px-2 py-1 text-xs hover:bg-[#242424]" title="Auto reframe">
+              Auto reframe
+            </button>
+            <button type="button" onClick={() => setActiveTab('Captions')} className="rounded-md px-2 py-1 text-xs hover:bg-[#242424]" title="Captions" aria-label="Captions">
+              CC
+            </button>
+            <button type="button" onClick={() => setAiToolsOverlay('enhance')} className="flex items-center gap-1 rounded-md px-2 py-1 text-xs hover:bg-[#242424]" title="Smart tools">
+              Smart tools <IconChevronDown size={12} />
+            </button>
+            <div className="relative">
+              <button type="button" onClick={() => setClipMenuOpen((v) => !v)} aria-label="More clip actions" aria-expanded={clipMenuOpen} className="rounded-md p-1.5 hover:bg-[#242424]">
+                <IconDots size={16} />
+              </button>
+              {clipMenuOpen && (
+                <div className="absolute right-0 top-8 z-40 w-56 rounded-lg border border-[#3D3D3D] bg-[#1E1E1E] py-1 shadow-xl">
+                  {clipMenuItem('Split', 'Ctrl B', () => splitAtPlayhead())}
+                  {clipMenuItem('Copy', 'Ctrl C', () => copySelected())}
+                  {clipMenuItem('Cut', 'Ctrl X', () => { copySelected(); deleteSelected(); })}
+                  {clipMenuItem('Paste', 'Ctrl V', () => pasteClipboard())}
+                  {clipMenuItem('Duplicate', 'Ctrl D', () => duplicateSelected())}
+                  {clipMenuItem('Delete', 'Backspace', () => deleteSelected())}
+                  {clipMenuItem('Separate audio', 'Ctrl Shift S', () => detachAudio())}
+                  {clipMenuItem('Freeze', '', () => freezeSelected())}
+                  {clipMenuItem('Reverse', '', () => reverseSelected())}
+                  {clipMenuItem('Flip horizontal', '', () => updateSelectedClip({ flipH: !selectedClip.flipH }))}
+                  {clipMenuItem('Crop', '', () => window.dispatchEvent(new CustomEvent('vidora:open-inspector-basic')))}
+                  <button type="button" onClick={() => { setClipMenuOpen(false); window.dispatchEvent(new CustomEvent('vidora:download-clip')); }} className="flex w-full items-center gap-1.5 px-3 py-1.5 text-left text-[13px] hover:bg-[#242424]">
+                    <IconDownload size={14} /> Download clip
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
-      <div className="flex h-12 shrink-0 items-center justify-center gap-2 border-t border-zinc-800 bg-zinc-950 px-2">
-        <button type="button" onClick={() => stepFrame(-1)} className="rounded-md border border-zinc-700 px-2 py-1 text-[11px] text-zinc-300 hover:bg-zinc-800" aria-label="Previous frame" title="Previous frame (one frame back)">
-          −1f
-        </button>
-        <button type="button" onClick={() => setPlaying(!playing)} className="rounded-full bg-gradient-to-r from-violet-600 to-cyan-500 p-2.5 text-white" aria-label={playing ? 'Pause' : 'Play'} title={playing ? 'Pause (Space)' : 'Play (Space)'}>
-          {playing ? <IconPause size={18} /> : <IconPlay size={18} />}
-        </button>
-        <button type="button" onClick={() => stepFrame(1)} className="rounded-md border border-zinc-700 px-2 py-1 text-[11px] text-zinc-300 hover:bg-zinc-800" aria-label="Next frame" title="Next frame (one frame forward)">
-          +1f
-        </button>
-        <input
-          type="range"
-          min={0}
-          max={Math.max(duration, 0.1)}
-          step={0.01}
-          value={Math.min(playhead, Math.max(duration, 0.1))}
-          onChange={(e) => setPlayhead(Number(e.target.value))}
-          aria-label="Seek"
-          className="w-48"
-        />
-        <span className="font-mono text-xs text-zinc-400" aria-label="Timecode">
+
+      {/* CapCut-fix (P2): bottom bar — timecode left, play center, Full / fit / Ratio / fullscreen right. Seek stays on the timeline ruler. */}
+      <div className="flex h-12 shrink-0 items-center justify-between border-t border-[#2E2E2E] bg-[#141414] px-3">
+        <span className="font-mono text-xs text-[#A8A8A8]" aria-label="Timecode">
           {formatTimecode(playhead, fps)} / {formatTimecode(duration, fps)}
         </span>
-        {primaryClip && (
-          <span className="max-w-48 truncate text-xs text-zinc-400" title={primaryClip.name}>
-            {primaryClip.name} · {primaryClip.speed}×
-            {selectedClipIds.length > 0 && maskEditing ? ' · pen-mask editing' : ''}
-            {drawMode ? ' · drawing' : ''}
-            {trackingMode ? ' · adding track points' : ''}
-          </span>
-        )}
-        <button type="button" onClick={() => setLoop(!loop)} aria-pressed={loop} className={`rounded-md border px-2 py-1 text-[11px] ${loop ? 'border-violet-500 bg-violet-600/20 text-violet-300' : 'border-zinc-700 text-zinc-300 hover:bg-zinc-800'}`} title="Loop playback">
-          Loop
+        <button type="button" onClick={() => setPlaying(!playing)} className="rounded-full bg-[#00D9D9] p-2.5 text-[#062A2A]" aria-label={playing ? 'Pause' : 'Play'} title={playing ? 'Pause (Space)' : 'Play (Space)'}>
+          {playing ? <IconPause size={18} /> : <IconPlay size={18} />}
         </button>
-        <button type="button" onClick={() => setShowSafe(!showSafe)} aria-pressed={showSafe} className={`rounded-md border px-2 py-1 text-[11px] ${showSafe ? 'border-violet-500 bg-violet-600/20 text-violet-300' : 'border-zinc-700 text-zinc-300 hover:bg-zinc-800'}`} title="Toggle safe zones (action-safe 90%, title-safe 80%)">
-          Safe
-        </button>
-        <button type="button" onClick={() => setShowGrid(!showGrid)} aria-pressed={showGrid} className={`rounded-md border px-2 py-1 text-[11px] ${showGrid ? 'border-violet-500 bg-violet-600/20 text-violet-300' : 'border-zinc-700 text-zinc-300 hover:bg-zinc-800'}`} title="Toggle thirds grid">
-          Grid
-        </button>
-        <button type="button" onClick={toggleFullscreen} className="rounded-md border border-zinc-700 px-2 py-1 text-[11px] text-zinc-300 hover:bg-zinc-800" aria-label="Fullscreen preview" title="Fullscreen preview">
-          ⛶
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => { setViewZoom((z) => (z === 1 ? 1.5 : 1)); setPan({ x: 0, y: 0 }); }}
+            className="rounded-md px-2 py-1 text-[11px] text-[#A8A8A8] hover:bg-[#242424] hover:text-[#F2F2F2]"
+            title="Fill the preview area"
+          >
+            Full
+          </button>
+          <button
+            type="button"
+            onClick={() => { setViewZoom(1); setPan({ x: 0, y: 0 }); }}
+            aria-label="Fit preview"
+            title="Fit preview"
+            className="rounded-md p-1.5 text-[#A8A8A8] hover:bg-[#242424] hover:text-[#F2F2F2]"
+          >
+            <IconFit size={16} />
+          </button>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setRatioOpen((v) => !v)}
+              aria-expanded={ratioOpen}
+              className="rounded-md px-2 py-1 text-[11px] text-[#A8A8A8] hover:bg-[#242424] hover:text-[#F2F2F2]"
+              title="Aspect ratio"
+            >
+              Ratio
+            </button>
+            {ratioOpen && (
+              <div className="absolute right-0 bottom-9 z-40 w-36 rounded-lg border border-[#3D3D3D] bg-[#1E1E1E] py-1 text-sm shadow-xl">
+                {(['Original', '16:9', '4:3', '2:1', '9:16', '1:1', '3:4'] as const).map((r) => (
+                  <button
+                    key={r}
+                    type="button"
+                    onClick={() => { setAspectRatio(r === 'Original' ? originalRatio() : r); setRatioOpen(false); }}
+                    className="block w-full px-3 py-1.5 text-left hover:bg-[#242424]"
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <button type="button" onClick={toggleFullscreen} aria-label="Fullscreen preview" title="Fullscreen preview" className="rounded-md p-1.5 text-[#A8A8A8] hover:bg-[#242424] hover:text-[#F2F2F2]">
+            <IconFullscreen size={16} />
+          </button>
+        </div>
       </div>
     </section>
   );

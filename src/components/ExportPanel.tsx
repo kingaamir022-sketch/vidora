@@ -34,21 +34,22 @@ import { buildBundle, bundleFileName, bundleToText, loadBackupRecords, saveBacku
 import { formatCommentTime } from '../lib/collab';
 import { SOCIAL_TARGETS, buildPresentationHtml, buildShareCaption } from '../lib/share';
 
-type ShareTab = 'download' | 'review' | 'present' | 'social';
-
 /**
- * Full export dialog (Phase 8, Section L — L-EXPORT / L-SHARE / L-COLLAB).
- * Same four sections as CapCut's Export menu: Download, Share for review,
- * Share as presentation, Share on social. Video export renders offline
- * (frame by frame, with the audio mix) — no longer realtime, and no
- * longer silent (D5 closed). H.265 is not offered: no browser encoder
- * exists for it. Social sharing opens the platform's own upload page —
- * Vidora has no connected social accounts, so it cannot post for you.
+ * Download settings panel (CapCut-fix 2026-11-25, V1/Y12). The Export
+ * button opens the Export MENU (ExportMenu.tsx); this panel is the
+ * single section the menu chose, via the store's exportTab
+ * (download/review/present/social). It has NO tab bar of its own and
+ * renders ONLY that section. Video export renders offline (frame by
+ * frame, with the audio mix) — no longer realtime, and no longer
+ * silent. H.265 is not offered: no browser encoder exists for it.
+ * Social sharing opens the platform's own upload page — Vidora has no
+ * connected social accounts, so it cannot post for you.
  */
 export default function ExportPanel() {
   const project = useProjectStore((s) => s.project);
   const playhead = useProjectStore((s) => s.playhead);
   const exportOpen = useProjectStore((s) => s.exportOpen);
+  const exportTab = useProjectStore((s) => s.exportTab);
   const setExportOpen = useProjectStore((s) => s.setExportOpen);
   const setPlaying = useProjectStore((s) => s.setPlaying);
   const setPresentMode = useProjectStore((s) => s.setPresentMode);
@@ -56,7 +57,6 @@ export default function ExportPanel() {
   const setCommentResolved = useProjectStore((s) => s.setCommentResolved);
   const shareWith = useProjectStore((s) => s.shareWith);
 
-  const [tab, setTab] = useState<ShareTab>('download');
   const [options, setOptions] = useState<ExportOptions>(defaultExportOptions());
   const [caps, setCaps] = useState<ExportCapabilities | null>(null);
   const [jobs, setJobs] = useState<ExportJob[]>([]);
@@ -174,12 +174,21 @@ export default function ExportPanel() {
   const sharedWith = project.sharedWith ?? [];
   const finishedJobs = jobs.filter((j) => j.status === 'done');
 
+  const sectionTitle =
+    exportTab === 'review'
+      ? 'Share for review'
+      : exportTab === 'present'
+        ? 'Share as presentation'
+        : exportTab === 'social'
+          ? 'Share on social'
+          : 'Download';
+
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-4" role="dialog" aria-modal="true" aria-label="Export and share">
-      <div className="w-full max-w-lg rounded-xl border border-zinc-700 bg-zinc-950 p-5 text-zinc-100">
+      <div className="w-full max-w-lg rounded-xl border border-[#3D3D3D] bg-[#0A0A0A] p-5 text-zinc-100">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h2 className="text-lg font-semibold">Export</h2>
+            <h2 className="text-lg font-semibold">{sectionTitle}</h2>
             <p className="mt-0.5 text-xs text-zinc-400">Duration {duration.toFixed(1)}s · offline render with the audio mix (not realtime).</p>
           </div>
           <button type="button" onClick={() => setExportOpen(false)} className="rounded-md border border-zinc-700 px-3 py-1 text-sm" aria-label="Close export">
@@ -187,29 +196,7 @@ export default function ExportPanel() {
           </button>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-1" role="tablist" aria-label="Export sections">
-          {(
-            [
-              ['download', 'Download'],
-              ['review', 'Share for review'],
-              ['present', 'Share as presentation'],
-              ['social', 'Share on social'],
-            ] as const
-          ).map(([id, label]) => (
-            <button
-              key={id}
-              type="button"
-              role="tab"
-              aria-selected={tab === id}
-              onClick={() => setTab(id)}
-              className={`rounded-full border px-3 py-1 text-xs ${tab === id ? 'border-violet-500 bg-violet-600/20 text-violet-200' : 'border-zinc-700 text-zinc-400'}`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {tab === 'download' && (
+        {exportTab === 'download' && (
           <div className="mt-4">
             <div className="flex gap-3">
               {cover && <img src={cover} alt="Video cover" className="h-16 w-28 rounded object-cover" />}
@@ -301,7 +288,7 @@ export default function ExportPanel() {
                 type="button"
                 disabled={duration <= 0 || Boolean(videoBlocked)}
                 onClick={() => enqueue('video', options)}
-                className="flex-1 rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+                className="flex-1 rounded-lg bg-[#00D9D9] px-4 py-2 text-sm font-semibold text-[#062A2A] disabled:opacity-40"
               >
                 {duration <= 0 ? 'Project is empty and cannot be exported' : 'Export'}
               </button>
@@ -347,16 +334,81 @@ export default function ExportPanel() {
                       className="w-16 rounded border border-zinc-700 bg-zinc-900 px-1 py-0.5 text-zinc-100"
                     />
                   </label>
-                  <button type="button" onClick={() => enqueue('cover', { ...options, kind: 'cover' })} className="mt-1.5 rounded-md border border-violet-500 bg-violet-600/20 px-2 py-1 text-violet-200">
+                  <button type="button" onClick={() => enqueue('cover', { ...options, kind: 'cover' })} className="mt-1.5 rounded-md bg-[#00D9D9] px-2 py-1 font-semibold text-[#062A2A]">
                     Export cover
                   </button>
                 </div>
               </div>
             </div>
+
+            <div className="mt-5 border-t border-zinc-800 pt-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold">Export queue ({jobs.length})</h3>
+                <button type="button" onClick={clearFinished} className="text-[11px] text-zinc-400 underline">
+                  Clear finished
+                </button>
+              </div>
+              <p className="mt-1 text-[11px] text-zinc-500">Jobs run one at a time. Finished files can be re-downloaded until you close the app.</p>
+              {jobs.length === 0 ? (
+                <p className="mt-2 text-xs text-zinc-500">No exports yet.</p>
+              ) : (
+                <ul className="mt-2 space-y-2">
+                  {jobs.map((job) => (
+                    <li key={job.id} data-job-id={job.id} data-kind={job.kind} className="rounded-lg border border-zinc-800 bg-zinc-900 p-2 text-xs">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="min-w-0 flex-1 truncate font-semibold">
+                          {job.fileName ?? `${job.kind} export`} · {job.projectName}
+                        </span>
+                        <span className="shrink-0 text-zinc-400">{job.status}</span>
+                      </div>
+                      {(job.status === 'running' || job.status === 'queued') && (
+                        <div className="mt-1.5 h-2 overflow-hidden rounded bg-zinc-800">
+                          <div className="h-full bg-[#00D9D9]" style={{ width: `${job.progress}%` }} />
+                        </div>
+                      )}
+                      <p className="mt-1 text-zinc-500">
+                        {job.step}
+                        {job.progress > 0 && job.status === 'running' ? ` — ${job.progress}%` : ''}
+                        {job.size ? ` · ${formatBytesShort(job.size)}` : ''}
+                      </p>
+                      {job.warnings?.map((w) => (
+                        <p key={w} className="mt-0.5 text-[11px] text-amber-300">
+                          ⚠ {w}
+                        </p>
+                      ))}
+                      {job.error && <p className="mt-0.5 text-[11px] text-red-300">{job.error}</p>}
+                      <div className="mt-1.5 flex gap-2">
+                        {job.status === 'running' && (
+                          <button type="button" onClick={() => cancelJob(job.id)} className="rounded border border-zinc-700 px-2 py-0.5 text-[11px]">
+                            Cancel
+                          </button>
+                        )}
+                        {job.status === 'done' && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (!downloadJobFile(job)) setStatus('That file is gone (the app was closed) — re-run the export to make it again.');
+                            }}
+                            className="rounded border border-zinc-700 px-2 py-0.5 text-[11px]"
+                          >
+                            Download again
+                          </button>
+                        )}
+                        {(job.status === 'failed' || job.status === 'cancelled' || job.status === 'interrupted') && (
+                          <button type="button" onClick={() => rerun(job)} className="rounded border border-zinc-700 px-2 py-0.5 text-[11px]">
+                            Re-run
+                          </button>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         )}
 
-        {tab === 'review' && (
+        {exportTab === 'review' && (
           <div className="mt-4">
             <p className="text-xs leading-relaxed text-zinc-400">People can add comments to your video. Send them the review package file — their comments come back in the same file. No account, no server.</p>
             <div className="mt-3">
@@ -368,7 +420,7 @@ export default function ExportPanel() {
                 Add a comment at {formatCommentTime(playhead)} (current playhead)
                 <textarea value={commentText} onChange={(e) => setCommentText(e.target.value)} placeholder="Write a note about this moment…" aria-label="Comment text" rows={2} className="mt-1 w-full rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-sm text-zinc-100" />
               </label>
-              <button type="button" onClick={submitComment} disabled={!commentText.trim()} className="mt-2 rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-4 py-2 text-sm font-semibold text-white disabled:opacity-40">
+              <button type="button" onClick={submitComment} disabled={!commentText.trim()} className="mt-2 rounded-lg bg-[#00D9D9] px-4 py-2 text-sm font-semibold text-[#062A2A] disabled:opacity-40">
                 Add comment
               </button>
             </div>
@@ -381,7 +433,7 @@ export default function ExportPanel() {
                   {comments.map((c) => (
                     <li key={c.id} className={`rounded-lg border border-zinc-800 bg-zinc-900 p-2 text-xs ${c.resolved ? 'opacity-60' : ''}`}>
                       <div className="flex items-center justify-between gap-2">
-                        <button type="button" onClick={() => useProjectStore.getState().setPlayhead(c.time)} className="font-mono text-cyan-300" title="Seek to this moment">
+                        <button type="button" onClick={() => useProjectStore.getState().setPlayhead(c.time)} className="font-mono text-[#00D9D9]" title="Seek to this moment">
                           {formatCommentTime(c.time)}
                         </button>
                         <button type="button" onClick={() => setCommentResolved(c.id, !c.resolved)} className="rounded border border-zinc-700 px-2 py-0.5 text-[11px]">
@@ -416,14 +468,14 @@ export default function ExportPanel() {
                 </button>
               </div>
               {sharedWith.length > 0 && <p className="mt-2 text-xs text-zinc-400">Shared with: {sharedWith.join(', ')}</p>}
-              <button type="button" onClick={downloadReviewPackage} className="mt-3 w-full rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-4 py-2 text-sm font-semibold text-white">
+              <button type="button" onClick={downloadReviewPackage} className="mt-3 w-full rounded-lg bg-[#00D9D9] px-4 py-2 text-sm font-semibold text-[#062A2A]">
                 Download review package (.vidora)
               </button>
             </div>
           </div>
         )}
 
-        {tab === 'present' && (
+        {exportTab === 'present' && (
           <div className="mt-4">
             <p className="text-xs leading-relaxed text-zinc-400">People can only watch your video. Present it fullscreen here, or download a small player page to send with the exported video file.</p>
             <div className="mt-3 flex flex-col gap-2">
@@ -435,7 +487,7 @@ export default function ExportPanel() {
                   setExportOpen(false);
                   setPresentMode(true);
                 }}
-                className="rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+                className="rounded-lg bg-[#00D9D9] px-4 py-2 text-sm font-semibold text-[#062A2A] disabled:opacity-40"
               >
                 Present now (fullscreen, watch only)
               </button>
@@ -449,10 +501,10 @@ export default function ExportPanel() {
           </div>
         )}
 
-        {tab === 'social' && (
+        {exportTab === 'social' && (
           <div className="mt-4">
             <p className="text-xs leading-relaxed text-zinc-400">
-              Vidora prepares the file — you upload it on the platform. Direct posting needs a connected account (Phase 9). Export the video first (Download tab), then open the platform&apos;s upload page.
+              Vidora prepares the file — you upload it on the platform. Direct posting needs a connected account (Phase 9). Export the video first (Download), then open the platform&apos;s upload page.
             </p>
             {finishedJobs.length === 0 && <p className="mt-2 text-xs text-amber-300">No exported file yet in this session — export the video first.</p>}
             <label className="mt-3 block text-xs text-zinc-400">
@@ -488,71 +540,6 @@ export default function ExportPanel() {
         )}
 
         {status && <p className="mt-4 text-xs text-zinc-300">{status}</p>}
-
-        <div className="mt-5 border-t border-zinc-800 pt-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold">Export queue ({jobs.length})</h3>
-            <button type="button" onClick={clearFinished} className="text-[11px] text-zinc-400 underline">
-              Clear finished
-            </button>
-          </div>
-          <p className="mt-1 text-[11px] text-zinc-500">Jobs run one at a time. Finished files can be re-downloaded until you close the app.</p>
-          {jobs.length === 0 ? (
-            <p className="mt-2 text-xs text-zinc-500">No exports yet.</p>
-          ) : (
-            <ul className="mt-2 space-y-2">
-              {jobs.map((job) => (
-                <li key={job.id} data-job-id={job.id} data-kind={job.kind} className="rounded-lg border border-zinc-800 bg-zinc-900 p-2 text-xs">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="min-w-0 flex-1 truncate font-semibold">
-                      {job.fileName ?? `${job.kind} export`} · {job.projectName}
-                    </span>
-                    <span className="shrink-0 text-zinc-400">{job.status}</span>
-                  </div>
-                  {(job.status === 'running' || job.status === 'queued') && (
-                    <div className="mt-1.5 h-2 overflow-hidden rounded bg-zinc-800">
-                      <div className="h-full bg-gradient-to-r from-violet-600 to-cyan-500" style={{ width: `${job.progress}%` }} />
-                    </div>
-                  )}
-                  <p className="mt-1 text-zinc-500">
-                    {job.step}
-                    {job.progress > 0 && job.status === 'running' ? ` — ${job.progress}%` : ''}
-                    {job.size ? ` · ${formatBytesShort(job.size)}` : ''}
-                  </p>
-                  {job.warnings?.map((w) => (
-                    <p key={w} className="mt-0.5 text-[11px] text-amber-300">
-                      ⚠ {w}
-                    </p>
-                  ))}
-                  {job.error && <p className="mt-0.5 text-[11px] text-red-300">{job.error}</p>}
-                  <div className="mt-1.5 flex gap-2">
-                    {job.status === 'running' && (
-                      <button type="button" onClick={() => cancelJob(job.id)} className="rounded border border-zinc-700 px-2 py-0.5 text-[11px]">
-                        Cancel
-                      </button>
-                    )}
-                    {job.status === 'done' && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (!downloadJobFile(job)) setStatus('That file is gone (the app was closed) — re-run the export to make it again.');
-                        }}
-                        className="rounded border border-zinc-700 px-2 py-0.5 text-[11px]"
-                      >
-                        Download again
-                      </button>
-                    )}
-                    {(job.status === 'failed' || job.status === 'cancelled' || job.status === 'interrupted') && (
-                      <button type="button" onClick={() => rerun(job)} className="rounded border border-zinc-700 px-2 py-0.5 text-[11px]">
-                        Re-run
-                      </button>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
       </div>
     </div>
   );

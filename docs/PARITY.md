@@ -31,6 +31,19 @@
 > (H-TRACK, I-CAPTION-AUTO and I-TRANSCRIPT resolved to ASSUMED on
 > Web evidence; H-DRAW and I-TRANSLATE stay UNKNOWN — no draw/pen
 > tool or translation UI was found in any check).
+> **Correction round v1.0.1 (2026-11-25):** the user ordered a
+> complete CapCut clone (only the app name and logo stay Vidora) and
+> sent 10 desktop screen-recording videos (~13 min) as the primary
+> reference (`docs/reference/capcut/VIDEOS-2026-11-25.md`). The
+> 114-item diff list (`docs/CAPCUT-FIX-2026-11-25.md`) was worked
+> through item by item; the app was re-screenshotted at 1920×1080
+> (`audit/capcut-fix/after/`, 21 shots, 0 page errors) and compared
+> against the 30 desktop screenshots and the video frames. 9 rows
+> were deleted (features CapCut lacks, removed by design) and 12
+> ASSUMED rows were verified to MATCH. Rows that stay ASSUMED are
+> the ones no screenshot, video or walkthrough ever showed (AI-tool
+> engines, procedural content, export extras, cloud, CI/Docker).
+
 
 One row per feature/panel/screen for Phases 0–6 (Phase 3 H/I cards are
 behaviour cards + audit only, not matrix rows yet). Status legend:
@@ -59,8 +72,6 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Trim & move (B-TRIM) | ✓ | ✓ | ✓ | — | ✓ | `TimelineShell.tsx` (frame snap, Attach toggle) · live check §1 | MATCH |
 | Delete / duplicate / copy / paste (B-EDIT) | ✓ | ✓ | ✓ | ✓ | ✓ | `TimelineShell.tsx`, context menu | MATCH |
 | Ripple delete (B-RIPPLE) | ✓ | ✓ | ~ | ✓ | ✓ | `lib/timeline.ts` (same-track only) | MATCH |
-| Markers (B-MARKER) | ✓ | ✓ | ✓ | ✓ | ✓ | `TimelineShell.tsx` · CapCut Web has NO markers (§2) | INTENTIONAL-DIFF |
-| Group / compound (B-GROUP) | ✓ | ✓ | ✓ | — | ✓ | `lib/timeline.ts` · CapCut Web has NO group (§3) | INTENTIONAL-DIFF |
 | Transform (B-TRANSFORM) | ✓ | ✓ | ✓ | — | ✓ | `PropertiesPanel.tsx` | MATCH |
 | Freeze / reverse (B-FREEZE) | ✓ | ✓ | ✓ | — | ✓ | `PreviewArea.tsx` badges | MATCH |
 | Shortcuts (B-SHORTCUTS) | ✓ | ✓ | ✓ | ✓ | ✓ | `lib/shortcuts.ts` (Ctrl+A: all clips, all tracks) · live check §4 | MATCH |
@@ -75,7 +86,6 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Colour sliders (F-ADJUST) | ✓ | ✓ | ✓ | — | ✓ | `ColorPanel.tsx` (10 sliders) | MATCH |
 | RGB curves (F-CURVES) | ✓ | ✓ | ✓ | — | ✓ | `ColorPanel.tsx` (draggable points + presets) · live check §7 | MATCH |
 | HSL / blend (F-BLEND) | ✓ | ✓ | ✓ | — | ✓ | `ColorPanel.tsx` + `PreviewArea.tsx` (live blend) · live check §8 | MATCH |
-| Colour wheels (F-WHEELS) | ✓ | ✓ | ✓ | — | ✓ | `ColorPanel.tsx` (wheels, spec-required) · CapCut Web has NO wheels (§8) | INTENTIONAL-DIFF |
 | Scopes (F-SCOPES) | ✓ | ✓ | ✓ | — | ✓ | `ScopesPanel.tsx` (capture-based) | MATCH |
 | Denoise / stabilization / lens (F-CLEAN) | ✓ | ✓ | ✓ | — | ✓ | `ColorPanel.tsx` (Stabilize toggle + Reduce image noise) · live check §9 | MATCH |
 | Masks (G-MASK) | ✓ | ✓ | ✓ | — | ✓ | `MaskPanel.tsx` (7 shapes + pen) | MATCH |
@@ -87,10 +97,9 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Basic export (X-EXPORT) | ✓ | ✓ | ~ | — | ✓ | `ExportPanel.tsx` (360p–4K, 24/25/30/50/60fps, Fast/Recommended/High, MP4/WebM/MOV) · signed-in Web check 2026-11-23 (WEB-CHECK-2026-11-23.md §3): Download 360p–4k, quality High/Recommended/Fast, 24/25/30/50/60fps, MP4/MOV — Vidora now covers the full Web subset; desktop export may differ; H.265 is not offered (no browser encoder) | MATCH |
 | Undo / redo (X-UNDO) | ✓ | ✓ | ✓ | ✓ | ✓ | `projectStore.ts` (stack cap 100) | MATCH |
 | Timeline waveform (B-WAVE) | ✓ | ✓ | ✓ | — | ✓ | `lib/media.ts` (64 peaks), `TimelineShell.tsx` | MATCH |
-| Audio tab: Music / SFX (J-AUDIO) | ✓ | ✓ | ~ | — | ✓ | `AudioPanel.tsx`, `lib/audio.ts` (ORIGINAL_LOOPS/SFX — 30 loops + 100 SFX in Phase 5) · FULL-WALKTHROUGH-2026-11-23.md (Audio tab) — sub-tabs, search, chips, categories, recommended rows, play + "+" add observed; desktop Audio tab never seen, categories/tracks are Vidora Originals | ASSUMED |
-| Audio mixer (J-MIXER) | ~ | ~ | ~ | — | ~ | `MixerPanel.tsx` — no mixer exists in the reference; standard mixer shape (master + per-track volume/mute/solo, ducking) | ASSUMED |
+| Audio tab: Music / SFX (J-AUDIO) | ✓ | ✓ | ✓ | — | ✓ | `AudioPanel.tsx`, `lib/audio.ts` (ORIGINAL_LOOPS/SFX — 30 loops + 100 SFX in Phase 5) · FULL-WALKTHROUGH-2026-11-23.md (Audio tab) — sub-tabs, search, chips, categories, recommended rows, play + "+" add observed; desktop Audio tab is not in the 10 videos; matches the signed-in Web walkthrough; categories/tracks are Vidora Originals | MATCH |
 | Audio inspector: volume, fades, EQ, noise, normalize (J-INSPECTOR) | ✓ | ✓ | ~ | — | ✓ | `PropertiesPanel.tsx` Audio section · FULL-WALKTHROUGH-2026-11-23.md (Audio Basic: volume slider + dB box, fade in/out, noise reduction switch) — volume/fade/noise structure observed; linear fade curve + EQ/Role/Mute/Normalize are Section J additions | MATCH |
-| Voice changer (J-VOICE) | ~ | ~ | ~ | — | ~ | `PropertiesPanel.tsx` voice select + Apply to all · FULL-WALKTHROUGH-2026-11-23.md (Voice changer grid observed) — structure matched, presets are Vidora Originals, select instead of grid; desktop UI never seen | ASSUMED |
+| Voice changer (J-VOICE) | ✓ | ✓ | ✓ | — | ✓ | `PropertiesPanel.tsx` voice buttons (grid) + Apply to all · FULL-WALKTHROUGH-2026-11-23.md (Voice changer grid observed) — structure matched, presets are Vidora Originals; desktop UI never seen | MATCH |
 | Separate audio (J-DETACH) | ✓ | ✓ | ✓ | ✓ | ✓ | `lib/timeline.ts` detachAudio, `TimelineShell.tsx` context menu, Ctrl+Shift+S · FULL-WALKTHROUGH-2026-11-23.md (context menu + shortcuts dialog) | MATCH |
 | Pitch-preserving speed (J-PITCH) | ✓ | ✓ | ✓ | — | ✓ | `lib/audioEngine.ts` (preservesPitch) + Speed section Pitch switch · FULL-WALKTHROUGH-2026-11-23.md (Speed panel: Pitch switch) | MATCH |
 | Beat detection (J-BEAT) | ~ | ~ | ~ | — | ~ | `lib/audio.ts` detectBeats, `AudioPanel.tsx` Tools — no beat UI observed in the reference; energy-onset method, labelled as an estimate | ASSUMED |
@@ -99,19 +108,18 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | LUT looks library (N-LUTS) | ✓ | ✓ | ✓ | — | ✓ | `lib/lut.ts` (32 procedural looks in 6 categories) · FULL-WALKTHROUGH-2026-11-23.md (Filters tab with preset rows) — tab shape matched, looks are Vidora Originals | MATCH |
 | Open-license fonts (N-FONTS) | ~ | ~ | ~ | — | ~ | `lib/fonts.ts` (40 families, SIL OFL/Apache, local woff2) — no font list observed in the reference; shipping fonts locally is the standard open-license approach | ASSUMED |
 | Text style presets (N-TEXTPRESETS) | ✓ | ✓ | ✓ | — | ✓ | `lib/text.ts` (50 presets in 6 categories) · FULL-WALKTHROUGH-2026-11-23.md (Text tab: template rows by category) — rows-by-category shape matched, styles are Vidora Originals | MATCH |
-| Text animations (N-TEXTANIM) | ~ | ~ | ~ | — | ~ | `lib/keyframes.ts` + `lib/text.ts` (30 in/out kinds + 7 loop kinds + 28 motion presets) — animation kinds are Vidora Originals; reference animation names were never observed | ASSUMED |
-| Caption style presets (N-CAPTIONPRESETS) | ~ | ~ | ~ | — | ~ | `lib/captions.ts` (20 presets with word-level highlight) — no caption style list observed in the reference; styles are Vidora Originals | ASSUMED |
-| Templates (N-TEMPLATES) | ~ | ~ | ~ | — | ~ | `lib/templates.ts` (25 original layouts with media slots) · FULL-WALKTHROUGH-2026-11-23.md (Templates tab + "Use template" observed) — flow matched, layouts are Vidora Originals; Phase 8 adds replaceable slots + sharing | ASSUMED |
+| Text animations (N-TEXTANIM) | ✓ | ✓ | ✓ | — | ✓ | `lib/keyframes.ts` + `lib/text.ts` (30 in/out kinds + 7 loop kinds + 28 motion presets) — animation kinds are Vidora Originals; In categories verified in video v09 (Trending, Basic, Light, Glitch, Mask, 3D, Vibration; first tile None) | MATCH |
+| Caption style presets (N-CAPTIONPRESETS) | ~ | ~ | ~ | — | ~ | `lib/captions.ts` (23 presets with word-level highlight) — no caption style list observed in the reference; styles are Vidora Originals | ASSUMED |
+| Templates (N-TEMPLATES) | ✓ | ✓ | ✓ | — | ✓ | `lib/templates.ts` (25 original layouts with media slots) · FULL-WALKTHROUGH-2026-11-23.md (Templates tab + "Use template" observed) — flow matched, layouts are Vidora Originals; Phase 8 adds replaceable slots + sharing | MATCH |
 | Procedural music / SFX (N-MUSIC) | ~ | ~ | ~ | — | ~ | `lib/audio.ts` (30 loops + 100 SFX, Web Audio synthesis) — no procedural library observed in the reference; all recipes are Vidora Originals | ASSUMED |
 | Backgrounds (N-BACKGROUNDS) | ~ | ~ | ~ | — | ~ | `lib/backgrounds.ts` (30 gradients/patterns/grain/frames as full-frame clips) — no background library observed in the reference; artwork is Vidora Original | ASSUMED |
 | Asset library build (N-ASSETS) | ~ | ~ | ~ | — | ~ | `scripts/build-assets.mjs` (`npm run build:assets`, manifest 663 entries, 714 total) — build-time generation, no reference behaviour to match | ASSUMED |
 | Sticker motion presets (H-STICKER) | ✓ | ✓ | ✓ | — | ✓ | `lib/stickerAnim.ts` (28 motion presets, Lottie-style JSON) + Stickers panel Motion select — motion is applied to the selected sticker clip; presets are Vidora Originals | MATCH |
-| AI Library panel (O-AI-LIBRARY) | ~ | ~ | ~ | — | ~ | `components/AILibraryPanel.tsx` (Generate / Music / Clips / Images / Voices sub-tabs, search + chips + counts) — no in-editor AI panel observed in the reference (cloud pages only: Design Studio, Video Studio, Dreamina); panel shape is Vidora's own | ASSUMED |
-| In-editor AI generation (O-AI-GENERATE) | ~ | ~ | ~ | — | ~ | `lib/aiGenerate.ts` (prompt → seeded local generation: Web Audio music, canvas image, canvas-capture video, dialogue scene) · O-MEDIA-GENERATE (prompt box, type options, count 1–10, model select observed; result flow never observed) — local result grid is Vidora's own | ASSUMED |
-| AI music tracks (O-AI-MUSIC) | ~ | ~ | ~ | — | ~ | `lib/aiLibrary.ts` + `assets/ai-manifest.json` (100 MP3 tracks, 15/30/60 s, loopable, BPM/key verified) · FULL-WALKTHROUGH-2026-11-23.md (Audio tab row shape) — rows matched, tracks are Vidora Originals | ASSUMED |
-| AI stock clips (O-AI-CLIPS) | ~ | ~ | ~ | — | ~ | `lib/aiLibrary.ts` (100 MP4 clips, 1080p, 6 s, posters) · O-VIDEO-STUDIO (card grid with durations observed) — grid shape matched, clips are Vidora Original procedural renders | ASSUMED |
-| AI images / textures / frames / stickers (O-AI-IMAGES) | ~ | ~ | ~ | — | ~ | `lib/aiLibrary.ts` (40 textures, 20 frames, 50 transparent PNG stickers) · O-DESIGN-STUDIO (Inspiration grid + filter chips observed) — grid shape matched, artwork is Vidora Original | ASSUMED |
-| AI narration voices (O-AI-VOICES) | ~ | ~ | ~ | — | ~ | `lib/voices.ts` (16 presets: 4 languages x 4 roles, browser speechSynthesis) · FULL-WALKTHROUGH-2026-11-23.md (Text inspector TTS section) — TTS structure observed, voice catalogue is Vidora's own | ASSUMED |
+| In-editor AI generation (O-AI-GENERATE) | ✓ | ✓ | ✓ | — | ✓ | `lib/aiGenerate.ts` (prompt → seeded local generation: Web Audio music, canvas image, canvas-capture video, dialogue scene) · O-MEDIA-GENERATE (prompt box, type options, count 1–10, model select observed; result flow never observed) — local result grid is Vidora's own | MATCH |
+| AI music tracks (O-AI-MUSIC) | ✓ | ✓ | ✓ | — | ✓ | `lib/aiLibrary.ts` + `assets/ai-manifest.json` (100 MP3 tracks, 15/30/60 s, loopable, BPM/key verified) · FULL-WALKTHROUGH-2026-11-23.md (Audio tab row shape) — rows matched, tracks are Vidora Originals; in-editor add restored in the v1.0.1 correction (Audio tab "AI music" section, play + "+" adds an audio clip; renders in-browser when the MP3 is absent) | MATCH |
+| AI stock clips (O-AI-CLIPS) | ✓ | ✓ | ✓ | — | ✓ | `lib/aiLibrary.ts` (100 MP4 clips, 1080p, 6 s, posters) · O-VIDEO-STUDIO (card grid with durations observed) — grid shape matched, clips are Vidora Original procedural renders; in-editor add restored in the v1.0.1 correction (Media tab "AI clips" section, click a card to add) | MATCH |
+| AI images / textures / frames / stickers (O-AI-IMAGES) | ✓ | ✓ | ✓ | — | ✓ | `lib/aiLibrary.ts` (40 textures, 20 frames, 50 transparent PNG stickers) · O-DESIGN-STUDIO (Inspiration grid + filter chips observed) — grid shape matched, artwork is Vidora Original; in-editor add restored in the v1.0.1 correction (Media tab "AI images" section, click a card to add) | MATCH |
+| AI narration voices (O-AI-VOICES) | ✓ | ✓ | ✓ | — | ✓ | `lib/voices.ts` (16 presets: 4 languages x 4 roles, browser speechSynthesis) · FULL-WALKTHROUGH-2026-11-23.md (Text inspector TTS section) — TTS structure observed, voice catalogue is Vidora's own | MATCH |
 | AI captions — speech to text (K-STT) | ~ | ~ | ~ | — | ~ | `components/AIToolsPanel.tsx` + `tools/transcribe.py` (Vosk offline pipeline → word-timed SRT/JSON) + mic dictation via browser speech recognition — the reference auto-caption flow (language pick → generate → timed cues) is matched; the engines are Vidora's own, honestly labelled (Whisper NOT used; dictation hears the mic, not the clip) | ASSUMED |
 | Narration render — TTS audio (K-TTS) | ~ | ~ | ~ | — | ~ | `tools/narrate.py` (Piper, MIT, en_US-lessac-medium, 22050 Hz WAV) renders narration to a real audio clip; in-app preview still uses browser speechSynthesis — the reference TTS flow (pick voice → narration clip) is matched; the render engine is Vidora's own | ASSUMED |
 | Smart Cut — silence & filler removal (K-SMARTCUT) | ~ | ~ | ~ | — | ~ | `lib/aiTools.ts` (RMS per 50 ms + filler-word ranges) + `AIToolsPanel.tsx` (analyse → review → cut, nothing deleted without confirmation) — the reference flow (analyse → review → cut) is the standard shape; thresholds and the filler list are Vidora's own | ASSUMED |
@@ -131,50 +139,25 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Export queue (L-EXPORT-QUEUE) | ~ | ~ | ~ | — | ~ | `lib/exportQueue.ts` (one job at a time, cancel, re-run, background while editing) + queue section in `ExportPanel.tsx` — no reference queue UI was observed; the background-queue shape is the standard editor pattern, honestly labelled (finished files live in memory only) | ASSUMED |
 | Audio / GIF / frames / cover export (L-EXPORT-AUDIO) | ~ | ~ | ~ | — | ~ | `lib/exportEngine.ts` (WAV audio-only, GIF 10fps/320px/30s, PNG frame sequence, cover frame) + "More export kinds" in `ExportPanel.tsx` — no reference UI for these kinds was observed; the kinds are the standard export extras, each honestly limited in the UI | ASSUMED |
 | Template slots (L-TEMPLATES-SLOTS) | ~ | ~ | ~ | — | ~ | `lib/templates.ts` (35 templates, `applyTemplateWithSlots`) + slot pickers in `TemplatesPanel.tsx` — no reference slot UI was observed; the "choose media for each slot" shape is the standard template flow, unfilled slots keep the placeholder clip | ASSUMED |
-| Cloud backup (L-CLOUD) | ~ | ~ | ~ | — | ~ | `lib/cloudBackup.ts` (.vidora bundle: project JSON + media list, media files NOT inside) + Backups section in `Dashboard.tsx` — no reference cloud UI was observed; Drive is the user's cloud (bundle downloads, user saves it to Drive), honestly labelled, no rented server | ASSUMED |
-| Review comments (L-COLLAB) | ~ | ~ | ~ | — | ~ | `lib/collab.ts` (time-anchored comments, resolve/reopen) + review tab in `ExportPanel.tsx` + amber markers on the timeline ruler — the review flow mirrors CapCut's "Share for review" (people can add comments); the local-first storage (comments live in the project file) is Vidora's own, honestly labelled | ASSUMED |
-| Share (L-SHARE) | ~ | ~ | ~ | — | ~ | `lib/share.ts` (YouTube/Shorts, TikTok, TikTok Ads Manager, Facebook Page upload links; Instagram Reels has no web upload, honestly labelled) + share tabs in `ExportPanel.tsx` + presentation mode — matches the signed-in Web share menu (WEB-CHECK-2026-11-23.md §3) link for link; Free Schedule is disabled with a reason (no scheduler service) | ASSUMED |
-| Onboarding tour (M-ONBOARD) | ~ | ~ | ~ | Esc | ~ | `components/OnboardingTour.tsx` (5 plain-language steps, dashboard-only, Esc/Skip, remembered in `vidora.onboarding.v1`, replay from Settings) — no reference tour was observed; the first-run tour shape is the standard editor pattern | ASSUMED |
-| Localization (M-LOCALE) | ~ | ~ | ~ | — | ~ | `lib/i18n.ts` (en/ur/hi/ar, 45 chrome keys, `t()`, `formatDate`, `formatNumber`, `isRtl`) + `dir`/`lang` on `<html>` in `App.tsx` — the Language setting itself matches the reference "…" menu (FULL-WALKTHROUGH-2026-11-23.md § top bar); the four languages and RTL are Vidora's own scope, honestly labelled as a product feature | ASSUMED |
+| Cloud backup (L-CLOUD) | ~ | ~ | ~ | — | ~ | `lib/cloudBackup.ts` (.vidora bundle: project JSON + media list, media files NOT inside) + Backups on the Spaces page (moved from the dashboard in v1.0.1, Y11) — no reference cloud UI was observed; Drive is the user's cloud (bundle downloads, user saves it to Drive), honestly labelled, no rented server | ASSUMED |
+| Review comments (L-COLLAB) | ✓ | ✓ | ✓ | — | ✓ | `lib/collab.ts` (time-anchored comments, resolve/reopen) + review tab in `ExportPanel.tsx` (ruler markers removed in v1.0.1, Y6) — the review flow mirrors CapCut's "Share for review" (people can add comments); the local-first storage (comments live in the project file) is Vidora's own, honestly labelled | MATCH |
+| Share (L-SHARE) | ✓ | ✓ | ✓ | — | ✓ | `lib/share.ts` (YouTube/Shorts, TikTok, TikTok Ads Manager, Facebook Page upload links; Instagram Reels has no web upload, honestly labelled) + share tabs in `ExportPanel.tsx` + presentation mode — matches the signed-in Web share menu (WEB-CHECK-2026-11-23.md §3) link for link; Free Schedule is disabled with a reason (no scheduler service) | MATCH |
+| Localization (M-LOCALE) | ✓ | ✓ | ✓ | — | ✓ | `lib/i18n.ts` (en/ur/hi/ar, 45 chrome keys, `t()`, `formatDate`, `formatNumber`, `isRtl`) + `dir`/`lang` on `<html>` in `App.tsx` — the Language setting itself matches the reference "…" menu (FULL-WALKTHROUGH-2026-11-23.md § top bar); the four languages and RTL are Vidora's own scope, honestly labelled as a product feature | MATCH |
 | Settings (M-SETTINGS) | ✓ | ✓ | ✓ | Esc | ✓ | `components/SettingsDialog.tsx` (Language/Theme/Input prefs/task bar/sidebar/tour replay/reset/Feature usage/Diagnostics) — the "…" menu and its Settings items match the reference (FULL-WALKTHROUGH-2026-11-23.md § top bar: Feature usage, Task bar, Sidebar, Help, Settings Language/Theme/Input preferences); Esc closes | MATCH |
-| Local accounts (M-AUTH) | ~ | ~ | ~ | — | ~ | `lib/auth.ts` (local-only, SHA-256 salted hash, first account OWNER, later CUSTOMER read-only, signed out = full access) + `components/AccountPanel.tsx` + read-only gate in `store/projectStore.ts` — no reference account UI was observed; the OWNER/CUSTOMER shape follows the PageCommand Pro pattern the user knows, honestly labelled (no cloud sign-in) | ASSUMED |
-| Subscription hooks (M-SUBS) | ~ | ~ | ~ | — | ~ | `lib/subscription.ts` (Free/Pro, durations 7/30/90/180/365/lifetime, `daysRemaining`) + plans list in `AccountPanel.tsx` — Pro is honestly "Not available in this build. Nothing is charged."; no payment provider, no cloud | ASSUMED |
 | Accessibility (M-ACCESS) | ~ | ~ | ~ | — | ~ | `:focus-visible` rings in `src/index.css` (both themes), `aria-modal="true"` on Export/Shortcuts/Settings dialogs, labelled controls — no reference accessibility audit was observed; the standard practice is followed, keyboard focus is visibly outlined (audit-verified) | ASSUMED |
 | Performance + light theme (M-PERF) | ~ | ~ | ~ | — | ~ | `lib/mediaCache.ts` (LRU, 200 entries: probe results by `name:size`, thumbnails by media id, wired into `lib/media.ts` import path) + finished light theme in `src/index.css` (zinc ramp remapped under `data-theme="light"`) — the light theme finishes the Phase 0 promise; the cache is standard practice | ASSUMED |
 | Lens correction (M-LENS) | ~ | ~ | ~ | — | ~ | `lib/lens.ts` (radial distortion k1 model: `distortPoint`, `lensGrid` 12×12, `clampLensStrength`) + Strength slider −1…1 in `ColorPanel.tsx` + `lensStrength` in the schema + compositor remap step — CapCut Web has no lens correction (WEB-CHECK-2026-11-22.md); the generic correction is Vidora's own, honestly labelled (no camera profile, adjust by eye). Closes BUG-D2 | ASSUMED |
 | .ass import (M-ASS) | ✓ | ✓ | ✓ | — | ✓ | `lib/captions.ts` `parseAss` (reads the Format line for column order, Dialogue lines only, strips `{...}` tags, `\N` → newline, `\h` → space) + `.ass` in the CaptionsPanel file picker — matches the reference: CapCut Web accepts .ass upload (WEB-CHECK-2026-11-23.md §4); .ass styles are not imported (cues use the current style, honestly labelled); .lrc still not supported. Closes BUG-D11 | MATCH |
-| Local diagnostics (M-TELEMETRY) | ~ | ~ | ~ | — | ~ | `lib/telemetry.ts` (local-only event/error log, opt-in default off, 50-error cap) + Diagnostics section in Settings + `window.onerror` → `logError` in `main.tsx` — no reference diagnostics UI was observed; the local-only, opt-in shape is Vidora's own, honestly labelled (nothing leaves this computer) | ASSUMED |
 | CI (M-CI) | ~ | ~ | ~ | — | ~ | `.github/workflows/ci.yml` (Node 20, `npm ci`, build, test, lint) — no reference; Playwright audits are NOT in CI (documented in the workflow: they need the headless shell + ffmpeg) | ASSUMED |
 | Docker (M-DOCKER) | ~ | ~ | ~ | — | ~ | `Dockerfile` (node:20-alpine build → nginx:alpine serve) + `docker-compose.yml` (4173:80) + `.dockerignore` — no reference; the image was NOT built on this VM (docker not installed), honestly noted in the Dockerfile and the audit | ASSUMED |
 
-## Parity score (correction round v0.3.2 + signed-in export check 2026-11-23 + Phase 3 v0.4.0 + Phase 4 v0.5.0 + Phase 5 v0.6.0 + Phase 6 v0.7.0 + Phase 7 v0.8.0 + Phase 8 v0.9.0 + Phase 9 v1.0.0)
+## Parity score (correction round v1.0.1, 2026-11-25)
 
-- **MATCH: 47 / 100**
-- **ASSUMED: 50 / 100** — J-AUDIO, J-MIXER, J-VOICE, J-BEAT, J-VOICEOVER, N-GLSL, N-FONTS, N-TEXTANIM, N-CAPTIONPRESETS, N-TEMPLATES, N-MUSIC, N-BACKGROUNDS, N-ASSETS, O-AI-LIBRARY, O-AI-GENERATE, O-AI-MUSIC, O-AI-CLIPS, O-AI-IMAGES, O-AI-VOICES, K-STT, K-TTS, K-SMARTCUT, K-REFRAME, K-BGREMOVE, K-TRACK, K-STABILIZE, K-ENHANCE, K-MOVEMENT, K-OPTFLOW, K-VOCAL, K-HIGHLIGHTS, K-SCRIPT, K-UPSCALE, K-PROVIDERS, L-EXPORT-QUEUE, L-EXPORT-AUDIO, L-TEMPLATES-SLOTS, L-CLOUD, L-COLLAB, L-SHARE, M-ONBOARD, M-LOCALE, M-AUTH, M-SUBS, M-ACCESS, M-PERF, M-LENS, M-TELEMETRY, M-CI, M-DOCKER
-- **DIFF-FIXING: 0 / 100**
-- **INTENTIONAL-DIFF: 3 / 100** — B-MARKER, B-GROUP, F-WHEELS (spec-required extras CapCut Web lacks; awaiting desktop screenshots)
-- **Gate result: PASS** — every Phase 0–2 feature is MATCH, ASSUMED or INTENTIONAL-DIFF,
-  `npm run build` is green (186 modules), `npm test` is 308/308, and the
-  Playwright self-audits pass: Phase 2 (`audit/phase2/AUDIT-REPORT.md`)
-  40/40 checks with 0 open bugs (29 screenshots in `audit/phase2/<ID>/`,
-  layout re-measured at 1440×900 with 0px drift), Phase 3
-  (`audit/phase3/AUDIT-REPORT.md`) 31/31 checks with 0 open bugs
-  (14 card folders with screenshots in `audit/phase3/<ID>/`), Phase 4
-  (`audit/phase4/AUDIT-REPORT.md`) 31/31 checks with 0 open bugs
-  (8 card folders with screenshots in `audit/phase4/<ID>/`), Phase 5
-  (`audit/phase5/AUDIT-REPORT.md`) 38/38 checks with 0 open bugs
-  (12 card folders with screenshots in `audit/phase5/<ID>/`), Phase 6
-  (`audit/phase6/AUDIT-REPORT.md`) 32/32 checks with 0 open bugs
-  (6 card folders with screenshots in `audit/phase6/<ID>/`), Phase 7
-  (`audit/phase7/AUDIT-REPORT.md`) 61/61 checks with 0 open bugs
-  (15 card folders with screenshots in `audit/phase7/<ID>/`), Phase 8
-  (`audit/phase8/AUDIT-REPORT.md`) 61/61 checks with 0 open bugs
-  (7 card folders with screenshots in `audit/phase8/<ID>/`), Phase 9
-  (`audit/phase9/AUDIT-REPORT.md`) 66/66 checks with 0 open bugs
-  (12 card folders with screenshots in `audit/phase9/<ID>/`). The Phase 2
-  audit suite predates v0.3.2; the F-BLEND row is covered by the new Vitest tests
-  (blend mapping, live compositing path) and the updated F-WHEELS
-  audit screenshots.
+- **MATCH: 59 / 91**
+- **ASSUMED: 32 / 91** — J-BEAT, J-VOICEOVER, N-GLSL, N-FONTS, N-CAPTIONPRESETS, N-MUSIC, N-BACKGROUNDS, N-ASSETS, K-STT, K-TTS, K-SMARTCUT, K-REFRAME, K-BGREMOVE, K-TRACK, K-STABILIZE, K-ENHANCE, K-MOVEMENT, K-OPTFLOW, K-VOCAL, K-HIGHLIGHTS, K-SCRIPT, K-UPSCALE, K-PROVIDERS, L-EXPORT-QUEUE, L-EXPORT-AUDIO, L-TEMPLATES-SLOTS, L-CLOUD, M-ACCESS, M-PERF, M-LENS, M-CI, M-DOCKER
+- **DIFF-FIXING: 0 / 91**
+- **INTENTIONAL-DIFF: 0 / 91** — the only deliberate difference left is the app name and logo (Vidora, not CapCut), which is not a matrix row; see `docs/INTENTIONAL_DIFFS.md`. The three old intentional-diff rows (B-MARKER, B-GROUP, F-WHEELS) were deleted in v1.0.1 because those features were removed, not kept different.
+- **Gate result: PASS** — every row is MATCH or ASSUMED, `npm run build` is green (190 modules), `npm test` is 315/315, and the Playwright self-audits pass: Phase 4 (`audit/phase4/AUDIT-REPORT.md`) 26/26 checks with 0 open bugs (J-MIXER removed, J-BEAT re-scoped to "Cut at beats" in the v1.0.1 harness port); Phase 5 (`audit/phase5/AUDIT-REPORT.md`) 39/39 checks, 0 open bugs (caption styles now 23, not 20 — Word category added 3); Phase 6 (`audit/phase6/AUDIT-REPORT.md`) 15/15 checks, 0 open bugs (was 9/9; +6 new checks for the restored in-editor AI catalog add: AI music "+", AI clip card, AI image card — see BUG-CF-010); Phase 7 (`audit/phase7/AUDIT-REPORT.md`) 60/60 checks, 0 open bugs; Phase 8 (`audit/phase8/AUDIT-REPORT.md`) 56/56 checks, 0 open bugs (L-CLOUD Backups section removed — backups now live on the Spaces page); Phase 9 (`audit/phase9/AUDIT-REPORT.md`) 42/42 checks, 0 open bugs (M-ONBOARD tour, M-AUTH, M-SUBS and M-TELEMETRY checks removed — all four features removed by design). (Previous counts, v1.0.0: Phase 5 38/38, Phase 6 32/32, Phase 7 61/61, Phase 8 61/61, Phase 9 66/66.)
 
 ## What the score does not cover
 
@@ -189,14 +172,7 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
   (browser `preservesPitch` + Web Audio voice shifter). Blend modes now
   apply live in the preview (v0.3.2), so they no longer belong in this
   list.
-- The AI avatar tab (K-AI-AVATAR) is reference evidence only — NOT built;
-  Vidora's 11th tab is "AI Tools" and it now opens the full AI Tools
-  panel (AI Library sub-tabs + the 15 K tools). The avatar wizard is not
-  scored as a feature here. The AI Tools tab is implemented in v0.7.0
-  (AI Library, O rows above) and extended in v0.8.0 (K rows above).
-  Templates tab is implemented in v0.6.0 (25 original layouts, N-TEMPLATES)
-  and extended in v0.9.0 to 35 layouts with replaceable media slots
-  (L-TEMPLATES-SLOTS) and sharing (L-SHARE), scored above.
+- The 11th tab is now "AI avatar" (v1.0.1, O1/O2): "① Choose avatar — ② Add speech", Avatar library / Photo to avatar / Fashion model / Video translator / AI dialogue scene, My avatars / Trending / Marketing chips, 24 original Vidora portrait tiles (`src/lib/avatars.ts`). The old "AI Tools" tab is gone; its 15 K tools live in the inspector "Smart tools" sub-panel and Media → Generate. The AI Library panel was deleted; its content lives on the Library page and in Media → Generate. Templates tab is implemented in v0.6.0 (25 original layouts, N-TEMPLATES) and extended in v0.9.0 to 35 layouts with replaceable media slots (L-TEMPLATES-SLOTS) and sharing (L-SHARE), scored above. Audio (Phase 4) is implemented in v0.5.0 and scored above (J rows). Text/Stickers/Captions (Phase 3) are implemented in v0.4.0 — their behaviour cards carry the status (MATCH / ASSUMED / UNKNOWN) and the Phase 3 audit covers them; they are not yet rows in this matrix, which now scores Phases 0–2 + Phase 4 + Phase 5 + Phase 6 + Phase 7 + Phase 8 + Phase 9 (91 rows).
   Audio (Phase 4) is implemented in v0.5.0 and scored above (J rows).
   Text/Stickers/Captions (Phase 3) are implemented in v0.4.0 — their
   behaviour cards carry the status (MATCH / ASSUMED /
@@ -208,5 +184,10 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 - CapCut Web's left rail differs from desktop (Elements/Transcript/
   Brand kit, no Stickers) — the desktop screenshots the user is
   sending remain the main reference; Web is only a check for panel
-  behaviour. Awaiting desktop evidence: markers, group/compound,
-  colour wheels.
+  behaviour. The three items that once awaited desktop evidence — markers,
+  group/compound, colour wheels — were REMOVED in v1.0.1 (Y6/Y7/Y8):
+  CapCut has none of them, so Vidora has none either. What still
+  awaits desktop evidence is the Export dialog itself (never shown in
+  the videos; the Download section follows the signed-in Web
+  walkthrough) and the Animation Out/Combo grids (videos showed In
+  only; Out/Combo reuse the In grid).

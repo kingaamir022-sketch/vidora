@@ -35,8 +35,6 @@ import {
   duplicateClip,
   durationAtSpeed,
   findClip,
-  groupClips,
-  makeCompound,
   moveClip,
   projectDuration,
   rippleDeleteClip,
@@ -44,7 +42,6 @@ import {
   splitClipAt,
   splitClipAtTimes,
   trimClip,
-  ungroupClips,
   updateClip,
 } from '../lib/timeline';
 import { defaultTextStyle, type TextStyle } from '../schema/project';
@@ -56,8 +53,6 @@ import { addComment, mergeComments, setCommentResolved } from '../lib/collab';
 import { parseBundle, relinkMedia } from '../lib/cloudBackup';
 import { normalizeGain } from '../lib/audio';
 import { loadLocale, saveLocale, type Locale } from '../lib/i18n';
-import { createAccount, currentAccount, signIn, signOut, type VidoraAccount } from '../lib/auth';
-import { logEvent, setTelemetryOptIn as saveTelemetryOptIn, telemetryOptIn as loadTelemetryOptIn } from '../lib/telemetry';
 import {
   parseCaptionFile,
   retimeWords,
@@ -84,7 +79,7 @@ export const LEFT_TABS = [
   'Filters',
   'Adjustment',
   'Templates',
-  'AI Tools',
+  'AI avatar',
 ] as const;
 export type LeftTab = (typeof LEFT_TABS)[number];
 
@@ -163,6 +158,7 @@ function baseClip(type: Clip['type'], name: string, duration: number, start: num
     flipH: false,
     flipV: false,
     frozen: false,
+    removeFlicker: false,
     id: newId('clip'),
     isCompound: false,
     keyframes: [],
@@ -194,6 +190,7 @@ function baseClip(type: Clip['type'], name: string, duration: number, start: num
     sourceDuration: duration,
     sourceStart: 0,
     speed: 1,
+    speedCurve: 'none',
     start: Math.max(0, start),
     trackId: '',
     type,
@@ -214,9 +211,15 @@ interface ProjectState {
   presentMode: boolean;
   lastSavedAt: string | null;
   magnetic: boolean;
+  /** CapCut-fix (Q2): Details "Arrange layers" toggle — when off, clips
+   * cannot be dragged between tracks (layer order is locked). */
+  arrangeLayers: boolean;
   maskEditing: boolean;
   playhead: number;
   playing: boolean;
+  /** CapCut-fix (W1): preview axis guide (S) and the active preview tool (V move / H hand). */
+  previewAxis: boolean;
+  previewTool: 'move' | 'hand';
   project: VidoraProject | null;
   projects: VidoraProject[];
   recoveredNotice: string | null;
@@ -227,16 +230,12 @@ interface ProjectState {
   shortcuts: Record<ShortcutAction, string>;
   shortcutsOpen: boolean;
   theme: 'dark' | 'light';
-  // Phase 9 — settings, locale, accounts, onboarding (Section M)
+  // Phase 9 — settings, locale, onboarding (Section M)
   locale: Locale;
-  account: VidoraAccount | null;
   settingsOpen: boolean;
-  guideOpen: boolean;
-  showOnboarding: boolean;
   showTaskBar: boolean;
   showSidebar: boolean;
   inputPreference: 'default' | 'left-handed';
-  analyticsOptIn: boolean;
   undoStack: string[];
   view: View;
   zoom: number;
@@ -245,6 +244,10 @@ interface ProjectState {
   drawColor: string;
   drawWidth: number;
   trackingMode: boolean;
+  /** CapCut-fix (O3): which AI tool the floating AI-tools overlay is open on (null = closed). */
+  aiToolsOverlay: string | null;
+  /** CapCut-fix (V1): which Export panel section the Export menu opened (download / review / present / social). */
+  exportTab: 'download' | 'review' | 'present' | 'social';
   // dashboard / projects
   createProject: (name?: string) => void;
   deleteProject: (id: string) => void;
@@ -252,8 +255,12 @@ interface ProjectState {
   openDashboard: () => void;
   openProject: (project: VidoraProject) => void;
   renameProject: (id: string, name: string) => void;
+  /** CapCut-fix (Q2): project settings from the Details "Modify" dialog. */
+  updateProjectSettings: (patch: { fps?: number; name?: string; resolution?: { height: number; width: number } }) => void;
+  setArrangeLayers: (v: boolean) => void;
+  /** CapCut-fix (Q-Background): apply one background to every video/image clip. */
+  applyBackgroundToAll: (background: ClipBackground) => void;
   // editing
-  addMarker: (label?: string) => void;
   addMediaFiles: (files: FileList | File[], folderId?: string) => Promise<void>;
   addMediaToTimeline: (mediaId: string) => void;
   addTrack: (kind: TrackKind) => void;
@@ -261,19 +268,17 @@ interface ProjectState {
   deleteSelected: () => void;
   duplicateSelected: () => void;
   freezeSelected: () => void;
-  groupSelected: () => void;
-  makeCompoundSelected: () => void;
   moveSelected: (newStart: number, trackId?: string) => void;
   pasteClipboard: () => void;
-  removeMarker: (time: number) => void;
   reverseSelected: () => void;
-  rippleDeleteSelected: () => void;
   selectClip: (clipId: string | null, additive?: boolean) => void;
   selectAllClips: () => void;
   selectTrack: (trackId: string | null) => void;
   setClipSpeed: (speed: number) => void;
   setClipDuration: (seconds: number) => void;
   setMagnetic: (v: boolean) => void;
+  setPreviewAxis: (v: boolean) => void;
+  setPreviewTool: (v: 'move' | 'hand') => void;
   setPlayhead: (t: number) => void;
   setPlaying: (v: boolean) => void;
   setRipple: (v: boolean) => void;
@@ -281,7 +286,6 @@ interface ProjectState {
   setZoom: (z: number) => void;
   splitAtPlayhead: () => void;
   trimSelected: (edge: 'start' | 'end', delta: number) => void;
-  ungroupSelected: () => void;
   updateSelectedClip: (patch: Partial<Clip>) => void;
   // Phase 2 — keyframes & animation
   addKeyframeAtPlayhead: (property: string) => void;
@@ -348,7 +352,6 @@ interface ProjectState {
   setMixer: (patch: Partial<{ duckAmountDb: number; ducking: boolean; masterVolume: number }>) => void;
   normalizeSelectedClip: () => number | null;
   applyVoiceToAll: (voiceId: string) => void;
-  addBeatMarkers: (times: number[]) => void;
   splitSelectedAtTimes: (times: number[]) => void;
   addVoiceoverClip: (blob: Blob, name: string, durationSeconds?: number) => Promise<void>;
   addAudioClip: (mediaId: string, start?: number) => void;
@@ -373,25 +376,18 @@ interface ProjectState {
   setAspectRatio: (ratio: AspectRatio) => void;
   setCustomRatio: (width: number, height: number) => void;
   setExportOpen: (v: boolean) => void;
+  setExportTab: (tab: 'download' | 'review' | 'present' | 'social') => void;
   setShortcutsOpen: (v: boolean) => void;
+  setAiToolsOverlay: (tool: string | null) => void;
   setShortcut: (action: ShortcutAction, combo: string) => void;
   resetShortcuts: () => void;
   setTheme: (theme: 'dark' | 'light') => void;
-  // Phase 9 — settings, locale, accounts, onboarding (Section M)
+  // Phase 9 — settings, locale, onboarding (Section M)
   setLocale: (locale: Locale) => void;
   setSettingsOpen: (v: boolean) => void;
-  setGuideOpen: (v: boolean) => void;
-  dismissOnboarding: () => void;
-  replayOnboarding: () => void;
   setShowTaskBar: (v: boolean) => void;
   setShowSidebar: (v: boolean) => void;
   setInputPreference: (v: 'default' | 'left-handed') => void;
-  setAnalyticsOptIn: (v: boolean) => void;
-  /** Sign up; returns an error message or null on success. */
-  signUp: (name: string, email: string, password: string) => Promise<string | null>;
-  /** Sign in; returns an error message or null on success. */
-  signInAccount: (email: string, password: string) => Promise<string | null>;
-  signOutAccount: () => void;
   resetSettings: () => void;
   dismissRecovery: () => void;
   snapshot: () => void;
@@ -400,22 +396,7 @@ interface ProjectState {
   redo: () => void;
 }
 
-/** Phase 9 (M-ONBOARD): the tour is done once the flag exists. */
-const ONBOARDING_KEY = 'vidora.onboarding.v1';
-function onboardingDone(): boolean {
-  try {
-    return localStorage.getItem(ONBOARDING_KEY) === '1';
-  } catch {
-    return false;
-  }
-}
-function markOnboardingDone(): void {
-  try {
-    localStorage.setItem(ONBOARDING_KEY, '1');
-  } catch {
-    /* session-only */
-  }
-}
+/** Phase 9 (M-ONBOARD): tour/guide removed in the CapCut-fix (v1.0.1, Y1/Y2). */
 
 /** Phase 9 (M-SETTINGS): theme / task bar / sidebar / input prefs. */
 const SETTINGS_KEY = 'vidora.settings.v1';
@@ -451,14 +432,10 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     }
   };
 
-  /** Phase 9 (M-AUTH): a signed-in CUSTOMER is read-only. Comments and
-   * shares are the exception — a customer may review (allowWhenReadOnly).
-   * Signed out = full access, as before accounts existed. */
-  const isReadOnly = () => get().account?.role === 'customer';
-  const applyProject = (next: VidoraProject, pushUndo = true, allowWhenReadOnly = false) => {
+  /** CapCut-fix (Y3): no accounts, no read-only gate — full access always. */
+  const applyProject = (next: VidoraProject, pushUndo = true) => {
     const s = get();
     if (!s.project) return;
-    if (!allowWhenReadOnly && isReadOnly()) return;
     const stamped: VidoraProject = { ...next, updatedAt: new Date().toISOString() };
     const undoStack = pushUndo ? [...s.undoStack, JSON.stringify(s.project)].slice(-100) : s.undoStack;
     const projects = s.projects.map((p) => (p.id === stamped.id ? stamped : p));
@@ -485,9 +462,12 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     presentMode: false,
     lastSavedAt: null,
     magnetic: true,
+    arrangeLayers: true,
     maskEditing: false,
     playhead: 0,
     playing: false,
+    previewAxis: false,
+    previewTool: 'move',
     project: null,
     projects: initial.projects,
     recoveredNotice: initial.recovered,
@@ -497,23 +477,20 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     selectedTrackId: null,
     shortcuts: loadShortcuts(),
     shortcutsOpen: false,
+    aiToolsOverlay: null,
+    exportTab: 'download',
     theme: savedSettings.theme ?? 'dark',
     locale: loadLocale(),
-    account: currentAccount(),
     settingsOpen: false,
-    guideOpen: false,
-    showOnboarding: !onboardingDone(),
     showTaskBar: savedSettings.showTaskBar ?? true,
     showSidebar: savedSettings.showSidebar ?? true,
     inputPreference: savedSettings.inputPreference ?? 'default',
-    analyticsOptIn: loadTelemetryOptIn(),
     trackingMode: false,
     undoStack: [],
     view: 'dashboard',
     zoom: 24,
 
     createProject: (name) => {
-      if (isReadOnly()) return;
       const now = new Date().toISOString();
       const project: VidoraProject = {
         ...structuredClone(SAMPLE_PROJECT),
@@ -533,11 +510,8 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const projects = [project, ...get().projects];
       writeProjects(projects);
       set({ aspectRatio: '16:9', playhead: 0, project, projects, redoStack: [], selectedClipIds: [], undoStack: [], view: 'editor' });
-      // Phase 9 (M-TELEMETRY): count created projects locally (opt-in only, no-op otherwise).
-      logEvent('projects');
     },
     deleteProject: (id) => {
-      if (isReadOnly()) return;
       const projects = get().projects.filter((p) => p.id !== id);
       writeProjects(projects);
       try {
@@ -548,7 +522,6 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       set({ projects, project: get().project?.id === id ? null : get().project, view: get().project?.id === id ? 'dashboard' : get().view });
     },
     duplicateProject: (id) => {
-      if (isReadOnly()) return;
       const src = get().projects.find((p) => p.id === id);
       if (!src) return;
       const now = new Date().toISOString();
@@ -577,20 +550,39 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       }
     },
     renameProject: (id, name) => {
-      if (isReadOnly()) return;
       const clean = name.trim().slice(0, 120);
       if (!clean) return;
       const projects = get().projects.map((p) => (p.id === id ? { ...p, name: clean, updatedAt: new Date().toISOString() } : p));
       writeProjects(projects);
       set({ project: get().project?.id === id ? { ...get().project!, name: clean } : get().project, projects });
     },
-
-    addMarker: (label) => {
+    updateProjectSettings: (patch) => {
       const s = get();
       if (!s.project) return;
-      const marker = { color: '#06B6D4', label: label ?? `Marker ${s.project.markers.length + 1}`, time: Math.round(s.playhead * 100) / 100 };
-      applyProject({ ...s.project, markers: [...s.project.markers, marker].sort((a, b) => a.time - b.time) });
+      const next = {
+        ...s.project,
+        ...(patch.name !== undefined ? { name: patch.name.trim().slice(0, 120) || s.project.name } : {}),
+        ...(patch.resolution ? { resolution: patch.resolution } : {}),
+        ...(patch.fps ? { fps: Math.min(120, Math.max(1, Math.round(patch.fps))) } : {}),
+        updatedAt: new Date().toISOString(),
+      };
+      const projects = s.projects.map((p) => (p.id === next.id ? next : p));
+      writeProjects(projects);
+      set({ project: next, projects });
     },
+    setArrangeLayers: (v) => set({ arrangeLayers: v }),
+    applyBackgroundToAll: (background) => {
+      const s = get();
+      if (!s.project) return;
+      commit((p) => ({
+        ...p,
+        tracks: p.tracks.map((t) => ({
+          ...t,
+          clips: t.clips.map((c) => (c.type === 'video' || c.type === 'image' ? { ...c, background: { ...background } } : c)),
+        })),
+      }));
+    },
+
     addMediaFiles: async (files, folderId = 'folder-all') => {
       const s = get();
       if (!s.project) return;
@@ -668,6 +660,8 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
         sourceDuration: duration,
         sourceStart: 0,
         speed: 1,
+        speedCurve: 'none',
+        removeFlicker: false,
         src: media.src,
         start,
         trackId: track.id,
@@ -719,21 +713,6 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const clip = findClip(s.project, id)?.clip;
       if (clip) commit((p) => updateClip(p, id, { frozen: !clip.frozen }));
     },
-    groupSelected: () => {
-      const s = get();
-      if (!s.project || s.selectedClipIds.length < 2) return;
-      const { project } = groupClips(s.project, s.selectedClipIds);
-      applyProject(project);
-    },
-    makeCompoundSelected: () => {
-      const s = get();
-      if (!s.project || s.selectedClipIds.length < 2) return;
-      const next = makeCompound(s.project, s.selectedClipIds, `Compound ${s.selectedClipIds.length} clips`);
-      if (next) {
-        applyProject(next);
-        set({ selectedClipIds: [] });
-      }
-    },
     moveSelected: (newStart, trackId) => {
       const s = get();
       if (!s.project || s.selectedClipIds.length === 0) return;
@@ -756,25 +735,12 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       applyProject(next);
       set({ selectedClipIds: newIds });
     },
-    removeMarker: (time) => {
-      const s = get();
-      if (!s.project) return;
-      applyProject({ ...s.project, markers: s.project.markers.filter((m) => m.time !== time) });
-    },
     reverseSelected: () => {
       const s = get();
       if (!s.project || s.selectedClipIds.length === 0) return;
       const id = s.selectedClipIds[0];
       const clip = findClip(s.project, id)?.clip;
       if (clip) commit((p) => updateClip(p, id, { reversed: !clip.reversed }));
-    },
-    rippleDeleteSelected: () => {
-      const s = get();
-      if (!s.project) return;
-      let next = s.project;
-      for (const id of s.selectedClipIds) next = rippleDeleteClip(next, id);
-      applyProject(next);
-      set({ selectedClipIds: [] });
     },
     selectClip: (clipId, additive) => {
       if (!clipId) return set({ selectedClipIds: [] });
@@ -808,6 +774,8 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       commit((p) => updateClip(p, id, { duration: durationAtSpeed(source, speed), sourceDuration: source, speed }));
     },
     setMagnetic: (v) => set({ magnetic: v }),
+    setPreviewAxis: (v) => set({ previewAxis: v }),
+    setPreviewTool: (v) => set({ previewTool: v }),
     setPlayhead: (t) => set({ playhead: Math.max(0, t) }),
     setPlaying: (v) => set({ playing: v }),
     setRipple: (v) => set({ ripple: v }),
@@ -828,13 +796,6 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       if (!s.project || s.selectedClipIds.length === 0) return;
       const next = trimClip(s.project, s.selectedClipIds[0], edge, delta);
       if (next) applyProject(next, false);
-    },
-    ungroupSelected: () => {
-      const s = get();
-      if (!s.project || s.selectedClipIds.length === 0) return;
-      const clip = findClip(s.project, s.selectedClipIds[0])?.clip;
-      if (!clip?.groupId) return;
-      applyProject(ungroupClips(s.project, clip.groupId));
     },
     updateSelectedClip: (patch) => {
       const s = get();
@@ -1104,19 +1065,19 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       if (!s.project) return;
       const comments = addComment(s.project.comments ?? [], author, s.playhead, text);
       if (comments.length === (s.project.comments ?? []).length) return;
-      applyProject({ ...s.project, comments }, true, true);
+      applyProject({ ...s.project, comments });
     },
     setCommentResolved: (id, resolved) => {
       const s = get();
       if (!s.project) return;
-      applyProject({ ...s.project, comments: setCommentResolved(s.project.comments ?? [], id, resolved) }, true, true);
+      applyProject({ ...s.project, comments: setCommentResolved(s.project.comments ?? [], id, resolved) });
     },
     shareWith: (name) => {
       const s = get();
       if (!s.project) return;
       const trimmed = name.trim();
       if (!trimmed || (s.project.sharedWith ?? []).includes(trimmed)) return;
-      applyProject({ ...s.project, sharedWith: [...(s.project.sharedWith ?? []), trimmed] }, true, true);
+      applyProject({ ...s.project, sharedWith: [...(s.project.sharedWith ?? []), trimmed] });
     },
     importBundle: (bundleText) => {
       let bundle;
@@ -1342,12 +1303,6 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
         tracks: p.tracks.map((t) => ({ ...t, clips: t.clips.map((c) => (c.type === 'audio' ? { ...c, voice: voiceId } : c)) })),
       }));
     },
-    addBeatMarkers: (times) => {
-      const s = get();
-      if (!s.project || times.length === 0) return;
-      const markers = times.map((t) => ({ color: '#A855F7', label: 'Beat', time: t }));
-      applyProject({ ...s.project, markers: [...s.project.markers, ...markers].sort((a, b) => a.time - b.time) });
-    },
     splitSelectedAtTimes: (times) => {
       const s = get();
       if (!s.project || s.selectedClipIds.length === 0 || times.length === 0) return;
@@ -1539,7 +1494,9 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       set({ aspectRatio: 'custom' });
     },
     setExportOpen: (v) => set({ exportOpen: v }),
+    setExportTab: (tab) => set({ exportTab: tab }),
     setShortcutsOpen: (v) => set({ shortcutsOpen: v }),
+    setAiToolsOverlay: (tool) => set({ aiToolsOverlay: tool }),
     setShortcut: (action, combo) => {
       const shortcuts = { ...get().shortcuts, [action]: combo };
       saveShortcuts(shortcuts);
@@ -1553,25 +1510,12 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       set({ theme });
       persistSettings();
     },
-    // Phase 9 — settings, locale, accounts, onboarding (Section M)
+    // Phase 9 — settings, locale, onboarding (Section M)
     setLocale: (locale) => {
       saveLocale(locale);
       set({ locale });
     },
     setSettingsOpen: (v) => set({ settingsOpen: v }),
-    setGuideOpen: (v) => set({ guideOpen: v }),
-    dismissOnboarding: () => {
-      markOnboardingDone();
-      set({ showOnboarding: false });
-    },
-    replayOnboarding: () => {
-      try {
-        localStorage.removeItem(ONBOARDING_KEY);
-      } catch {
-        /* ignore */
-      }
-      set({ settingsOpen: false, showOnboarding: true });
-    },
     setShowTaskBar: (v) => {
       set({ showTaskBar: v });
       persistSettings();
@@ -1584,30 +1528,9 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       set({ inputPreference: v });
       persistSettings();
     },
-    setAnalyticsOptIn: (v) => {
-      saveTelemetryOptIn(v);
-      set({ analyticsOptIn: v });
-    },
-    signUp: async (name, email, password) => {
-      const result = await createAccount(name, email, password);
-      if (result.error || !result.account) return result.error ?? 'Could not create the account.';
-      set({ account: result.account });
-      return null;
-    },
-    signInAccount: async (email, password) => {
-      const result = await signIn(email, password);
-      if (result.error || !result.account) return result.error ?? 'Wrong email or password.';
-      set({ account: result.account });
-      return null;
-    },
-    signOutAccount: () => {
-      signOut();
-      set({ account: null });
-    },
     resetSettings: () => {
       saveLocale('en');
       set({
-        guideOpen: false,
         inputPreference: 'default',
         locale: 'en',
         settingsOpen: false,
@@ -1636,7 +1559,6 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     },
     undo: () => {
       const s = get();
-      if (isReadOnly()) return;
       if (s.undoStack.length === 0 || !s.project) return;
       const prev = s.undoStack[s.undoStack.length - 1];
       const project = parseProject(JSON.parse(prev) as unknown);
@@ -1645,7 +1567,6 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     },
     redo: () => {
       const s = get();
-      if (isReadOnly()) return;
       if (s.redoStack.length === 0 || !s.project) return;
       const nextRaw = s.redoStack[s.redoStack.length - 1];
       const project = parseProject(JSON.parse(nextRaw) as unknown);

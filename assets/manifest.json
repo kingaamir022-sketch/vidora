@@ -5,7 +5,7 @@
     "aiSfx": 100,
     "aiTracks": 100,
     "backgrounds": 30,
-    "captionPresets": 20,
+    "captionPresets": 23,
     "cssEffects": 14,
     "fonts": 40,
     "glslEffects": 62,
@@ -17,7 +17,7 @@
     "templates": 35,
     "textAnimations": 37,
     "textPresets": 50,
-    "total": 1250,
+    "total": 1253,
     "transitions": 32,
     "voices": 16
   },
@@ -5408,6 +5408,39 @@
       "id": "pink-pop",
       "license": "CC0 (Vidora original)",
       "name": "Pink Pop",
+      "tags": [
+        "caption",
+        "preset"
+      ],
+      "type": "caption-preset"
+    },
+    {
+      "category": "Captions",
+      "id": "word-pop",
+      "license": "CC0 (Vidora original)",
+      "name": "Word Pop",
+      "tags": [
+        "caption",
+        "preset"
+      ],
+      "type": "caption-preset"
+    },
+    {
+      "category": "Captions",
+      "id": "word-karaoke",
+      "license": "CC0 (Vidora original)",
+      "name": "Word Karaoke",
+      "tags": [
+        "caption",
+        "preset"
+      ],
+      "type": "caption-preset"
+    },
+    {
+      "category": "Captions",
+      "id": "word-bounce",
+      "license": "CC0 (Vidora original)",
+      "name": "Word Bounce",
       "tags": [
         "caption",
         "preset"
@@ -13453,7 +13486,7 @@
       "type": "ai-voice"
     }
   ],
-  "generated": "2026-11-24T05:40:22.257Z",
+  "generated": "2026-11-25T10:51:52.210Z",
   "generatedBy": "npm run build:assets (Phase 6)",
   "version": "0.7.0"
 }

@@ -17,8 +17,9 @@ describe('design tokens', () => {
   });
 
   it('provides dark and light colour themes', () => {
-    expect(tokens.color.dark.bg).toBe('#0B0B12');
-    expect(tokens.color.dark.text).toBe('#F4F4F8');
+    // CapCut-fix (2026-11-25, A2): dark theme is CapCut's near-black grays.
+    expect(tokens.color.dark.bg).toBe('#141414');
+    expect(tokens.color.dark.text).toBe('#F2F2F2');
     expect(tokens.color.light.bg).toBe('#F6F6FA');
     expect(tokens.color.light.text).toBe('#14141F');
   });

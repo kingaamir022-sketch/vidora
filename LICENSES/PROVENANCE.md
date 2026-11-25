@@ -42,7 +42,7 @@ TypeScript catalogs in `src/lib/`. Counts are enforced by the script.
 | Fonts (`public/fonts/`, `assets/fonts/manifest.json`) | 40 families | Google Fonts, downloaded as latin-subset woff2 by the script | SIL OFL 1.1 (JetBrains Mono: Apache-2.0) — see LICENSES/ |
 | Text style presets (`src/lib/text.ts`) | 50 | Original Vidora styles | CC0 (Vidora original) |
 | Text animations | 37 | Original in/out + loop animation code | CC0 (Vidora original) |
-| Caption style presets (`src/lib/captions.ts`) | 20 | Original Vidora styles | CC0 (Vidora original) |
+| Caption style presets (`src/lib/captions.ts`) | 23 | Original Vidora styles | CC0 (Vidora original) |
 | Templates (`src/lib/templates.ts`) | 35 | Original layouts from Vidora assets only | CC0 (Vidora original) |
 | Procedural music loops (`src/lib/audio.ts`) | 30 | Original Web Audio compositions (no samples) | CC0 (Vidora original) |
 | Procedural sound effects (`src/lib/audio.ts`) | 200 | Original Web Audio synthesis (no samples) | CC0 (Vidora original) |

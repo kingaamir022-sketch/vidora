@@ -74,12 +74,13 @@ describe('VTT parsing (Phase 3, I-SRT)', () => {
     expect(again.map((c) => [c.start, c.end, c.text])).toEqual(cues.map((c) => [c.start, c.end, c.text]));
   });
 
-  it('parseCaptionFile routes by extension and rejects .lrc', () => {
+  it('parseCaptionFile routes by extension and parses .lrc', () => {
     expect(parseCaptionFile('subs.srt', SRT_SAMPLE)).toHaveLength(2);
     expect(parseCaptionFile('subs.vtt', VTT_SAMPLE)).toHaveLength(2);
     // Phase 9 (M-ASS): .ass parses now.
     expect(parseCaptionFile('subs.ass', '[Events]\nFormat: Layer, Start, End, Text\nDialogue: 0,0:00:01.00,0:00:02.00,Hi\n')).toHaveLength(1);
-    expect(() => parseCaptionFile('subs.lrc', '[00:01.00] hi')).toThrow(/\.lrc is not supported/);
+    // CapCut-fix (2026-11-25, K4): .lrc parses now (lyrics timestamps + text).
+    expect(parseCaptionFile('subs.lrc', '[00:01.00] hi')).toHaveLength(1);
   });
 });
 

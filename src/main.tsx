@@ -2,16 +2,15 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import './index.css';
-import { logError } from './lib/telemetry';
 
-// Phase 9 (M-TELEMETRY): uncaught errors are logged locally (nothing
-// leaves this computer) so Settings → Diagnostics can show them.
+// CapCut-fix (Y5): telemetry removed — uncaught errors go to the console
+// only; nothing is collected or stored.
 window.addEventListener('error', (event) => {
-  logError(event.message ? `Error: ${event.message}` : 'Unknown error');
+  console.error(event.message ? `Error: ${event.message}` : 'Unknown error');
 });
 window.addEventListener('unhandledrejection', (event) => {
   const reason = event.reason instanceof Error ? event.reason.message : String(event.reason ?? 'Unknown error');
-  logError(`Unhandled promise rejection: ${reason}`);
+  console.error(`Unhandled promise rejection: ${reason}`);
 });
 
 const root = document.getElementById('root');

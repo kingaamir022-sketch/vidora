@@ -2,121 +2,193 @@ import { useMemo, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { findClip } from '../lib/timeline';
 import { EFFECT_CATALOG, anyEffectDef } from '../lib/effects';
-import { BUILTIN_LUTS, LUT_CATEGORIES, lutThumbnail } from '../lib/lut';
-import { GLSL_CATEGORIES, GLSL_EFFECT_CATALOG, searchGlslEffects, type GlslCategory } from '../lib/glslEffects';
+import { GLSL_EFFECT_CATALOG, searchGlslEffects } from '../lib/glslEffects';
 import { glslThumbnail, isGlslSupported } from '../lib/glsl';
+import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from './PanelShell';
 
-/** Effects + LUT filters panel (Phase 2, SPEC E; Phase 5 adds the 62
- * GLSL effects with search, categories and auto thumbnails, and the 32
- * LUT looks with categories and thumbnails). Left panel for the Effects
- * / Filters tabs. */
-export default function EffectsPanel({ lutFocus = false }: { lutFocus?: boolean }) {
+/**
+ * Effects panel (Phase 2, SPEC E; Phase 5: 62 GLSL effects).
+ * CapCut-fix (2026-11-25, I1/I2): sub-nav Favorites + Video effects
+ * (Trending, Sale, Classic, Cutout, NEW, Hits) + Body effects
+ * (Trending, Pro, Hits, Clone, Glowing lines, Stroke). "Sale" is the
+ * original name in CapCut's "Black Friday" slot and "Cutout" is the
+ * original name in the "Magic cutout" slot. Body effects apply to the
+ * WHOLE clip in this build — there is no body-detection engine, and
+ * the panel says so honestly. LUT filters moved to the Filters tab
+ * (L1). 2-col card grid (D3) with thumbnails + names below. Effect
+ * names stay Vidora Originals.
+ */
+export const VIDEO_EFFECT_NAV = ['Trending', 'Sale', 'Classic', 'Cutout', 'NEW', 'Hits'] as const;
+export const BODY_EFFECT_NAV = ['Trending', 'Pro', 'Hits', 'Clone', 'Glowing lines', 'Stroke'] as const;
+
+type EffectNav = { category: string; group: 'video' | 'body' | 'favorites' };
+
+function keywordFilter(re: RegExp, fallbackCategory: string) {
+  const found = GLSL_EFFECT_CATALOG.filter((d) => re.test(`${d.name} ${d.description}`));
+  return found.length > 0 ? found : GLSL_EFFECT_CATALOG.filter((d) => d.category === fallbackCategory);
+}
+
+export default function EffectsPanel() {
   const project = useProjectStore((s) => s.project);
   const selectedClipIds = useProjectStore((s) => s.selectedClipIds);
   const addEffect = useProjectStore((s) => s.addEffect);
   const removeEffect = useProjectStore((s) => s.removeEffect);
   const updateEffect = useProjectStore((s) => s.updateEffect);
-  const setBuiltinLut = useProjectStore((s) => s.setBuiltinLut);
-  const setLut = useProjectStore((s) => s.setLut);
-  const importLutFile = useProjectStore((s) => s.importLutFile);
-  const [lutError, setLutError] = useState<string | null>(null);
   const [query, setQuery] = useState('');
-  const [category, setCategory] = useState<GlslCategory | 'All'>('All');
-  const [lutCategory, setLutCategory] = useState<string>('All');
+  const [effectNav, setEffectNav] = useState<EffectNav>({ category: 'Trending', group: 'video' });
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('vidora.effect-favorites.v1') ?? '[]') as string[];
+    } catch {
+      return [];
+    }
+  });
+
+  const toggleFavorite = (id: string) => {
+    setFavorites((f) => {
+      const next = f.includes(id) ? f.filter((x) => x !== id) : [...f, id];
+      localStorage.setItem('vidora.effect-favorites.v1', JSON.stringify(next));
+      return next;
+    });
+  };
 
   const clip = project && selectedClipIds.length > 0 ? findClip(project, selectedClipIds[0])?.clip ?? null : null;
   const glslSupported = useMemo(() => isGlslSupported(), []);
-  const glslResults = useMemo(() => {
-    const found = searchGlslEffects(query);
-    return category === 'All' ? found : found.filter((d) => d.category === category);
-  }, [query, category]);
-  const lutResults = useMemo(
-    () => (lutCategory === 'All' ? BUILTIN_LUTS : BUILTIN_LUTS.filter((l) => l.category === lutCategory)),
-    [lutCategory],
-  );
 
-  const onImportLut = async (file: File | undefined) => {
-    if (!file) return;
-    const err = await importLutFile(file);
-    setLutError(err);
-  };
+  const results = useMemo(() => {
+    if (query) {
+      const glsl = searchGlslEffects(query);
+      const classic = EFFECT_CATALOG.filter((d) => `${d.name} ${d.description}`.toLowerCase().includes(query.toLowerCase()));
+      return { classic, glsl };
+    }
+    if (effectNav.group === 'favorites') {
+      return {
+        classic: EFFECT_CATALOG.filter((d) => favorites.includes(d.id)),
+        glsl: GLSL_EFFECT_CATALOG.filter((d) => favorites.includes(d.id)),
+      };
+    }
+    if (effectNav.group === 'body') {
+      const byCat = (c: string) => GLSL_EFFECT_CATALOG.filter((d) => d.category === c);
+      switch (effectNav.category) {
+        case 'Pro':
+          return { classic: [], glsl: byCat('Stylize') };
+        case 'Hits':
+          return { classic: [], glsl: byCat('Motion') };
+        case 'Clone':
+          return { classic: [], glsl: keywordFilter(/mirror|clone|duplic/i, 'Distort') };
+        case 'Glowing lines':
+          return { classic: [], glsl: keywordFilter(/glow|neon|line/i, 'Light') };
+        case 'Stroke':
+          return { classic: [], glsl: keywordFilter(/edge|outline|stroke/i, 'Stylize') };
+        default:
+          return { classic: [], glsl: GLSL_EFFECT_CATALOG.slice(0, 12) };
+      }
+    }
+    switch (effectNav.category) {
+      case 'Sale':
+        return { classic: [], glsl: GLSL_EFFECT_CATALOG.filter((d) => d.category === 'Retro') };
+      case 'Classic':
+        return { classic: EFFECT_CATALOG, glsl: [] };
+      case 'Cutout':
+        return { classic: [], glsl: keywordFilter(/key|mask|cutout|alpha/i, 'Stylize') };
+      case 'NEW':
+        return { classic: [], glsl: GLSL_EFFECT_CATALOG.slice(-12) };
+      case 'Hits':
+        return { classic: [], glsl: GLSL_EFFECT_CATALOG.filter((d) => d.category === 'Light') };
+      default:
+        return { classic: [], glsl: GLSL_EFFECT_CATALOG.slice(0, 12) };
+    }
+  }, [query, effectNav, favorites]);
+
+  const heading = query
+    ? `Results for "${query}"`
+    : effectNav.group === 'favorites'
+      ? 'Favorites'
+      : effectNav.group === 'body'
+        ? `Body effects — ${effectNav.category}`
+        : `Video effects — ${effectNav.category}`;
 
   return (
-    <div className="w-72 shrink-0 overflow-y-auto border-r border-zinc-800 bg-zinc-950 p-4 text-zinc-100" aria-label="Effects and filters">
-      <h2 className="text-sm font-semibold">Effects &amp; Filters</h2>
-      {!clip && <p className="mt-2 text-xs text-zinc-400">Select a clip on the timeline to add effects, filters or a LUT.</p>}
+    <PanelShell
+      subNav={<>
+        <SubNavItem active={effectNav.group === 'favorites'} onClick={() => setEffectNav({ category: 'All', group: 'favorites' })}>Favorites</SubNavItem>
+        <SubNavGroup title="Video effects">
+          {VIDEO_EFFECT_NAV.map((n) => (
+            <SubNavItem key={n} active={effectNav.group === 'video' && effectNav.category === n} onClick={() => setEffectNav({ category: n, group: 'video' })}>{n}</SubNavItem>
+          ))}
+        </SubNavGroup>
+        <SubNavGroup title="Body effects">
+          {BODY_EFFECT_NAV.map((n) => (
+            <SubNavItem key={n} active={effectNav.group === 'body' && effectNav.category === n} onClick={() => setEffectNav({ category: n, group: 'body' })}>{n}</SubNavItem>
+          ))}
+        </SubNavGroup>
+      </>}
+    >
+      <PanelSearch value={query} onChange={setQuery} placeholder="People are searching effects" />
+      {!clip && <p className="mt-2 text-xs text-zinc-400">Select a clip on the timeline to add effects.</p>}
+      {effectNav.group === 'body' && (
+        <p className="mt-2 rounded-md border border-[#2E2E2E] bg-[#242424] px-2.5 py-2 text-[11px] leading-relaxed text-[#A8A8A8]">
+          Body effects apply to the whole clip in this build — there is no body-detection engine.
+        </p>
+      )}
       {clip && (
         <div className="mt-3 space-y-4">
           <section>
-            <h3 className="text-xs font-semibold text-zinc-300">Video effects ({EFFECT_CATALOG.length})</h3>
-            <div className="mt-2 grid grid-cols-2 gap-1.5">
-              {EFFECT_CATALOG.map((def) => {
+            <SectionHeading>{heading}</SectionHeading>
+            {!glslSupported && results.glsl.length > 0 && (
+              <p className="mt-1 text-[11px] text-amber-400">WebGL2 is not available in this browser, so GLSL effects are disabled. The classic effects below still work.</p>
+            )}
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              {results.classic.map((def) => {
                 const active = clip.effects.some((e) => e.name === def.id);
                 return (
-                  <button
-                    key={def.id}
-                    type="button"
-                    onClick={() => addEffect(def.id)}
-                    disabled={active}
-                    title={def.description}
-                    className={`rounded-md border px-2 py-1.5 text-left text-[11px] ${active ? 'border-violet-500 bg-violet-600/20 text-violet-200' : 'border-zinc-700 hover:border-zinc-500'}`}
-                  >
-                    {def.name}
-                    {active && ' ✓'}
-                  </button>
+                  <div key={def.id} className={`relative overflow-hidden rounded-lg border ${active ? 'border-[#00D9D9]' : 'border-[#2E2E2E] hover:border-[#3D3D3D]'} bg-[#242424]`}>
+                    <button
+                      type="button"
+                      onClick={() => addEffect(def.id)}
+                      disabled={active}
+                      title={def.description}
+                      className="block w-full text-left disabled:opacity-60"
+                    >
+                      <span className="flex h-14 w-full items-center justify-center bg-gradient-to-br from-[#3D3D3D] via-[#242424] to-[#141414] text-sm font-bold text-[#F2F2F2]">{def.name}</span>
+                      <span className="block truncate px-2 py-1 text-[11px]">
+                        {def.name}
+                        {active && ' ✓'}
+                      </span>
+                    </button>
+                    <button type="button" onClick={() => toggleFavorite(def.id)} aria-pressed={favorites.includes(def.id)} aria-label={`Favorite ${def.name}`} className={`absolute right-1 top-1 rounded p-0.5 ${favorites.includes(def.id) ? 'text-[#FFD34D]' : 'text-[#A8A8A8] hover:text-[#F2F2F2]'}`}>★</button>
+                  </div>
                 );
               })}
-            </div>
-          </section>
-
-          <section>
-            <h3 className="text-xs font-semibold text-zinc-300">GLSL effects ({GLSL_EFFECT_CATALOG.length})</h3>
-            {!glslSupported && (
-              <p className="mt-1 text-[11px] text-amber-400">WebGL2 is not available in this browser, so GLSL effects are disabled. The effects above still work.</p>
-            )}
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search effects…"
-              aria-label="Search GLSL effects"
-              className="mt-2 w-full rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1 text-xs text-zinc-100"
-            />
-            <div className="mt-2 flex flex-wrap gap-1">
-              {(['All', ...GLSL_CATEGORIES] as const).map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setCategory(c)}
-                  aria-pressed={category === c}
-                  className={`rounded-full border px-2 py-0.5 text-[11px] ${category === c ? 'border-violet-500 bg-violet-600/20 text-violet-200' : 'border-zinc-700 text-zinc-400'}`}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-            <div className="mt-2 grid grid-cols-2 gap-1.5">
-              {glslResults.map((def) => {
+              {results.glsl.map((def) => {
                 const active = clip.effects.some((e) => e.name === def.id);
                 const thumb = glslSupported ? glslThumbnail(def.body, def.p1?.default ?? 0, def.p2?.default ?? 0) : null;
                 return (
-                  <button
-                    key={def.id}
-                    type="button"
-                    onClick={() => addEffect(def.id)}
-                    disabled={active || !glslSupported}
-                    title={def.description}
-                    className={`overflow-hidden rounded-md border text-left text-[11px] ${active ? 'border-violet-500 bg-violet-600/20 text-violet-200' : 'border-zinc-700 hover:border-zinc-500'}`}
-                  >
-                    {thumb && <img src={thumb} alt="" className="h-9 w-full object-cover" />}
-                    <span className="block px-2 py-1">
-                      {def.name}
-                      {active && ' ✓'}
-                    </span>
-                  </button>
+                  <div key={def.id} className={`relative overflow-hidden rounded-lg border ${active ? 'border-[#00D9D9]' : 'border-[#2E2E2E] hover:border-[#3D3D3D]'} bg-[#242424]`}>
+                    <button
+                      type="button"
+                      onClick={() => addEffect(def.id)}
+                      disabled={active || !glslSupported}
+                      title={def.description}
+                      className="block w-full text-left disabled:opacity-60"
+                    >
+                      {thumb ? (
+                        <img src={thumb} alt="" className="h-14 w-full object-cover" />
+                      ) : (
+                        <span className="flex h-14 w-full items-center justify-center bg-gradient-to-br from-[#3D3D3D] via-[#242424] to-[#141414] text-sm font-bold text-[#F2F2F2]">{def.name}</span>
+                      )}
+                      <span className="block truncate px-2 py-1 text-[11px]">
+                        {def.name}
+                        {active && ' ✓'}
+                      </span>
+                    </button>
+                    <button type="button" onClick={() => toggleFavorite(def.id)} aria-pressed={favorites.includes(def.id)} aria-label={`Favorite ${def.name}`} className={`absolute right-1 top-1 rounded p-0.5 ${favorites.includes(def.id) ? 'text-[#FFD34D]' : 'text-[#A8A8A8] hover:text-[#F2F2F2]'}`}>★</button>
+                  </div>
                 );
               })}
-              {glslResults.length === 0 && <p className="col-span-2 text-[11px] text-zinc-500">No effects match “{query}”.</p>}
+              {results.classic.length === 0 && results.glsl.length === 0 && (
+                <p className="col-span-2 text-[11px] text-zinc-500">No effects match{query ? ` “${query}”` : ''}.</p>
+              )}
             </div>
           </section>
 
@@ -190,74 +262,8 @@ export default function EffectsPanel({ lutFocus = false }: { lutFocus?: boolean 
               );
             })}
           </section>
-
-          <section className="space-y-2 border-t border-zinc-800 pt-3">
-            <h3 className="text-xs font-semibold text-zinc-300">LUT filters (.cube) ({BUILTIN_LUTS.length})</h3>
-            {lutFocus && <p className="text-[11px] text-zinc-500">Import a .cube file or pick a built-in Vidora look. Intensity blends the look in.</p>}
-            <div className="flex flex-wrap gap-1">
-              {(['All', ...LUT_CATEGORIES] as const).map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setLutCategory(c)}
-                  aria-pressed={lutCategory === c}
-                  className={`rounded-full border px-2 py-0.5 text-[11px] ${lutCategory === c ? 'border-violet-500 bg-violet-600/20 text-violet-200' : 'border-zinc-700 text-zinc-400'}`}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-            <div className="grid grid-cols-2 gap-1.5">
-              {lutResults.map((lut) => {
-                const thumb = lutThumbnail(lut);
-                return (
-                  <button
-                    key={lut.id}
-                    type="button"
-                    onClick={() => setBuiltinLut(lut.name)}
-                    title={lut.name}
-                    className={`overflow-hidden rounded-md border text-left text-[11px] ${clip.lut?.name === lut.name ? 'border-violet-500 bg-violet-600/20' : 'border-zinc-700'}`}
-                  >
-                    {thumb && <img src={thumb} alt="" className="h-7 w-full object-cover" />}
-                    <span className="block px-2 py-1">{lut.name}</span>
-                  </button>
-                );
-              })}
-              {clip.lut && (
-                <button type="button" onClick={() => setLut(null)} className="rounded-md border border-zinc-700 px-2 py-1 text-[11px]">
-                  Clear LUT
-                </button>
-              )}
-            </div>
-            {clip.lut && (
-              <label className="flex items-center gap-2 text-xs">
-                LUT intensity
-                <input
-                  type="range"
-                  min={0}
-                  max={1}
-                  step={0.05}
-                  value={clip.lut.intensity}
-                  onChange={(e) => setLut({ ...clip.lut!, intensity: Number(e.target.value) })}
-                  className="flex-1"
-                  aria-label="LUT intensity"
-                />
-                <span className="w-10 text-right font-mono">{clip.lut.name} · {Math.round(clip.lut.intensity * 100)}%</span>
-              </label>
-            )}
-            <label className="block text-xs">
-              <span className="text-zinc-400">Import .cube file</span>
-              <input
-                type="file"
-                accept=".cube"
-                onChange={(e) => void onImportLut(e.target.files?.[0])}
-                className="mt-1 block w-full text-[11px] text-zinc-400"
-              />
-            </label>
-            {lutError && <p className="text-[11px] text-red-400">{lutError}</p>}
-          </section>
         </div>
       )}
-    </div>
+    </PanelShell>
   );
 }

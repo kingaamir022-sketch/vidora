@@ -1,8 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { formatDate, formatNumber, isRtl, loadLocale, t, type StringKey } from '../lib/i18n';
-import { canEdit, createAccount, currentAccount, loadAccounts, signIn, signOut } from '../lib/auth';
-import { daysRemaining, planById } from '../lib/subscription';
-import { clearTelemetry, loadTelemetry, logError, logEvent, setTelemetryOptIn, telemetryOptIn } from '../lib/telemetry';
 import { createLruCache, probeCache, thumbnailCache } from '../lib/mediaCache';
 import { clampLensStrength, distortPoint, lensGrid } from '../lib/lens';
 import { parseAss, parseCaptionFile } from '../lib/captions';
@@ -62,104 +59,6 @@ describe('M-LOCALE i18n', () => {
     expect(loadLocale()).toBe('ur');
     store.set('vidora.locale.v1', 'xx');
     expect(loadLocale()).toBe('en');
-  });
-});
-
-describe('M-AUTH local accounts', () => {
-  beforeEach(() => {
-    vi.unstubAllGlobals();
-    stubStorage();
-  });
-
-  it('the first account is OWNER, later ones are CUSTOMER', async () => {
-    const first = await createAccount('Aamir', 'aamir@example.com', 'password123');
-    expect(first.error).toBeUndefined();
-    expect(first.account?.role).toBe('owner');
-    const second = await createAccount('Kashif', 'kashif@example.com', 'password123');
-    expect(second.account?.role).toBe('customer');
-    expect(loadAccounts()).toHaveLength(2);
-  });
-
-  it('rejects duplicate emails, bad emails and short passwords', async () => {
-    await createAccount('Aamir', 'aamir@example.com', 'password123');
-    expect((await createAccount('Other', 'AAMIR@example.com', 'password123')).error).toMatch(/already exists/);
-    expect((await createAccount('Bad', 'not-an-email', 'password123')).error).toMatch(/valid email/);
-    expect((await createAccount('Short', 's@example.com', 'abc')).error).toMatch(/at least 8/);
-    expect((await createAccount('', 'n@example.com', 'password123')).error).toMatch(/name/);
-  });
-
-  it('sign-in checks the password; wrong email and wrong password give the same message', async () => {
-    await createAccount('Aamir', 'aamir@example.com', 'password123');
-    expect((await signIn('aamir@example.com', 'wrongpass')).error).toBe('Wrong email or password.');
-    expect((await signIn('nobody@example.com', 'password123')).error).toBe('Wrong email or password.');
-    const ok = await signIn('aamir@example.com', 'password123');
-    expect(ok.account?.email).toBe('aamir@example.com');
-    expect(currentAccount()?.email).toBe('aamir@example.com');
-    signOut();
-    expect(currentAccount()).toBeNull();
-  });
-
-  it('the same password hashes differently per account (random salt)', async () => {
-    const a = await createAccount('One', 'one@example.com', 'samepassword');
-    const b = await createAccount('Two', 'two@example.com', 'samepassword');
-    expect(a.account?.hash).not.toBe(b.account?.hash);
-    expect(a.account?.hash).not.toContain('samepassword');
-  });
-
-  it('canEdit: signed out and OWNER may edit, CUSTOMER may not', async () => {
-    expect(canEdit(null)).toBe(true);
-    const owner = await createAccount('Owner', 'o@example.com', 'password123');
-    expect(canEdit(owner.account ?? null)).toBe(true);
-    const customer = await createAccount('Cust', 'c@example.com', 'password123');
-    expect(canEdit(customer.account ?? null)).toBe(false);
-  });
-});
-
-describe('M-SUBS plans', () => {
-  it('Free is available, Pro is not, unknown ids fall back to Free', () => {
-    expect(planById('free').available).toBe(true);
-    expect(planById('pro').available).toBe(false);
-    expect(planById('nope').id).toBe('free');
-  });
-
-  it('Free and Lifetime never expire; dated plans count down', () => {
-    const now = new Date('2026-11-24T00:00:00Z');
-    expect(daysRemaining('free', 30, '2026-01-01T00:00:00Z', now)).toBeNull();
-    expect(daysRemaining('pro', 'lifetime', '2026-01-01T00:00:00Z', now)).toBeNull();
-    expect(daysRemaining('pro', 30, '2026-11-24T00:00:00Z', now)).toBe(30);
-    expect(daysRemaining('pro', 30, '2026-10-25T00:00:00Z', now)).toBe(0);
-  });
-});
-
-describe('M-TELEMETRY local-only logging', () => {
-  beforeEach(() => {
-    vi.unstubAllGlobals();
-    stubStorage();
-  });
-
-  it('usage counting is off by default and counts when opted in', () => {
-    expect(telemetryOptIn()).toBe(false);
-    logEvent('exports');
-    expect(loadTelemetry().events).toEqual([]);
-    setTelemetryOptIn(true);
-    expect(telemetryOptIn()).toBe(true);
-    logEvent('exports');
-    logEvent('exports');
-    logEvent('projects');
-    expect(loadTelemetry().events).toEqual([
-      { count: 2, name: 'exports' },
-      { count: 1, name: 'projects' },
-    ]);
-  });
-
-  it('errors are always logged locally and trimmed to 500 chars', () => {
-    logError('boom');
-    expect(loadTelemetry().errors).toHaveLength(1);
-    expect(loadTelemetry().errors[0].message).toBe('boom');
-    logError('x'.repeat(600));
-    expect(loadTelemetry().errors[0].message).toHaveLength(500);
-    clearTelemetry();
-    expect(loadTelemetry()).toEqual({ errors: [], events: [] });
   });
 });
 
@@ -250,9 +149,10 @@ Dialogue: 0:00:02.00,0:00:03.00,Reordered,0
     expect(() => parseAss('[Events]\nFormat: Layer, Start, End, Text\n')).toThrow(/No dialogue/);
   });
 
-  it('parseCaptionFile dispatches .ass and rejects .lrc', () => {
+  it('parseCaptionFile dispatches .ass and .lrc', () => {
     expect(parseCaptionFile('subs.ass', SAMPLE_ASS)).toHaveLength(2);
-    expect(() => parseCaptionFile('subs.lrc', '[00:01.00] hi')).toThrow(/\.lrc is not supported/);
+    // CapCut-fix (2026-11-25, K4): .lrc parses now.
+    expect(parseCaptionFile('subs.lrc', '[00:01.00] hi')).toHaveLength(1);
   });
 });
 

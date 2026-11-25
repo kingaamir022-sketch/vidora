@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
-import { SHORTCUT_LABELS, type ShortcutAction } from '../lib/shortcuts';
+import { formatCombo, SHORTCUT_LABELS, SHORTCUT_ORDER, type ShortcutAction } from '../lib/shortcuts';
 
-/** Customizable keyboard shortcuts (Phase 1, SPEC B). Click a shortcut, then press keys. */
+/** Customizable keyboard shortcuts (CapCut-fix 2026-11-25, W1/W2).
+ * Listed in CapCut's order (SHORTCUT_ORDER) with CapCut's defaults.
+ * Click a shortcut, then press keys. Esc cancels a capture. */
 export default function ShortcutsPanel() {
   const open = useProjectStore((s) => s.shortcutsOpen);
   const setOpen = useProjectStore((s) => s.setShortcutsOpen);
@@ -18,7 +20,7 @@ export default function ShortcutsPanel() {
         <h2 className="text-lg font-semibold">Keyboard shortcuts</h2>
         <p className="mt-1 text-xs text-zinc-400">Click a shortcut, then press the new key combination. Esc cancels.</p>
         <ul className="mt-4 space-y-2">
-          {(Object.keys(SHORTCUT_LABELS) as ShortcutAction[]).map((action) => (
+          {SHORTCUT_ORDER.map((action) => (
             <li key={action} className="flex items-center justify-between gap-3 text-sm">
               <span>{SHORTCUT_LABELS[action]}</span>
               <button
@@ -44,7 +46,7 @@ export default function ShortcutsPanel() {
                 }}
                 className="rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1 font-mono text-xs"
               >
-                {capturing === action ? 'Press keys…' : shortcuts[action]}
+                {capturing === action ? 'Press keys…' : formatCombo(shortcuts[action])}
               </button>
             </li>
           ))}
@@ -53,7 +55,7 @@ export default function ShortcutsPanel() {
           <button type="button" onClick={resetShortcuts} className="rounded-lg border border-zinc-700 px-4 py-2 text-sm">
             Reset to defaults
           </button>
-          <button type="button" onClick={() => setOpen(false)} className="flex-1 rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-4 py-2 text-sm font-semibold text-white">
+          <button type="button" onClick={() => setOpen(false)} className="flex-1 rounded-lg bg-[#00D9D9] px-4 py-2 text-sm font-semibold text-[#062A2A]">
             Done
           </button>
         </div>

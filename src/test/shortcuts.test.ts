@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { actionForCombo, DEFAULT_SHORTCUTS, eventToCombo, SHORTCUT_LABELS } from '../lib/shortcuts';
+import { actionForCombo, DEFAULT_SHORTCUTS, eventToCombo, SHORTCUT_LABELS, SHORTCUT_ORDER } from '../lib/shortcuts';
 import { exportFileName, pickMimeType, resolutionSize } from '../lib/exporter';
 
 describe('keyboard shortcuts', () => {
@@ -7,26 +7,36 @@ describe('keyboard shortcuts', () => {
     const values = Object.values(DEFAULT_SHORTCUTS);
     expect(values.length).toBeGreaterThan(0);
     expect(new Set(values).size).toBe(values.length);
-    expect(DEFAULT_SHORTCUTS.split).toBe('s');
+    expect(DEFAULT_SHORTCUTS.split).toBe('ctrl+b');
     expect(DEFAULT_SHORTCUTS.undo).toBe('ctrl+z');
     expect(DEFAULT_SHORTCUTS.togglePlay).toBe('space');
   });
 
   it('resolves a combo to its action', () => {
-    expect(actionForCombo(DEFAULT_SHORTCUTS, 'ctrl+d')).toBe('duplicate');
-    expect(actionForCombo(DEFAULT_SHORTCUTS, 'm')).toBe('addMarker');
+    expect(actionForCombo(DEFAULT_SHORTCUTS, 'ctrl+d')).toBeNull();
+    // CapCut-fix (Y6/W1): 'm' (addMarker) is unbound; 's' is Preview axis.
+    expect(actionForCombo(DEFAULT_SHORTCUTS, 'm')).toBeNull();
+    expect(actionForCombo(DEFAULT_SHORTCUTS, 's')).toBe('previewAxis');
     expect(actionForCombo(DEFAULT_SHORTCUTS, 'ctrl+q')).toBeNull();
+  });
+
+  it('lists actions in CapCut order (v1.0.1, W1)', () => {
+    expect(SHORTCUT_ORDER).toEqual([
+      'selectAll', 'copy', 'cut', 'paste', 'delete', 'undo', 'redo', 'togglePlay',
+      'split', 'zoomIn', 'zoomOut', 'frameStepPrev', 'frameStepNext', 'previewAxis',
+      'attachToggle', 'separateAudio', 'fullscreen', 'handTool', 'moveTool', 'zoomToFit',
+    ]);
   });
 
   it('Ctrl+A is select-all and selects all clips on all tracks (CapCut Web)', () => {
     expect(actionForCombo(DEFAULT_SHORTCUTS, 'ctrl+a')).toBe('selectAll');
-    expect(SHORTCUT_LABELS.selectAll).toBe('Select all clips on all tracks');
+    expect(SHORTCUT_LABELS.selectAll).toBe('Select all');
   });
 
   it('Ctrl+Shift+S separates audio (Phase 4, J-DETACH)', () => {
     expect(DEFAULT_SHORTCUTS.separateAudio).toBe('ctrl+shift+s');
     expect(actionForCombo(DEFAULT_SHORTCUTS, 'ctrl+shift+s')).toBe('separateAudio');
-    expect(SHORTCUT_LABELS.separateAudio).toBe('Separate audio from selected video clip');
+    expect(SHORTCUT_LABELS.separateAudio).toBe('Separate audio');
   });
 
   it('normalises keyboard events to combos', () => {

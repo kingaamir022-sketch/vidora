@@ -97,34 +97,6 @@ export default function ColorPanel() {
     </label>
   );
 
-  const wheel = (label: string, wheelKey: 'lift' | 'gamma' | 'gain') => {
-    if (!adj) return null;
-    const w = adj[wheelKey];
-    return (
-      <div className="rounded-md border border-zinc-800 bg-zinc-900 p-2">
-        <p className="text-[11px] font-semibold capitalize text-zinc-300">{label}</p>
-        {(['r', 'g', 'b'] as const).map((ch) => (
-          <label key={ch} className="mt-1 flex items-center gap-2 text-[11px] uppercase">
-            {ch}
-            <input
-              type="range"
-              min={-1}
-              max={1}
-              step={0.05}
-              value={w[ch]}
-              onChange={(e) =>
-                updateAdjustment({ [wheelKey]: { ...w, [ch]: Number(e.target.value) } } as Partial<Adjustment>)
-              }
-              className="flex-1"
-              aria-label={`${label} ${ch}`}
-            />
-            <span className="w-10 text-right font-mono">{w[ch].toFixed(2)}</span>
-          </label>
-        ))}
-      </div>
-    );
-  };
-
   const onCurveClick = (e: React.MouseEvent<SVGSVGElement>) => {
     if (suppressClickRef.current) {
       suppressClickRef.current = false;
@@ -148,9 +120,8 @@ export default function ColorPanel() {
   const curvePointsAttr = (pts: CurvePoint[]) => pts.map((p) => `${(p.x * 100).toFixed(1)},${((1 - p.y) * 100).toFixed(1)}`).join(' ');
 
   return (
-    <div className="w-80 shrink-0 overflow-y-auto border-r border-zinc-800 bg-zinc-950 p-4 text-zinc-100" aria-label="Colour and adjustment">
-      <h2 className="text-sm font-semibold">Adjustment</h2>
-      {!clip && <p className="mt-2 text-xs text-zinc-400">Select a clip on the timeline to adjust its colour.</p>}
+    <div className="space-y-3" aria-label="Color adjustment">
+      {!clip && <p className="mt-2 text-xs text-[#A8A8A8]">Select a clip on the timeline to adjust its colour.</p>}
       {clip && adj && (
         <div className="mt-3 space-y-3">
           <section className="space-y-1.5">
@@ -166,15 +137,15 @@ export default function ColorPanel() {
             {slider('Sharpen', adj.sharpen, 0, 1, 0.05, 'sharpen')}
           </section>
 
-          <section className="space-y-2 border-t border-zinc-800 pt-3">
-            <h3 className="text-xs font-semibold text-zinc-300">RGB curves — click to add a point, drag a point to move it</h3>
+          <section className="space-y-2 border-t border-[#2E2E2E] pt-3">
+            <h3 className="text-xs font-semibold text-[#D8D8D8]">RGB curves — click to add a point, drag a point to move it</h3>
             <div className="flex gap-1">
               {(['r', 'g', 'b'] as const).map((ch) => (
                 <button
                   key={ch}
                   type="button"
                   onClick={() => setCurveChannel(ch)}
-                  className={`rounded-md border px-2 py-0.5 text-[11px] uppercase ${curveChannel === ch ? 'border-violet-500 bg-violet-600/20' : 'border-zinc-700'}`}
+                  className={`rounded-md border px-2 py-0.5 text-[11px] uppercase ${curveChannel === ch ? 'border-[#00D9D9] bg-[#00D9D9]/10' : 'border-[#3D3D3D]'}`}
                 >
                   {ch}
                 </button>
@@ -182,7 +153,7 @@ export default function ColorPanel() {
               <button
                 type="button"
                 onClick={() => updateAdjustment({ curves: { ...adj.curves, [curveChannel]: [{ x: 0, y: 0 }, { x: 1, y: 1 }] } })}
-                className="ml-auto rounded-md border border-zinc-700 px-2 py-0.5 text-[11px]"
+                className="ml-auto rounded-md border border-[#3D3D3D] px-2 py-0.5 text-[11px]"
               >
                 Reset curve
               </button>
@@ -193,14 +164,14 @@ export default function ColorPanel() {
                   key={preset}
                   type="button"
                   onClick={() => updateAdjustment({ curves: { ...adj.curves, [curveChannel]: curvePreset(preset) } })}
-                  className="rounded-md border border-zinc-700 px-2 py-0.5 text-[11px]"
+                  className="rounded-md border border-[#3D3D3D] px-2 py-0.5 text-[11px]"
                   title={`Apply the ${CURVE_PRESET_LABELS[preset]} preset to the ${curveChannel.toUpperCase()} curve`}
                 >
                   {CURVE_PRESET_LABELS[preset]}
                 </button>
               ))}
             </div>
-            <svg ref={svgRef} viewBox="0 0 100 100" onClick={onCurveClick} className="h-28 w-full cursor-crosshair rounded-md border border-zinc-700 bg-zinc-900" aria-label="RGB curves editor">
+            <svg ref={svgRef} viewBox="0 0 100 100" onClick={onCurveClick} className="h-28 w-full cursor-crosshair rounded-md border border-[#3D3D3D] bg-[#242424]" aria-label="RGB curves editor">
               <line x1="0" y1="100" x2="100" y2="0" stroke="#3f3f46" strokeWidth="0.5" />
               <polyline points={curvePointsAttr(adj.curves[curveChannel])} fill="none" stroke={curveChannel === 'r' ? '#f87171' : curveChannel === 'g' ? '#4ade80' : '#60a5fa'} strokeWidth="1.5" />
               {adj.curves[curveChannel].map((p, i) => (
@@ -210,7 +181,7 @@ export default function ColorPanel() {
                   cy={(1 - p.y) * 100}
                   r="4.5"
                   fill="#fff"
-                  stroke="#8b5cf6"
+                  stroke="#00d9d9"
                   strokeWidth="1"
                   className="cursor-grab active:cursor-grabbing"
                   onPointerDown={(e) => onCurvePointDown(e, i)}
@@ -218,18 +189,11 @@ export default function ColorPanel() {
                 />
               ))}
             </svg>
-            <p className="text-[11px] text-zinc-500">{adj.curves[curveChannel].length} point(s) on the {curveChannel.toUpperCase()} curve. Presets apply to the active channel.</p>
+            <p className="text-[11px] text-[#6E6E6E]">{adj.curves[curveChannel].length} point(s) on the {curveChannel.toUpperCase()} curve. Presets apply to the active channel.</p>
           </section>
 
-          <section className="space-y-2 border-t border-zinc-800 pt-3">
-            <h3 className="text-xs font-semibold text-zinc-300">Colour wheels</h3>
-            {wheel('Lift (shadows)', 'lift')}
-            {wheel('Gamma (mid-tones)', 'gamma')}
-            {wheel('Gain (highlights)', 'gain')}
-          </section>
-
-          <section className="space-y-1.5 border-t border-zinc-800 pt-3">
-            <h3 className="text-xs font-semibold text-zinc-300">HSL</h3>
+          <section className="space-y-1.5 border-t border-[#2E2E2E] pt-3">
+            <h3 className="text-xs font-semibold text-[#D8D8D8]">HSL</h3>
             {slider('HSL hue', adj.hslHue, -180, 180, 1, 'hslHue')}
             {slider('HSL saturation', adj.hslSaturation, -1, 1, 0.05, 'hslSaturation')}
             {slider('HSL lightness', adj.hslLightness, -1, 1, 0.05, 'hslLightness')}
@@ -238,28 +202,28 @@ export default function ColorPanel() {
               <select
                 value={adj.blendMode}
                 onChange={(e) => updateAdjustment({ blendMode: e.target.value as BlendMode })}
-                className="rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1"
+                className="rounded-md border border-[#3D3D3D] bg-[#242424] px-2 py-1"
               >
                 {BLEND_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>{o.label}</option>
                 ))}
               </select>
             </label>
-            <p className="text-[11px] text-zinc-500">Blend mode applies live in the preview (and in export, which records the preview canvas). Use Transform → Opacity for the blend opacity. Linear burn has no canvas equivalent and is not offered.</p>
+            <p className="text-[11px] text-[#6E6E6E]">Blend mode applies live in the preview (and in export, which records the preview canvas). Use Transform → Opacity for the blend opacity. Linear burn has no canvas equivalent and is not offered.</p>
           </section>
 
-          <section className="space-y-1.5 border-t border-zinc-800 pt-3">
-            <h3 className="text-xs font-semibold text-zinc-300">Cleanup</h3>
+          <section className="space-y-1.5 border-t border-[#2E2E2E] pt-3">
+            <h3 className="text-xs font-semibold text-[#D8D8D8]">Cleanup</h3>
             <label className="flex items-center gap-2 text-xs">
               <input type="range" min={0} max={1} step={0.05} value={adj.denoise} onChange={(e) => updateAdjustment({ denoise: Number(e.target.value) })} className="flex-1" aria-label="Reduce image noise" />
               <span className="w-10 text-right font-mono">Reduce image noise {Math.round(adj.denoise * 100)}%</span>
             </label>
-            <p className="text-[11px] text-zinc-500">CapCut calls this “Reduce image noise” (Free). Applies a light spatial soften in the preview.</p>
+            <p className="text-[11px] text-[#6E6E6E]">CapCut calls this “Reduce image noise” (Free). Applies a light spatial soften in the preview.</p>
             <label className="flex items-center gap-2 text-xs">
               <input type="checkbox" checked={adj.stabilization} onChange={(e) => updateAdjustment({ stabilization: e.target.checked })} />
               Stabilize
             </label>
-            <p className="text-[11px] text-zinc-500">
+            <p className="text-[11px] text-[#6E6E6E]">
               Real stabilization lives in AI Tools → Stabilize (motion analysis, Phase 7). This toggle is kept for compatibility and does not change the preview.
             </p>
             <label className="flex items-center gap-2 text-xs">
@@ -282,7 +246,7 @@ export default function ColorPanel() {
                 <span className="w-10 text-right font-mono">{(adj.lensStrength ?? 0).toFixed(2)}</span>
               </label>
             )}
-            <p className="text-[11px] text-zinc-500">
+            <p className="text-[11px] text-[#6E6E6E]">
               Generic correction — no camera profile; adjust by eye. Negative straightens bulging (barrel) lines, positive fixes pinched (pincushion) lines. Applies in the preview and in export.
             </p>
             <button
@@ -297,7 +261,7 @@ export default function ColorPanel() {
                 };
                 updateAdjustment(clean);
               }}
-              className="rounded-md border border-zinc-700 px-2 py-1 text-[11px]"
+              className="rounded-md border border-[#3D3D3D] px-2 py-1 text-[11px]"
             >
               Reset all adjustments
             </button>

@@ -1,305 +1,627 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
-import { IconClock, IconFolder, IconPlus } from './icons';
-import { buildBundle, bundleFileName, bundleToText, deleteBackupRecord, loadBackupRecords, saveBackupRecords, type BackupRecord } from '../lib/cloudBackup';
-import { downloadBlob, formatBytesShort } from '../lib/exportEngine';
-import { formatDate, t } from '../lib/i18n';
-import AccountPanel from './AccountPanel';
+import { formatDate } from '../lib/i18n';
+import type { VidoraProject } from '../schema/project';
+import TemplatesPage from './home/TemplatesPage';
+import LibraryPage from './home/LibraryPage';
+import SpacesPage from './home/SpacesPage';
+import AIStudios, { type AIStudioView } from './home/AIStudios';
+import { InviteDialog, NoteDialog, ScriptDialog, TermsDialog, UpdatesDialog } from './home/HomeDialogs';
 
-/** Dashboard (SPEC A, Phase 1): new / recent / drafts with rename, duplicate, delete.
- * Phase 8 (L-CLOUD): project backups — a .vidora file you keep anywhere
- * (Drive, a USB stick, a chat message). The file holds the project + the
- * names of its media; when you restore, Vidora asks you to point at the
- * media files again. Media is never inside the bundle (too large). */
+/**
+ * Dashboard / home (CapCut desktop shots 02/03, diff S).
+ * Left sidebar (~290px) + main content: Create project banner, 5 AI cards,
+ * AI-powered creative suite, My projects cards. Templates / Library / Spaces
+ * are sidebar views. First run shows the Terms dialog, then the Updates
+ * notice. No auth, no tour, no theme toggle (removed — see diff Y).
+ */
+
+type DashboardView =
+  | 'home'
+  | 'templates'
+  | 'library'
+  | 'spaces'
+  | 'video-studio'
+  | 'design-studio'
+  | 'marketing';
+
+type ProjectFilter = 'All' | 'Video' | 'Image' | 'Effects';
+
+const TEAL = '#00D9D9';
+
+const AI_CARDS: { desc: string; icon: string; id: string; title: string }[] = [
+  // CapCut-fix (2026-11-25): six tiles, per the video reference (v02) —
+  // "AI video" first. (The screenshot-based diff listed five; the video
+  // shows six, and the video wins.)
+  { desc: 'Set ideas into motion', icon: '▶', id: 'ai-video', title: 'AI video' },
+  { desc: 'Turn ideas into imagery', icon: '✦', id: 'ai-image', title: 'AI image' },
+  { desc: 'Seamlessly extend any clip', icon: '⇥', id: 'extend', title: 'Extend video' },
+  { desc: 'Edit clips by describing it', icon: '✎', id: 'ai-edit', title: 'AI edit' },
+  { desc: 'Get sharper results instantly', icon: 'HD', id: 'enhance', title: 'Enhance quality' },
+  { desc: 'Remove anything unwanted', icon: '◐', id: 'ai-remove', title: 'AI remove' },
+];
+
+const SUITE_CARDS: { desc: string; gradient: string; id: DashboardView | 'tts'; title: string }[] = [
+  {
+    desc: 'Make 30-second videos with Vidora Video 1.0',
+    gradient: 'linear-gradient(135deg,#38BDF8 0%,#1D4ED8 60%,#0F172A 100%)',
+    id: 'video-studio',
+    title: 'Video Studio',
+  },
+  {
+    desc: 'Bring your imagination to life in the easiest way.',
+    gradient: 'linear-gradient(135deg,#7DD3FC 0%,#38BDF8 55%,#1E3A8A 100%)',
+    id: 'design-studio',
+    title: 'Design Studio',
+  },
+  {
+    desc: 'Create winning ads, scale fast with variants.',
+    gradient: 'linear-gradient(135deg,#818CF8 0%,#4F46E5 55%,#1E1B4B 100%)',
+    id: 'marketing',
+    title: 'AI ad maker',
+  },
+  {
+    desc: 'Convert text to speech in various languages.',
+    gradient: 'linear-gradient(135deg,#22D3EE 0%,#0E7490 60%,#083344 100%)',
+    id: 'tts',
+    title: 'Text to speech',
+  },
+];
+
+const STUDIO_INITIAL: Record<Exclude<DashboardView, 'home' | 'templates' | 'library' | 'spaces'>, AIStudioView> = {
+  'design-studio': 'design',
+  marketing: 'marketing',
+  'video-studio': 'video',
+};
+
+const CARD_GRADIENTS = [
+  'linear-gradient(135deg,#7C3AED,#312E81)',
+  'linear-gradient(135deg,#0E7490,#164E63)',
+  'linear-gradient(135deg,#DB2777,#4C1D95)',
+  'linear-gradient(135deg,#059669,#134E4A)',
+  'linear-gradient(135deg,#EA580C,#7C2D12)',
+  'linear-gradient(135deg,#2563EB,#1E3A8A)',
+];
+
+function gradientFor(id: string): string {
+  let h = 0;
+  for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return CARD_GRADIENTS[h % CARD_GRADIENTS.length];
+}
+
+function projectClips(p: VidoraProject): number {
+  return p.tracks.reduce((n, t) => n + t.clips.length, 0);
+}
+function projectDuration(p: VidoraProject): number {
+  return Math.max(0, ...p.tracks.flatMap((t) => t.clips.map((c) => c.start + c.duration)));
+}
+function formatClock(totalSeconds: number): string {
+  const m = Math.floor(totalSeconds / 60);
+  const s = Math.round(totalSeconds % 60);
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
 export default function Dashboard() {
-  const [tab, setTab] = useState<'recent' | 'drafts'>('recent');
-  const [newName, setNewName] = useState('');
+  const [view, setView] = useState<DashboardView>('home');
+  const [moreToolsOpen, setMoreToolsOpen] = useState(true);
+  const [termsState, setTermsState] = useState<'pending' | 'declined' | 'done'>(() => {
+    try {
+      return localStorage.getItem('vidora.terms.v1') === '1' ? 'done' : 'pending';
+    } catch {
+      return 'pending';
+    }
+  });
+  const [showUpdates, setShowUpdates] = useState(false);
+  const [note, setNote] = useState<{ body: string; title: string } | null>(null);
+  const [showInvite, setShowInvite] = useState(false);
+  const [showScript, setShowScript] = useState(false);
+  const [projectFilter, setProjectFilter] = useState<ProjectFilter>('All');
+  const [gridView, setGridView] = useState(true);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
-  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
-  const [backupProjectId, setBackupProjectId] = useState('');
-  const [backupRecords, setBackupRecords] = useState<BackupRecord[]>(() => loadBackupRecords());
-  const [backupNotice, setBackupNotice] = useState('');
-  const importFileRef = useRef<HTMLInputElement>(null);
+  const [pendingDelete, setPendingDelete] = useState<VidoraProject | null>(null);
+
   const projects = useProjectStore((s) => s.projects);
   const openProject = useProjectStore((s) => s.openProject);
   const createProject = useProjectStore((s) => s.createProject);
   const renameProject = useProjectStore((s) => s.renameProject);
   const duplicateProject = useProjectStore((s) => s.duplicateProject);
   const deleteProject = useProjectStore((s) => s.deleteProject);
-  const importBundle = useProjectStore((s) => s.importBundle);
+  const setActiveTab = useProjectStore((s) => s.setActiveTab);
+  const setSettingsOpen = useProjectStore((s) => s.setSettingsOpen);
+  const buildScriptProject = useProjectStore((s) => s.buildScriptProject);
   const recoveredNotice = useProjectStore((s) => s.recoveredNotice);
   const dismissRecovery = useProjectStore((s) => s.dismissRecovery);
-  const theme = useProjectStore((s) => s.theme);
-  const setTheme = useProjectStore((s) => s.setTheme);
-  const locale = useProjectStore((s) => s.locale);
-  const account = useProjectStore((s) => s.account);
-  const readOnly = account?.role === 'customer';
 
-  const sorted = useMemo(() => [...projects].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()), [projects]);
-  const drafts = useMemo(() => sorted.filter((p) => p.isDraft || p.tracks.every((t) => t.clips.length === 0)), [sorted]);
-  const shown = tab === 'recent' ? sorted : drafts;
+  const sorted = useMemo(
+    () => [...projects].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()),
+    [projects],
+  );
+  const shownProjects = useMemo(() => {
+    if (projectFilter === 'All') return sorted;
+    if (projectFilter === 'Video') return sorted.filter((p) => p.tracks.some((t) => t.clips.some((c) => c.type === 'video')));
+    if (projectFilter === 'Image') return sorted.filter((p) => p.tracks.some((t) => t.clips.some((c) => c.type === 'image')));
+    return sorted.filter((p) => p.tracks.some((t) => t.clips.some((c) => c.effects.length > 0)));
+  }, [sorted, projectFilter]);
+
+  const agreeTerms = () => {
+    try {
+      localStorage.setItem('vidora.terms.v1', '1');
+    } catch {
+      /* session-only */
+    }
+    setTermsState('done');
+    try {
+      if (localStorage.getItem('vidora.updates.v1') !== '1') setShowUpdates(true);
+    } catch {
+      setShowUpdates(true);
+    }
+  };
+  const dismissUpdates = () => {
+    try {
+      localStorage.setItem('vidora.updates.v1', '1');
+    } catch {
+      /* session-only */
+    }
+    setShowUpdates(false);
+  };
+
+  const openEditorWithTab = (tab: 'Media' | 'Filters' | 'Captions') => {
+    createProject();
+    setActiveTab(tab);
+  };
+
+  const handleAiCard = (id: string) => {
+    if (id === 'ai-video') setView('video-studio');
+    else if (id === 'ai-image') openEditorWithTab('Media');
+    else if (id === 'extend')
+      setNote({
+        body: 'Video extension isn’t available in this build. You can still trim, split and speed up any clip in the editor.',
+        title: 'Extend video',
+      });
+    else if (id === 'ai-edit') setShowScript(true);
+    else if (id === 'enhance') openEditorWithTab('Filters');
+    else if (id === 'ai-remove')
+      setNote({
+        body: 'Import a clip in the editor, select it, then open Smart tools → Remove background. The background is removed on the selected clip.',
+        title: 'AI remove',
+      });
+  };
+
+  const navItem = (id: DashboardView, label: string, icon: string) => (
+    <button
+      key={id}
+      type="button"
+      onClick={() => setView(id)}
+      className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-[15px] ${
+        view === id ? 'bg-[#242424] font-medium text-[#F2F2F2]' : 'text-[#A8A8A8] hover:bg-[#1E1E1E] hover:text-[#F2F2F2]'
+      }`}
+    >
+      <span className="w-5 text-center text-base">{icon}</span>
+      {label}
+    </button>
+  );
+
+  const isStudioView = view === 'video-studio' || view === 'design-studio' || view === 'marketing';
+
+  if (termsState === 'declined') {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#0A0A0A] px-6 text-center text-[#F2F2F2]">
+        <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Vidora logo" className="h-12 w-12" />
+        <h1 className="mt-4 text-2xl font-bold">Vidora is closed</h1>
+        <p className="mt-3 max-w-md text-sm leading-relaxed text-[#A8A8A8]">
+          You chose not to agree to the Terms of Service and Privacy Policy, so Vidora can&rsquo;t open. Your projects
+          stay on this computer — nothing was deleted.
+        </p>
+        <button
+          type="button"
+          onClick={() => setTermsState('pending')}
+          className="mt-6 rounded-lg px-6 py-2.5 text-sm font-semibold"
+          style={{ background: TEAL, color: '#062A2A' }}
+        >
+          Go back
+        </button>
+      </div>
+    );
+  }
+
+  const studio =
+    view === 'video-studio' || view === 'design-studio' || view === 'marketing' ? STUDIO_INITIAL[view] : null;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
-      <header className="flex h-14 items-center gap-3 border-b border-zinc-800 px-5">
-        <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Vidora logo" className="h-8 w-8" />
-        <span className="bg-gradient-to-r from-violet-600 to-cyan-500 bg-clip-text text-xl font-bold text-transparent">Vidora</span>
-        <span className="hidden text-xs tracking-widest text-zinc-500 uppercase sm:block">Create. Cut. Shine.</span>
+    <div className="flex min-h-screen bg-[#0A0A0A] text-[#F2F2F2]">
+      {/* ---- Left sidebar (~290px) ---- */}
+      <aside className="flex w-[290px] shrink-0 flex-col gap-1 overflow-y-auto border-r border-[#2E2E2E] bg-[#141414] px-3 py-4">
+        <div className="mb-2 flex items-center gap-2 px-2">
+          <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Vidora logo" className="h-8 w-8" />
+          <span className="bg-gradient-to-r from-violet-500 to-cyan-400 bg-clip-text text-xl font-bold text-transparent">
+            Vidora
+          </span>
+        </div>
+
+        <div className="rounded-xl bg-[#1E1E1E] p-3">
+          <button
+            type="button"
+            onClick={() =>
+              setNote({
+                body: 'Sign-in isn’t available in this build. Your projects stay on this computer.',
+                title: 'Sign in',
+              })
+            }
+            className="flex w-full items-center gap-3 text-left"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2E2E2E] text-lg text-[#A8A8A8]">
+              ○
+            </span>
+            <span className="text-[15px]">Sign in</span>
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              setNote({
+                body: 'Pro features are included in this build. Nothing is charged.',
+                title: 'Vidora Pro',
+              })
+            }
+            className="mt-3 w-full rounded-lg py-2 text-sm font-semibold text-[#062A2A]"
+            style={{ background: 'linear-gradient(90deg,#F9A8D4 0%,#67E8F9 100%)' }}
+          >
+            Join Pro
+          </button>
+        </div>
+
+        <div className="mt-3">
+          {navItem('home', 'Home', '⌂')}
+          {navItem('templates', 'Templates', '▦')}
+        </div>
+
+        <div className="mx-2 my-3 h-px bg-[#2E2E2E]" />
+        <p className="px-3 pb-1 text-xs text-[#6E6E6E]">Create with AI</p>
+        {navItem('video-studio', 'Video Studio', '▶')}
+        {navItem('design-studio', 'Design Studio', '✦')}
         <button
           type="button"
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="ml-auto rounded-md border border-zinc-700 px-3 py-1.5 text-xs text-zinc-300 hover:bg-zinc-800"
-          title="Theme toggle"
+          onClick={() => setMoreToolsOpen((v) => !v)}
+          aria-expanded={moreToolsOpen}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-[15px] text-[#A8A8A8] hover:bg-[#1E1E1E] hover:text-[#F2F2F2]"
         >
-          Theme: {theme}
+          <span className="w-5 text-center text-base">⊞</span>
+          More tools
+          <span className="ml-auto text-xs">{moreToolsOpen ? '▴' : '▾'}</span>
         </button>
+        {moreToolsOpen && (
+          <div className="ml-5 border-l border-[#2E2E2E] pl-2">
+            {navItem('video-studio', 'Create with AI', '✦')}
+            {navItem('marketing', 'Marketing tools', '◈')}
+          </div>
+        )}
+
+        <div className="mx-2 my-3 h-px bg-[#2E2E2E]" />
+        <p className="px-3 pb-1 text-xs text-[#6E6E6E]">Management</p>
+        {navItem('library', 'Library', '▤')}
+        {navItem('spaces', 'Spaces', '☁')}
+
         <button
           type="button"
-          onClick={() => useProjectStore.getState().setSettingsOpen(true)}
-          className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs text-zinc-300 hover:bg-zinc-800"
-          title="Settings"
+          onClick={() => setShowInvite(true)}
+          className="mt-3 flex w-full items-center gap-3 rounded-lg border border-[#2E2E2E] px-3 py-2.5 text-left text-[15px] text-[#F2F2F2] hover:bg-[#1E1E1E]"
         >
-          {t(locale, 'settings.title')}
+          <span className="w-5 text-center text-base">➤</span>
+          Invite friends
+          <span className="ml-auto rounded bg-[#FACC15] px-1.5 py-0.5 text-[10px] font-bold text-[#422006]">New</span>
         </button>
-      </header>
-      <main className="mx-auto max-w-4xl px-5 py-10">
+
+        <button
+          type="button"
+          onClick={() => setView('video-studio')}
+          className="mt-auto block rounded-xl p-4 text-left"
+          style={{ background: 'linear-gradient(160deg,#0E7490 0%,#083344 100%)' }}
+        >
+          <span className="block text-base font-bold" style={{ color: '#00D9D9' }}>
+            Try Video Studio
+          </span>
+          <span className="mt-0.5 block text-sm" style={{ color: '#00D9D9' }}>
+            Generate 4K videos
+          </span>
+        </button>
+      </aside>
+
+      {/* ---- Main content ---- */}
+      <main className={isStudioView ? 'min-w-0 flex-1 overflow-hidden' : 'min-w-0 flex-1 overflow-y-auto px-8 py-6'}>
         {recoveredNotice && (
-          <div className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-cyan-500/50 bg-cyan-500/10 px-4 py-3 text-sm" role="status">
+          <div className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-[#00D9D9]/50 bg-[#00D9D9]/10 px-4 py-3 text-sm" role="status">
             <span>{recoveredNotice}</span>
-            <button type="button" onClick={dismissRecovery} className="rounded-md border border-zinc-700 px-2 py-1 text-xs">
+            <button type="button" onClick={dismissRecovery} className="rounded-md border border-[#2E2E2E] px-2 py-1 text-xs">
               Dismiss
             </button>
           </div>
         )}
-        <h1 className="text-3xl font-bold">{t(locale, 'dashboard.title')}</h1>
-        <p className="mt-2 text-sm text-zinc-400">Start a new edit or pick up where you left off. Projects autosave every few seconds.</p>
-        {readOnly && (
-          <p className="mt-3 rounded-lg border border-amber-500/50 bg-amber-500/10 px-3 py-2 text-xs text-amber-200" role="status">
-            {t(locale, 'auth.readOnly')}
-          </p>
-        )}
-        <div className="mt-6 flex flex-wrap items-center gap-2">
-          <input
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !readOnly) {
-                createProject(newName || undefined);
-                setNewName('');
-              }
-            }}
-            placeholder="New project name (optional)"
-            aria-label="New project name"
-            disabled={readOnly}
-            className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2.5 text-sm disabled:opacity-40"
-          />
-          <button
-            type="button"
-            disabled={readOnly}
-            title={readOnly ? t(locale, 'auth.readOnly') : undefined}
-            onClick={() => {
-              createProject(newName || undefined);
-              setNewName('');
-            }}
-            className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-40"
-          >
-            <IconPlus size={18} />
-            {t(locale, 'dashboard.newProject')}
-          </button>
-        </div>
-        <div className="mt-10 flex gap-2 border-b border-zinc-800" role="tablist" aria-label="Project lists">
-          {(['recent', 'drafts'] as const).map((t) => (
+
+        {view === 'home' && (
+          <>
             <button
-              key={t}
               type="button"
-              role="tab"
-              aria-selected={tab === t}
-              onClick={() => setTab(t)}
-              className={`px-3 py-2 text-sm capitalize ${tab === t ? 'border-b-2 border-violet-500 text-white' : 'text-zinc-400 hover:text-zinc-100'}`}
+              onClick={() => createProject()}
+              className="flex h-[210px] w-full items-center justify-center gap-3 rounded-2xl text-3xl font-bold"
+              style={{ background: 'linear-gradient(120deg,#7FE7F0 0%,#00C8D8 100%)', color: '#062A2A' }}
             >
-              {t} ({t === 'recent' ? sorted.length : drafts.length})
+              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#062A2A] text-2xl text-[#00D9D9]">+</span>
+              Create project
             </button>
-          ))}
-        </div>
-        {shown.length === 0 ? (
-          <p className="mt-4 flex items-center gap-2 text-sm text-zinc-500">
-            <IconFolder size={16} />
-            {tab === 'drafts' ? 'No drafts yet. A new project is a draft until it has clips on the timeline.' : 'No projects yet.'}
-          </p>
-        ) : (
-          <ul className="mt-4 space-y-3">
-            {shown.map((p) => {
-              const clipCount = p.tracks.reduce((n, t) => n + t.clips.length, 0);
-              return (
-                <li key={p.id} className="flex items-center gap-4 rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-                  <button type="button" onClick={() => openProject(p)} className="flex min-w-0 flex-1 items-center gap-4 text-left" aria-label={`Open ${p.name}`}>
-                    <span className="rounded-lg bg-violet-600/20 p-3 text-violet-300">
-                      <IconFolder size={22} />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      {renamingId === p.id ? (
-                        <input
-                          value={renameValue}
-                          autoFocus
-                          onClick={(e) => e.stopPropagation()}
-                          onChange={(e) => setRenameValue(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              renameProject(p.id, renameValue);
-                              setRenamingId(null);
-                            }
-                            if (e.key === 'Escape') setRenamingId(null);
-                          }}
-                          onBlur={() => {
-                            renameProject(p.id, renameValue);
-                            setRenamingId(null);
-                          }}
-                          aria-label="Rename project"
-                          className="w-full rounded border border-zinc-700 bg-zinc-800 px-2 py-1 text-sm"
-                        />
-                      ) : (
-                        <span className="block truncate font-medium">{p.name}</span>
-                      )}
-                      <span className="mt-0.5 flex items-center gap-1 text-xs text-zinc-400">
-                        <IconClock size={12} />
-                        {p.aspectRatio} · {p.fps} fps · {p.tracks.length} tracks · {clipCount} clips · {p.media.length} media · updated{' '}
-                        {formatDate(locale, new Date(p.updatedAt))}
-                      </span>
-                    </span>
-                  </button>
-                  <span className="flex shrink-0 gap-1">
+
+            <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+              {AI_CARDS.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => handleAiCard(c.id)}
+                  className={`rounded-xl bg-[#1E1E1E] p-4 text-left hover:bg-[#242424] ${
+                    c.id === 'enhance' ? 'border border-[#00D9D9]' : ''
+                  }`}
+                >
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#242424] text-xl text-[#F2F2F2]">
+                    {c.icon}
+                  </span>
+                  <span className="mt-4 block text-[15px] font-medium">{c.title}</span>
+                  <span className="mt-1 block text-xs leading-relaxed text-[#A8A8A8]">{c.desc}</span>
+                </button>
+              ))}
+            </div>
+
+            <h2 className="mt-10 text-xl font-bold">AI-powered creative suite</h2>
+            <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
+              {SUITE_CARDS.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => (c.id === 'tts' ? openEditorWithTab('Captions') : setView(c.id))}
+                  className="overflow-hidden rounded-xl text-left"
+                >                  <span className="flex h-40 items-end p-4" style={{ background: c.gradient }}>
+                    <span className="text-2xl font-bold text-white drop-shadow">{c.title}</span>
+                  </span>
+                  <span className="block bg-[#1E1E1E] px-4 py-3">
+                    <span className="block text-[15px] font-medium">{c.title}</span>
+                    <span className="mt-0.5 block text-xs leading-relaxed text-[#A8A8A8]">{c.desc}</span>
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-10 flex flex-wrap items-center gap-2">
+              <h2 className="mr-2 text-xl font-bold">My projects</h2>
+              {(['All', 'Video', 'Image', 'Effects'] as const).map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  onClick={() => setProjectFilter(f)}
+                  className={`rounded-full px-3.5 py-1.5 text-sm ${
+                    projectFilter === f
+                      ? 'border border-[#00D9D9] text-[#F2F2F2]'
+                      : 'bg-[#242424] text-[#A8A8A8] hover:text-[#F2F2F2]'
+                  }`}
+                >
+                  {f}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => setGridView((v) => !v)}
+                className="ml-auto rounded-lg bg-[#242424] px-3 py-1.5 text-sm text-[#A8A8A8] hover:text-[#F2F2F2]"
+                aria-label={gridView ? 'Switch to list view' : 'Switch to grid view'}
+              >
+                {gridView ? '▦ Grid' : '☰ List'}
+              </button>
+            </div>
+
+            {pendingDelete && (
+              <div className="mt-4 flex items-center gap-3 rounded-lg border border-red-500/50 bg-red-500/10 px-4 py-3 text-sm" role="alert">
+                <span>
+                  Delete &ldquo;{pendingDelete.name}&rdquo;? This can&rsquo;t be undone.
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    deleteProject(pendingDelete.id);
+                    setPendingDelete(null);
+                  }}
+                  className="ml-auto rounded-lg bg-red-500 px-3 py-1.5 text-xs font-semibold text-white"
+                >
+                  Delete
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPendingDelete(null)}
+                  className="rounded-lg border border-[#2E2E2E] px-3 py-1.5 text-xs"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+
+            {shownProjects.length === 0 ? (
+              <p className="mt-6 text-sm text-[#6E6E6E]">
+                {projectFilter === 'All'
+                  ? 'No projects yet — create your first project above.'
+                  : `No ${projectFilter.toLowerCase()} projects yet.`}
+              </p>
+            ) : gridView ? (
+              <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
+                {shownProjects.map((p) => (
+                  <article key={p.id} className="relative">
                     <button
                       type="button"
-                      disabled={readOnly}
-                      title={readOnly ? t(locale, 'auth.readOnly') : undefined}
-                      onClick={() => {
-                        setRenamingId(p.id);
-                        setRenameValue(p.name);
-                      }}
-                      className="rounded-md border border-zinc-700 px-2 py-1 text-xs hover:bg-zinc-800 disabled:opacity-40"
+                      onClick={() => openProject(p)}
+                      aria-label={`Open ${p.name}`}
+                      className="relative block aspect-video w-full overflow-hidden rounded-xl text-left"
+                      style={{ background: gradientFor(p.id) }}
                     >
-                      Rename
+                      <span className="absolute inset-0 flex items-center justify-center text-4xl font-bold text-white/80">
+                        {p.name.charAt(0).toUpperCase()}
+                      </span>
+                      <span className="absolute bottom-2 right-2 rounded bg-black/60 px-1.5 py-0.5 text-xs text-white">
+                        {formatClock(projectDuration(p))}
+                      </span>
                     </button>
-                    <button type="button" disabled={readOnly} title={readOnly ? t(locale, 'auth.readOnly') : undefined} onClick={() => duplicateProject(p.id)} className="rounded-md border border-zinc-700 px-2 py-1 text-xs hover:bg-zinc-800 disabled:opacity-40">
-                      Duplicate
-                    </button>
-                    {confirmDeleteId === p.id ? (
+                    <div className="mt-2 flex items-start gap-2">
+                      <span className="min-w-0 flex-1">
+                        {renamingId === p.id ? (
+                          <input
+                            value={renameValue}
+                            autoFocus
+                            onChange={(e) => setRenameValue(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                renameProject(p.id, renameValue);
+                                setRenamingId(null);
+                              }
+                              if (e.key === 'Escape') setRenamingId(null);
+                            }}
+                            onBlur={() => {
+                              renameProject(p.id, renameValue);
+                              setRenamingId(null);
+                            }}
+                            aria-label="Rename project"
+                            className="w-full rounded border border-[#2E2E2E] bg-[#1E1E1E] px-2 py-1 text-sm"
+                          />
+                        ) : (
+                          <button type="button" onClick={() => openProject(p)} className="block w-full truncate text-left text-sm font-medium">
+                            {p.name}
+                          </button>
+                        )}
+                        <span className="mt-0.5 block text-xs text-[#6E6E6E]">
+                          {p.aspectRatio} · {p.fps} fps · {projectClips(p)} clips · updated {formatDate('en', new Date(p.updatedAt))}
+                        </span>
+                      </span>
                       <button
                         type="button"
-                        onClick={() => {
-                          deleteProject(p.id);
-                          setConfirmDeleteId(null);
-                        }}
-                        className="rounded-md border border-red-500 bg-red-500/20 px-2 py-1 text-xs text-red-300"
+                        onClick={() => setOpenMenuId(openMenuId === p.id ? null : p.id)}
+                        aria-label={`More options for ${p.name}`}
+                        aria-haspopup="menu"
+                        className="shrink-0 rounded-lg px-2 py-0.5 text-lg leading-none text-[#A8A8A8] hover:bg-[#242424] hover:text-[#F2F2F2]"
                       >
-                        Confirm delete
+                        …
                       </button>
-                    ) : (
-                      <button type="button" disabled={readOnly} title={readOnly ? t(locale, 'auth.readOnly') : undefined} onClick={() => setConfirmDeleteId(p.id)} className="rounded-md border border-zinc-700 px-2 py-1 text-xs hover:bg-zinc-800 disabled:opacity-40">
+                    </div>
+                    {openMenuId === p.id && (
+                      <>
+                        <button
+                          type="button"
+                          aria-label="Close menu"
+                          className="fixed inset-0 z-10 cursor-default"
+                          onClick={() => setOpenMenuId(null)}
+                        />
+                        <div role="menu" className="absolute right-0 z-20 mt-1 w-40 overflow-hidden rounded-xl border border-[#2E2E2E] bg-[#242424] py-1 shadow-2xl">
+                          <button type="button" role="menuitem" onClick={() => { setOpenMenuId(null); openProject(p); }} className="block w-full px-4 py-2 text-left text-sm hover:bg-[#2E2E2E]">
+                            Open
+                          </button>
+                          <button
+                            type="button"
+                            role="menuitem"
+                            onClick={() => { setOpenMenuId(null); setRenamingId(p.id); setRenameValue(p.name); }}
+                            className="block w-full px-4 py-2 text-left text-sm hover:bg-[#2E2E2E]"
+                          >
+                            Rename
+                          </button>
+                          <button
+                            type="button"
+                            role="menuitem"
+                            onClick={() => { setOpenMenuId(null); duplicateProject(p.id); }}
+                            className="block w-full px-4 py-2 text-left text-sm hover:bg-[#2E2E2E]"
+                          >
+                            Duplicate
+                          </button>
+                          <button
+                            type="button"
+                            role="menuitem"
+                            onClick={() => { setOpenMenuId(null); setPendingDelete(p); }}
+                            className="block w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-[#2E2E2E]"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <ul className="mt-4 space-y-2">
+                {shownProjects.map((p) => (
+                  <li key={p.id} className="flex items-center gap-3 rounded-xl border border-[#2E2E2E] bg-[#1E1E1E] p-3">
+                    <button type="button" onClick={() => openProject(p)} className="flex min-w-0 flex-1 items-center gap-3 text-left">
+                      <span
+                        className="flex h-12 w-20 shrink-0 items-center justify-center rounded-lg text-lg font-bold text-white/80"
+                        style={{ background: gradientFor(p.id) }}
+                      >
+                        {p.name.charAt(0).toUpperCase()}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block truncate text-sm font-medium">{p.name}</span>
+                        <span className="block text-xs text-[#6E6E6E]">
+                          {p.aspectRatio} · {p.fps} fps · {projectClips(p)} clips · updated {formatDate('en', new Date(p.updatedAt))}
+                        </span>
+                      </span>
+                    </button>
+                    <span className="flex shrink-0 gap-1">
+                      <button type="button" onClick={() => { setRenamingId(p.id); setRenameValue(p.name); }} className="rounded-md border border-[#2E2E2E] px-2 py-1 text-xs hover:bg-[#242424]">
+                        Rename
+                      </button>
+                      <button type="button" onClick={() => duplicateProject(p.id)} className="rounded-md border border-[#2E2E2E] px-2 py-1 text-xs hover:bg-[#242424]">
+                        Duplicate
+                      </button>
+                      <button type="button" onClick={() => setPendingDelete(p)} className="rounded-md border border-[#2E2E2E] px-2 py-1 text-xs text-red-400 hover:bg-[#242424]">
                         Delete
                       </button>
-                    )}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-        <AccountPanel />
-        <section className="mt-10 rounded-xl border border-zinc-800 bg-zinc-900 p-4" aria-label="Backups">
-          <h2 className="text-lg font-semibold">{t(locale, 'dashboard.backups')}</h2>
-          <p className="mt-1 text-sm text-zinc-400">
-            Back up a project to a .vidora file and keep it anywhere — Google Drive, a USB stick, a message to yourself. The file holds the project and the
-            names of its media files; when you restore it, Vidora asks you to point at the media again. Media is never inside the backup file (too large).
-          </p>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            <select
-              value={backupProjectId}
-              onChange={(e) => setBackupProjectId(e.target.value)}
-              aria-label="Project to back up"
-              className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm"
-            >
-              <option value="">— Choose a project —</option>
-              {sorted.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              disabled={!backupProjectId}
-              onClick={() => {
-                const target = projects.find((p) => p.id === backupProjectId);
-                if (!target) return;
-                const bundle = buildBundle(target);
-                downloadBlob(new Blob([bundleToText(bundle)], { type: 'application/json' }), bundleFileName(target));
-                const record: BackupRecord = {
-                  createdAt: new Date().toISOString(),
-                  id: `bk-${Date.now().toString(36)}`,
-                  projectId: target.id,
-                  projectName: target.name,
-                  size: bundleToText(bundle).length,
-                };
-                const next = [record, ...loadBackupRecords()];
-                saveBackupRecords(next);
-                setBackupRecords(next);
-                setBackupNotice(`Backed up ${target.name} → ${bundleFileName(target)}. Keep the file somewhere safe.`);
-              }}
-              className="rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
-            >
-              Back up this project
-            </button>
-            <button type="button" onClick={() => importFileRef.current?.click()} className="rounded-lg border border-zinc-700 px-4 py-2 text-sm">
-              Import backup…
-            </button>
-            <input
-              ref={importFileRef}
-              type="file"
-              accept=".vidora,application/json"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                void file
-                  .text()
-                  .then((text) => {
-                    const ok = importBundle(text);
-                    setBackupNotice(ok ? `Restored “${file.name}”. If any media was missing, re-import the files and re-attach them.` : 'That file is not a valid Vidora backup.');
-                  })
-                  .catch(() => setBackupNotice('Could not read that file.'));
-                e.target.value = '';
-              }}
-            />
-          </div>
-          {backupNotice && <p className="mt-2 text-sm text-zinc-300">{backupNotice}</p>}
-          {backupRecords.length > 0 && (
-            <ul className="mt-3 space-y-2">
-              {backupRecords.map((r) => (
-                <li key={r.id} className="flex items-center justify-between gap-3 rounded-lg border border-zinc-800 bg-zinc-950 p-3 text-sm">
-                  <span className="min-w-0">
-                    <span className="block truncate font-medium">{r.projectName}</span>
-                    <span className="text-xs text-zinc-400">
-                      {new Date(r.createdAt).toLocaleString()} · {formatBytesShort(r.size)} · backup file not stored here — keep the .vidora file you downloaded
                     </span>
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const next = deleteBackupRecord(r.id);
-                      setBackupRecords(next);
-                    }}
-                    className="shrink-0 rounded-md border border-zinc-700 px-2 py-1 text-xs"
-                  >
-                    Remove record
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        )}
+
+        {view === 'templates' && <TemplatesPage />}
+        {view === 'library' && <LibraryPage onStartCreating={() => setView('video-studio')} />}
+        {view === 'spaces' && (
+          <SpacesPage
+            onProNote={() =>
+              setNote({
+                body: 'Pro features are included in this build. Nothing is charged.',
+                title: 'Vidora Pro',
+              })
+            }
+          />
+        )}
+        {studio && (
+          <div className="h-screen">
+            <AIStudios key={view} initialView={studio} />
+          </div>
+        )}
       </main>
+
+      {/* ---- First-run dialogs ---- */}
+      {termsState === 'pending' && <TermsDialog onAgree={agreeTerms} onDisagree={() => setTermsState('declined')} />}
+      {termsState === 'done' && showUpdates && (
+        <UpdatesDialog
+          onOk={dismissUpdates}
+          onGoToSettings={() => {
+            dismissUpdates();
+            setSettingsOpen(true);
+          }}
+        />
+      )}
+      {note && <NoteDialog title={note.title} body={note.body} onClose={() => setNote(null)} />}
+      {showInvite && <InviteDialog onClose={() => setShowInvite(false)} />}
+      {showScript && (
+        <ScriptDialog
+          onClose={() => setShowScript(false)}
+          onCreate={(lines) => {
+            setShowScript(false);
+            buildScriptProject('Untitled Project', lines.map((line) => ({ duration: 3, imageDataUrl: null, line })), false);
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useProjectStore } from '../store/projectStore';
 import { findClip } from '../lib/timeline';
 import { LOOP_ANIMATION_LABELS, TEXT_PRESET_CATEGORIES, TEXT_STYLE_PRESETS } from '../lib/text';
 import { animationKindSchema, type LoopAnimationKind } from '../schema/project';
+import PanelShell, { PanelSearch, SectionHeading, SubNavItem } from './PanelShell';
 
 /**
  * Text panel (Phase 3, SPEC H — H-TEXT, H-TEXTSTYLE, H-TEXTANIM).
@@ -20,6 +21,24 @@ export default function TextPanel() {
   const setAnimation = useProjectStore((s) => s.setAnimation);
   const updateSelectedClip = useProjectStore((s) => s.updateSelectedClip);
   const [subTab, setSubTab] = useState<'templates' | 'effects' | 'ai-text-fx'>('templates');
+  const [query, setQuery] = useState('');
+  const [commercial, setCommercial] = useState(false);
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('vidora.text-favorites.v1') ?? '[]') as string[];
+    } catch {
+      return [];
+    }
+  });
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+
+  const toggleFavorite = (id: string) => {
+    setFavorites((f) => {
+      const next = f.includes(id) ? f.filter((x) => x !== id) : [...f, id];
+      localStorage.setItem('vidora.text-favorites.v1', JSON.stringify(next));
+      return next;
+    });
+  };
 
   const clip = project && selectedClipIds.length > 0 ? findClip(project, selectedClipIds[0])?.clip ?? null : null;
   const isText = clip?.type === 'text';
@@ -37,23 +56,13 @@ export default function TextPanel() {
   const loopKind = (clip?.animationLoop?.kind ?? 'none') as LoopAnimationKind;
 
   return (
-    <div className="w-72 shrink-0 overflow-y-auto border-r border-zinc-800 bg-zinc-950 p-4 text-zinc-100" aria-label="Text panel">
-      <h2 className="text-sm font-semibold">Text</h2>
-      <div className="mt-2 flex gap-1" role="tablist" aria-label="Text sub-tabs">
-        {(['templates', 'effects', 'ai-text-fx'] as const).map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            role="tab"
-            aria-selected={subTab === tab}
-            onClick={() => setSubTab(tab)}
-            className={`rounded-md border px-2 py-0.5 text-[11px] ${subTab === tab ? 'border-violet-500 bg-violet-600/20' : 'border-zinc-700'}`}
-          >
-            {tab === 'ai-text-fx' ? 'AI text FX' : tab[0].toUpperCase() + tab.slice(1)}
-          </button>
-        ))}
-      </div>
-
+    <PanelShell
+      subNav={<>
+        <SubNavItem active={subTab === 'templates'} onClick={() => setSubTab('templates')}>Templates</SubNavItem>
+        <SubNavItem active={subTab === 'effects'} onClick={() => setSubTab('effects')}>Effects</SubNavItem>
+        <SubNavItem active={subTab === 'ai-text-fx'} onClick={() => setSubTab('ai-text-fx')}>AI text FX</SubNavItem>
+      </>}
+    >
       {subTab === 'ai-text-fx' ? (
         <section className="mt-3 space-y-2">
           <h3 className="text-xs font-semibold text-zinc-300">AI text FX</h3>
@@ -65,6 +74,12 @@ export default function TextPanel() {
         </section>
       ) : (
         <>
+      <PanelSearch value={query} onChange={setQuery} placeholder="People are searching text styles" />
+      <div className="mt-2 flex gap-1">
+        <button type="button" onClick={() => setCommercial(false)} aria-pressed={!commercial} className={`rounded-full border px-2.5 py-0.5 text-[11px] ${!commercial ? 'border-[#00D9D9] bg-[#00D9D9]/10 text-[#00D9D9]' : 'border-[#3D3D3D] text-[#A8A8A8]'}`}>All</button>
+        <button type="button" onClick={() => setCommercial(true)} aria-pressed={commercial} className={`rounded-full border px-2.5 py-0.5 text-[11px] ${commercial ? 'border-[#00D9D9] bg-[#00D9D9]/10 text-[#00D9D9]' : 'border-[#3D3D3D] text-[#A8A8A8]'}`}>Commercial</button>
+      </div>
+      {commercial && <p className="mt-1 text-[11px] text-zinc-500">All Vidora styles are original designs, safe for commercial use.</p>}
       <section className="mt-3 space-y-2">
         <h3 className="text-xs font-semibold text-zinc-300">Basic</h3>
         <div className="flex gap-2">
@@ -81,28 +96,57 @@ export default function TextPanel() {
       </section>
 
       <section className="mt-4 space-y-3 border-t border-zinc-800 pt-3">
-        <h3 className="text-xs font-semibold text-zinc-300">{subTab === 'templates' ? 'Text templates' : 'Text styles'}</h3>
-        {TEXT_PRESET_CATEGORIES.map((category) => (
-          <div key={category}>
-            <p className="text-[11px] font-semibold text-zinc-400">{category}</p>
-            <div className="mt-1 space-y-1">
-              {TEXT_STYLE_PRESETS.filter((p) => p.category === category).map((preset) => (
-                <button
-                  key={preset.id}
-                  type="button"
-                  onClick={() => applyPreset(preset.id)}
-                  title={preset.description}
-                  className="block w-full rounded-md border border-zinc-800 bg-zinc-900 px-2 py-1.5 text-left hover:border-zinc-600"
-                >
-                  <span className="block text-xs font-semibold" style={{ color: preset.style.fill === 'transparent' ? '#fff' : preset.style.fill }}>
-                    {preset.name}
-                  </span>
-                  <span className="block text-[11px] text-zinc-500">{preset.description}</span>
-                </button>
-              ))}
-            </div>
+        <SectionHeading action={<button type="button" onClick={() => setExpanded((e) => ({ ...e, __fav: !e.__fav }))} className="text-[11px] text-[#00D9D9]">View all</button>}>
+          Favorites
+        </SectionHeading>
+        {favorites.length === 0 ? (
+          <p className="text-[11px] text-zinc-500">No favorites yet — star a style to pin it here.</p>
+        ) : (
+          <div className="space-y-1">
+            {TEXT_STYLE_PRESETS.filter((p) => favorites.includes(p.id)).map((preset) => (
+              <button key={preset.id} type="button" onClick={() => applyPreset(preset.id)} title={preset.description} className="block w-full rounded-md border border-zinc-800 bg-zinc-900 px-2 py-1.5 text-left hover:border-zinc-600">
+                <span className="block text-xs font-semibold" style={{ color: preset.style.fill === 'transparent' ? '#fff' : preset.style.fill }}>{preset.name}</span>
+                <span className="block text-[11px] text-zinc-500">{preset.description}</span>
+              </button>
+            ))}
           </div>
-        ))}
+        )}
+        <h3 className="text-xs font-semibold text-zinc-300">{subTab === 'templates' ? 'Text templates' : 'Text styles'}</h3>
+        {TEXT_PRESET_CATEGORIES.map((category) => {
+          const presets = TEXT_STYLE_PRESETS.filter((p) => p.category === category && (!query || p.name.toLowerCase().includes(query.toLowerCase()) || p.description.toLowerCase().includes(query.toLowerCase())));
+          if (presets.length === 0) return null;
+          const shown = expanded[category] ? presets : presets.slice(0, 4);
+          return (
+            <div key={category}>
+              <div className="flex items-center justify-between">
+                <p className="text-[11px] font-semibold text-zinc-400">{category}</p>
+                {presets.length > 4 && (
+                  <button type="button" onClick={() => setExpanded((e) => ({ ...e, [category]: !e[category] }))} className="text-[11px] text-[#00D9D9]">
+                    {expanded[category] ? 'Show less' : 'View all'}
+                  </button>
+                )}
+              </div>
+              <div className="mt-1 space-y-1">
+                {shown.map((preset) => (
+                  <div key={preset.id} className="flex items-stretch gap-1">
+                    <button
+                      type="button"
+                      onClick={() => applyPreset(preset.id)}
+                      title={preset.description}
+                      className="block min-w-0 flex-1 rounded-md border border-zinc-800 bg-zinc-900 px-2 py-1.5 text-left hover:border-zinc-600"
+                    >
+                      <span className="block text-xs font-semibold" style={{ color: preset.style.fill === 'transparent' ? '#fff' : preset.style.fill }}>
+                        {preset.name}
+                      </span>
+                      <span className="block text-[11px] text-zinc-500">{preset.description}</span>
+                    </button>
+                    <button type="button" onClick={() => toggleFavorite(preset.id)} aria-pressed={favorites.includes(preset.id)} aria-label={`Favorite ${preset.name}`} className={`shrink-0 rounded-md border border-zinc-800 px-1.5 ${favorites.includes(preset.id) ? 'text-[#FFD34D]' : 'text-zinc-500'}`}>★</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
         <p className="text-[11px] text-zinc-500">Click a style to apply it to the selected text clip — or to add a new text clip with that style when nothing is selected. All styles are original Vidora designs.</p>
       </section>
 
@@ -170,6 +214,6 @@ export default function TextPanel() {
       )}
         </>
       )}
-    </div>
+    </PanelShell>
   );
 }

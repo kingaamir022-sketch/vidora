@@ -1,11 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Dashboard from './components/Dashboard';
 import AudioPanel from './components/AudioPanel';
-import AILibraryPanel from './components/AILibraryPanel';
+import AIAvatarPanel from './components/AIAvatarPanel';
+import AIToolsPanel from './components/AIToolsPanel';
 import CaptionsPanel from './components/CaptionsPanel';
-import ColorPanel from './components/ColorPanel';
 import EffectsPanel from './components/EffectsPanel';
 import ExportPanel from './components/ExportPanel';
+import ExportMenu from './components/ExportMenu';
+import FeatureUsageDialog from './components/FeatureUsageDialog';
+import FiltersPanel from './components/FiltersPanel';
+import AdjustmentPanel from './components/AdjustmentPanel';
+import HelpCenter from './components/HelpCenter';
 import StickersPanel from './components/StickersPanel';
 import TextPanel from './components/TextPanel';
 import TemplatesPanel from './components/TemplatesPanel';
@@ -18,13 +23,21 @@ import ShortcutsPanel from './components/ShortcutsPanel';
 import TimelineShell from './components/TimelineShell';
 import TopBar from './components/TopBar';
 import SettingsDialog from './components/SettingsDialog';
-import UserGuideDialog from './components/UserGuideDialog';
-import OnboardingTour from './components/OnboardingTour';
+import { IconKeyboard } from './components/icons';
 import { startAutosave, useProjectStore } from './store/projectStore';
+import { projectDuration } from './lib/timeline';
 import { actionForCombo, eventToCombo } from './lib/shortcuts';
 import { isRtl } from './lib/i18n';
 
-/** Vidora Phase 1 app: dashboard <-> editor layout (SPEC Section 3) with real editing. Phase 9: locale/RTL, dialogs, sidebar visibility. */
+/**
+ * Vidora editor shell (CapCut-fix 2026-11-25, v1.0.1).
+ * Layout: 48px TopBar, then a row — left column (horizontal 64px tab
+ * rail on top + active panel + keyboard icon at the bottom), preview,
+ * Details inspector — then the timeline. The 11th tab is "AI avatar".
+ * The onboarding tour and the 10-step user guide are REMOVED (Y1/Y2);
+ * Help Center replaces the guide. Local auth is REMOVED (Y3) — no
+ * account chip and no read-only gate anywhere in this shell.
+ */
 export default function App() {
   const view = useProjectStore((s) => s.view);
   const theme = useProjectStore((s) => s.theme);
@@ -34,49 +47,93 @@ export default function App() {
   const setPresentMode = useProjectStore((s) => s.setPresentMode);
   const setPlaying = useProjectStore((s) => s.setPlaying);
   const showSidebar = useProjectStore((s) => s.showSidebar);
+  const setShowSidebar = useProjectStore((s) => s.setShowSidebar);
+  const aiToolsOverlay = useProjectStore((s) => s.aiToolsOverlay);
+  const setAiToolsOverlay = useProjectStore((s) => s.setAiToolsOverlay);
+  const setShortcutsOpen = useProjectStore((s) => s.setShortcutsOpen);
+  const setSettingsOpen = useProjectStore((s) => s.setSettingsOpen);
+  const setActiveTab = useProjectStore((s) => s.setActiveTab);
+
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [featureUsageOpen, setFeatureUsageOpen] = useState(false);
+  const [exportMenu, setExportMenu] = useState<'main' | 'share' | null>(null);
+  const [timelineVisible, setTimelineVisible] = useState(true);
 
   useEffect(() => startAutosave(), []);
 
-  // Global keyboard shortcuts (Phase 1, SPEC B). Ignored while typing in a field.
+  // Global keyboard shortcuts (CapCut defaults, W1). Ignored while
+  // typing in a field. Esc closes dialogs first, then presentation mode.
   useEffect(() => {
     if (view !== 'editor') return;
     const handler = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
       if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable)) return;
-      // Phase 8 (L-SHARE): Esc exits presentation mode.
-      if (e.key === 'Escape' && useProjectStore.getState().presentMode) {
-        useProjectStore.getState().setPresentMode(false);
-        return;
-      }
       const s = useProjectStore.getState();
-      // Phase 9 (M-AUTH): a signed-in CUSTOMER is read-only — editing
-      // shortcuts do nothing (the store also blocks the mutations).
-      if (s.account?.role === 'customer') {
-        if (e.key === ' ' || e.code === 'Space') {
-          e.preventDefault();
-          s.setPlaying(!s.playing);
+      if (e.key === 'Escape') {
+        if (exportMenu) {
+          setExportMenu(null);
+          return;
+        }
+        if (s.aiToolsOverlay) {
+          s.setAiToolsOverlay(null);
+          return;
+        }
+        if (s.shortcutsOpen) {
+          s.setShortcutsOpen(false);
+          return;
+        }
+        if (s.settingsOpen) {
+          s.setSettingsOpen(false);
+          return;
+        }
+        if (s.exportOpen) {
+          s.setExportOpen(false);
+          return;
+        }
+        if (helpOpen) {
+          setHelpOpen(false);
+          return;
+        }
+        if (featureUsageOpen) {
+          setFeatureUsageOpen(false);
+          return;
+        }
+        if (s.presentMode) {
+          s.setPresentMode(false);
+          return;
         }
         return;
       }
       const action = actionForCombo(s.shortcuts, eventToCombo(e));
       if (!action) return;
       e.preventDefault();
+      const fps = s.project?.fps ?? 30;
       if (action === 'togglePlay') s.setPlaying(!s.playing);
       else if (action === 'split') s.splitAtPlayhead();
       else if (action === 'delete') s.deleteSelected();
-      else if (action === 'duplicate') s.duplicateSelected();
       else if (action === 'copy') s.copySelected();
       else if (action === 'paste') s.pasteClipboard();
-      else if (action === 'undo') s.undo();
+      else if (action === 'cut') {
+        s.copySelected();
+        s.deleteSelected();
+      } else if (action === 'undo') s.undo();
       else if (action === 'redo') s.redo();
-      else if (action === 'addMarker') s.addMarker();
-      else if (action === 'rippleDelete') s.rippleDeleteSelected();
       else if (action === 'selectAll') s.selectAllClips();
       else if (action === 'separateAudio') s.detachAudio();
+      else if (action === 'zoomIn') s.setZoom(Math.min(200, (s.zoom ?? 100) + 10));
+      else if (action === 'zoomOut') s.setZoom(Math.max(10, (s.zoom ?? 100) - 10));
+      else if (action === 'frameStepPrev') s.setPlayhead(Math.max(0, s.playhead - 1 / fps));
+      else if (action === 'frameStepNext') s.setPlayhead(Math.min(s.project ? projectDuration(s.project) : 0, s.playhead + 1 / fps));
+      else if (action === 'previewAxis') s.setPreviewAxis(!s.previewAxis);
+      else if (action === 'attachToggle') s.setMagnetic(!s.magnetic);
+      else if (action === 'handTool') s.setPreviewTool('hand');
+      else if (action === 'moveTool') s.setPreviewTool('move');
+      else if (action === 'zoomToFit') window.dispatchEvent(new CustomEvent('vidora:zoom-to-fit'));
+      else if (action === 'fullscreen') window.dispatchEvent(new CustomEvent('vidora:preview-fullscreen'));
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [view]);
+  }, [view, exportMenu, helpOpen, featureUsageOpen]);
 
   const dir = isRtl(locale) ? 'rtl' : 'ltr';
 
@@ -93,8 +150,6 @@ export default function App() {
       <div data-theme={theme} dir={dir} lang={locale}>
         <Dashboard />
         <SettingsDialog />
-        <UserGuideDialog />
-        <OnboardingTour />
       </div>
     );
   }
@@ -125,30 +180,69 @@ export default function App() {
   }
 
   return (
-    <div data-theme={theme} dir={dir} lang={locale} className="flex h-screen flex-col overflow-hidden bg-zinc-950 text-zinc-100">
-      <TopBar />
+    <div data-theme={theme} dir={dir} lang={locale} className="relative flex h-screen flex-col overflow-hidden bg-[#141414] text-[#F2F2F2]">
+      <TopBar
+        onExport={() => setExportMenu(exportMenu === 'main' ? null : 'main')}
+        onShare={() => setExportMenu(exportMenu === 'share' ? null : 'share')}
+        onNewProject={() => useProjectStore.getState().createProject('Untitled Project')}
+        onShowFeatureUsage={() => setFeatureUsageOpen(true)}
+        onShowHelp={() => setHelpOpen(true)}
+        onShowSettings={() => setSettingsOpen(true)}
+        onShowShortcuts={() => setShortcutsOpen(true)}
+        onToggleSidebar={() => setShowSidebar(!showSidebar)}
+        onToggleTimeline={() => setTimelineVisible((v) => !v)}
+        sidebarVisible={showSidebar}
+        timelineVisible={timelineVisible}
+      />
+      {exportMenu && <ExportMenu section={exportMenu} onClose={() => setExportMenu(null)} />}
       <div className="flex min-h-0 flex-1">
-        {showSidebar && <LeftTabs />}
-        {activeTab === 'Media' && <MediaBrowser />}
-        {activeTab === 'Text' && <TextPanel />}
-        {activeTab === 'Stickers' && <StickersPanel />}
-        {activeTab === 'Captions' && <CaptionsPanel />}
-        {activeTab === 'Effects' && <EffectsPanel />}
-        {activeTab === 'Filters' && <EffectsPanel lutFocus />}
-        {activeTab === 'Transitions' && <TransitionsPanel />}
-        {activeTab === 'Audio' && <AudioPanel />}
-        {activeTab === 'Adjustment' && <ColorPanel />}
-        {activeTab === 'Templates' && <TemplatesPanel />}
-        {activeTab === 'AI Tools' && <AILibraryPanel />}
+        {showSidebar && (
+          <div className="flex w-[610px] shrink-0 flex-col border-r border-[#2E2E2E] bg-[#141414]">
+            <LeftTabs activeTab={activeTab} onSelect={setActiveTab} />
+            <div className="min-h-0 flex-1">
+              {activeTab === 'Media' && <MediaBrowser onSelectTab={setActiveTab} />}
+              {activeTab === 'Audio' && <AudioPanel />}
+              {activeTab === 'Text' && <TextPanel />}
+              {activeTab === 'Stickers' && <StickersPanel />}
+              {activeTab === 'Effects' && <EffectsPanel />}
+              {activeTab === 'Transitions' && <TransitionsPanel />}
+              {activeTab === 'Captions' && <CaptionsPanel />}
+              {activeTab === 'Filters' && <FiltersPanel />}
+              {activeTab === 'Adjustment' && <AdjustmentPanel />}
+              {activeTab === 'Templates' && <TemplatesPanel />}
+              {activeTab === 'AI avatar' && <AIAvatarPanel />}
+            </div>
+            <div className="flex h-10 shrink-0 items-center justify-center border-t border-[#2E2E2E]">
+              <button
+                type="button"
+                onClick={() => setShortcutsOpen(true)}
+                title="Keyboard shortcuts"
+                aria-label="Keyboard shortcuts"
+                className="rounded-md p-1.5 text-[#A8A8A8] hover:bg-[#242424] hover:text-[#F2F2F2]"
+              >
+                <IconKeyboard size={20} />
+              </button>
+            </div>
+          </div>
+        )}
         <PreviewArea />
         <PropertiesPanel />
       </div>
-      <TimelineShell />
+      {timelineVisible && <TimelineShell />}
       <ExportPanel />
       <ShortcutsPanel />
       <SettingsDialog />
-      <UserGuideDialog />
-      <OnboardingTour />
+      {helpOpen && <HelpCenter onClose={() => setHelpOpen(false)} />}
+      {featureUsageOpen && <FeatureUsageDialog onClose={() => setFeatureUsageOpen(false)} />}
+      {aiToolsOverlay && (
+        <div role="dialog" aria-modal="false" aria-label="AI tools" className="absolute bottom-[300px] right-[540px] z-40 max-h-[calc(100vh-420px)] w-[480px] overflow-y-auto rounded-lg border border-[#3D3D3D] bg-[#1E1E1E] shadow-2xl">
+          <div className="sticky top-0 flex items-center justify-between border-b border-[#2E2E2E] bg-[#1E1E1E] px-4 py-2">
+            <span className="text-sm font-semibold">AI tools</span>
+            <button type="button" onClick={() => setAiToolsOverlay(null)} aria-label="Close AI tools" className="rounded-md border border-[#3D3D3D] px-2 py-0.5 text-[#A8A8A8] hover:text-[#F2F2F2]">×</button>
+          </div>
+          <AIToolsPanel focusTool={aiToolsOverlay} />
+        </div>
+      )}
     </div>
   );
 }

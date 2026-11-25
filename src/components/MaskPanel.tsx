@@ -103,7 +103,7 @@ export default function MaskPanel() {
               key={mode}
               type="button"
               onClick={() => setLayout(mode)}
-              className={`rounded-md border px-2 py-1 text-[11px] ${clip.layoutMode === mode ? 'border-violet-500 bg-violet-600/20' : 'border-zinc-700'}`}
+              className={`rounded-md border px-2 py-1 text-[11px] ${clip.layoutMode === mode ? 'border-violet-500 bg-[#00D9D9]/10' : 'border-zinc-700'}`}
             >
               {mode === 'full' ? 'Full' : mode === 'pip' ? 'PiP' : mode.replace('split', '') + '-up'}
             </button>

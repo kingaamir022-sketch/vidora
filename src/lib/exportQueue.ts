@@ -22,7 +22,6 @@ import {
   type ExportOptions,
 } from './exportEngine';
 import type { VidoraProject } from '../schema/project';
-import { logEvent } from './telemetry';
 
 export type ExportJobStatus = 'queued' | 'running' | 'done' | 'failed' | 'cancelled' | 'interrupted';
 
@@ -135,8 +134,6 @@ export async function runQueue(
         const all = loadJobs().map((j) => (j.id === next.id ? { ...j, ...patch } : j));
         saveJobs(all);
         onUpdate(all);
-        // Phase 9 (M-TELEMETRY): count completed exports locally (opt-in only, no-op otherwise).
-        if (patch.status === 'done') logEvent('exports');
       };
       update({ progress: 0, status: 'running', step: 'Starting…' });
       try {

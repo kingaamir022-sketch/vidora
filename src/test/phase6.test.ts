@@ -226,6 +226,7 @@ describe('Phase 6 asset library counts', () => {
     expect(entries.filter((e) => e.type === 'ai-clip').length).toBe(100);
     expect(entries.filter((e) => e.type === 'ai-image').length).toBe(110);
     expect(entries.filter((e) => e.type === 'ai-voice').length).toBe(16);
-    expect(entries.length).toBe(673 + 100 + 100 + 100 + 110 + 16);
+    // CapCut-fix (2026-11-25, K5): base 673 + 3 Word caption styles = 676.
+    expect(entries.length).toBe(676 + 100 + 100 + 100 + 110 + 16);
   });
 });

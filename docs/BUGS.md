@@ -14,6 +14,99 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
 
 ## Fixed
 
+- BUG-CF-008 | CapCut-fix v1.0.1 | Asset manifest | FIXED
+  2026-11-25 — `assets/manifest.json` was stale: it still listed 20
+  caption presets after the Word category added 3 (word-pop,
+  word-karaoke, word-bounce; `CAPTION_STYLE_PRESETS` = 23). The
+  manifest is generated from the code, so it had silently drifted.
+  Found by the Phase 5 audit port (its floor check still passed, so
+  the drift was invisible to the suite). Fix: regenerated the
+  manifest from the current library code (only the 3 Word entries
+  added, nothing removed); `LICENSES/PROVENANCE.md`,
+  `docs/behavior/N-CAPTIONPRESETS.md` and the PARITY.md caption row
+  updated 20 → 23 to match.
+- BUG-CF-009 | CapCut-fix v1.0.1 | Asset build script | FIXED
+  2026-11-25 — `npm run build:assets` crashed under plain node:
+  `src/lib/aiLibrary.ts` reads `import.meta.env.BASE_URL` at module
+  load, but `import.meta.env` is undefined outside Vite/Vitest, so
+  importing the library (via `assetLibrary.ts`) threw before the
+  script did anything. Fix: optional-chain it
+  (`import.meta.env?.BASE_URL ?? '/'`); the manifest regeneration
+  above then ran clean. The app itself was unaffected (Vite always
+  defines `import.meta.env`).
+- BUG-CF-010 | CapCut-fix v1.0.1 | AI library in-editor add | FIXED
+  2026-11-25 — Deleting the AI Library panel removed the only
+  in-editor way to add the AI catalog to a timeline: the 100 AI
+  music tracks, 100 AI SFX, 100 AI clips and 110 AI images could only
+  be browsed on the dashboard Library page. The diff list's O3
+  redistribution had promised them to the Audio tab / Media tab /
+  Library page, but only the Library page half had landed. Fix:
+  `src/lib/aiLibrary.ts` gained MediaItem builders
+  (`aiMusicToMediaItem`, `aiSfxToMediaItem`, `aiClipToMediaItem`,
+  `aiImageToMediaItem`); the Audio tab now has "AI music" and "AI
+  sound effects" sections (play + "+" rows; music renders in-browser
+  when the MP3 is absent) and the Media tab has "AI clips" and "AI
+  images" sections (click a card to add); both honour the panel
+  search and Favorites, and show an honest note when the library
+  files are not in the install. New tests `src/test/aiLibrary.test.ts`
+  (6 tests); Phase 6 audit gained 6 checks (AI music "+", AI clip
+  card, AI image card) and now passes 15/15.
+- BUG-CF-001 | CapCut-fix v1.0.1 | Audio / Cut at beats | FIXED
+  2026-11-25 — "Cut at beats" silently did nothing whenever the
+  selected audio clip did not start at 0: `AudioPanel.tsx` passed
+  clip-relative beat times straight to `splitSelectedAtTimes`, but
+  `splitClipAtTimes` (`src/lib/timeline.ts`) expects absolute timeline
+  times and skips every time outside the clip, so a beats clip placed
+  after another audio clip (start 8s) produced 0 splits. Found by the
+  ported Phase 4 audit (J-BEAT: clips 3 -> 3). Fix: offset the times
+  by the selected clip's start in `AudioPanel.tsx`. Re-run: J-BEAT
+  passes, clips 3 -> 8. Phase 4 audit 26/26.
+- BUG-CF-002 | CapCut-fix v1.0.1 | Preview / Crop | FIXED 2026-11-25
+  — The preview floating toolbar's Crop button and the clip "…"
+  menu's Crop dispatched `vidora:inspector-basic`, but
+  `PropertiesPanel.tsx` listens for `vidora:open-inspector-basic`,
+  so Crop did nothing. Found in the screenshot comparison pass.
+  Fix: both dispatches now use `vidora:open-inspector-basic`.
+  Verified with a Playwright probe (`audit/capcut-fix/probe-crop.mjs`):
+  click Crop → inspector Basic sub-panel opens (Basic, Transform,
+  Color adjustment visible), 0 page errors.
+- BUG-CF-003 | CapCut-fix v1.0.1 | Preview empty state | FIXED
+  2026-11-25 — The "Click to upload / Or drag and drop file here"
+  prompt showed whenever the project had no *media items*, even with
+  a text-only timeline (the sample project's title card rendered
+  behind the prompt). Fix: `PreviewArea.tsx` now shows the prompt
+  only when the timeline has no clips at all. Verified in the
+  screenshot pass (`audit/capcut-fix/after/editor-details.png`).
+- BUG-CF-004 | CapCut-fix v1.0.1 | Timeline ruler | FIXED
+  2026-11-25 — The ruler labelled every second ("0s 1s 2s…");
+  CapCut labels every 5 seconds ("00:00, 00:05, 00:10…"). Fix:
+  `TimelineShell.tsx` labels every 5 s in mm:ss with a minor tick
+  each second. Verified in the screenshot pass.
+- BUG-CF-005 | CapCut-fix v1.0.1 | Dashboard AI cards | FIXED
+  2026-11-25 — Only 5 AI cards showed; CapCut's home (video v02)
+  shows 6, the first "AI video — Set ideas into motion". The grid
+  was `lg:grid-cols-5`, so the 6th card wrapped to a second row.
+  Fix: added the AI video card first (routes to Video Studio) and
+  changed the grid to `lg:grid-cols-6`. Verified in the screenshot
+  pass (all 6 in one row).
+- BUG-CF-006 | CapCut-fix v1.0.1 | AI avatar tab | FIXED
+  2026-11-25 — The avatar library showed frame/texture images with
+  frame names ("Thin Line Frame 1") — borders, not avatars. Fix:
+  `src/lib/avatars.ts` (24 original stylised portrait tiles:
+  gradient + person silhouette as inline SVG data URIs) and
+  `AIAvatarPanel.tsx` now uses them (Trending = first 12, Marketing
+  = last 12, Fashion model = middle 12); `ensureMediaItem` skips
+  the file-availability probe for data: URIs; the download link
+  uses a .svg extension for tiles. New tests
+  `src/test/avatars.test.ts` (3 tests). Verified in the screenshot
+  pass.
+- BUG-CF-007 | CapCut-fix v1.0.1 | Timeline empty state | FIXED
+  2026-11-25 — The dashed "Drag material here and start to create"
+  box was narrow (~580px, left-aligned) because its container was
+  sized to `totalWidth`, which is small for an empty project.
+  CapCut's box spans most of the timeline width. Fix: the tracks
+  container now has `minWidth: '100%'` and the box is `max-w-6xl`
+  (1152px), centred. Verified in the screenshot pass.
 - BUG-001 | Phase 2 retrofit | Left tabs | FIXED 2026-11-22 — Tabs
   Audio, Text, Stickers, Captions, Templates, AI Tools rendered no
   left panel at all (App.tsx only rendered a panel for Media, Effects,

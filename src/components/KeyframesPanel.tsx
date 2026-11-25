@@ -45,7 +45,7 @@ export default function KeyframesPanel() {
       <button
         type="button"
         onClick={() => addKeyframeAtPlayhead(property)}
-        className="w-full rounded-md border border-violet-500 bg-violet-600/20 px-2 py-1 text-[11px]"
+        className="w-full rounded-md border border-violet-500 bg-[#00D9D9]/10 px-2 py-1 text-[11px]"
       >
         + Add keyframe at {local.toFixed(2)}s
       </button>

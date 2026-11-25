@@ -10,6 +10,7 @@
  */
 import aiManifest from '../../assets/ai-manifest.json' with { type: 'json' };
 import { ORIGINAL_SFX, renderAiTrack, type AiTrackPattern, type RenderedOriginal } from './audio';
+import type { MediaItem } from '../schema/project';
 
 export interface AiMusicEntry {
   bpm: number;
@@ -96,7 +97,10 @@ const manifest = aiManifest as unknown as AiManifest;
  * paths pass through untouched.
  */
 export function withBase(path: string): string {
-  const base = import.meta.env.BASE_URL ?? '/';
+  // import.meta.env exists under Vite/Vitest but is undefined under plain
+  // node (e.g. `npm run build:assets`) — optional-chain so the library
+  // module loads in both environments; base '/' is correct for node.
+  const base = import.meta.env?.BASE_URL ?? '/';
   if (!path.startsWith('/')) return path;
   return `${base}${path.slice(1)}`;
 }
@@ -156,4 +160,87 @@ export function aiMatches(haystack: string[], query: string): boolean {
   const q = query.trim().toLowerCase();
   if (!q) return true;
   return haystack.some((h) => h.toLowerCase().includes(q));
+}
+
+/**
+ * Build the project MediaItem for one AI library entry, so the editor
+ * panels can add library tracks/clips/images to the timeline with the
+ * same add path as imported media (addMediaItem + add*Clip). The src
+ * is the served library URL (withBase), never file bytes. CapCut-fix
+ * 2026-11-25: this completes the O3 redistribution — the deleted AI
+ * Library panel's catalog now lives in the Audio tab (music/SFX) and
+ * the Media tab (clips/images), instead of only on the Library page.
+ */
+
+function mimeFor(file: string): string {
+  if (file.endsWith('.mp3')) return 'audio/mpeg';
+  if (file.endsWith('.wav')) return 'audio/wav';
+  if (file.endsWith('.mp4')) return 'video/mp4';
+  if (file.endsWith('.png')) return 'image/png';
+  if (file.endsWith('.jpg') || file.endsWith('.jpeg')) return 'image/jpeg';
+  return 'application/octet-stream';
+}
+
+export function aiMusicToMediaItem(entry: AiMusicEntry, id: string): MediaItem {
+  return {
+    createdAt: new Date().toISOString(),
+    duration: entry.duration,
+    folderId: 'folder-all',
+    id,
+    kind: 'audio',
+    mime: 'audio/mpeg',
+    name: entry.name,
+    peakLevel: entry.peak,
+    peaks: entry.peaks,
+    size: entry.size,
+    src: entry.file,
+  };
+}
+
+export function aiSfxToMediaItem(entry: AiSfxEntry, id: string): MediaItem {
+  return {
+    createdAt: new Date().toISOString(),
+    duration: entry.duration,
+    folderId: 'folder-all',
+    id,
+    kind: 'audio',
+    mime: 'audio/mpeg',
+    name: entry.name,
+    peaks: entry.peaks,
+    size: entry.size,
+    src: entry.file,
+  };
+}
+
+export function aiClipToMediaItem(entry: AiClipEntry, id: string): MediaItem {
+  return {
+    createdAt: new Date().toISOString(),
+    duration: entry.duration,
+    folderId: 'folder-all',
+    height: entry.height,
+    id,
+    kind: 'video',
+    mime: 'video/mp4',
+    name: entry.name,
+    size: entry.size,
+    src: entry.file,
+    thumbnail: entry.poster,
+    width: entry.width,
+  };
+}
+
+export function aiImageToMediaItem(entry: AiImageEntry, id: string): MediaItem {
+  return {
+    createdAt: new Date().toISOString(),
+    folderId: 'folder-all',
+    height: entry.height,
+    id,
+    kind: 'image',
+    mime: mimeFor(entry.file),
+    name: entry.name,
+    size: entry.size,
+    src: entry.file,
+    thumbnail: entry.file,
+    width: entry.width,
+  };
 }
