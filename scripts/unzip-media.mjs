@@ -12,8 +12,12 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const lib = join(root, 'public', 'ai-library');
 
 const bundles = [
-  ['music.zip', 'music', 'ai-track-001.mp3'],
-  ['clips.zip', 'clips', 'ai-clip-001.mp4'],
+  ['music-1.zip', 'music', 'ai-track-001.mp3'],
+  ['music-2.zip', 'music', 'ai-track-026.mp3'],
+  ['music-3.zip', 'music', 'ai-track-051.mp3'],
+  ['music-4.zip', 'music', 'ai-track-076.mp3'],
+  ['clips-1.zip', 'clips', 'ai-clip-001.mp4'],
+  ['clips-2.zip', 'clips', 'ai-clip-051.mp4'],
   ['images.zip', 'images', 'frames/ai-frame-01.png'],
   ['sfx.zip', 'sfx', 'ai-sfx-001.mp3'],
 ];
