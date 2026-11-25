@@ -18,6 +18,8 @@ Evidence: `docs/reference/capcut/WEB-CHECK-2026-11-25.md` (CapCut Web online edi
 
 **Verification (item 6):** Playwright at 1920×1080 / 100% (dev server, `audit/capcut-fix/v103/verify.mjs`): full editor screen + all 11 tabs, hover probe on a template card shows BOTH "Use template" and "Edit more" in the viewport, "Pals" absent from the Transitions nav, no "CC" button, tile thumbnails measure ~70px square, Tools click applies HD Cam 2 with an Intensity-only card. 0 page errors.
 
+**Deploy retry:** Pages run #25 (commit 677bbf81) failed GitHub-side — "No artifacts named github-pages were found" + "Fetching artifact metadata failed" — even though the 92 MB artifact was produced. Transient GitHub failure (same as the v1.0.1 saga); re-running is not the fix (duplicate artifact), so this line triggers a fresh commit + fresh Pages run. No code change.
+
 ### Tests
 
 - Suite now 364 tests (was 355): new `v103-tools.test.ts` (9) — the 7 tool defs + direct-apply + Intensity-only + no-duplicate-stack + Pals removal. `npx tsc --noEmit` clean, `npm run build` passes. Phase audits re-run green (see below).
