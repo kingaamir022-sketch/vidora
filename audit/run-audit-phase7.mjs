@@ -16,6 +16,18 @@
  *  - test-gaps.wav: 6 s stereo WAV written in Node — tone 0–2 s,
  *    silence 2–4 s, tone 4–6 s; L = centre + side, R = centre − side
  *    (exercises Smart Cut AND the centre-channel stem split).
+ *
+ * CapCut-fix port (2026-11-25, v1.0.1): entry is now Terms ("Agree and
+ * continue") -> Updates ("OK") -> "Create project" (tour + "New Project"
+ * are gone); the tab rail is div[role="tablist"][aria-label="Editor
+ * tools"] with role="tab" buttons (see tabBtn); the Media panel is a
+ * PanelShell div (no aside[aria-label="Media library"]) with a hidden
+ * file input and a card grid (button[title$="click to add to timeline"]).
+ * The AI Tools panel is an overlay dialog ([role="dialog"][aria-label=
+ * "AI tools"]) opened here via Filters tab -> Tools -> Enhance — there
+ * is no "AI Tools" rail tab and no "Tools" sub-tab inside the overlay,
+ * so the old sub-tab check is deleted. K-REFRAME waits on the current
+ * status string ("Reframed to 9:16 …") instead of "window".
  */
 import { spawn } from 'node:child_process';
 import { promises as fs } from 'node:fs';
@@ -97,6 +109,10 @@ async function waitSectionStatus(section, text, timeoutMs = 60000) {
   }
   return (await section.textContent()) ?? '';
 }
+/** Left tab rail button (labels truncate visually, textContent is full). */
+const tabBtn = (page, name) => page.locator('div[role="tablist"][aria-label="Editor tools"] button[role="tab"]', { hasText: name }).first();
+/** The left editor column (tab rail + active PanelShell panel). */
+const leftCol = (page) => page.locator('div[class*="min(610px,32vw)"]');
 
 const K_CARDS = [
   'K-STT', 'K-TTS', 'K-SMARTCUT', 'K-REFRAME', 'K-BGREMOVE', 'K-TRACK',
@@ -173,40 +189,38 @@ async function main() {
 
     await page.goto(URL, { waitUntil: 'networkidle' });
     await page.waitForTimeout(800);
-    // Phase 9 (M-ONBOARD): a first-run tour covers the dashboard on a
-    // fresh profile — dismiss it before doing anything else.
-    const tour = page.locator('[role="dialog"][aria-labelledby="tour-heading"]');
-    if (await tour.isVisible().catch(() => false)) {
-      await tour.getByRole('button', { name: 'Skip tour' }).click();
-      await page.waitForTimeout(400);
-    }
-
-    await page.getByRole('button', { name: 'New Project' }).click();
+    // CapCut-fix entry (v1.0.1): first-run Terms dialog, then the
+    // Updates notice, then the dashboard "Create project" banner.
+    const agree = page.getByRole('button', { name: 'Agree and continue' });
+    if (await agree.count()) { await agree.first().click(); await page.waitForTimeout(500); }
+    const updOk = page.getByRole('button', { name: 'OK', exact: true });
+    if (await updOk.count()) { await updOk.first().click(); await page.waitForTimeout(500); }
+    await page.getByRole('button', { name: 'Create project' }).first().click();
     await page.waitForTimeout(600);
 
-    const aiPanel = page.locator('aside[aria-label="AI Library"]');
+    const aiPanel = page.locator('[role="dialog"][aria-label="AI tools"]');
     const section = (title) => aiPanel.locator(`section[aria-label="${title}"]`);
 
     // ---- Import fixtures ----
-    await page.locator('nav[aria-label="Editor tools"] button[title="Media"]').click();
+    await tabBtn(page, 'Media').click();
     await page.waitForTimeout(300);
-    const mediaInput = page.locator('aside[aria-label="Media library"] input[type="file"]').first();
+    const mediaInput = page.locator('input[type="file"]').first();
     await mediaInput.setInputFiles([path.join(MEDIA, 'test-av.mp4'), path.join(MEDIA, 'test-gaps.wav'), path.join(MEDIA, 'test-shaky.mp4')]);
-    await page.waitForTimeout(4000);
-    const lib = page.locator('aside[aria-label="Media library"]');
+    await page.getByRole('button', { name: 'Media', exact: true }).click();
+    await page.waitForTimeout(500);
     for (const name of ['test-av.mp4', 'test-gaps.wav', 'test-shaky.mp4']) {
-      await lib.locator('li', { hasText: name }).first().locator('button', { hasText: 'Add to timeline' }).click();
+      await page.locator(`button[title^="${name}"]`).first().waitFor({ timeout: 15000 });
+      await page.locator(`button[title^="${name}"]`).first().click();
       await page.waitForTimeout(500);
     }
     check('K-SMARTCUT', 'video + audio + shaky fixtures on the timeline', (await clipCount(page)) === 3, `clips: ${await clipCount(page)}`);
 
-    // ---- Open the AI Tools tab + Tools sub-tab ----
-    await page.locator('nav[aria-label="Editor tools"] button[title="AI Tools"]').click();
+    // ---- Open the AI Tools overlay (Filters tab -> Tools -> Enhance) ----
+    await tabBtn(page, 'Filters').click();
     await page.waitForTimeout(400);
-    check('K-PROVIDERS', 'AI Library panel opens on the AI Tools tab', await aiPanel.isVisible());
-    check('K-PROVIDERS', 'Tools sub-tab present', (await aiPanel.getByRole('tab', { name: 'Tools' }).count()) === 1);
-    await aiPanel.getByRole('tab', { name: 'Tools' }).click();
+    await leftCol(page).getByRole('button', { name: 'Enhance', exact: true }).click();
     await page.waitForTimeout(500);
+    check('K-PROVIDERS', 'AI Tools overlay opens', (await aiPanel.count()) === 1);
     for (const title of [
       'AI Captions — speech to text', 'Narration — render to audio', 'Smart Cut — silence & filler removal',
       'Auto Reframe', 'Background Removal', 'Camera Tracking — automatic', 'Stabilize — real motion correction',
@@ -261,8 +275,8 @@ async function main() {
     const reframe = section('Auto Reframe');
     await reframe.locator('#ai-reframe-ratio').selectOption('9:16');
     await reframe.getByRole('button', { name: 'Analyse & apply' }).click();
-    const reframeText = await waitSectionStatus(reframe, 'window');
-    check('K-REFRAME', '9:16 analysis returns a crop window', reframeText.includes('9:16') && reframeText.includes('window'), reframeText.slice(0, 140));
+    const reframeText = await waitSectionStatus(reframe, 'Reframed to 9:16');
+    check('K-REFRAME', '9:16 analysis returns a crop window', reframeText.includes('9:16') && (reframeText.includes('window') || reframeText.includes('centre crop')), reframeText.slice(0, 140));
     await shot(page, 'K-REFRAME', 'reframe.png');
 
     // ---- K-STABILIZE (on the shaky fixture — either honest outcome is a pass) ----

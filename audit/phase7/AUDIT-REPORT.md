@@ -1,7 +1,7 @@
 # Vidora Phase 7 audit report
 
-Run: 2026-11-24T10:46:56.107Z
-Result: 61/61 checks passed, 0 failed.
+Run: 2026-11-25T12:52:35.198Z
+Result: 60/60 checks passed, 0 failed.
 
 - PASS [K-STT] behaviour card docs/behavior/K-STT.md exists
 - PASS [K-TTS] behaviour card docs/behavior/K-TTS.md exists
@@ -26,8 +26,7 @@ Result: 61/61 checks passed, 0 failed.
 - PASS [K-STT] Vosk model downloaded locally (tools/models/vosk-en-small)
 - PASS [K-TTS] Piper voice downloaded locally (tools/models/en_US-lessac-medium.onnx)
 - PASS [K-SMARTCUT] video + audio + shaky fixtures on the timeline — clips: 3
-- PASS [K-PROVIDERS] AI Library panel opens on the AI Tools tab
-- PASS [K-PROVIDERS] Tools sub-tab present
+- PASS [K-PROVIDERS] AI Tools overlay opens
 - PASS [K-PROVIDERS] AI Tools section "AI Captions — speech to text" renders
 - PASS [K-PROVIDERS] AI Tools section "Narration — render to audio" renders
 - PASS [K-PROVIDERS] AI Tools section "Smart Cut — silence & filler removal" renders

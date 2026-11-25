@@ -1,13 +1,20 @@
 import { useMemo, useState } from 'react';
 import { useProjectStore } from '../../store/projectStore';
 import { searchTemplates, type TemplateDef } from '../../lib/templates';
-import { GrayButton, HomeModal, TealButton } from './HomeDialogs';
+import TemplateThumb from '../TemplateThumb';
+import { GrayButton, TealButton } from './HomeDialogs';
 
 /**
  * Templates home page (CapCut desktop shots 05/06).
  * Search + 3 filter dropdowns + category chips in two rows + vertical 9:16
  * cards. Templates are Vidora Originals. View counts are real local usage
  * counts (localStorage, starting at 0) — never invented.
+ * v1.0.2 (D11): NO click modal. Hovering a card shows an enlarged preview
+ * anchored to that card (bigger visual + title + duration + clip count +
+ * star, then "Use template" + "Edit more" beneath it); the card + popup
+ * are one hover region, mouseleave hides it. Card click does nothing.
+ * Cards show views + clip count on the image and the title below — no
+ * "Category · duration" sub-line (CapCut cards show none).
  */
 
 const CATEGORY_CHIPS = [
@@ -61,14 +68,6 @@ function readFavs(): string[] {
   }
 }
 
-const POSTER_GRADIENTS: Record<string, string> = {
-  Intro: 'linear-gradient(160deg,#7C3AED 0%,#312E81 55%,#0F172A 100%)',
-  Outro: 'linear-gradient(160deg,#0E7490 0%,#164E63 55%,#0F172A 100%)',
-  Promo: 'linear-gradient(160deg,#EA580C 0%,#7C2D12 55%,#1C1917 100%)',
-  Social: 'linear-gradient(160deg,#DB2777 0%,#4C1D95 55%,#0F172A 100%)',
-  Vlog: 'linear-gradient(160deg,#059669 0%,#134E4A 55%,#0F172A 100%)',
-};
-
 function formatDuration(totalSeconds: number): string {
   const m = Math.floor(totalSeconds / 60);
   const s = Math.round(totalSeconds % 60);
@@ -110,7 +109,7 @@ export default function TemplatesPage() {
   const [clips, setClips] = useState('No limit');
   const [duration, setDuration] = useState('No limit');
   const [chip, setChip] = useState<string>('For you');
-  const [preview, setPreview] = useState<TemplateDef | null>(null);
+  const [hovered, setHovered] = useState<TemplateDef | null>(null);
   const [uses, setUses] = useState<Record<string, number>>(readUses);
   const [favs, setFavs] = useState<string[]>(readFavs);
   const useTemplate = useProjectStore((s) => s.useTemplate);
@@ -158,7 +157,7 @@ export default function TemplatesPage() {
 
   const openInEditor = (t: TemplateDef) => {
     recordUse(t.id);
-    setPreview(null);
+    setHovered(null);
     useTemplate(t.id);
   };
 
@@ -266,78 +265,63 @@ export default function TemplatesPage() {
       ) : (
         <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {shown.map((t) => (
-            <article key={t.id}>
-              <button
-                type="button"
-                onClick={() => setPreview(t)}
-                aria-label={`Preview template ${t.name}`}
-                className="relative block aspect-[9/16] w-full overflow-hidden rounded-xl text-left"
-                style={{ background: POSTER_GRADIENTS[t.category] }}
-              >
+            <article
+              key={t.id}
+              className={`relative ${hovered?.id === t.id ? 'z-30' : ''}`}
+              onMouseEnter={() => setHovered(t)}
+              onMouseLeave={() => setHovered(null)}
+            >
+              <div className="relative block aspect-[9/16] w-full overflow-hidden rounded-xl text-left">
+                <TemplateThumb def={t} className="absolute inset-0" />
                 {FEATURED_IDS.has(t.id) && (
                   <span className="absolute left-2 top-2 rounded bg-black/50 px-2 py-0.5 text-xs font-medium text-white">
                     Featured
                   </span>
                 )}
-                <span className="absolute inset-x-0 top-1/3 px-3 text-center text-lg font-bold leading-snug text-white/95">
-                  {t.name}
-                </span>
                 <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-2 pb-2 pt-6 text-xs text-white">
                   ✂ {uses[t.id] ?? 0} &nbsp;▦ {clipCountOf(t)}
                 </span>
-              </button>
+              </div>
               <p className="mt-2 truncate text-sm text-[#F2F2F2]">{t.name}</p>
-              <p className="truncate text-xs text-[#6E6E6E]">
-                {t.category} · {formatDuration(t.duration)}
-              </p>
+              {hovered?.id === t.id && (
+                <div className="absolute left-1/2 top-0 z-30 w-[360px] max-w-[90vw] -translate-x-1/2">
+                  <div className="relative aspect-[9/16] w-full overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/20">
+                    <TemplateThumb def={t} className="absolute inset-0" />
+                    <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-3 pb-3 pt-8">
+                      <span className="block text-base font-semibold text-white">{t.name}</span>
+                      <span className="mt-1 flex items-center justify-between text-xs text-white/90">
+                        <span>
+                          ◷ {formatDuration(t.duration)} &nbsp;▦ {clipCountOf(t)}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => toggleFav(t.id)}
+                          aria-label={favs.includes(t.id) ? 'Remove from favorites' : 'Add to favorites'}
+                          className="text-lg leading-none"
+                        >
+                          {favs.includes(t.id) ? '★' : '☆'}
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <TealButton onClick={() => openInEditor(t)}>Use template</TealButton>
+                    <span className="relative">
+                      <GrayButton onClick={() => openInEditor(t)}>Edit more</GrayButton>
+                      <span
+                        className="absolute -right-2 -top-2 rounded px-1 text-[10px] font-bold"
+                        style={{ background: '#A78BFA', color: '#1E1B4B' }}
+                        title="Included in this build — nothing is charged."
+                      >
+                        ◆ Pro
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              )}
             </article>
           ))}
         </div>
-      )}
-
-      {preview && (
-        <HomeModal onClose={() => setPreview(null)}>
-          <div className="flex flex-col items-center">
-            <div
-              className="relative aspect-[9/16] w-56 overflow-hidden rounded-xl"
-              style={{ background: POSTER_GRADIENTS[preview.category] }}
-            >
-              <span className="absolute inset-x-0 top-1/3 px-3 text-center text-xl font-bold leading-snug text-white/95">
-                {preview.name}
-              </span>
-              <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-3 pb-3 pt-8">
-                <span className="block text-base font-semibold text-white">{preview.name}</span>
-                <span className="mt-1 flex items-center justify-between text-xs text-white/90">
-                  <span>
-                    ◷ {formatDuration(preview.duration)} &nbsp;▦ {clipCountOf(preview)}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => toggleFav(preview.id)}
-                    aria-label={favs.includes(preview.id) ? 'Remove from favorites' : 'Add to favorites'}
-                    className="text-lg leading-none"
-                  >
-                    {favs.includes(preview.id) ? '★' : '☆'}
-                  </button>
-                </span>
-              </span>
-            </div>
-            <p className="mt-3 max-w-xs text-center text-sm text-[#A8A8A8]">{preview.description}</p>
-            <div className="mt-4 flex items-center gap-2">
-              <TealButton onClick={() => openInEditor(preview)}>Use template</TealButton>
-              <span className="relative">
-                <GrayButton onClick={() => openInEditor(preview)}>Edit more</GrayButton>
-                <span
-                  className="absolute -right-2 -top-2 rounded px-1 text-[10px] font-bold"
-                  style={{ background: '#A78BFA', color: '#1E1B4B' }}
-                  title="Included in this build — nothing is charged."
-                >
-                  ◆ Pro
-                </span>
-              </span>
-            </div>
-          </div>
-        </HomeModal>
       )}
     </div>
   );

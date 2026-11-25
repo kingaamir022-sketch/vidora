@@ -365,3 +365,208 @@ removals) plus the coordinator's verification round. Result:
   see `editor-inspector-text.png`).
 - **Live-site limits (unchanged):** offline Vosk/Piper models are not
   served from Pages; the Docker image was never built on this VM.
+
+## v1.0.2 fix round (2026-11-25, user-reported — D1–D16)
+
+The user opened the live site herself and reported every difference she
+found, screenshot by screenshot: (1) editor empty project, Media tab;
+(2) Templates page; (3) template-applied editor, Transitions tab;
+(4) zoomed-out editor; (5) Effects tab, Trending; (6) Filters /
+Transitions tile thumbnails. Each item was fixed, then re-verified with
+Playwright at 1920×1080, deviceScaleFactor 1, 100% browser zoom
+(`audit/capcut-fix/v102/final/final-compare.json` — all checks pass,
+0 page errors), plus the D13 functional sweep, the phase audits
+(4: 26/26, 5: 39/39, 6: 15/15, 7: 60/60, 8: 56/56, 9: 42/42) and the
+full suite (355/355).
+
+### The 150%-zoom finding (D1 root cause)
+
+Her screenshots showed left ~910 / preview ~225 / Details ~775. Those
+proportions match **150% browser zoom exactly** (610×1.5=915,
+520×1.5=780, preview (1280−610−520)=150 CSS px = 225 device px). At
+100% zoom the tree already measured CapCut's widths (left 610 /
+preview 790 / Details 520). Her zoomed-out screenshot confirmed the
+diagnosis: all content exists — purely a sizing/overflow problem.
+**Acceptance target is 1920×1080 at 100% zoom (Ctrl+0).** The fix
+keeps the 100% widths exact and adds responsive caps
+(`w-[min(610px,32vw)]` left, `w-[min(520px,28vw)]` Details; at 1280
+CSS px: 410 / 358, preview 512) plus 80px tab buttons so ~7 tabs show
++ `>` scroll like CapCut.
+
+### Items D1–D16 (all FIXED)
+
+- **D1 Layout proportions:** caps above; tab rail CapCut-width.
+  (`App.tsx`, `LeftTabs.tsx`, `PropertiesPanel.tsx`)
+- **D2 Preview panel:** header always "Player-Timeline 01"; the
+  clipped "Click to upload" button removed (upload lives in Media →
+  Import); play is a plain gray triangle; single-row bottom bar with
+  `min-w-0` / `overflow-hidden` guards. The empty canvas is now plain
+  dark — the renderer used to draw the project name + an import hint
+  on it (`renderFrame.ts`, no-clip branch). (`PreviewArea.tsx`,
+  `renderFrame.ts`)
+- **D3 Media Import box:** small 28px teal "+" with "Import" inline
+  right + gray subtext "Drag and drop videos, photos, and audio files
+  here"; whole box clickable (opens the file picker); "Browse files"
+  button removed. (`MediaBrowser.tsx`)
+- **D4 Media cards + sub-nav:** all 9 sub-nav rows, divider and the
+  Generate / AI avatars / Record cards fit at 1080p without scrolling
+  (they already did at 100% — the Import box shrink keeps it so).
+- **D5 Details panel (empty project):** Color space row only when the
+  project has ≥1 clip (empty #19/#04 have none; v05/v06 with a clip
+  have it); Arrange layers is text "Turned on"/"Turned off" (no
+  switch); Proxy note removed; Aspect "Original"; Resolution just
+  "Adapted"; Modify gray. (`PropertiesPanel.tsx`)
+- **D6 "Ratio" overlap:** preview bottom-bar overflow guards (D2);
+  inspector rows got `min-w-0` guards. No overlapping text remains at
+  1920 or 1280.
+- **D7 Top bar:** teal cloud icon removed; "…" menu removed, its
+  "Feature usage" item moved into Menu. Order verified vs #19.
+  (`TopBar.tsx`)
+- **D8 Empty timeline box:** film icon + "Drag material here and
+  start to create", left-aligned. (`TimelineShell.tsx`)
+- **D9 Timeline toolbar:** centre play + timecode removed (play lives
+  only in the preview bottom bar); keyboard-icon button under the
+  preview removed (Shortcuts via Menu → Shortcuts).
+- **D10 Full-editor regression:** all 11 tabs re-verified, no
+  regressions.
+- **D11 Templates hover preview:** hovering a card shows CapCut's
+  anchored enlarged preview (bigger visual + title + duration + clip
+  count + star, "Use template" teal + "Edit more" gray with Pro badge
+  beneath); the centred click-modal is deleted; card click does
+  nothing; card "Category · duration" sub-line removed.
+  (`home/TemplatesPage.tsx`)
+- **D12 Template-applied editor:** (1) preview renders the sticker
+  large with a single-row bottom bar after D1; (2) Transitions panel:
+  search on top, 2-column tile grid always visible (even with no
+  clip), description-first paragraph / hint banner / "Select a clip…"
+  removed; (3) inspector rail Basic/Background/Smart tools/Audio/
+  Animation/Speed + Close fully visible at 1920×1080 (was already
+  fitting at 100% — the cut-off was the 150% zoom); (4) "RatioBlend"
+  overlap fixed by the D2/D6 guards; (5) template application now
+  splits tracks — background → Video 1, text → Text 1, sticker/shape
+  → new "Stickers 1" track kind `'sticker'` (`trackKindSchema`).
+  (`TransitionsPanel.tsx`, `lib/templates.ts`, `schema/project.ts`)
+- **D13 Functional parity (every control actually works):** verified
+  end to end with Playwright — Import opens the file picker; play
+  advances the preview (00:00:00:00 → 00:00:01:17); Use template
+  applies (Video 1 / Text 1 / Stickers 1); Edit more opens the editor
+  with the template; transition tiles apply with working Duration
+  (1.5 persists) / Direction; inspector Mask (Circle, feather 0.5),
+  Color adjustment, Ratio (9:16 applies), Blend (`screen`), Opacity
+  (50), Scale (150), Position X (10), Rotate (15) all change the
+  selected clip and persist (preview canvas hash changes); timeline
+  split / undo / redo / delete / zoom all work (clips 2 → split 3 →
+  undo 2 → redo 3 → delete 2; zoom 24 → 80). No dead controls found in
+  scope; nothing needed an "honestly labelled" fallback. One probe
+  quirk, not an app bug: Playwright's `locator.click()` timed out on
+  the Ratio 9:16 menu option while a real mouse click at the same
+  coordinates works.
+- **D14 Empty effect options:** the "Applied effects" card sat below
+  the fold (panel scrollHeight 838 vs clientHeight 680) — applying an
+  effect looked like nothing happened. The card now renders ABOVE the
+  tile grid with scroll-into-view (Blur card bottom 268 after apply);
+  param-less GLSL effects (Sepia Deep, Duotone Violet, Duotone Ember,
+  Channel Swap, Kaleidoscope, Mirror Split, Sketch Pencil, CRT Screen)
+  say so honestly ("No additional settings — Intensity only"). Same
+  fix for the applied-filter card. All Effects categories render tiles
+  (Trending 12, Sale 8, Classic 14, Cutout 12, NEW 12, Hits 10).
+  (`EffectsPanel.tsx`, `FiltersPanel.tsx`)
+- **D15 Applying effects:** `addEffect` applied to whatever clip was
+  selected with no kind guard, so four effects silently stacked on a
+  selected sticker and showed nothing (✓ = "applied to the selected
+  clip" was accurate, the target was wrong — the compositor's effect
+  passes run only for video/image frames). Now: drag-and-drop an
+  effect tile onto a timeline clip or the preview applies it there;
+  every tile has a visible "+" apply button; tile click with a
+  sticker/text/audio clip selected redirects to the topmost video clip
+  under the playhead and says so; dropping on a sticker/text clip is
+  refused with a hint, never stacked. Same drag + "+" for transitions
+  (onto clip boundaries), filters, stickers, text presets. Manual
+  sticker/shape/background adds now land on "Stickers N" tracks,
+  never Text 1. (`projectStore.ts`, `lib/panelDrag.ts` (new),
+  `lib/timeline.ts`, `TimelineShell.tsx`, `PreviewArea.tsx`)
+- **D16 Filter / transition tile thumbnails:** CapCut's tiles are real
+  photo thumbnails — Vidora's were flat gradients (filters) and
+  single letters (transitions). Filter tiles now show a sample photo
+  with the filter actually applied (per-pixel LUT render,
+  `lib/tileThumbs.ts`); transition tiles show a real mid-transition
+  still rendered by the existing transition engine. Tile chrome
+  matches #25 (name below, star top-right, download bottom-right).
+  Decision, reported honestly: NO Pro badge (Vidora has no paid tier,
+  so it would mislead); the download icon is REAL — filter download
+  saves the actual `.cube` LUT, transition download saves the still
+  as PNG. (`FiltersPanel.tsx`, `TransitionsPanel.tsx`,
+  `lib/tileThumbs.ts`)
+
+### Found by the final self-audit (all FIXED in this round)
+
+- **Template thumbnails blank:** the editor Templates panel drew a
+  slot-diagram SVG (black for templates with no media slots) and the
+  dashboard page used a flat per-category gradient. New shared
+  `src/components/TemplateThumb.tsx` renders each template's real
+  first frame (procedural background + title text in its preset fill +
+  sticker/shape at its position) in both places; `resolveSticker`
+  (base design id → first palette variant) is now exported from
+  `lib/templates.ts` for it.
+- **Effects grid invisible with no clip selected:** the whole grid
+  lived inside `{clip && …}` — fixed, the grid always renders with
+  tiles disabled until a clip is selected, plus an honest hint.
+- **First-frame race:** a freshly applied template showed a black
+  paused preview until the next state change (first draw ran before a
+  procedural SVG finished loading). The draw now re-triggers on image
+  load (guarded per-SVG, no loop). (`PreviewArea.tsx`)
+- **"+" button covered tile names** ("+arm Glow", "+ora Warm"):
+  fixed with `pl-7` on the name span in Effects / Filters /
+  Transitions panels.
+- **Import box at 1280:** the overflow was `PanelShell.tsx`'s fixed
+  `w-[400px]` content column, not MediaBrowser — now fluid
+  (`min-w-0 w-full flex-1 max-w-[400px]`); Import right edge 397
+  inside the 410 column at 1280, unchanged 400px at 1920.
+- **Store `addTrack` naming:** a manually added sticker track was
+  named "Text N" — the store now maps `'sticker'` → `'Stickers'`.
+- **Audit harness (not app bugs):** Phase 5/6/7 scripts used the stale
+  `div.w-[610px]` left-column selector; Phase 5's manifest expectation
+  was stale at 1099 (real total 1102 — caption presets grew 20 → 23
+  in v1.0.1) and its transition/music counters predated the "+" /
+  download buttons and the AI sections sharing the Audio row
+  component. All updated to count the right things.
+- **Not a bug (checked, no change):** Effects "Hits" vs body "Pro"
+  do NOT share tiles — Light starts Glow Halo / Bloom Soft / Vignette
+  Soft, Stylize starts Edge Ink / Emboss / Sketch Pencil (catalog
+  counts verified in code; the earlier probe reading was a
+  category-switch artifact).
+
+### What remains (follow-ups, with reasons)
+
+- **Preview top-bar tools** ("Edit with AI", "Crop", "Auto reframe",
+  "CC", "Smart tools") were not exercised end to end in this round —
+  open question for the CapCut Web check (below).
+- **Export flow** not driven end to end in this round (Export menu
+  opens; the render dialog was not driven) — needs a dedicated export
+  verification pass.
+- **Ratio menu Playwright quirk:** `locator.click()` timed out on the
+  9:16 option while a real mouse click works — a 10-second human
+  click-through is the remaining check.
+- **W3's TimelineShell sticker-rename workaround** is now redundant
+  after the store fix — harmless, cleanup optional.
+- **Filters Tools entries** (Enhance, 4K, HD Upscale, Quality
+  Restoration, Night-view Color, HD Cam 2, HD Pet) open the honest
+  "AI tools" dialog; Text "AI text FX" is empty until a text clip is
+  selected (by design); Captions "Generate captions" is correctly
+  disabled without a transcript — all verified, no change.
+
+### Open questions for the CapCut Web check (cannot be determined from the 30 screenshots + 10 videos + VIDEOS-2026-11-25.md — do not guess)
+
+1. Preview top bar — "Edit with AI", "Crop", "Auto reframe", "CC",
+   "Smart tools": what does each open in CapCut desktop, and where do
+   their panels sit?
+2. Effects "Body effects" group (Pro / Hits / Clone / Glowing lines /
+   Stroke): do body effects apply to a detected body region or the
+   whole clip? Vidora applies them to the whole clip and says so
+   honestly in the panel.
+3. Filters "Tools" group (Enhance / 4K / HD Upscale / Quality
+   Restoration / Night-view Color / HD Cam 2 / HD Pet): filter
+   categories or separate AI-enhancement tools, and what do they open?
+4. Transitions "Pals" / "Overlay" / "Light" categories: do these exist
+   in CapCut desktop with these names, or are they Vidora-original
+   groupings?

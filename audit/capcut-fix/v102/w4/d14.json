@@ -1,0 +1,57 @@
+{
+  "beforeApply": {
+    "found": true,
+    "aboveGrid": true,
+    "rect": {
+      "bottom": 207,
+      "top": 166
+    },
+    "text": "Applied effectsNone yet.",
+    "visibleWithoutScroll": true
+  },
+  "classicTile": "BlurBlur",
+  "afterClassic": {
+    "found": true,
+    "aboveGrid": true,
+    "rect": {
+      "bottom": 268,
+      "top": 166
+    },
+    "text": "Applied effectsBlur×Intensity100%Radius (px)8",
+    "visibleWithoutScroll": true
+  },
+  "glowFound": true,
+  "afterGlow": {
+    "found": true,
+    "aboveGrid": true,
+    "rect": {
+      "bottom": 354,
+      "top": 166
+    },
+    "text": "Applied effectsBlur×Intensity100%Radius (px)8Glow Halo×Intensity100%Glow0.5",
+    "visibleWithoutScroll": true
+  },
+  "sepiaFound": true,
+  "afterSepia": {
+    "found": true,
+    "aboveGrid": false,
+    "rect": {
+      "bottom": 439,
+      "top": 166
+    },
+    "text": "Applied effectsBlur×Intensity100%Radius (px)8Glow Halo×Intensity100%Glow0.5Sepia Deep×Intensity100%No additional settings — Intensity only.",
+    "visibleWithoutScroll": true
+  },
+  "sepiaNote": true,
+  "filterTileFound": true,
+  "filterApplied": {
+    "aboveGrid": true,
+    "found": true,
+    "rect": {
+      "bottom": 224,
+      "top": 166
+    },
+    "visibleWithoutScroll": true
+  },
+  "pageErrors": []
+}

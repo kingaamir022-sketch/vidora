@@ -1,33 +1,28 @@
 # Vidora Phase 8 audit report
 
-Run: 2026-11-24T10:45:46.000Z
-Result: 61/61 checks passed, 0 failed.
+Run: 2026-11-25T12:46:37.011Z
+Result: 56/56 checks passed, 0 failed.
 
 - PASS [L-EXPORT] behaviour card docs/behavior/L-EXPORT.md exists
 - PASS [L-EXPORT-QUEUE] behaviour card docs/behavior/L-EXPORT-QUEUE.md exists
 - PASS [L-EXPORT-AUDIO] behaviour card docs/behavior/L-EXPORT-AUDIO.md exists
 - PASS [L-TEMPLATES-SLOTS] behaviour card docs/behavior/L-TEMPLATES-SLOTS.md exists
-- PASS [L-CLOUD] behaviour card docs/behavior/L-CLOUD.md exists
 - PASS [L-COLLAB] behaviour card docs/behavior/L-COLLAB.md exists
 - PASS [L-SHARE] behaviour card docs/behavior/L-SHARE.md exists
 - PASS [L-TEMPLATES-SLOTS] build-assets templates floor is 35
-- PASS [L-CLOUD] Dashboard Backups section renders
-- PASS [L-CLOUD] backup project picker lists projects — — Choose a project — | Sunset Coast — Sample Project
-- PASS [L-CLOUD] backup downloads a .vidora file — Sunset-Coast-Sample-Project-2026-11-24.vidora
-- PASS [L-CLOUD] bundle is a valid Vidora bundle (kind, version 0.9.0, sample project)
-- PASS [L-CLOUD] importing the bundle restores the project into the editor
 - PASS [L-EXPORT] test video is on the timeline (1 clip) — clips: 1
-- PASS [L-EXPORT] Export dialog opens
-- PASS [L-EXPORT] tab "Download" present
-- PASS [L-EXPORT] tab "Share for review" present
-- PASS [L-EXPORT] tab "Share as presentation" present
-- PASS [L-EXPORT] tab "Share on social" present
+- PASS [L-EXPORT] Export menu opens
+- PASS [L-EXPORT] menu item "Share for review" present
+- PASS [L-EXPORT] menu item "Share as presentation" present
+- PASS [L-EXPORT] menu item "Share on social" present
+- PASS [L-EXPORT] menu item "Download" present
+- PASS [L-EXPORT] Export panel opens at Download
 - PASS [L-EXPORT] resolution options include 480p and 4K
 - PASS [L-EXPORT] quality options include Fast / Recommended / High
 - PASS [L-EXPORT] format options include MP4 / WebM / MOV
 - PASS [L-EXPORT] H.265 honestly not offered
 - PASS [L-EXPORT] browser can encode at least one video codec — {"aac":false,"h264":true,"opus":true,"vp9":true,"vp8":true,"videoEncoder":true}
-- PASS [L-EXPORT] video export job completes (mp4 480p/30fps) — Untitled-Project.mp4 · Untitled ProjectdoneDone · 517 KB⚠ AAC is not available — this file will have no audio track.Download again
+- PASS [L-EXPORT] video export job completes (mp4 480p/30fps) — Untitled-Project.mp4 · Untitled ProjectdoneDone · 516 KB⚠ AAC is not available — this file will have no audio track.Download again
 - PASS [L-EXPORT] exported file downloads (.mp4) — Untitled-Project.mp4
 - PASS [L-EXPORT] video track is h264 (got h264) — video=h264 audio=none duration=6.000000
 - PASS [L-EXPORT] audio track is none (codec unavailable, honestly video-only) (got none) — video=h264 audio=none
@@ -51,13 +46,13 @@ Result: 61/61 checks passed, 0 failed.
 - PASS [L-COLLAB] comment marker appears on the timeline ruler
 - PASS [L-COLLAB] ruler click moves the playhead to ~4 s — timecode=00:00:04:05
 - PASS [L-COLLAB] clicking the marker seeks the playhead back to the comment (0:00) — timecode=00:00:00:00
+- PASS [L-SHARE] YouTube button opens the upload page — chrome-error://chromewebdata/
 - PASS [L-SHARE] social button "YouTube" present
 - PASS [L-SHARE] social button "TikTok" present
 - PASS [L-SHARE] social button "Facebook Page" present
 - PASS [L-SHARE] social button "Instagram Reels" present
 - PASS [L-SHARE] caption textarea present
 - PASS [L-SHARE] Free Schedule is disabled with a reason
-- PASS [L-SHARE] YouTube button opens the upload page — chrome-error://chromewebdata/
 - PASS [L-SHARE] Present now opens presentation mode with an exit bar
 - PASS [L-SHARE] Esc leaves presentation mode
 - PASS [L-TEMPLATES-SLOTS] Templates panel opens

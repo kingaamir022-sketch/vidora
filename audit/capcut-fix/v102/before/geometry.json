@@ -1,0 +1,287 @@
+{
+  "cloudIcon": true,
+  "uploadButton": {
+    "x": 936,
+    "y": 384,
+    "w": 138,
+    "h": 36
+  },
+  "previewHeader": "Untitled Project",
+  "previewBottomBar": {
+    "barH": 48,
+    "tcLines": 1,
+    "tcH": 16
+  },
+  "importBox": {
+    "circle": {
+      "w": 48,
+      "h": 48
+    },
+    "box": {
+      "x": 197,
+      "y": 124,
+      "w": 376,
+      "h": 176
+    }
+  },
+  "importLabelBelow": [
+    {
+      "y": 198,
+      "visible": true
+    }
+  ],
+  "mediaCardsVisible": {
+    "divider": true,
+    "dividerY": 316,
+    "dividerVisible": true,
+    "cards": [
+      {
+        "label": "Generate",
+        "found": false
+      },
+      {
+        "label": "AI avatars",
+        "found": false
+      },
+      {
+        "label": "Record",
+        "found": false
+      }
+    ]
+  },
+  "subNavRows": [
+    {
+      "label": "Import",
+      "found": true,
+      "inViewport": true,
+      "y": 120
+    },
+    {
+      "label": "Media",
+      "found": true,
+      "inViewport": true,
+      "y": 48
+    },
+    {
+      "label": "Timeline",
+      "found": true,
+      "inViewport": true,
+      "y": 176
+    },
+    {
+      "label": "Subprojects",
+      "found": true,
+      "inViewport": true,
+      "y": 204
+    },
+    {
+      "label": "Yours",
+      "found": true,
+      "inViewport": true,
+      "y": 232
+    },
+    {
+      "label": "Generate",
+      "found": true,
+      "inViewport": true,
+      "y": 260
+    },
+    {
+      "label": "Spaces",
+      "found": true,
+      "inViewport": true,
+      "y": 288
+    },
+    {
+      "label": "Library",
+      "found": true,
+      "inViewport": true,
+      "y": 316
+    },
+    {
+      "label": "Create",
+      "found": true,
+      "inViewport": true,
+      "y": 344
+    }
+  ],
+  "details": {
+    "name": {
+      "found": true,
+      "value": "Untitled Project",
+      "y": 100,
+      "visible": true
+    },
+    "path": {
+      "found": true,
+      "value": "Browser storage (this computer)",
+      "y": 141,
+      "visible": true
+    },
+    "colorSpace": {
+      "found": true,
+      "value": "Rec. 709 SDR",
+      "y": 182,
+      "visible": true
+    },
+    "imported": {
+      "found": true,
+      "value": "Stay in original location",
+      "y": 223,
+      "visible": true
+    },
+    "arrange": {
+      "found": true,
+      "value": "",
+      "y": 268,
+      "visible": true
+    },
+    "proxy": {
+      "found": true,
+      "value": "Turned off",
+      "y": 313,
+      "visible": true
+    },
+    "aspect": {
+      "found": true,
+      "value": "16:9",
+      "y": 373,
+      "visible": true
+    },
+    "resolution": {
+      "found": true,
+      "value": "Adapted (1920 × 1080)",
+      "y": 414,
+      "visible": true
+    },
+    "arrangeSwitch": true,
+    "proxyNote": true,
+    "modify": {
+      "bg": "rgb(0, 217, 217)",
+      "color": "rgb(6, 42, 42)"
+    }
+  },
+  "ratioOverlap": {
+    "ratioRect": {
+      "x": 1313,
+      "right": 1356
+    },
+    "detailsLeft": 1400,
+    "overflowsIntoDetails": false
+  },
+  "emptyBox": {
+    "textAlign": "start",
+    "justifyContent": "normal",
+    "hasIcon": false,
+    "x": 0,
+    "w": 1920
+  },
+  "toolbarCenter": {
+    "playInToolbar": true,
+    "timecodeInToolbar": true
+  },
+  "keyboardButton": true,
+  "geometry": {
+    "topbar": {
+      "x": 0,
+      "y": 0,
+      "w": 1920,
+      "h": 48
+    },
+    "leftColumn": {
+      "x": 0,
+      "y": 48,
+      "w": 610,
+      "h": 744
+    },
+    "properties": {
+      "x": 1400,
+      "y": 48,
+      "w": 520,
+      "h": 744
+    },
+    "preview": {
+      "x": 610,
+      "y": 48,
+      "w": 790,
+      "h": 744
+    },
+    "timeline": {
+      "x": 0,
+      "y": 792,
+      "w": 1920,
+      "h": 288
+    },
+    "tabRail": {
+      "x": 0,
+      "y": 48,
+      "w": 609,
+      "h": 64
+    },
+    "tabsVisible": [
+      "Media",
+      "Audio",
+      "Text",
+      "Stickers",
+      "Effects",
+      "Transitions",
+      "Captions",
+      "Filters",
+      "Adjustment",
+      "Templates",
+      "AI avatar"
+    ]
+  },
+  "templates": {
+    "chips": [
+      "For you",
+      "Pro",
+      "Daily life",
+      "Selfie",
+      "Velocity",
+      "AI",
+      "Lyrics",
+      "Relationship",
+      "Friendship",
+      "Family",
+      "Meme",
+      "School life",
+      "Travel",
+      "Anniversary",
+      "Fashion",
+      "Sports",
+      "Motivation"
+    ],
+    "cardCount": 35,
+    "firstCards": [
+      "Preview template Bold Opening",
+      "Preview template Minimal Intro",
+      "Preview template Neon Intro"
+    ]
+  },
+  "templatesHover": {
+    "useTemplateVisible": false,
+    "editMoreVisible": false,
+    "anyModal": false
+  },
+  "templatesClick": {
+    "modalOpen": true,
+    "useBtnText": "Use template"
+  },
+  "templateApplied": {
+    "clips": [
+      "Violet Dusk · 5.0s",
+      "Your Title Here · 4.4s",
+      "Star · Violet · 4.0s"
+    ],
+    "trackNames": [
+      "Text 1"
+    ]
+  },
+  "transitionsPanel": {
+    "hasDescription": false,
+    "searchFirst": null,
+    "tilesVisible": 38
+  },
+  "pageErrors": []
+}

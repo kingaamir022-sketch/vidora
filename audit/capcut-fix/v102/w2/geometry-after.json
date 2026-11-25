@@ -1,0 +1,465 @@
+{
+  "empty1920": {
+    "detailsWidth": 520,
+    "details": {
+      "name": {
+        "found": true,
+        "value": "Untitled Project",
+        "y": 100,
+        "visible": true
+      },
+      "path": {
+        "found": true,
+        "value": "Browser storage (this computer)",
+        "y": 141,
+        "visible": true
+      },
+      "colorSpace": {
+        "found": false
+      },
+      "imported": {
+        "found": true,
+        "value": "Stay in original location",
+        "y": 182,
+        "visible": true
+      },
+      "arrange": {
+        "found": true,
+        "value": "Turned on",
+        "y": 223,
+        "visible": true
+      },
+      "proxy": {
+        "found": true,
+        "value": "Turned off",
+        "y": 264,
+        "visible": true
+      },
+      "aspect": {
+        "found": true,
+        "value": "Original",
+        "y": 305,
+        "visible": true
+      },
+      "resolution": {
+        "found": true,
+        "value": "Adapted",
+        "y": 346,
+        "visible": true
+      },
+      "arrangeSwitch": false,
+      "proxyNote": false,
+      "modify": {
+        "bg": "rgb(61, 61, 61)",
+        "color": "rgb(242, 242, 242)"
+      },
+      "allRowsVisible": true,
+      "asideScrollH": 744,
+      "asideClientH": 744
+    },
+    "importBox": {
+      "box": {
+        "x": 197,
+        "y": 124,
+        "w": 376,
+        "h": 80
+      },
+      "circle": {
+        "w": 28,
+        "h": 28
+      },
+      "labelInline": true,
+      "labelY": 138,
+      "circleY": 138,
+      "hasBrowseFiles": false,
+      "pageHasBrowseFiles": false
+    },
+    "importClickOpensPicker": true,
+    "fit": {
+      "subNav": [
+        {
+          "label": "Import",
+          "found": true,
+          "inViewport": true,
+          "y": 120
+        },
+        {
+          "label": "Media",
+          "found": true,
+          "inViewport": true,
+          "y": 48
+        },
+        {
+          "label": "Timeline",
+          "found": true,
+          "inViewport": true,
+          "y": 176
+        },
+        {
+          "label": "Subprojects",
+          "found": true,
+          "inViewport": true,
+          "y": 204
+        },
+        {
+          "label": "Yours",
+          "found": true,
+          "inViewport": true,
+          "y": 232
+        },
+        {
+          "label": "Generate",
+          "found": true,
+          "inViewport": true,
+          "y": 260
+        },
+        {
+          "label": "Spaces",
+          "found": true,
+          "inViewport": true,
+          "y": 288
+        },
+        {
+          "label": "Library",
+          "found": true,
+          "inViewport": true,
+          "y": 316
+        },
+        {
+          "label": "Create",
+          "found": true,
+          "inViewport": true,
+          "y": 344
+        }
+      ],
+      "divider": {
+        "y": 220,
+        "visible": true
+      },
+      "cards": [
+        {
+          "label": "Generate",
+          "found": true,
+          "inViewport": true,
+          "y": 260,
+          "bottom": 288
+        },
+        {
+          "label": "AI avatars",
+          "found": true,
+          "inViewport": true,
+          "y": 313,
+          "bottom": 373
+        },
+        {
+          "label": "Record",
+          "found": true,
+          "inViewport": true,
+          "y": 381,
+          "bottom": 442
+        }
+      ]
+    }
+  },
+  "templateApplied": [
+    "Violet Dusk · 5.0s",
+    "Your Title Here · 4.4s",
+    "Star · Violet · 4.0s"
+  ],
+  "inspectorSticker": {
+    "found": true,
+    "rail": [
+      {
+        "label": "Basic",
+        "inViewport": true,
+        "y": 56,
+        "bottom": 103
+      },
+      {
+        "label": "Background",
+        "inViewport": true,
+        "y": 107,
+        "bottom": 153
+      },
+      {
+        "label": "Smart tools",
+        "inViewport": true,
+        "y": 157,
+        "bottom": 216
+      },
+      {
+        "label": "Animation",
+        "inViewport": true,
+        "y": 220,
+        "bottom": 267
+      },
+      {
+        "label": "Speed",
+        "inViewport": true,
+        "y": 271,
+        "bottom": 317
+      },
+      {
+        "label": "Close",
+        "inViewport": true,
+        "y": 737,
+        "bottom": 784
+      }
+    ],
+    "title": "Star · Violet",
+    "subtitle": "sticker · 4.00s · start 0.50s",
+    "mask": {
+      "text": "MaskNone",
+      "visible": true,
+      "y": 119
+    },
+    "colorAdj": {
+      "text": "Color adjustmentBasic, HSL, Curves",
+      "visible": true,
+      "y": 169
+    },
+    "hScroll": false,
+    "contentScrollW": 463,
+    "contentClientW": 463
+  },
+  "inspectorVideo": {
+    "found": true,
+    "rail": [
+      {
+        "label": "Basic",
+        "inViewport": true,
+        "y": 56,
+        "bottom": 103
+      },
+      {
+        "label": "Background",
+        "inViewport": true,
+        "y": 107,
+        "bottom": 153
+      },
+      {
+        "label": "Smart tools",
+        "inViewport": true,
+        "y": 157,
+        "bottom": 216
+      },
+      {
+        "label": "Animation",
+        "inViewport": true,
+        "y": 220,
+        "bottom": 267
+      },
+      {
+        "label": "Speed",
+        "inViewport": true,
+        "y": 271,
+        "bottom": 317
+      },
+      {
+        "label": "Close",
+        "inViewport": true,
+        "y": 737,
+        "bottom": 784
+      }
+    ],
+    "title": "Violet Dusk",
+    "subtitle": "sticker · 5.00s · start 0.00s",
+    "blend": {
+      "y": 219,
+      "bottom": 466,
+      "right": 1904,
+      "visible": true
+    },
+    "contentRight": 1920,
+    "hScroll": false,
+    "overflowers": [
+      "NAV.flex w-14 shrink-0 flex-col items-center gap-1 border-r py-2",
+      "BUTTON.flex w-12 flex-col items-center gap-0.5 rounded-md px-1 py-1",
+      "svg.[object SVGAnimatedString]",
+      "path.[object SVGAnimatedString]",
+      "circle.[object SVGAnimatedString]",
+      "circle.[object SVGAnimatedString]",
+      "circle.[object SVGAnimatedString]",
+      "SPAN.text-center"
+    ]
+  },
+  "detailsWithClips": {
+    "found": true,
+    "colorSpace": {
+      "value": "Rec. 709 SDR"
+    },
+    "rowOrder": [
+      "Name",
+      "Path",
+      "Color space",
+      "Imported media",
+      "Arrange layers ⓘ",
+      "Proxy ⓘ",
+      "Aspect ratio",
+      "Resolution"
+    ]
+  },
+  "empty1280": {
+    "detailsWidth": 358,
+    "details": {
+      "name": {
+        "found": true,
+        "value": "Untitled Project",
+        "y": 100,
+        "visible": true
+      },
+      "path": {
+        "found": true,
+        "value": "Browser storage (this computer)",
+        "y": 141,
+        "visible": true
+      },
+      "colorSpace": {
+        "found": false
+      },
+      "imported": {
+        "found": true,
+        "value": "Stay in original location",
+        "y": 182,
+        "visible": true
+      },
+      "arrange": {
+        "found": true,
+        "value": "Turned on",
+        "y": 223,
+        "visible": true
+      },
+      "proxy": {
+        "found": true,
+        "value": "Turned off",
+        "y": 264,
+        "visible": true
+      },
+      "aspect": {
+        "found": true,
+        "value": "Original",
+        "y": 305,
+        "visible": true
+      },
+      "resolution": {
+        "found": true,
+        "value": "Adapted",
+        "y": 346,
+        "visible": true
+      },
+      "arrangeSwitch": false,
+      "proxyNote": false,
+      "modify": {
+        "bg": "rgb(61, 61, 61)",
+        "color": "rgb(242, 242, 242)"
+      },
+      "allRowsVisible": true,
+      "asideScrollH": 464,
+      "asideClientH": 464
+    },
+    "importBox": {
+      "box": {
+        "x": 197,
+        "y": 124,
+        "w": 376,
+        "h": 80
+      },
+      "circle": {
+        "w": 28,
+        "h": 28
+      },
+      "labelInline": true,
+      "labelY": 138,
+      "circleY": 138,
+      "hasBrowseFiles": false,
+      "pageHasBrowseFiles": false
+    },
+    "importClickOpensPicker": true,
+    "fit": {
+      "subNav": [
+        {
+          "label": "Import",
+          "found": true,
+          "inViewport": true,
+          "y": 120
+        },
+        {
+          "label": "Media",
+          "found": true,
+          "inViewport": true,
+          "y": 48
+        },
+        {
+          "label": "Timeline",
+          "found": true,
+          "inViewport": true,
+          "y": 176
+        },
+        {
+          "label": "Subprojects",
+          "found": true,
+          "inViewport": true,
+          "y": 204
+        },
+        {
+          "label": "Yours",
+          "found": true,
+          "inViewport": true,
+          "y": 232
+        },
+        {
+          "label": "Generate",
+          "found": true,
+          "inViewport": true,
+          "y": 260
+        },
+        {
+          "label": "Spaces",
+          "found": true,
+          "inViewport": true,
+          "y": 288
+        },
+        {
+          "label": "Library",
+          "found": true,
+          "inViewport": true,
+          "y": 316
+        },
+        {
+          "label": "Create",
+          "found": true,
+          "inViewport": true,
+          "y": 344
+        }
+      ],
+      "divider": {
+        "y": 220,
+        "visible": true
+      },
+      "cards": [
+        {
+          "label": "Generate",
+          "found": true,
+          "inViewport": true,
+          "y": 260,
+          "bottom": 288
+        },
+        {
+          "label": "AI avatars",
+          "found": true,
+          "inViewport": true,
+          "y": 313,
+          "bottom": 373
+        },
+        {
+          "label": "Record",
+          "found": true,
+          "inViewport": true,
+          "y": 381,
+          "bottom": 442
+        }
+      ]
+    }
+  },
+  "pageErrors": []
+}

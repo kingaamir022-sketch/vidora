@@ -231,16 +231,25 @@ describe('templates (N-TEMPLATES, 25)', () => {
       expect(next).not.toBeNull();
       expect(next!.aspectRatio).toBe(t.ratio);
       expect(next!.id).not.toBe(SAMPLE_PROJECT.id);
-      expect(next!.tracks.length).toBe(3);
+      // v1.0.2 (W4, D-a): templates with sticker/shape items get a
+      // fourth "Stickers 1" track; templates without them stay at 3.
+      const hasStickerItems = t.items.some((i) => i.kind === 'sticker' || i.kind === 'shape');
+      expect(next!.tracks.length).toBe(hasStickerItems ? 4 : 3);
       expect(next!.media).toHaveLength(0);
-      const slotCount = next!.tracks[0].clips.length;
-      expect(slotCount).toBe(t.slots.length);
-      for (const clip of next!.tracks[0].clips) {
+      // Video 1 holds the slots (type 'video') plus background items
+      // (type 'sticker'), so the slot count must filter by type.
+      const videoClips = next!.tracks[0].clips.filter((c) => c.type === 'video');
+      expect(videoClips.length).toBe(t.slots.length);
+      for (const clip of videoClips) {
         expect(clip.type).toBe('video');
         expect(clip.name.startsWith('▶ ')).toBe(true);
       }
-      const overlayCount = next!.tracks[2].clips.length;
-      expect(overlayCount).toBe(t.items.length);
+      const backgroundCount = next!.tracks[0].clips.filter((c) => c.type === 'sticker').length;
+      expect(backgroundCount).toBe(t.items.filter((i) => i.kind === 'background').length);
+      // Overlay items (text + sticker/shape) live on the Text 1 and
+      // Stickers 1 tracks, counted across tracks.
+      const overlayCount = next!.tracks.slice(2).flatMap((tr) => tr.clips).length;
+      expect(overlayCount).toBe(t.items.filter((i) => i.kind === 'text' || i.kind === 'sticker' || i.kind === 'shape').length);
     }
   });
 

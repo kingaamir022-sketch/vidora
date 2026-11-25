@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { findClip } from '../lib/timeline';
 import { searchStickers, SHAPE_DEFS, shapeSvg, STICKER_CATALOG } from '../lib/stickers';
+import { encodePanelDrag, PANEL_DRAG_MIME } from '../lib/panelDrag';
 import { LOOP_ANIMATION_LABELS } from '../lib/text';
 import type { LoopAnimationKind } from '../schema/project';
 import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from './PanelShell';
@@ -114,7 +115,17 @@ export default function StickersPanel() {
         </SectionHeading>
         <div className="mt-2 grid grid-cols-2 gap-2">
           {results.slice(0, 64).map((sticker) => (
-            <div key={sticker.id} className="relative overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900 hover:border-[#00D9D9]">
+            <div
+              key={sticker.id}
+              draggable
+              onDragStart={(e) => {
+                const payload = encodePanelDrag({ id: sticker.id, kind: 'sticker' });
+                e.dataTransfer.setData(PANEL_DRAG_MIME, payload);
+                e.dataTransfer.setData('text/plain', payload);
+                e.dataTransfer.effectAllowed = 'copy';
+              }}
+              className="relative overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900 hover:border-[#00D9D9]"
+            >
               <button
                 type="button"
                 onClick={() => addStickerClip(sticker.id)}
@@ -124,6 +135,7 @@ export default function StickersPanel() {
               >
                 <img src={`data:image/svg+xml;utf8,${encodeURIComponent(sticker.svg)}`} alt={sticker.name} className="mx-auto h-16 w-16" draggable={false} />
               </button>
+              <button type="button" onClick={() => addStickerClip(sticker.id)} aria-label={`Add sticker ${sticker.name}`} title={`Add ${sticker.name}`} className="absolute bottom-1 left-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#00D9D9] text-sm font-bold leading-none text-[#062A2A] hover:bg-[#00E5E5]">+</button>
               {category === 'Trending' && (
                 <span className="absolute left-1 top-1 flex items-center rounded bg-[#7C3AED] px-1 py-0.5 text-[10px] leading-none text-white" title="Included in this build — nothing is charged.">◆</span>
               )}
@@ -135,7 +147,7 @@ export default function StickersPanel() {
         {results.length > 64 && <p className="mt-1 text-[11px] text-zinc-500">Showing 64 of {results.length} — refine your search to see more.</p>}
         {results.length === 0 && <p className="mt-2 text-[11px] text-zinc-500">No stickers match. Try another word.</p>}
         <p className="mt-2 text-[11px] leading-relaxed text-zinc-500">
-          Click a sticker to add it as a 3-second clip at the playhead. All {STICKER_CATALOG.length} stickers are original procedural SVG.
+          Click a sticker (or its +) to add it as a 3-second clip at the playhead, or drag it onto the preview or the timeline. All {STICKER_CATALOG.length} stickers are original procedural SVG.
         </p>
       </section>
 
@@ -174,6 +186,13 @@ export default function StickersPanel() {
             <button
               key={shape.id}
               type="button"
+              draggable
+              onDragStart={(e) => {
+                const payload = encodePanelDrag({ fill: shapeFill, id: shape.id, kind: 'shape' });
+                e.dataTransfer.setData(PANEL_DRAG_MIME, payload);
+                e.dataTransfer.setData('text/plain', payload);
+                e.dataTransfer.effectAllowed = 'copy';
+              }}
               onClick={() => addShapeClip(shape.id, shapeFill)}
               title={`${shape.name} — ${shape.description}`}
               aria-label={`Add shape ${shape.name}`}

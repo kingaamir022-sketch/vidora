@@ -3,9 +3,11 @@ import { LEFT_TABS, type LeftTab } from '../store/projectStore';
 import { IconChevronLeft, IconChevronRight, TAB_ICONS } from './icons';
 
 /**
- * Tab rail (CapCut-fix 2026-11-25, C1–C6). HORIZONTAL row at the top
- * of the left column only (~610px wide at 1920), ~64px tall, icon ABOVE
- * label. It SCROLLS: ">" arrow at the right when tabs overflow, "<" at
+ * Tab rail (CapCut-fix 2026-11-25, C1–C6; v1.0.2 D1). HORIZONTAL row
+ * at the top of the left column only (~610px wide at 1920), ~64px
+ * tall, icon ABOVE label. Tabs are CapCut-width (~80px each, so ~7
+ * show through "Fi" + ">" at 1920, exactly as in CapCut #19).
+ * It SCROLLS: ">" arrow at the right when tabs overflow, "<" at
  * the left when scrolled. Active tab: teal icon + teal text.
  * Full 11-tab order: Media, Audio, Text, Stickers, Effects,
  * Transitions, Captions, Filters, Adjustment, Templates, AI avatar.
@@ -60,7 +62,7 @@ export default function LeftTabs({
               role="tab"
               aria-selected={active}
               onClick={() => onSelect(tab)}
-              className={`flex w-[62px] shrink-0 flex-col items-center justify-center gap-1 border-b-2 px-1 text-[11px] leading-none ${
+              className={`flex w-[80px] shrink-0 flex-col items-center justify-center gap-1 border-b-2 px-1 text-[11px] leading-none ${
                 active ? 'border-[#00D9D9] text-[#00D9D9]' : 'border-transparent text-[#A8A8A8] hover:text-[#F2F2F2]'
               }`}
             >

@@ -23,7 +23,6 @@ import ShortcutsPanel from './components/ShortcutsPanel';
 import TimelineShell from './components/TimelineShell';
 import TopBar from './components/TopBar';
 import SettingsDialog from './components/SettingsDialog';
-import { IconKeyboard } from './components/icons';
 import { startAutosave, useProjectStore } from './store/projectStore';
 import { projectDuration } from './lib/timeline';
 import { actionForCombo, eventToCombo } from './lib/shortcuts';
@@ -32,8 +31,12 @@ import { isRtl } from './lib/i18n';
 /**
  * Vidora editor shell (CapCut-fix 2026-11-25, v1.0.1).
  * Layout: 48px TopBar, then a row — left column (horizontal 64px tab
- * rail on top + active panel + keyboard icon at the bottom), preview,
+ * rail on top + active panel; NO keyboard icon at the bottom — CapCut
+ * has none, shortcuts open from Menu → Shortcuts), preview,
  * Details inspector — then the timeline. The 11th tab is "AI avatar".
+ * v1.0.2 (D1): left column is min(610px, 32vw) so the 610/520 widths
+ * measured at 1920 stay exact there but the layout survives narrower
+ * viewports (at 1280 CSS px: 410px left, preview ~512px).
  * The onboarding tour and the 10-step user guide are REMOVED (Y1/Y2);
  * Help Center replaces the guide. Local auth is REMOVED (Y3) — no
  * account chip and no read-only gate anywhere in this shell.
@@ -197,7 +200,7 @@ export default function App() {
       {exportMenu && <ExportMenu section={exportMenu} onClose={() => setExportMenu(null)} />}
       <div className="flex min-h-0 flex-1">
         {showSidebar && (
-          <div className="flex w-[610px] shrink-0 flex-col border-r border-[#2E2E2E] bg-[#141414]">
+          <div className="flex w-[min(610px,32vw)] shrink-0 flex-col border-r border-[#2E2E2E] bg-[#141414]">
             <LeftTabs activeTab={activeTab} onSelect={setActiveTab} />
             <div className="min-h-0 flex-1">
               {activeTab === 'Media' && <MediaBrowser onSelectTab={setActiveTab} />}
@@ -211,17 +214,6 @@ export default function App() {
               {activeTab === 'Adjustment' && <AdjustmentPanel />}
               {activeTab === 'Templates' && <TemplatesPanel />}
               {activeTab === 'AI avatar' && <AIAvatarPanel />}
-            </div>
-            <div className="flex h-10 shrink-0 items-center justify-center border-t border-[#2E2E2E]">
-              <button
-                type="button"
-                onClick={() => setShortcutsOpen(true)}
-                title="Keyboard shortcuts"
-                aria-label="Keyboard shortcuts"
-                className="rounded-md p-1.5 text-[#A8A8A8] hover:bg-[#242424] hover:text-[#F2F2F2]"
-              >
-                <IconKeyboard size={20} />
-              </button>
             </div>
           </div>
         )}

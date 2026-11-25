@@ -1,0 +1,134 @@
+{
+  "emptyBox": {
+    "textAlign": "left",
+    "justifyContent": "flow-start",
+    "hasIcon": true,
+    "x": 32,
+    "w": 1856,
+    "iconX": 49,
+    "textLeft": 81
+  },
+  "toolbar": {
+    "playInToolbar": false,
+    "timecodeInToolbar": false,
+    "buttons": [
+      "Add track",
+      "Select",
+      "Undo",
+      "Redo",
+      "Split at playhead",
+      "Delete selected clip",
+      "Reverse clip",
+      "Crop selected clip",
+      "Flip horizontal",
+      "Freeze frame",
+      "Transcript-based editing",
+      "Split scene",
+      "Create from reference",
+      "Download clip",
+      "Voiceover",
+      "Attach",
+      "Preview axis",
+      "Zoom out",
+      "Zoom in",
+      "Fullscreen preview",
+      "Collapse timeline panel"
+    ]
+  },
+  "previewBottomBar": {
+    "timecodePresent": true,
+    "playOutsideToolbar": true
+  },
+  "transitionsEmpty": {
+    "searchVisible": true,
+    "tilesVisible": 45,
+    "hasHintBanner": false,
+    "hasSelectClipText": false,
+    "hasDescription": false
+  },
+  "templates": {
+    "chips": [
+      "For you",
+      "Pro",
+      "Daily life",
+      "Selfie",
+      "Velocity",
+      "AI",
+      "Lyrics",
+      "Relationship",
+      "Friendship",
+      "Family",
+      "Meme",
+      "School life",
+      "Travel",
+      "Anniversary",
+      "Fashion",
+      "Sports",
+      "Motivation"
+    ],
+    "cardCount": 35,
+    "firstCards": [
+      "Bold Opening",
+      "Minimal Intro",
+      "Neon Intro"
+    ],
+    "durationSubLines": 0
+  },
+  "templatesHover": {
+    "useTemplateVisible": true,
+    "editMoreVisible": true,
+    "anyModal": false,
+    "cardW": 300,
+    "popupW": 360,
+    "popupX": 292,
+    "cardX": 322,
+    "popupLargerThanCard": true,
+    "popupOverlapsCard": true
+  },
+  "templatesClick": {
+    "modalOpen": false,
+    "dimOverlay": false
+  },
+  "templateApplied": {
+    "clips": [
+      "Violet Dusk · 5.0s",
+      "Your Title Here · 4.4s",
+      "Star · Violet · 4.0s"
+    ],
+    "trackNames": [
+      "Video 1",
+      "Text 1",
+      "Stickers 1"
+    ]
+  },
+  "appliedTransitions": {
+    "barH": 48,
+    "tcLines": 1,
+    "tcH": 16
+  },
+  "appliedSeek": {
+    "timecode": "00:00:03:15 / 00:00:05:00",
+    "canvas": true,
+    "px": [
+      [
+        149,
+        154,
+        164
+      ],
+      [
+        106,
+        76,
+        233
+      ],
+      [
+        23,
+        163,
+        215
+      ]
+    ],
+    "starPx": 11803,
+    "starVisible": true,
+    "nonBlack": true
+  },
+  "pageErrors": []
+}

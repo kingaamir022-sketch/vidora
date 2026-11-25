@@ -22,14 +22,19 @@ import {
   disposeRenderPool,
   formatTimecode,
   renderTimelineFrame,
+  stickerElementFor,
   type RenderPool,
 } from '../lib/renderFrame';
+import { decodePanelDrag } from '../lib/panelDrag';
 
 /** Center preview (Phase 2): canvas compositor with keyframes, effects,
  * LUT, colour, masks, transitions, PiP / split-screen and backgrounds.
- * CapCut-fix (P1–P4, v1.0.1): title "Player-Timeline 01" + ≡ menu,
- * bottom bar (timecode / play / Full / fit / Ratio / fullscreen),
- * floating clip toolbar, preview axis, hand/move tools, empty state. */
+ * CapCut-fix (P1–P4, v1.0.1; v1.0.2 D2): title is ALWAYS the
+ * constant "Player-Timeline 01" (never the project name) + ≡ menu,
+ * bottom bar (timecode / plain play icon / Full / fit / Ratio /
+ * fullscreen), floating clip toolbar, preview axis, hand/move tools.
+ * No "Click to upload" overlay — CapCut #19 has none; drag-drop
+ * still works on the section and the hidden file input stays. */
 export default function PreviewArea() {
   const project = useProjectStore((s) => s.project);
   const aspectRatio = useProjectStore((s) => s.aspectRatio);
@@ -43,6 +48,12 @@ export default function PreviewArea() {
   const setActiveTab = useProjectStore((s) => s.setActiveTab);
   const setAiToolsOverlay = useProjectStore((s) => s.setAiToolsOverlay);
   const addMediaFiles = useProjectStore((s) => s.addMediaFiles);
+  const addEffect = useProjectStore((s) => s.addEffect);
+  const setBuiltinLut = useProjectStore((s) => s.setBuiltinLut);
+  const setTransition = useProjectStore((s) => s.setTransition);
+  const addStickerClip = useProjectStore((s) => s.addStickerClip);
+  const addShapeClip = useProjectStore((s) => s.addShapeClip);
+  const addTextClip = useProjectStore((s) => s.addTextClip);
   const splitAtPlayhead = useProjectStore((s) => s.splitAtPlayhead);
   const copySelected = useProjectStore((s) => s.copySelected);
   const pasteClipboard = useProjectStore((s) => s.pasteClipboard);
@@ -83,6 +94,10 @@ export default function PreviewArea() {
     return renderPoolRef.current;
   };
   const [videoReady, setVideoReady] = useState(false);
+  // v1.0.2 (W4, D-b): re-draw trigger for sticker images that finish
+  // loading AFTER the first frame was drawn (see the draw effect).
+  const [, setImgTick] = useState(0);
+  const stickerRedrawRef = useRef(new Set<string>());
   const prevPlayheadRef = useRef(0);
   const drawingStrokeRef = useRef<{ x: number; y: number }[] | null>(null);
 
@@ -298,6 +313,28 @@ export default function PreviewArea() {
       isCurrent: () => drawSeqRef.current === seq,
       maskEditing,
       showBadges: true,
+    }).then(() => {
+      // v1.0.2 (W4, D-b): a freshly applied template shows a BLACK
+      // preview while paused until the next state change — the first
+      // draw runs before a procedural sticker SVG finishes loading
+      // (stickerElementFor returns null until complete) and nothing
+      // re-triggers the draw. When a visible sticker's image was not
+      // ready for this frame, redraw once it loads (once per SVG, so
+      // this can never loop).
+      if (drawSeqRef.current !== seq) return;
+      for (const track of project.tracks) {
+        if (track.hidden || track.kind === 'audio') continue;
+        for (const clip of track.clips) {
+          if (!clip.sticker || playhead < clip.start || playhead >= clip.start + clip.duration) continue;
+          const svg = clip.sticker.svg;
+          if (stickerRedrawRef.current.has(svg)) continue;
+          const img = stickerElementFor(pool, svg);
+          if (!img) continue;
+          stickerRedrawRef.current.add(svg);
+          if (img.complete && img.naturalWidth > 0) setImgTick((t) => t + 1);
+          else img.addEventListener('load', () => setImgTick((t) => t + 1), { once: true });
+        }
+      }
     });
     void videoReady;
   });
@@ -415,10 +452,6 @@ export default function PreviewArea() {
     return Math.abs(best.ratio - r) < 0.02 ? best.value : 'custom';
   };
 
-  // CapCut-fix (2026-11-25, P3): the upload prompt shows only when the
-  // timeline is completely empty — a text-only timeline still renders
-  // its clips on the canvas, so media presence alone is not the test.
-  const hasClips = project?.tracks.some((t) => t.clips.length > 0) ?? false;
   const selectedClip = selectedClipIds.length > 0 && project ? findClip(project, selectedClipIds[0])?.clip ?? null : null;
 
   const clipMenuItem = (label: string, shortcut: string, onClick: () => void) => (
@@ -436,6 +469,33 @@ export default function PreviewArea() {
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => {
         e.preventDefault();
+        // v1.0.2 (W4, D15): panel-tile drops — an effect/filter goes to
+        // the selected clip (redirecting to the video under the
+        // playhead when the selection can't show it); a transition goes
+        // to the topmost video clip under the playhead; a sticker /
+        // shape / text tile adds a clip at the playhead.
+        const payload = decodePanelDrag(e.dataTransfer);
+        if (payload) {
+          if (payload.kind === 'effect') void addEffect(payload.id);
+          else if (payload.kind === 'filter') void setBuiltinLut(payload.id);
+          else if (payload.kind === 'transition') {
+            const top = (() => {
+              let found: Clip | null = null;
+              for (const track of project?.tracks ?? []) {
+                if (track.hidden || track.kind === 'audio') continue;
+                for (const clip of track.clips) {
+                  if (clip.type !== 'video' && clip.type !== 'image') continue;
+                  if (playhead >= clip.start && playhead < clip.start + clip.duration) found = clip;
+                }
+              }
+              return found;
+            })();
+            if (top) setTransition({ direction: 'right', duration: 0.5, type: payload.id as never }, top.id);
+          } else if (payload.kind === 'sticker') addStickerClip(payload.id);
+          else if (payload.kind === 'shape') addShapeClip(payload.id, payload.fill ?? '#7C3AED');
+          else addTextClip(payload.id);
+          return;
+        }
         if (e.dataTransfer.files.length > 0) void addMediaFiles(e.dataTransfer.files);
       }}
     >
@@ -452,7 +512,7 @@ export default function PreviewArea() {
       />
       {/* CapCut-fix (P1): preview title top-left, ≡ menu top-right. */}
       <div className="flex h-10 shrink-0 items-center justify-between px-3">
-        <span className="truncate text-[13px] font-medium text-[#F2F2F2]">{project?.name ?? 'Player-Timeline 01'}</span>
+        <span className="truncate text-[13px] font-medium text-[#F2F2F2]">Player-Timeline 01</span>
         <div className="relative">
           <button
             type="button"
@@ -519,19 +579,20 @@ export default function PreviewArea() {
           {previewAxis && (
             <div className="pointer-events-none absolute top-0 bottom-0 left-1/2 w-px bg-[#00D9D9]" aria-label="Preview axis" />
           )}
-          {!hasClips && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/70">
-              <button type="button" onClick={() => fileInputRef.current?.click()} className="rounded-lg bg-[#00D9D9] px-5 py-2 text-sm font-semibold text-[#062A2A]">
-                Click to upload
-              </button>
-              <span className="text-xs text-[#A8A8A8]">Or drag and drop file here</span>
-            </div>
-          )}
+          {/* v1.0.2 D2: no upload overlay — CapCut shows an empty
+              canvas here; files arrive via drag-drop or Media → Import.
+              The hidden file input above stays for drag-drop. */}
         </div>
 
-        {/* CapCut-fix (P3): floating toolbar when a clip is selected. */}
+        {/* CapCut-fix (P3): floating toolbar when a clip is selected.
+            v1.0.2 D2: constrained to the preview width — it wraps to a
+            second row on narrow previews instead of overflowing.
+            `w-max` is load-bearing: an abs-pos box with left-1/2 would
+            otherwise shrink-to-fit at half the preview width and wrap
+            even at 1920; max-content lets it stay one row until the
+            max-w cap actually bites. */}
         {selectedClip && (
-          <div className="absolute top-2 left-1/2 z-30 flex -translate-x-1/2 items-center gap-1 rounded-lg border border-[#3D3D3D] bg-[#1E1E1E]/95 px-1 py-1 shadow-xl">
+          <div className="absolute top-2 left-1/2 z-30 flex w-max max-w-[calc(100%-16px)] -translate-x-1/2 flex-wrap items-center justify-center gap-1 rounded-lg border border-[#3D3D3D] bg-[#1E1E1E]/95 px-1 py-1 shadow-xl">
             <button type="button" onClick={() => setAiToolsOverlay('enhance')} className="flex items-center gap-1 rounded-md px-2 py-1 text-xs hover:bg-[#242424]" title="Edit with AI">
               <IconSparkles size={14} /> Edit with AI
             </button>
@@ -574,15 +635,19 @@ export default function PreviewArea() {
         )}
       </div>
 
-      {/* CapCut-fix (P2): bottom bar — timecode left, play center, Full / fit / Ratio / fullscreen right. Seek stays on the timeline ruler. */}
-      <div className="flex h-12 shrink-0 items-center justify-between border-t border-[#2E2E2E] bg-[#141414] px-3">
-        <span className="font-mono text-xs text-[#A8A8A8]" aria-label="Timecode">
+      {/* CapCut-fix (P2): bottom bar — timecode left, play center, Full / fit / Ratio / fullscreen right. Seek stays on the timeline ruler.
+          v1.0.2 D2: min-w-0 + overflow-hidden + whitespace-nowrap guards
+          so the bar can NEVER overflow into the Details panel (D6 root
+          cause); play is a PLAIN gray triangle icon button — CapCut #19
+          has no teal circle. Order verified vs #19. */}
+      <div className="flex h-12 min-w-0 shrink-0 items-center justify-between gap-2 overflow-hidden border-t border-[#2E2E2E] bg-[#141414] px-3">
+        <span className="min-w-0 shrink-0 truncate font-mono text-xs whitespace-nowrap text-[#A8A8A8]" aria-label="Timecode">
           {formatTimecode(playhead, fps)} / {formatTimecode(duration, fps)}
         </span>
-        <button type="button" onClick={() => setPlaying(!playing)} className="rounded-full bg-[#00D9D9] p-2.5 text-[#062A2A]" aria-label={playing ? 'Pause' : 'Play'} title={playing ? 'Pause (Space)' : 'Play (Space)'}>
+        <button type="button" onClick={() => setPlaying(!playing)} className="shrink-0 rounded-md p-2 text-[#A8A8A8] hover:bg-[#242424] hover:text-[#F2F2F2]" aria-label={playing ? 'Pause' : 'Play'} title={playing ? 'Pause (Space)' : 'Play (Space)'}>
           {playing ? <IconPause size={18} /> : <IconPlay size={18} />}
         </button>
-        <div className="flex items-center gap-1">
+        <div className="flex min-w-0 shrink-0 items-center gap-1 overflow-hidden whitespace-nowrap">
           <button
             type="button"
             onClick={() => { setViewZoom((z) => (z === 1 ? 1.5 : 1)); setPan({ x: 0, y: 0 }); }}

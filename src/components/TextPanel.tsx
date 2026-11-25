@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { findClip } from '../lib/timeline';
 import { LOOP_ANIMATION_LABELS, TEXT_PRESET_CATEGORIES, TEXT_STYLE_PRESETS } from '../lib/text';
+import { encodePanelDrag, PANEL_DRAG_MIME } from '../lib/panelDrag';
 import { animationKindSchema, type LoopAnimationKind } from '../schema/project';
 import PanelShell, { PanelSearch, SectionHeading, SubNavItem } from './PanelShell';
 
@@ -128,7 +129,17 @@ export default function TextPanel() {
               </div>
               <div className="mt-1 space-y-1">
                 {shown.map((preset) => (
-                  <div key={preset.id} className="flex items-stretch gap-1">
+                  <div
+                    key={preset.id}
+                    draggable
+                    onDragStart={(e) => {
+                      const payload = encodePanelDrag({ id: preset.id, kind: 'text' });
+                      e.dataTransfer.setData(PANEL_DRAG_MIME, payload);
+                      e.dataTransfer.setData('text/plain', payload);
+                      e.dataTransfer.effectAllowed = 'copy';
+                    }}
+                    className="flex items-stretch gap-1"
+                  >
                     <button
                       type="button"
                       onClick={() => applyPreset(preset.id)}
@@ -147,7 +158,7 @@ export default function TextPanel() {
             </div>
           );
         })}
-        <p className="text-[11px] text-zinc-500">Click a style to apply it to the selected text clip — or to add a new text clip with that style when nothing is selected. All styles are original Vidora designs.</p>
+        <p className="text-[11px] text-zinc-500">Click a style to apply it to the selected text clip — or to add a new text clip with that style when nothing is selected. Drag a style onto the preview or the timeline to add it there. All styles are original Vidora designs.</p>
       </section>
 
       {isText && clip && (

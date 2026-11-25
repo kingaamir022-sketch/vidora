@@ -1,0 +1,118 @@
+{
+  "sampleOpened": true,
+  "selectedClip": [
+    "Sunset Coast — Title Card · 10.0s"
+  ],
+  "effects": {
+    "subNavButtons": [
+      "Media",
+      "Audio",
+      "Text",
+      "Stickers",
+      "Effects",
+      "Transitions",
+      "Captions",
+      "Filters",
+      "Adjustment",
+      "Templates",
+      "AI avatar",
+      "Favorites",
+      "Trending",
+      "Sale",
+      "Classic",
+      "Cutout",
+      "NEW",
+      "Hits",
+      "Trending",
+      "Pro",
+      "Hits",
+      "Clone",
+      "Glowing lines",
+      "Stroke",
+      "Warm Glow",
+      "★",
+      "Cool Dusk",
+      "★",
+      "Mono Ink",
+      "★",
+      "Sepia Deep",
+      "★",
+      "Duotone Violet",
+      "★",
+      "Duotone Ember",
+      "★",
+      "Posterize Pop",
+      "★",
+      "Solarize",
+      "★",
+      "Channel Swap",
+      "★",
+      "Saturation Surge",
+      "★",
+      "Contrast Punch",
+      "★",
+      "Hue Drift",
+      "★"
+    ],
+    "Trending": 12,
+    "Sale": 8,
+    "Classic": 14,
+    "Cutout": 12,
+    "NEW": 12,
+    "Hits": 10,
+    "Body effects": "NO BUTTON",
+    "Video effects": "NO BUTTON",
+    "applyAttempt": 10,
+    "paramsPanel": {
+      "slidersInLeftColumn": 0,
+      "panelTextLength": 350,
+      "panelSnippet": "MediaAudioTextStickersEffectsTransitionsCaptionsFiltersAdjustmentTemplatesAI avatarFavoritesVideo effectsTrendingSaleClassicCutoutNEWHitsBody effectsTrendingProHitsCloneGlowing linesStrokeSearchVideo effects — HitsGlow Halo★Bloom Soft★Vignette Soft★Light Leak★Sun Rays★Sparkle Dust★Bokeh Dream★Haze M"
+    }
+  },
+  "panels": {
+    "Filters": {
+      "buttons": 42,
+      "textLength": 564,
+      "snippet": "MediaAudioTextStickersEffectsTransitionsCaptionsFiltersAdjustmentTemplatesAI avatarFavoritesFiltersFeaturedNEWHitsLifeLandscapePortraitMonoToolsEnhance4KHD UpscaleQuality RestorationNight-view ColorHD"
+    },
+    "Stickers": {
+      "buttons": 37,
+      "textLength": 418,
+      "snippet": "MediaAudioTextStickersEffectsTransitionsCaptionsFiltersAdjustmentTemplatesAI avatarYoursFavoritesStickersTrendingSaleClassicNEWAnimal MemeSquadShapesSearchTrending (32)◆★⭳◆★⭳◆★⭳◆★⭳◆★⭳◆★⭳◆★⭳◆★⭳◆★⭳◆★⭳◆★"
+    },
+    "Text": {
+      "buttons": 36,
+      "textLength": 1630,
+      "snippet": "MediaAudioTextStickersEffectsTransitionsCaptionsFiltersAdjustmentTemplatesAI avatarTemplatesEffectsAI text FXSearchAllCommercialBasicAdd headingAdd body textAdds a 3-second text clip at the playhead, "
+    },
+    "Captions": {
+      "buttons": 27,
+      "textLength": 1383,
+      "snippet": "MediaAudioTextStickersEffectsTransitionsCaptionsFiltersAdjustmentTemplatesAI avatarAuto captionsTemplatesFavoritesTrendingClassicNEWHitsWordAuto lyricsAuto captionsLanguageEnglishUrduHindiArabicSpanis"
+    },
+    "Adjustment": {
+      "buttons": 20,
+      "textLength": 454,
+      "snippet": "MediaAudioTextStickersEffectsTransitionsCaptionsFiltersAdjustmentTemplatesAI avatar+ Add adjustmentYoursBrand presetsLUTSunset Coast — Sample Project's space↻⚙SearchBrand presetsNo presets yet. Select"
+    },
+    "Audio": {
+      "buttons": 44,
+      "textLength": 5229,
+      "snippet": "MediaAudioTextStickersEffectsTransitionsCaptionsFiltersAdjustmentTemplatesAI avatarFavoritesMusicSound effectsSearchcalmelectronicambientpopbeathappyCategoriesView allAll categoriesRecommendedVidora O"
+    },
+    "Templates": {
+      "buttons": 27,
+      "textLength": 3092,
+      "snippet": "MediaAudioTextStickersEffectsTransitionsCaptionsFiltersAdjustmentTemplatesAI avatarYoursFavoritesTemplatesFor youProDaily lifeSelfieVelocityAILyricsSearchOrientationAll9:1616:91:1ClipsNo limit12–34+Du"
+    },
+    "AI avatar": {
+      "buttons": 30,
+      "textLength": 502,
+      "snippet": "MediaAudioTextStickersEffectsTransitionsCaptionsFiltersAdjustmentTemplatesAI avatarAvatar library ◆Photo to avatar ◆Fashion model … ◆Video translator ◆AI dialogue sce… ◆1Choose avatar—2Add speechAI av"
+    }
+  },
+  "pageErrors": [
+    "console: Error: Uncaught ReferenceError: IconKeyboard is not defined",
+    "ReferenceError: IconKeyboard is not defined"
+  ]
+}

@@ -1,17 +1,21 @@
 import { useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
-import { IconChevronDown, IconCloud, IconExport, IconLayout, IconPro, IconShare } from './icons';
+import { IconChevronDown, IconExport, IconLayout, IconPro, IconShare } from './icons';
 
 /**
- * Top bar (CapCut-fix 2026-11-25, B1–B6). 48px, near-black #0A0A0A.
- * Order: [Vidora logo+wordmark] [Menu ⌄] … [project name CENTERED,
- * editable] … [layout icons] [cloud autosave icon] [Pro ◆] [Share]
- * [Export teal]. No save-state text, no undo/redo (they live in the
- * timeline toolbar), no aspect-ratio select (ratio lives in the
- * preview "Ratio" button + Details + Modify), no "⌨ Shortcuts"
- * button (shortcuts open from the keyboard icon at the bottom of the
- * left column), no account chip or read-only banner (auth removed, Y3).
- * Window controls: N/A (browser chrome).
+ * Top bar (CapCut-fix 2026-11-25, B1–B6; v1.0.2 D7). 48px, near-black #0A0A0A.
+ * Order (verified vs CapCut #19): [Vidora logo+wordmark] [Menu ⌄] …
+ * [project name CENTERED, editable] … [layout icons] [Pro ◆] [Share]
+ * [Export teal]. No cloud autosave icon (D7), no "…" more menu (D7 —
+ * its unique "Feature usage" item moved into the Menu dropdown; the
+ * other "…" items already exist elsewhere: Help/Settings in Menu,
+ * sidebar/timeline toggles in the layout icons). No save-state text,
+ * no undo/redo (they live in the timeline toolbar), no aspect-ratio
+ * select (ratio lives in the preview "Ratio" button + Details +
+ * Modify). Shortcuts open from Menu → Shortcuts (the keyboard icon
+ * at the bottom of the left column is REMOVED, D9). No account chip
+ * or read-only banner (auth removed, Y3). Window controls: N/A
+ * (browser chrome).
  */
 export default function TopBar({
   onExport,
@@ -41,12 +45,9 @@ export default function TopBar({
   const project = useProjectStore((s) => s.project);
   const openDashboard = useProjectStore((s) => s.openDashboard);
   const renameProject = useProjectStore((s) => s.renameProject);
-  const dirty = useProjectStore((s) => s.dirty);
-  const lastSavedAt = useProjectStore((s) => s.lastSavedAt);
   const showTaskBar = useProjectStore((s) => s.showTaskBar);
   const setShowTaskBar = useProjectStore((s) => s.setShowTaskBar);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(false);
   const [proOpen, setProOpen] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [nameDraft, setNameDraft] = useState('');
@@ -76,7 +77,7 @@ export default function TopBar({
       <div className="relative shrink-0">
         <button
           type="button"
-          onClick={() => { setMenuOpen((v) => !v); setMoreOpen(false); }}
+          onClick={() => { setMenuOpen((v) => !v); }}
           aria-haspopup="menu"
           aria-expanded={menuOpen}
           className="flex items-center gap-1 rounded-md px-2 py-1.5 text-sm hover:bg-[#242424]"
@@ -91,6 +92,7 @@ export default function TopBar({
               { label: 'Shortcuts', run: () => { setMenuOpen(false); onShowShortcuts(); } },
               { label: 'Settings', run: () => { setMenuOpen(false); onShowSettings(); } },
               { label: 'Help', run: () => { setMenuOpen(false); onShowHelp(); } },
+              { label: 'Feature usage', run: () => { setMenuOpen(false); onShowFeatureUsage(); } },
             ].map((item) => (
               <button key={item.label} type="button" role="menuitem" onClick={item.run} className="block w-full px-3 py-2 text-left hover:bg-[#242424]">
                 {item.label}
@@ -131,13 +133,6 @@ export default function TopBar({
         <button type="button" onClick={onToggleTimeline} aria-pressed={timelineVisible} title={timelineVisible ? 'Hide timeline' : 'Show timeline'} className="rounded-md p-2 text-[#A8A8A8] hover:bg-[#242424] hover:text-[#F2F2F2]">
           <IconChevronDown size={18} />
         </button>
-        <span
-          className="rounded-md p-2 text-[#00D9D9]"
-          title={dirty ? 'Saving…' : lastSavedAt ? `All changes saved ${new Date(lastSavedAt).toLocaleTimeString()}` : 'All changes saved'}
-          aria-label={dirty ? 'Saving' : 'All changes saved'}
-        >
-          <IconCloud size={18} />
-        </span>
       </div>
 
       <button
@@ -162,38 +157,6 @@ export default function TopBar({
         <IconExport size={16} />
         Export
       </button>
-
-      <div className="relative shrink-0">
-        <button
-          type="button"
-          onClick={() => { setMoreOpen((v) => !v); setMenuOpen(false); }}
-          aria-haspopup="menu"
-          aria-expanded={moreOpen}
-          className="rounded-md border border-[#3D3D3D] px-2 py-1.5 text-sm hover:bg-[#242424]"
-          title="More options"
-        >
-          …
-        </button>
-        {moreOpen && (
-          <div role="menu" className="absolute right-0 z-50 mt-1 w-60 rounded-lg border border-[#3D3D3D] bg-[#1E1E1E] py-1 text-sm shadow-lg">
-            <button type="button" role="menuitem" onClick={() => { setMoreOpen(false); onShowFeatureUsage(); }} className="block w-full px-3 py-2 text-left hover:bg-[#242424]">
-              Feature usage
-            </button>
-            <button type="button" role="menuitem" onClick={() => { setMoreOpen(false); setShowTaskBar(!showTaskBar); }} className="block w-full px-3 py-2 text-left hover:bg-[#242424]">
-              Task bar — {showTaskBar ? 'Shown' : 'Hidden'}
-            </button>
-            <button type="button" role="menuitem" onClick={() => { setMoreOpen(false); onToggleSidebar(); }} className="block w-full px-3 py-2 text-left hover:bg-[#242424]">
-              Sidebar — {sidebarVisible ? 'Shown' : 'Hidden'}
-            </button>
-            <button type="button" role="menuitem" onClick={() => { setMoreOpen(false); onShowHelp(); }} className="block w-full px-3 py-2 text-left hover:bg-[#242424]">
-              Help
-            </button>
-            <button type="button" role="menuitem" onClick={() => { setMoreOpen(false); onShowSettings(); }} className="block w-full px-3 py-2 text-left hover:bg-[#242424]">
-              Settings
-            </button>
-          </div>
-        )}
-      </div>
 
       {proOpen && (
         <div role="dialog" aria-modal="true" aria-label="Pro" className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setProOpen(false)}>

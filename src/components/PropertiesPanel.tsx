@@ -3,7 +3,7 @@ import { useProjectStore } from '../store/projectStore';
 import { SPEED_PRESETS } from '../lib/timeline';
 import { findClip } from '../lib/timeline';
 import { FONT_STACKS, LOOP_ANIMATION_LABELS, TEXT_STYLE_PRESETS } from '../lib/text';
-import type { AnimationKind, AspectRatio, BlendMode, Clip, LoopAnimationKind, TextStyle } from '../schema/project';
+import type { AnimationKind, AspectRatio, BlendMode, Clip, LoopAnimationKind, TextStyle, VidoraProject } from '../schema/project';
 import { formatDb, VOICE_PRESETS } from '../lib/audio';
 import KeyframesPanel from './KeyframesPanel';
 import MaskPanel from './MaskPanel';
@@ -88,6 +88,19 @@ const RECOMMENDED_COLORS = [
 
 const RATIO_OPTIONS: AspectRatio[] = ['16:9', '9:16', '1:1', '4:5', '4:3', '2:1', '21:9', '3:4'];
 
+/** v1.0.2 D5(a): CapCut shows the "Color space" row only once the
+ * project has at least one clip (v05/v06 frames with a clip show
+ * "Rec. 709 SDR"; the empty project in #19/#04 shows no such row). */
+export function projectHasClips(project: VidoraProject | null | undefined): boolean {
+  return (project?.tracks ?? []).some((t) => t.clips.length > 0);
+}
+
+/** v1.0.2 D5(d): CapCut's Details panel shows "Original" for the
+ * default 16:9 ratio and the raw ratio otherwise. */
+export function detailsAspectLabel(aspectRatio: AspectRatio): string {
+  return aspectRatio === '16:9' ? 'Original' : aspectRatio === 'custom' ? 'Custom' : aspectRatio;
+}
+
 function railFor(clip: Clip): RailId[] {
   if (clip.type === 'audio') return ['audio', 'speed'];
   if (clip.type === 'text') return ['basic', 'background', 'animation', 'speed'];
@@ -108,7 +121,6 @@ export default function PropertiesPanel() {
   const project = useProjectStore((s) => s.project);
   const aspectRatio = useProjectStore((s) => s.aspectRatio);
   const arrangeLayers = useProjectStore((s) => s.arrangeLayers);
-  const setArrangeLayers = useProjectStore((s) => s.setArrangeLayers);
   const setAspectRatio = useProjectStore((s) => s.setAspectRatio);
   const updateProjectSettings = useProjectStore((s) => s.updateProjectSettings);
   const selectedClipIds = useProjectStore((s) => s.selectedClipIds);
@@ -242,10 +254,14 @@ export default function PropertiesPanel() {
   };
 
   /* ---------------- Details panel (nothing selected) ---------------- */
+  // v1.0.2 D5(a): CapCut shows "Color space — Rec. 709 SDR" only once a
+  // clip exists on the timeline (v05/v06 frames); the empty project has
+  // no Color space row.
+  const hasClips = projectHasClips(project);
   if (!clip) {
     return (
       <aside
-        className="w-[520px] shrink-0 overflow-y-auto border-l text-[#F2F2F2]"
+        className="w-[min(520px,28vw)] shrink-0 overflow-y-auto border-l text-[#F2F2F2]"
         style={{ backgroundColor: BG, borderColor: BORDER }}
         aria-label="Details"
       >
@@ -260,52 +276,40 @@ export default function PropertiesPanel() {
               <dt className="text-[#A8A8A8]">Path</dt>
               <dd>Browser storage (this computer)</dd>
             </div>
-            <div className="flex items-center justify-between gap-2 border-b pb-3" style={{ borderColor: BORDER }}>
-              <dt className="text-[#A8A8A8]">Color space</dt>
-              <dd>Rec. 709 SDR</dd>
-            </div>
+            {hasClips && (
+              <div className="flex items-center justify-between gap-2 border-b pb-3" style={{ borderColor: BORDER }}>
+                <dt className="text-[#A8A8A8]">Color space</dt>
+                <dd>Rec. 709 SDR</dd>
+              </div>
+            )}
             <div className="flex items-center justify-between gap-2 border-b pb-3" style={{ borderColor: BORDER }}>
               <dt className="text-[#A8A8A8]">Imported media</dt>
               <dd>Stay in original location</dd>
             </div>
             <div className="flex items-center justify-between gap-2 border-b pb-3" style={{ borderColor: BORDER }}>
               <dt className="text-[#A8A8A8]">Arrange layers ⓘ</dt>
-              <dd>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={arrangeLayers}
-                  aria-label="Arrange layers"
-                  title="When on, a newly added clip opens a new track above"
-                  onClick={() => setArrangeLayers(!arrangeLayers)}
-                  className={`relative h-5 w-9 rounded-full transition-colors ${arrangeLayers ? 'bg-[${TEAL}]' : 'bg-[#3D3D3D]'}`}
-                >
-                  <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition-all ${arrangeLayers ? 'left-[18px]' : 'left-0.5'}`} />
-                </button>
-              </dd>
+              <dd>{arrangeLayers ? 'Turned on' : 'Turned off'}</dd>
             </div>
             <div className="border-b pb-3" style={{ borderColor: BORDER }}>
               <div className="flex items-center justify-between gap-2">
                 <dt className="text-[#A8A8A8]">Proxy ⓘ</dt>
                 <dd>Turned off</dd>
               </div>
-              <p className="mt-1 text-[11px] text-[#8A8A8A]">Proxy files are not created in this build.</p>
             </div>
             <div className="flex items-center justify-between gap-2 border-b pb-3" style={{ borderColor: BORDER }}>
               <dt className="text-[#A8A8A8]">Aspect ratio</dt>
-              <dd>{aspectRatio === 'custom' ? 'Custom' : aspectRatio}</dd>
+              <dd>{detailsAspectLabel(aspectRatio)}</dd>
             </div>
             <div className="flex items-center justify-between gap-2 border-b pb-3" style={{ borderColor: BORDER }}>
               <dt className="text-[#A8A8A8]">Resolution</dt>
-              <dd>Adapted ({project ? `${project.resolution.width} × ${project.resolution.height}` : '—'})</dd>
+              <dd>Adapted</dd>
             </div>
           </dl>
           <div className="mt-4 flex justify-end">
             <button
               type="button"
               onClick={openModify}
-              className="rounded-md px-4 py-1.5 text-xs font-semibold"
-              style={{ backgroundColor: TEAL, color: '#062A2A' }}
+              className="rounded-md bg-[#3D3D3D] px-4 py-1.5 text-xs font-semibold text-[#F2F2F2]"
             >
               Modify
             </button>
@@ -367,7 +371,7 @@ export default function PropertiesPanel() {
 
   return (
     <aside
-      className="flex w-[520px] shrink-0 overflow-hidden border-l text-[#F2F2F2]"
+      className="flex w-[min(520px,28vw)] shrink-0 overflow-hidden border-l text-[#F2F2F2]"
       style={{ backgroundColor: BG, borderColor: BORDER }}
       aria-label="Properties"
     >
@@ -405,7 +409,7 @@ export default function PropertiesPanel() {
       {/* One sub-panel at a time */}
       <div className="min-w-0 flex-1 overflow-y-auto p-4">
         <h2 className="truncate text-sm font-semibold" style={{ color: TEAL }}>{clip.name}</h2>
-        <p className="mt-0.5 text-[11px] text-[#8A8A8A]">
+        <p className="mt-0.5 truncate text-[11px] text-[#8A8A8A]">
           {clip.type} · {clip.duration.toFixed(2)}s · start {clip.start.toFixed(2)}s
         </p>
 
@@ -593,14 +597,14 @@ export default function PropertiesPanel() {
                   {colorOpen && <ColorPanel />}
                 </section>
 
-                <section className="space-y-2 border-t pt-3" style={{ borderColor: BORDER }}>
+                <section className="min-w-0 space-y-2 border-t pt-3" style={{ borderColor: BORDER }}>
                   <h3 className="text-xs font-semibold text-[#D8D8D8]">Blend</h3>
-                  <label className="flex items-center justify-between gap-2 text-xs">
+                  <label className="flex min-w-0 items-center justify-between gap-2 text-xs">
                     Mode
                     <select
                       value={adj?.blendMode ?? 'normal'}
                       onChange={(e) => updateAdjustment({ blendMode: e.target.value as BlendMode })}
-                      className="rounded-md border border-[#2E2E2E] bg-[#242424] px-2 py-1"
+                      className="min-w-0 shrink-0 rounded-md border border-[#2E2E2E] bg-[#242424] px-2 py-1"
                       aria-label="Blend mode"
                     >
                       {BLEND_OPTIONS.map((o) => (
@@ -608,7 +612,7 @@ export default function PropertiesPanel() {
                       ))}
                     </select>
                   </label>
-                  <label className="flex items-center gap-2 text-xs">
+                  <label className="flex min-w-0 items-center gap-2 text-xs">
                     <span className="w-16 shrink-0">Opacity</span>
                     <input
                       type="range"
@@ -617,7 +621,7 @@ export default function PropertiesPanel() {
                       step={0.01}
                       value={clip.opacity}
                       onChange={(e) => updateSelectedClip({ opacity: Number(e.target.value) })}
-                      className="flex-1"
+                      className="min-w-0 flex-1"
                       aria-label="Opacity"
                     />
                     <input

@@ -14,7 +14,7 @@ import { STICKER_CATALOG, shapeSvg, stickerById, type StickerDef } from './stick
 
 /** Resolve a sticker by full catalog id, or by base design id (first
  * palette variant) — templates name the design, not a palette. */
-function resolveSticker(id: string): StickerDef | undefined {
+export function resolveSticker(id: string): StickerDef | undefined {
   return stickerById(id) ?? STICKER_CATALOG.find((s) => s.id.startsWith(`${id}-`));
 }
 
@@ -193,12 +193,16 @@ function makeClip(partial: Record<string, unknown>): Clip {
  * Build a new project from a template (pure). Returns null for an unknown
  * template id. Slots become video clips named after the slot — with no
  * media they show their label on the canvas until footage is dropped in.
+ * v1.0.2 (D12.5): items are split by kind across tracks instead of piling
+ * on one text track — backgrounds → Video 1, text → Text 1, stickers and
+ * shapes → a new Stickers 1 track (only when the template has any).
  */
 export function applyTemplate(project: VidoraProject, templateId: string): VidoraProject | null {
   const def = templateDef(templateId);
   if (!def) return null;
   const videoTrackId = newId('track');
   const textTrackId = newId('track');
+  const stickerTrackId = newId('track');
   const videoClips: Clip[] = def.slots.map((s) =>
     makeClip({
       duration: s.duration,
@@ -210,6 +214,7 @@ export function applyTemplate(project: VidoraProject, templateId: string): Vidor
     }),
   );
   const textClips: Clip[] = [];
+  const stickerClips: Clip[] = [];
   for (const item of def.items) {
     const base = {
       duration: item.duration,
@@ -218,7 +223,6 @@ export function applyTemplate(project: VidoraProject, templateId: string): Vidor
       positionY: item.positionY ?? 0,
       scale: item.scale ?? 1,
       start: item.start,
-      trackId: textTrackId,
     };
     if (item.kind === 'text') {
       const preset = TEXT_STYLE_PRESETS.find((p) => p.id === item.presetId);
@@ -230,34 +234,37 @@ export function applyTemplate(project: VidoraProject, templateId: string): Vidor
         animationLoop: { duration: 2, kind: (item.motion ?? 'none') as never },
         name: item.content ?? 'Text',
         text: { content: style.content, style, tts: null },
+        trackId: textTrackId,
         type: 'text',
       }));
     } else if (item.kind === 'sticker') {
       const sticker = resolveSticker(item.stickerId ?? '');
       if (!sticker) continue;
-      textClips.push(makeClip({
+      stickerClips.push(makeClip({
         ...base,
         animationLoop: { duration: 2, kind: (item.motion ?? 'none') as never },
         name: sticker.name,
         sticker: { category: sticker.category, id: sticker.id, kind: 'sticker', svg: sticker.svg },
+        trackId: stickerTrackId,
         type: 'sticker',
       }));
     } else if (item.kind === 'shape') {
       const svg = shapeSvg(item.shapeKind ?? 'circle', item.fill ?? '#7C3AED');
-      textClips.push(makeClip({
+      stickerClips.push(makeClip({
         ...base,
         name: `Shape ${item.shapeKind ?? ''}`,
         sticker: { category: 'Shapes', id: `shape-${item.shapeKind ?? 'circle'}`, kind: 'shape', svg },
+        trackId: stickerTrackId,
         type: 'sticker',
       }));
     } else if (item.kind === 'background') {
       const bg = backgroundDef(item.backgroundId ?? '');
       if (!bg) continue;
-      textClips.push(makeClip({
+      videoClips.push(makeClip({
         ...base,
-        duration: item.duration,
         name: bg.name,
         sticker: { category: 'Backgrounds', id: `bg-${bg.id}`, kind: 'sticker', svg: bg.svg },
+        trackId: videoTrackId,
         type: 'sticker',
       }));
     }
@@ -266,6 +273,9 @@ export function applyTemplate(project: VidoraProject, templateId: string): Vidor
     { clips: videoClips, hidden: false, id: videoTrackId, kind: 'video' as const, locked: false, muted: false, name: 'Video 1', solo: false, volume: 1 },
     { clips: [], hidden: false, id: newId('track'), kind: 'audio' as const, locked: false, muted: false, name: 'Audio 1', solo: false, volume: 1 },
     { clips: textClips, hidden: false, id: textTrackId, kind: 'text' as const, locked: false, muted: false, name: 'Text 1', solo: false, volume: 1 },
+    ...(stickerClips.length > 0
+      ? [{ clips: stickerClips, hidden: false, id: stickerTrackId, kind: 'sticker' as const, locked: false, muted: false, name: 'Stickers 1', solo: false, volume: 1 }]
+      : []),
   ];
   const now = new Date().toISOString();
   return {

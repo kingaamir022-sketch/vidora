@@ -1,0 +1,36 @@
+{
+  "aiImageFound": true,
+  "seekedOntoImageClip": true,
+  "webgl2": true,
+  "hashBeforeEffect": "aceb10d9ee0bcd4e",
+  "warmGlowPlusFound": true,
+  "hashAfterEffect": "65e813c30f5f6c62",
+  "pixelsChanged": true,
+  "appliedAfterPlus": "Applied effectsWarm Glow×Intensity100%Warmth0.8",
+  "dragVideo": {
+    "found": true
+  },
+  "appliedAfterDrag": "Applied effectsCool Dusk×Intensity100%Coolness0.8",
+  "dragAppliedCoolDusk": true,
+  "monoPlusFound": true,
+  "appliedAfterPlus2": "Applied effectsCool Dusk×Intensity100%Coolness0.8Mono Ink×Intensity100%Mono1Contrast0.4",
+  "plusAppliedMonoInk": true,
+  "stickerTileFound": true,
+  "stickerTrackName": "Stickers 1",
+  "hueFound": true,
+  "redirectNote": "“Smile · Violet” can't show effects — applied to the video clip “Amber Aurora” under the playhead instead.",
+  "stickerApplied": "Applied effectsNone yet.",
+  "videoAppliedAfterRedirect": "Applied effectsCool Dusk×Intensity100%Coolness0.8Mono Ink×Intensity100%Mono1Contrast0.4",
+  "stickerClipName": "Amber Aurora · 6.0s",
+  "dropOnSticker": {
+    "found": true
+  },
+  "dropHint": [
+    "That effect is already on this clip."
+  ],
+  "previewDrop": {
+    "found": true
+  },
+  "stickerAddedViaPreviewDrop": true,
+  "pageErrors": []
+}

@@ -60,11 +60,11 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Feature (card) | Layout | Controls | Behavior | Shortcut | Workflow | Evidence | Status |
 |---|---|---|---|---|---|---|---|
 | Branding & theme (P0-BRAND) | ✓ | ✓ | ✓ | — | ✓ | `design/tokens.json`, `public/logo.svg` | MATCH |
-| Editor shell layout (P0-SHELL) | ✓ | ✓ | ✓ | — | ✓ | `docs/UI_LAYOUT.md`, audit screenshots | MATCH |
+| Editor shell layout (P0-SHELL) | ✓ | ✓ | ✓ | — | ✓ | `docs/UI_LAYOUT.md`, audit screenshots · v1.0.2: widths verified at 1920×1080/100% (left 610 / preview 790 / Details 520) + `min(610px,32vw)` / `min(520px,28vw)` caps for narrow viewports | MATCH |
 | Dashboard lists & new project (A-DASH) | ✓ | ✓ | ✓ | — | ✓ | `Dashboard.tsx` | MATCH |
 | Rename / duplicate / delete (A-MANAGE) | ✓ | ✓ | ✓ | — | ✓ | `Dashboard.tsx` | MATCH |
 | Aspect ratios (A-RATIO) | ✓ | ✓ | ✓ | — | ✓ | `TopBar.tsx` | MATCH |
-| Media import (A-IMPORT) | ✓ | ✓ | ✓ | — | ✓ | `MediaBrowser.tsx`, `lib/media.ts` | MATCH |
+| Media import (A-IMPORT) | ✓ | ✓ | ✓ | — | ✓ | `MediaBrowser.tsx`, `lib/media.ts` · v1.0.2: CapCut-form Import box (28px teal "+" + "Import" inline + drag-and-drop subtext, whole box opens the file picker — verified) | MATCH |
 | Folders & search (A-FOLDERS) | ✓ | ✓ | ✓ | — | ✓ | `MediaBrowser.tsx` | MATCH |
 | Built-in assets browser (A-ASSETS) | ✓ | ✓ | ✓ | — | ✓ | `MediaBrowser.tsx` (Backgrounds section, live counts, total 714) · Phase 5: real browser, no longer a placeholder | MATCH |
 | Tracks (B-TRACKS) | ✓ | ✓ | ✓ | — | ✓ | `TimelineShell.tsx` | MATCH |
@@ -80,9 +80,9 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Keyframes (D-KEYFRAMES) | ✓ | ✓ | ✓ | — | ✓ | `KeyframesPanel.tsx`, `lib/keyframes.ts` | MATCH |
 | Easing & graph (D-EASING) | ✓ | ✓ | ✓ | — | ✓ | `KeyframesPanel.tsx` (bezier solver) | MATCH |
 | In/out animations (D-ANIM) | ✓ | ✓ | ✓ | — | ✓ | `KeyframesPanel.tsx` (11 kinds) | MATCH |
-| Transitions (E-TRANS) | ✓ | ✓ | ✓ | — | ✓ | `TransitionsPanel.tsx` (32 types, search + categories) | MATCH |
-| Effects (E-FX) | ✓ | ✓ | ✓ | — | ✓ | `EffectsPanel.tsx` (14 CSS/pixel effects + 62 GLSL effects, search + categories + auto thumbnails) | MATCH |
-| LUT import & looks (E-LUT) | ✓ | ✓ | ✓ | — | ✓ | `lib/lut.ts` (trilinear, 32 looks) · Filters tab real in Phase 5 | MATCH |
+| Transitions (E-TRANS) | ✓ | ✓ | ✓ | — | ✓ | `TransitionsPanel.tsx` (32 types, search + categories) · v1.0.2: search on top, tile grid always visible, tiles are real mid-transition stills with working PNG download, drag-and-drop onto clip boundaries + "+" apply | MATCH |
+| Effects (E-FX) | ✓ | ✓ | ✓ | — | ✓ | `EffectsPanel.tsx` (14 CSS/pixel effects + 62 GLSL effects, search + categories + auto thumbnails) · v1.0.2: applied-effects card above the grid (was below the fold), drag-and-drop + "+" apply, redirect to the video clip under the playhead when a sticker/text clip is selected, grid browsable with no clip | MATCH |
+| LUT import & looks (E-LUT) | ✓ | ✓ | ✓ | — | ✓ | `lib/lut.ts` (trilinear, 32 looks) · Filters tab real in Phase 5 · v1.0.2: filter tiles show a sample photo with the LUT actually applied + working `.cube` download | MATCH |
 | Colour sliders (F-ADJUST) | ✓ | ✓ | ✓ | — | ✓ | `ColorPanel.tsx` (10 sliders) | MATCH |
 | RGB curves (F-CURVES) | ✓ | ✓ | ✓ | — | ✓ | `ColorPanel.tsx` (draggable points + presets) · live check §7 | MATCH |
 | HSL / blend (F-BLEND) | ✓ | ✓ | ✓ | — | ✓ | `ColorPanel.tsx` + `PreviewArea.tsx` (live blend) · live check §8 | MATCH |
@@ -92,7 +92,7 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Chroma key (G-CHROMA) | ✓ | ✓ | ✓ | — | ✓ | `MaskPanel.tsx`, `lib/compositor.ts` | MATCH |
 | PiP / split-screen (G-LAYOUT) | ✓ | ✓ | ✓ | — | ✓ | `MaskPanel.tsx` (Full/PiP/2/3/4-up) | MATCH |
 | Backgrounds (G-BG) | ✓ | ✓ | ✓ | — | ✓ | `MaskPanel.tsx` (blur/colour/gradient/image) | MATCH |
-| Preview transport (X-PREVIEW) | ✓ | ✓ | ✓ | ✓ | ✓ | `PreviewArea.tsx` (step/loop/fullscreen/safe/grid) | MATCH |
+| Preview transport (X-PREVIEW) | ✓ | ✓ | ✓ | ✓ | ✓ | `PreviewArea.tsx` (step/loop/fullscreen/safe/grid) · v1.0.2: header always "Player-Timeline 01", plain gray play, play verified advancing the preview, empty canvas plain dark (project-name slate text removed) | MATCH |
 | Autosave & recovery (X-AUTOSAVE) | ✓ | ✓ | ✓ | — | ✓ | `projectStore.ts` (3s autosave) | MATCH |
 | Basic export (X-EXPORT) | ✓ | ✓ | ~ | — | ✓ | `ExportPanel.tsx` (360p–4K, 24/25/30/50/60fps, Fast/Recommended/High, MP4/WebM/MOV) · signed-in Web check 2026-11-23 (WEB-CHECK-2026-11-23.md §3): Download 360p–4k, quality High/Recommended/Fast, 24/25/30/50/60fps, MP4/MOV — Vidora now covers the full Web subset; desktop export may differ; H.265 is not offered (no browser encoder) | MATCH |
 | Undo / redo (X-UNDO) | ✓ | ✓ | ✓ | ✓ | ✓ | `projectStore.ts` (stack cap 100) | MATCH |
@@ -110,7 +110,7 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | Text style presets (N-TEXTPRESETS) | ✓ | ✓ | ✓ | — | ✓ | `lib/text.ts` (50 presets in 6 categories) · FULL-WALKTHROUGH-2026-11-23.md (Text tab: template rows by category) — rows-by-category shape matched, styles are Vidora Originals | MATCH |
 | Text animations (N-TEXTANIM) | ✓ | ✓ | ✓ | — | ✓ | `lib/keyframes.ts` + `lib/text.ts` (30 in/out kinds + 7 loop kinds + 28 motion presets) — animation kinds are Vidora Originals; In categories verified in video v09 (Trending, Basic, Light, Glitch, Mask, 3D, Vibration; first tile None) | MATCH |
 | Caption style presets (N-CAPTIONPRESETS) | ~ | ~ | ~ | — | ~ | `lib/captions.ts` (23 presets with word-level highlight) — no caption style list observed in the reference; styles are Vidora Originals | ASSUMED |
-| Templates (N-TEMPLATES) | ✓ | ✓ | ✓ | — | ✓ | `lib/templates.ts` (25 original layouts with media slots) · FULL-WALKTHROUGH-2026-11-23.md (Templates tab + "Use template" observed) — flow matched, layouts are Vidora Originals; Phase 8 adds replaceable slots + sharing | MATCH |
+| Templates (N-TEMPLATES) | ✓ | ✓ | ✓ | — | ✓ | `lib/templates.ts` (25 original layouts with media slots) · FULL-WALKTHROUGH-2026-11-23.md (Templates tab + "Use template" observed) — flow matched, layouts are Vidora Originals; Phase 8 adds replaceable slots + sharing · v1.0.2: hover-anchored preview (no click modal), separate Video/Text/Stickers tracks on apply, real first-frame thumbnails (`TemplateThumb.tsx`) | MATCH |
 | Procedural music / SFX (N-MUSIC) | ~ | ~ | ~ | — | ~ | `lib/audio.ts` (30 loops + 100 SFX, Web Audio synthesis) — no procedural library observed in the reference; all recipes are Vidora Originals | ASSUMED |
 | Backgrounds (N-BACKGROUNDS) | ~ | ~ | ~ | — | ~ | `lib/backgrounds.ts` (30 gradients/patterns/grain/frames as full-frame clips) — no background library observed in the reference; artwork is Vidora Original | ASSUMED |
 | Asset library build (N-ASSETS) | ~ | ~ | ~ | — | ~ | `scripts/build-assets.mjs` (`npm run build:assets`, manifest 663 entries, 714 total) — build-time generation, no reference behaviour to match | ASSUMED |
@@ -150,6 +150,32 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | .ass import (M-ASS) | ✓ | ✓ | ✓ | — | ✓ | `lib/captions.ts` `parseAss` (reads the Format line for column order, Dialogue lines only, strips `{...}` tags, `\N` → newline, `\h` → space) + `.ass` in the CaptionsPanel file picker — matches the reference: CapCut Web accepts .ass upload (WEB-CHECK-2026-11-23.md §4); .ass styles are not imported (cues use the current style, honestly labelled); .lrc still not supported. Closes BUG-D11 | MATCH |
 | CI (M-CI) | ~ | ~ | ~ | — | ~ | `.github/workflows/ci.yml` (Node 20, `npm ci`, build, test, lint) — no reference; Playwright audits are NOT in CI (documented in the workflow: they need the headless shell + ffmpeg) | ASSUMED |
 | Docker (M-DOCKER) | ~ | ~ | ~ | — | ~ | `Dockerfile` (node:20-alpine build → nginx:alpine serve) + `docker-compose.yml` (4173:80) + `.dockerignore` — no reference; the image was NOT built on this VM (docker not installed), honestly noted in the Dockerfile and the audit | ASSUMED |
+
+## Parity score (correction round v1.0.2, 2026-11-25)
+
+- **MATCH: 59 / 91** — unchanged from v1.0.1. No ASSUMED row gained
+  new CapCut reference evidence in this round (the 10 videos never
+  showed the AI engines, procedural libraries, export extras, cloud,
+  CI/Docker or beat/voiceover reference behaviour), so none moves to
+  MATCH — but the MATCH rows above were re-verified against the user's
+  own screenshots at 1920×1080 / 100% zoom (P0-SHELL, A-IMPORT,
+  E-TRANS, E-FX, N-LUTS, X-PREVIEW, N-TEMPLATES evidence updated),
+  and every control on them was verified working end to end
+  (D13 functional sweep: file picker, play, template apply, transition
+  apply, inspector sliders, timeline split/undo/redo/delete/zoom).
+- **ASSUMED: 32 / 91** — same 32 rows as v1.0.1.
+- **DIFF-FIXING: 0 / 91**
+- **INTENTIONAL-DIFF: 0 / 91** — the only deliberate difference left
+  is the app name and logo (Vidora, not CapCut), which is not a matrix
+  row; see `docs/INTENTIONAL_DIFFS.md`.
+- **Gate result: PASS** — every row is MATCH or ASSUMED, `npm run
+  build` is green (193 modules), `npm test` is 355/355, and the
+  Playwright self-audits pass: Phase 4 (`audit/phase4/AUDIT-REPORT.md`)
+  26/26, Phase 5 39/39, Phase 6 15/15, Phase 7 60/60, Phase 8 56/56,
+  Phase 9 42/42 — 0 open bugs. Final v1.0.2 comparison
+  (`audit/capcut-fix/v102/final/final-compare.json`): all checks pass
+  at 1920×1080 / 100% zoom, 0 page errors. The v1.0.1 score paragraph
+  below is kept for history.
 
 ## Parity score (correction round v1.0.1, 2026-11-25)
 

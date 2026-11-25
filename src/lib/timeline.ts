@@ -308,6 +308,37 @@ export function addClipToTextTrack(project: VidoraProject, clip: Clip): VidoraPr
 }
 
 /**
+ * v1.0.2 (W4, D15): sticker / shape / background / drawing clips go on a
+ * 'sticker' track ("Stickers N"), never on a text track — same placement
+ * rule as addClipToTextTrack. (Templates already did this in
+ * lib/templates.ts; manual adds piled onto "Text 1" and showed up there
+ * as a bare initial, e.g. a sticker named "S.".) */
+export function addClipToStickerTrack(project: VidoraProject, clip: Clip): VidoraProject {
+  const start = clip.start;
+  const end = start + clip.duration;
+  const overlaps = (t: { clips: Clip[] }) =>
+    t.clips.some((c) => c.start < end && start < c.start + c.duration);
+  let track = project.tracks.find((t) => t.kind === 'sticker' && !t.locked && !overlaps(t));
+  let tracks = project.tracks;
+  if (!track) {
+    track = {
+      clips: [],
+      hidden: false,
+      id: newId('track'),
+      kind: 'sticker',
+      locked: false,
+      muted: false,
+      name: `Stickers ${tracks.filter((t) => t.kind === 'sticker').length + 1}`,
+      solo: false,
+      volume: 1,
+    };
+    tracks = [...tracks, track];
+  }
+  const placed = { ...clip, trackId: track.id };
+  return { ...project, tracks: tracks.map((t) => (t.id === track!.id ? { ...t, clips: [...t.clips, placed] } : t)) };
+}
+
+/**
  * Phase 4 (J) — append a clip to the first unlocked audio track where its
  * time range is free, else open a new audio track (same placement rule
  * as addClipToTextTrack, for audio clips).

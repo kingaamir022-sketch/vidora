@@ -51,6 +51,103 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   files are not in the install. New tests `src/test/aiLibrary.test.ts`
   (6 tests); Phase 6 audit gained 6 checks (AI music "+", AI clip
   card, AI image card) and now passes 15/15.
+- BUG-CF-011 | CapCut-fix v1.0.2 | Effects applied-options below fold | FIXED
+  2026-11-25 — Applying an effect looked like nothing happened: the
+  "Applied effects" card rendered after the full tile grid, below the
+  panel fold (rect y 836–938, panel visible area ends ~792;
+  scrollHeight 838 vs clientHeight 680). Reproduced with Playwright
+  (probe-d14b). Fix: the card now renders ABOVE the grid with
+  scroll-into-view on apply (Blur card bottom 268 after apply);
+  param-less GLSL effects note honestly "No additional settings —
+  Intensity only". Same fix for the applied-filter card.
+- BUG-CF-012 | CapCut-fix v1.0.2 | Effects applied to the wrong clip | FIXED
+  2026-11-25 — User report: four effect tiles showed ✓ at once on a
+  selected sticker and nothing visibly changed. Cause: `addEffect`
+  applied to `selectedClipIds[0]` with no kind guard, so effects
+  stacked silently on sticker/text clips, and the compositor's effect
+  passes run only for video/image frames. Fix: tile click with a
+  sticker/text/audio clip selected redirects to the topmost video clip
+  under the playhead and says so; explicit drops on sticker/text clips
+  are refused with a hint, never stacked. `addEffect` /
+  `setBuiltinLut` / `setTransition` return a status
+  (`applied | already | blocked | no-clip | redirected`).
+- BUG-CF-013 | CapCut-fix v1.0.2 | No drag-and-drop / "+" apply | FIXED
+  2026-11-25 — User report: in CapCut an effect applies by
+  drag-and-drop onto the clip, and tiles have a "+" option — Vidora
+  had neither (zero draggable handlers in the panels; tiles showed
+  only a star). Fix: new `lib/panelDrag.ts` payload
+  (`application/x-vidora-panel-drag`); effect/filter tiles drag onto
+  timeline clips and the preview; transitions drag onto clip
+  boundaries; stickers/text drag to add; every effect/filter/
+  transition tile has a visible "+" apply button.
+- BUG-CF-014 | CapCut-fix v1.0.2 | Template items piled on one track | FIXED
+  2026-11-25 — Applying Bold Opening put all 3 items (background,
+  text, sticker) on a single "Text 1" track, overlapping in time.
+  Fix: `applyTemplate` now splits by kind — background → Video 1,
+  text → Text 1, sticker/shape → new "Stickers 1" track (new
+  `'sticker'` kind in `trackKindSchema`); manual sticker/shape/
+  background adds use the same sticker track (`addClipToStickerTrack`).
+  Phase 5 test updated to the 4-track Bold Opening.
+- BUG-CF-015 | CapCut-fix v1.0.2 | First-frame race after template apply | FIXED
+  2026-11-25 — A freshly applied template showed a black paused
+  preview until the next state change: the first draw ran before a
+  procedural SVG image finished loading (`stickerElementFor` returns
+  null until complete) and nothing re-triggered the draw. Fix: a
+  one-time `load` listener re-triggers the draw when the image
+  arrives, guarded per-SVG so it cannot loop. Verified: paused t=0
+  canvas non-black fraction 1.0 at 300 ms and 1500 ms after apply.
+- BUG-CF-016 | CapCut-fix v1.0.2 | Manual sticker adds on Text 1 | FIXED
+  2026-11-25 — `addStickerClip` called `addClipToTextTrack`, so a
+  sticker added by hand showed as "S." on the Text 1 track (seen in
+  the user's screenshot). Fix: stickers/shapes/backgrounds now land
+  on "Stickers N" tracks; the store's `addTrack` maps `'sticker'` →
+  `'Stickers'` for the name.
+- BUG-CF-017 | CapCut-fix v1.0.2 | Flat / letter tile thumbnails | FIXED
+  2026-11-25 — User report: filter tiles were flat gradients and
+  transition tiles a single big letter; CapCut's are real photo
+  thumbnails (#25). Fix: filter tiles render a sample photo with the
+  LUT actually applied (per-pixel, `lib/tileThumbs.ts`); transition
+  tiles render a real mid-transition still via the existing transition
+  engine. Download icons are real (`.cube` LUT / PNG still); no Pro
+  badge — Vidora has no paid tier.
+- BUG-CF-018 | CapCut-fix v1.0.2 | Template thumbnails blank | FIXED
+  2026-11-25 — Found by the final self-audit: the editor Templates
+  panel drew a slot-diagram SVG (black for templates with no media
+  slots) and the dashboard page used a flat per-category gradient.
+  Fix: new shared `src/components/TemplateThumb.tsx` renders each
+  template's real first frame (procedural background + title text in
+  its preset fill + sticker/shape at its position) in both places;
+  `resolveSticker` (base design id → first palette variant) exported
+  from `lib/templates.ts`.
+- BUG-CF-019 | CapCut-fix v1.0.2 | Empty preview drew slate text | FIXED
+  2026-11-25 — Found by the coordinator's final comparison: the empty
+  preview canvas drew the project name + "Import media and add it to
+  the timeline to preview it here." CapCut's empty preview is plain
+  dark. Fix: the no-clip branch in `renderFrame.ts` draws nothing
+  (captions still draw). Verified: 0 non-black pixels in the canvas
+  centre sample.
+- BUG-CF-020 | CapCut-fix v1.0.2 | Effects grid hidden with no clip | FIXED
+  2026-11-25 — Found by the final self-audit: the whole Effects grid
+  lived inside `{clip && …}`, so opening the panel with no clip
+  selected showed only "Select a clip…" and no library — unlike
+  Filters/Transitions/Stickers, which are always browsable. Fix: the
+  grid always renders; tiles are disabled until a clip is selected,
+  with an honest hint.
+- BUG-CF-021 | CapCut-fix v1.0.2 | Import box overflow at 1280 | FIXED
+  2026-11-25 — At 1280×800 the Import box stuck 175px past the
+  410px left column. Root cause was not MediaBrowser (its button was
+  already `w-full`) but `PanelShell.tsx`'s fixed `w-[400px]` content
+  column. Fix: fluid `min-w-0 w-full flex-1 max-w-[400px]`; Import
+  right edge 397 inside the 410 column at 1280, unchanged 400px at
+  1920.
+- BUG-CF-022 | CapCut-fix v1.0.2 | Audit harness stale selectors | FIXED
+  2026-11-25 — Harness, not app: Phase 5/6/7 scripts used the stale
+  `div.w-[610px]` left-column selector (now `min(610px,32vw)`); Phase
+  5's manifest expectation was stale at 1099 (real total 1102 —
+  caption presets grew 20 → 23 in v1.0.1) and its transition/music
+  counters predated the "+" / download buttons and the AI sections
+  sharing the Audio row component. All updated to count the right
+  things; Phase 5 audit passes 39/39 again.
 - BUG-CF-001 | CapCut-fix v1.0.1 | Audio / Cut at beats | FIXED
   2026-11-25 — "Cut at beats" silently did nothing whenever the
   selected audio clip did not start at 0: `AudioPanel.tsx` passed

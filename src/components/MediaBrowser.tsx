@@ -303,21 +303,24 @@ export default function MediaBrowser({ onSelectTab }: { onSelectTab: (tab: LeftT
       />
 
       {section === 'import' && (
-        <div
-          className={`rounded-lg border-2 border-dashed p-4 text-center ${dragOver ? 'border-[#00D9D9] bg-[#00D9D9]/10' : 'border-[#3D3D3D]'}`}
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          disabled={importing}
+          aria-label="Import media"
+          className={`w-full rounded-lg border-2 border-dashed p-3 text-center ${dragOver ? 'border-[#00D9D9] bg-[#00D9D9]/10' : 'border-[#3D3D3D]'}`}
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={(e) => { e.preventDefault(); setDragOver(false); if (e.dataTransfer.files.length > 0) void handleFiles(e.dataTransfer.files); }}
         >
-          <button type="button" onClick={() => fileRef.current?.click()} disabled={importing} className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#00D9D9] text-[#062A2A] disabled:opacity-50" aria-label="Import media">
-            <IconPlus size={22} />
-          </button>
-          <p className="mt-2 text-sm font-semibold">Import</p>
-          <p className="mt-1 text-[11px] leading-relaxed text-[#A8A8A8]">Drag and drop videos, photos, and audio files here</p>
-          <button type="button" onClick={() => fileRef.current?.click()} disabled={importing} className="mt-3 rounded-md border border-[#3D3D3D] px-3 py-1.5 text-xs hover:bg-[#242424] disabled:opacity-50">
-            {importing ? 'Importing…' : 'Browse files'}
-          </button>
-        </div>
+          <span className="flex items-center justify-center gap-2">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#00D9D9] text-[#062A2A]">
+              <IconPlus size={14} />
+            </span>
+            <span className="text-sm font-semibold">{importing ? 'Importing…' : 'Import'}</span>
+          </span>
+          <span className="mt-1.5 block text-[11px] leading-relaxed text-[#A8A8A8]">Drag and drop videos, photos, and audio files here</span>
+        </button>
       )}
 
       {section === 'import' && (

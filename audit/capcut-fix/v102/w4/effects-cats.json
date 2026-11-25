@@ -1,0 +1,95 @@
+{
+  "Favorites": {
+    "count": 0,
+    "first": [],
+    "empty": true
+  },
+  "Trending": {
+    "count": 12,
+    "first": [
+      "Apply Warm Glow",
+      "Apply Cool Dusk",
+      "Apply Mono Ink"
+    ],
+    "empty": false
+  },
+  "Sale": {
+    "count": 8,
+    "first": [
+      "Apply Eight MM",
+      "Apply Faded Memory",
+      "Apply Cross Process"
+    ],
+    "empty": false
+  },
+  "Classic": {
+    "count": 14,
+    "first": [
+      "Apply Blur",
+      "Apply Brightness",
+      "Apply Grayscale"
+    ],
+    "empty": false
+  },
+  "Cutout": {
+    "count": 12,
+    "first": [
+      "Apply Edge Ink",
+      "Apply Emboss",
+      "Apply Sketch Pencil"
+    ],
+    "empty": false
+  },
+  "NEW": {
+    "count": 12,
+    "first": [
+      "Apply Polaroid Fade",
+      "Apply Bleach Pass",
+      "Apply Noir Film"
+    ],
+    "empty": false
+  },
+  "Hits": {
+    "count": 10,
+    "first": [
+      "Apply Glow Halo",
+      "Apply Bloom Soft",
+      "Apply Vignette Soft"
+    ],
+    "empty": false
+  },
+  "Pro": {
+    "count": 10,
+    "first": [
+      "Apply Glow Halo",
+      "Apply Bloom Soft",
+      "Apply Vignette Soft"
+    ],
+    "empty": false
+  },
+  "Clone": {
+    "count": 2,
+    "first": [
+      "Apply Kaleidoscope",
+      "Apply Mirror Split"
+    ],
+    "empty": false
+  },
+  "Glowing lines": {
+    "count": 4,
+    "first": [
+      "Apply Warm Glow",
+      "Apply Glow Halo",
+      "Apply Edge Ink"
+    ],
+    "empty": false
+  },
+  "Stroke": {
+    "count": 1,
+    "first": [
+      "Apply Edge Ink"
+    ],
+    "empty": false
+  },
+  "pageErrors": []
+}

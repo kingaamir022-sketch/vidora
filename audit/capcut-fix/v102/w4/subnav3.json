@@ -1,0 +1,28 @@
+{
+  "effects": {
+    "activeTab": "Effects",
+    "applyCount": 0,
+    "first": []
+  },
+  "effectsTrending": {
+    "applyCount": 0,
+    "first": []
+  },
+  "stickers": {
+    "plusButtons": 33,
+    "addLabels": [
+      "Add sticker Smile · Violet",
+      "Add sticker Smile · Violet",
+      "Add sticker Smile · Sunset"
+    ]
+  },
+  "hdUpscale": {
+    "dialog": true,
+    "dialogText": "AI tools×AI tools — real local engines, no cloud, no credits. Where a tool cannot run in the browser, the panel says what it really does and what it does not do.AI Captions — speech to textTwo honest "
+  },
+  "enhance": {
+    "dialog": true,
+    "dialogText": "AI tools×AI tools — real local engines, no cloud, no credits. Where a tool cannot run in the browser, the panel says what it really does and what it does not do.AI Captions — speech to textTwo honest "
+  },
+  "pageErrors": []
+}

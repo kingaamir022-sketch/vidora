@@ -247,7 +247,11 @@ async function main() {
     await shot(page, 'X-EXPORT', 'export-dialog.png');
     await page.getByRole('button', { name: 'Close' }).click();
     await page.waitForTimeout(200);
-    await page.getByRole('button', { name: 'Shortcuts' }).first().click();
+    // v1.0.2 D9: Shortcuts opens from TopBar Menu → Shortcuts (the
+    // keyboard icon at the bottom of the left column is gone).
+    await page.getByRole('button', { name: 'Menu' }).first().click();
+    await page.waitForTimeout(300);
+    await page.getByRole('menuitem', { name: 'Shortcuts' }).first().click();
     await page.waitForTimeout(300);
     check('B-SHORTCUTS', 'Shortcuts dialog lists bindings', (await page.getByRole('dialog', { name: 'Keyboard shortcuts' }).isVisible()));
     await shot(page, 'B-SHORTCUTS', 'shortcuts-dialog.png');

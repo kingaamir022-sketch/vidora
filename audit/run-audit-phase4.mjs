@@ -3,10 +3,24 @@
  * Vidora Phase 4 self-audit (Rule 12.4).
  * Serves the production build with `vite preview`, drives it with
  * Playwright (chromium headless shell), performs each Phase 4 behaviour
- * card's steps (J-AUDIO, J-INSPECTOR, J-MIXER, J-VOICE, J-DETACH,
+ * card's steps (J-AUDIO, J-INSPECTOR, J-VOICE, J-DETACH,
  * J-PITCH, J-BEAT, J-VOICEOVER), screenshots into audit/phase4/<ID>/,
  * and writes audit/phase4/AUDIT-REPORT.md.
  * Run: npm run audit:phase4   (builds first)
+ *
+ * CapCut-fix port (2026-11-25, v1.0.1): entry is now the Terms dialog
+ * ("Agree and continue") + Updates notice ("OK") + "Create project"
+ * (the onboarding tour and the "New Project" button are gone); the tab
+ * rail is div[role="tablist"] + button[role="tab"] (was
+ * nav[aria-label="Editor tools"] button[title]); the Media list is a
+ * card grid (click the card to add to timeline); the inspector is a
+ * vertical icon rail (Basic/Background/Smart tools/Audio/Animation/
+ * Speed) that auto-opens the first rail panel for the selected clip
+ * type; voice presets are buttons under the "Voice changer" tab (no
+ * "Voice changer preset" select); "Apply to all" replaced
+ * "Apply voice to all audio". REMOVED by design in the CapCut-fix
+ * round: J-MIXER (MixerPanel deleted) and the J-BEAT marker steps
+ * (markers UI removed; "Cut at beats" is the kept behaviour).
  *
  * Fixtures are regenerated here because /tmp is wiped on restarts:
  *  - test-av.mp4: 4 s video + 440 Hz tone (detach target)
@@ -83,12 +97,10 @@ async function waitClipCount(page, expected, timeoutMs = 15000) {
   return (await clipCount(page)) === expected;
 }
 const props = (page) => page.locator('aside[aria-label="Properties"]');
-const markersText = async (page) => {
-  const text = await props(page).textContent().catch(() => '');
-  const m = (text ?? '').match(/Markers:\s*(\d+)/);
-  return m ? Number(m[1]) : -1;
-};
-let markersBaseline = -1;
+// CapCut-fix v1.0.1: the editor tab rail is a tablist of role="tab"
+// buttons (the old nav[aria-label="Editor tools"] button[title] rail
+// is gone). The rail truncates long labels, so match by substring.
+const tabBtn = (page, name) => page.locator('div[role="tablist"][aria-label="Editor tools"] button[role="tab"]', { hasText: name }).first();
 
 async function main() {
   await fs.mkdir(AUDIT, { recursive: true });
@@ -126,42 +138,50 @@ async function main() {
 
     await page.goto(URL, { waitUntil: 'networkidle' });
     await page.waitForTimeout(800);
-    // Phase 9 (M-ONBOARD): a first-run tour covers the dashboard on a
-    // fresh profile — dismiss it before doing anything else.
-    const tour = page.locator('[role="dialog"][aria-labelledby="tour-heading"]');
-    if (await tour.isVisible().catch(() => false)) {
-      await tour.getByRole('button', { name: 'Skip tour' }).click();
-      await page.waitForTimeout(400);
-    }
+    // First-run dialogs: Terms, then the Updates notice. (The
+    // onboarding tour was removed in the CapCut-fix round.)
+    const agree = page.getByRole('button', { name: 'Agree and continue' });
+    if (await agree.count()) { await agree.first().click(); await page.waitForTimeout(500); }
+    const updOk = page.getByRole('button', { name: 'OK', exact: true });
+    if (await updOk.count()) { await updOk.first().click(); await page.waitForTimeout(500); }
 
-    await page.getByRole('button', { name: 'New Project' }).click();
+    await page.getByRole('button', { name: 'Create project' }).first().click();
     await page.waitForTimeout(600);
 
     // ---- Import the video+audio fixture ----
-    await page.locator('nav[aria-label="Editor tools"] button[title="Media"]').click();
+    await tabBtn(page, 'Media').click();
     await page.waitForTimeout(300);
-    const mediaInput = page.locator('aside[aria-label="Media library"] input[type="file"]').first();
+    // The Media panel's hidden file input (Browse files / Import media
+    // button). No clip is selected yet, so this is the only file input.
+    const mediaInput = page.locator('input[type="file"]').first();
     await mediaInput.setInputFiles([path.join(MEDIA, 'test-av.mp4')]);
     await page.waitForTimeout(3000);
-    await page.locator('aside[aria-label="Media library"] li').first().locator('button', { hasText: 'Add to timeline' }).click();
+    // Imported files land in the Media section; the card itself adds
+    // the file to the timeline (title ends "click to add to timeline").
+    await page.getByRole('button', { name: 'Media', exact: true }).click();
+    await page.waitForTimeout(300);
+    await page.locator('button[title$="click to add to timeline"]').first().click();
     await page.waitForTimeout(500);
     check('J-DETACH', 'video clip on timeline (detach target)', (await clipCount(page)) === 1, `clips: ${await clipCount(page)}`);
 
     // ---- J-AUDIO: panel, sub-tabs, originals, add a loop ----
     await fs.mkdir(path.join(AUDIT, 'J-AUDIO'), { recursive: true });
-    await page.locator('nav[aria-label="Editor tools"] button[title="Audio"]').click();
+    await tabBtn(page, 'Audio').click();
     await page.waitForTimeout(300);
-    const audioPanel = page.locator('[aria-label="Audio panel"]');
-    check('J-AUDIO', 'Audio panel opens', await audioPanel.isVisible());
-    check('J-AUDIO', 'Music / Sound effects sub-tabs present', (await audioPanel.getByRole('tab', { name: 'Music' }).count()) === 1 && (await audioPanel.getByRole('tab', { name: 'Sound effects' }).count()) === 1);
-    check('J-AUDIO', 'Vidora Originals list shows Calm Pad', (await audioPanel.getByText('Calm Pad', { exact: true }).count()) === 1);
-    await audioPanel.getByRole('tab', { name: 'Sound effects' }).click();
+    // The Audio panel is a PanelShell div (no aria-label scope); its
+    // sub-tabs are plain buttons (Music / Sound effects), not role=tab.
+    const musicTab = page.getByRole('button', { name: 'Music', exact: true });
+    const sfxTab = page.getByRole('button', { name: 'Sound effects', exact: true });
+    check('J-AUDIO', 'Audio panel opens', await musicTab.isVisible());
+    check('J-AUDIO', 'Music / Sound effects sub-tabs present', (await musicTab.count()) === 1 && (await sfxTab.count()) === 1);
+    check('J-AUDIO', 'Vidora Originals list shows Calm Pad', (await page.getByText('Calm Pad', { exact: true }).count()) === 1);
+    await sfxTab.click();
     await page.waitForTimeout(200);
-    check('J-AUDIO', 'Sound effects tab shows Soft Pop', (await audioPanel.getByText('Soft Pop', { exact: true }).count()) === 1);
-    await audioPanel.getByRole('tab', { name: 'Music' }).click();
+    check('J-AUDIO', 'Sound effects tab shows Soft Pop', (await page.getByText('Soft Pop', { exact: true }).count()) === 1);
+    await musicTab.click();
     await page.waitForTimeout(200);
     const beforeLoop = await clipCount(page);
-    await audioPanel.locator('button[aria-label="Add Calm Pad to timeline"]').click();
+    await page.locator('button[aria-label="Add Calm Pad to timeline"]').click();
     const loopAdded = await waitClipCount(page, beforeLoop + 1);
     check('J-AUDIO', 'adding Calm Pad renders the original and adds an audio clip', loopAdded, `clips: ${beforeLoop} -> ${await clipCount(page)}`);
     await shot(page, 'J-AUDIO', 'original-added.png');
@@ -170,60 +190,58 @@ async function main() {
     await fs.mkdir(path.join(AUDIT, 'J-INSPECTOR'), { recursive: true });
     await clip(page, 1).click(); // Calm Pad is the 2nd clip (video first)
     await page.waitForTimeout(400);
-    check('J-INSPECTOR', 'Audio section appears in Properties', (await props(page).getByRole('heading', { name: 'Audio' }).count()) === 1);
-    const fadeIn = page.getByLabel('Fade in (s)');
+    // Selecting an audio clip auto-opens the inspector Audio sub-panel.
+    check('J-INSPECTOR', 'Audio section appears in Properties', (await props(page).getByLabel('Fade in (s)').count()) === 1);
+    const fadeIn = props(page).getByLabel('Fade in (s)');
     await fadeIn.fill('1');
     await page.waitForTimeout(300);
     check('J-INSPECTOR', 'fade-in sets to 1 s', (await fadeIn.inputValue()) === '1');
-    const voiceSelect = page.getByLabel('Voice changer preset');
-    await voiceSelect.selectOption('deep');
+    // Voice presets are buttons under the "Voice changer" tab now.
+    await props(page).getByRole('tab', { name: 'Voice changer' }).click();
     await page.waitForTimeout(300);
-    check('J-INSPECTOR', 'voice select sets Deep Voice', (await voiceSelect.inputValue()) === 'deep');
+    const deepBtn = props(page).getByRole('button', { name: 'Deep Voice' }).first();
+    await deepBtn.click();
+    await page.waitForTimeout(300);
+    check('J-INSPECTOR', 'voice select sets Deep Voice', (await deepBtn.getAttribute('aria-pressed')) === 'true');
+    await props(page).getByRole('tab', { name: 'Basic' }).click();
+    await page.waitForTimeout(300);
     await page.getByRole('button', { name: 'Normalize volume' }).click();
     await page.waitForTimeout(500);
     check('J-INSPECTOR', 'Normalize reports the new volume', (await props(page).getByText(/Volume set to/).count()) === 1);
     await shot(page, 'J-INSPECTOR', 'audio-inspector.png');
 
-    // ---- J-MIXER: open mixer with no clip selected ----
-    await fs.mkdir(path.join(AUDIT, 'J-MIXER'), { recursive: true });
-    await audioPanel.getByRole('button', { name: 'Open mixer' }).click();
-    await page.waitForTimeout(400);
-    check('J-MIXER', 'Mixer shows when no clip is selected', (await props(page).getByRole('heading', { name: 'Mixer' }).count()) === 1);
-    check('J-MIXER', 'master volume slider present', await page.getByLabel('Master volume').isVisible());
-    check('J-MIXER', 'track volume row present for Audio 1', await page.getByLabel('Volume for track Audio 1').isVisible());
-    const duck = page.getByLabel('Duck music under speech');
-    await duck.check();
-    await page.waitForTimeout(300);
-    check('J-MIXER', 'ducking switch turns on', await duck.isChecked());
-    markersBaseline = await markersText(page);
-    check('J-MIXER', 'project summary shows 0 markers in a new project', markersBaseline === 0, `markers: ${markersBaseline}`);
-    await shot(page, 'J-MIXER', 'mixer.png');
+    // ---- J-MIXER: REMOVED by design in the CapCut-fix round (v1.0.1) —
+    // MixerPanel was deleted; the Audio panel's "Open mixer" button now
+    // only deselects the clip. No mixer checks remain. ----
 
-    // ---- J-BEAT: import the pulses wav, detect beats, add markers ----
+    // ---- J-BEAT: import the pulses wav, detect beats, cut at beats ----
     await fs.mkdir(path.join(AUDIT, 'J-BEAT'), { recursive: true });
-    await page.locator('nav[aria-label="Editor tools"] button[title="Media"]').click();
+    await tabBtn(page, 'Media').click();
     await page.waitForTimeout(300);
     await mediaInput.setInputFiles([path.join(MEDIA, 'test-beats.wav')]);
     await page.waitForTimeout(3000);
-    await page.locator('aside[aria-label="Media library"] li').nth(1).locator('button', { hasText: 'Add to timeline' }).click();
+    await page.getByRole('button', { name: 'Media', exact: true }).click();
+    await page.waitForTimeout(300);
+    await page.locator('button[title$="click to add to timeline"]').nth(1).click();
     await page.waitForTimeout(500);
     const beatsClips = await clipCount(page);
     check('J-BEAT', 'beats wav added to timeline', beatsClips === 3, `clips: ${beatsClips}`);
     await clip(page, 2).click(); // beats clip is 3rd (video, Calm Pad, beats)
     await page.waitForTimeout(400);
-    await page.locator('nav[aria-label="Editor tools"] button[title="Audio"]').click();
+    await tabBtn(page, 'Audio').click();
     await page.waitForTimeout(300);
-    const detectBtn = audioPanel.getByRole('button', { name: 'Detect beats' });
+    const detectBtn = page.getByRole('button', { name: 'Detect beats' });
     check('J-BEAT', 'Detect beats is enabled for the audio clip', await detectBtn.isEnabled());
     await detectBtn.click();
     await page.waitForTimeout(600);
-    check('J-BEAT', 'beat detection reports found beats', (await audioPanel.getByText(/beats found/).count()) === 1);
-    await audioPanel.getByRole('button', { name: 'Add beat markers' }).click();
-    await page.waitForTimeout(400);
-    await audioPanel.getByRole('button', { name: 'Open mixer' }).click();
-    await page.waitForTimeout(300);
-    const markersAfter = await markersText(page);
-    check('J-BEAT', 'Add beat markers adds markers to the project', markersAfter > markersBaseline, `markers: ${markersBaseline} -> ${markersAfter}`);
+    check('J-BEAT', 'beat detection reports found beats', (await page.getByText(/beats found/).count()) === 1);
+    // "Add beat markers" was removed with the markers UI (Y6); the kept
+    // behaviour is "Cut at beats", which splits the clip at the beats.
+    const beforeCut = await clipCount(page);
+    await page.getByRole('button', { name: 'Cut at beats' }).click();
+    await page.waitForTimeout(600);
+    const afterCut = await clipCount(page);
+    check('J-BEAT', 'Cut at beats splits the clip at the detected beats', afterCut > beforeCut, `clips: ${beforeCut} -> ${afterCut}`);
     await shot(page, 'J-BEAT', 'beats.png');
 
     // ---- J-DETACH: shortcut first, then the context menu ----
@@ -235,18 +253,24 @@ async function main() {
     const detachedByKey = await waitClipCount(page, beforeDetach + 1);
     check('J-DETACH', 'Ctrl+Shift+S separates audio onto its own track', detachedByKey, `clips: ${beforeDetach} -> ${await clipCount(page)}`);
     // Add the same video again (lands at the end of Video 1) and detach it via the menu.
-    await page.locator('nav[aria-label="Editor tools"] button[title="Media"]').click();
+    await tabBtn(page, 'Media').click();
     await page.waitForTimeout(300);
-    await page.locator('aside[aria-label="Media library"] li').first().locator('button', { hasText: 'Add to timeline' }).click();
+    await page.getByRole('button', { name: 'Media', exact: true }).click();
+    await page.waitForTimeout(300);
+    await page.locator('button[title$="click to add to timeline"]').first().click();
     await page.waitForTimeout(500);
     const secondVideo = await clipCount(page);
     check('J-DETACH', 'second video clip added for the menu check', secondVideo === beforeDetach + 2, `clips: ${secondVideo}`);
     await clip(page, 1).click(); // second video clip
     await page.waitForTimeout(300);
+    // "Separate audio" lives in the inspector Audio sub-panel (Basic
+    // opens first for a video clip), so open Audio before looking for it.
+    await props(page).getByRole('button', { name: 'Audio' }).click();
+    await page.waitForTimeout(300);
     check('J-DETACH', 'Separate audio button shows for a video clip', (await props(page).getByRole('button', { name: /Separate audio/ }).count()) === 1);
     await clip(page, 1).click({ button: 'right' });
     await page.waitForTimeout(300);
-    const menuItem = page.getByRole('menuitem', { name: 'Separate audio (Ctrl+Shift+S)' });
+    const menuItem = page.getByRole('menuitem', { name: 'Separate audio (Ctrl Shift S)' });
     check('J-DETACH', 'context menu offers Separate audio (Ctrl+Shift+S)', await menuItem.isVisible());
     const beforeMenu = await clipCount(page);
     await menuItem.click();
@@ -258,9 +282,14 @@ async function main() {
     await fs.mkdir(path.join(AUDIT, 'J-PITCH'), { recursive: true });
     await clip(page, 1).click(); // second video clip (now detached, still a video clip)
     await page.waitForTimeout(300);
+    // Speed lives in its own inspector rail panel now (Basic opens first).
+    await props(page).getByRole('button', { name: 'Speed' }).click();
+    await page.waitForTimeout(300);
     await props(page).locator('button', { hasText: '0.5×' }).first().click();
     await page.waitForTimeout(300);
-    const pitchBox = props(page).locator('label', { hasText: 'Pitch' }).locator('input').first();
+    // Pitch is a plain checkbox in a <label> in the Speed sub-panel
+    // (not a role="switch" toggle like the inspector toggle() helper).
+    const pitchBox = props(page).getByLabel('Pitch');
     check('J-PITCH', 'Pitch switch stays on at 0.5x', await pitchBox.isChecked());
     check('J-PITCH', 'speed note describes pitch-preserving playback', (await props(page).getByText(/Pitch is kept/).count()) === 1);
     await shot(page, 'J-PITCH', 'speed-half.png');
@@ -269,25 +298,29 @@ async function main() {
     await fs.mkdir(path.join(AUDIT, 'J-VOICE'), { recursive: true });
     await clip(page, 2).click(); // Calm Pad audio clip
     await page.waitForTimeout(300);
-    const voiceSelect2 = page.getByLabel('Voice changer preset');
-    await voiceSelect2.selectOption('robot');
+    // Selecting an audio clip auto-opens the Audio sub-panel; voice
+    // presets are buttons under the "Voice changer" tab.
+    await props(page).getByRole('tab', { name: 'Voice changer' }).click();
     await page.waitForTimeout(300);
-    check('J-VOICE', 'Robot voice preset selects', (await voiceSelect2.inputValue()) === 'robot');
-    check('J-VOICE', 'Apply voice to all audio button present', (await page.getByRole('button', { name: 'Apply voice to all audio' }).count()) === 1);
-    await page.getByRole('button', { name: 'Apply voice to all audio' }).click();
+    const robotBtn = props(page).getByRole('button', { name: 'Robot' }).first();
+    await robotBtn.click();
     await page.waitForTimeout(300);
-    check('J-VOICE', 'voice stays Robot after Apply to all', (await page.getByLabel('Voice changer preset').inputValue()) === 'robot');
+    check('J-VOICE', 'Robot voice preset selects', (await robotBtn.getAttribute('aria-pressed')) === 'true');
+    check('J-VOICE', 'Apply voice to all audio button present', (await props(page).getByRole('button', { name: 'Apply to all' }).count()) === 1);
+    await props(page).getByRole('button', { name: 'Apply to all' }).click();
+    await page.waitForTimeout(300);
+    check('J-VOICE', 'voice stays Robot after Apply to all', (await props(page).getByRole('button', { name: 'Robot' }).first().getAttribute('aria-pressed')) === 'true');
     await shot(page, 'J-VOICE', 'robot-voice.png');
 
     // ---- J-VOICEOVER: record with the fake mic, stop, clip appears ----
     await fs.mkdir(path.join(AUDIT, 'J-VOICEOVER'), { recursive: true });
-    await page.locator('nav[aria-label="Editor tools"] button[title="Audio"]').click();
+    await tabBtn(page, 'Audio').click();
     await page.waitForTimeout(300);
     const beforeVo = await clipCount(page);
-    await audioPanel.getByRole('button', { name: 'Record voiceover' }).click();
+    await page.getByRole('button', { name: 'Record voiceover' }).click();
     await page.waitForTimeout(2500);
-    check('J-VOICEOVER', 'recording state shows the timer', (await audioPanel.getByText(/Recording/).count()) === 1);
-    await audioPanel.getByRole('button', { name: 'Stop and add to timeline' }).click();
+    check('J-VOICEOVER', 'recording state shows the timer', (await page.getByText(/Recording/).count()) === 1);
+    await page.getByRole('button', { name: 'Stop and add to timeline' }).click();
     const voAdded = await waitClipCount(page, beforeVo + 1);
     check('J-VOICEOVER', 'stopping adds a voiceover clip to the timeline', voAdded, `clips: ${beforeVo} -> ${await clipCount(page)}`);
     await shot(page, 'J-VOICEOVER', 'voiceover-clip.png');

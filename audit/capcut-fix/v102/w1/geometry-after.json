@@ -1,0 +1,253 @@
+[
+  {
+    "viewport": "1920x1080",
+    "geometry": {
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "w": 1920,
+        "h": 48
+      },
+      "leftColumn": {
+        "x": 0,
+        "y": 48,
+        "w": 610,
+        "h": 744
+      },
+      "preview": {
+        "x": 610,
+        "y": 48,
+        "w": 790,
+        "h": 744
+      },
+      "details": {
+        "x": 1400,
+        "y": 48,
+        "w": 520,
+        "h": 744
+      },
+      "timeline": {
+        "x": 0,
+        "y": 792,
+        "w": 1920,
+        "h": 288
+      },
+      "tabRail": {
+        "x": 0,
+        "y": 48,
+        "w": 609,
+        "h": 64
+      }
+    },
+    "tabs": {
+      "fullyVisible": [
+        "Media",
+        "Audio",
+        "Text",
+        "Stickers",
+        "Effects",
+        "Transitions",
+        "Captions"
+      ],
+      "tabWidths": [
+        80,
+        80,
+        80
+      ],
+      "canScrollRight": true
+    },
+    "previewHeader": "Player-Timeline 01",
+    "uploadOverlayGone": true,
+    "hiddenFileInputKept": true,
+    "cloudIconGone": true,
+    "moreMenuGone": true,
+    "keyboardButtonGone": true,
+    "playButton": {
+      "bg": "rgba(0, 0, 0, 0)",
+      "borderRadius": "6px",
+      "color": "rgb(168, 168, 168)"
+    },
+    "bottomBar": {
+      "previewRight": 1400,
+      "ratioRight": 1356,
+      "ratioInsidePreview": true,
+      "fullscreenRight": 1388,
+      "fullscreenInsidePreview": true,
+      "orderX": [
+        622,
+        1005,
+        1241,
+        1313
+      ],
+      "orderOk": true,
+      "timecodeSingleLine": true
+    },
+    "topBarOrder": [
+      {
+        "t": "Vidora",
+        "x": 12
+      },
+      {
+        "t": "Vidora",
+        "x": 52
+      },
+      {
+        "t": "Menu",
+        "x": 119
+      },
+      {
+        "t": "Untitled Project",
+        "x": 818
+      },
+      {
+        "t": "Pro",
+        "x": 1643
+      },
+      {
+        "t": "Share",
+        "x": 1716
+      },
+      {
+        "t": "Export",
+        "x": 1809
+      }
+    ],
+    "floatingToolbar": {
+      "found": true,
+      "left": 786,
+      "right": 1224,
+      "previewLeft": 610,
+      "previewRight": 1400,
+      "insidePreview": true,
+      "height": 38
+    },
+    "menuShortcutsOpens": true,
+    "menuFeatureUsageOpens": true,
+    "menuSettingsOpens": true,
+    "pageErrors": []
+  },
+  {
+    "viewport": "1280x800",
+    "geometry": {
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "w": 1280,
+        "h": 48
+      },
+      "leftColumn": {
+        "x": 0,
+        "y": 48,
+        "w": 410,
+        "h": 464
+      },
+      "preview": {
+        "x": 410,
+        "y": 48,
+        "w": 512,
+        "h": 464
+      },
+      "details": {
+        "x": 922,
+        "y": 48,
+        "w": 358,
+        "h": 464
+      },
+      "timeline": {
+        "x": 0,
+        "y": 512,
+        "w": 1280,
+        "h": 288
+      },
+      "tabRail": {
+        "x": 0,
+        "y": 48,
+        "w": 409,
+        "h": 64
+      }
+    },
+    "tabs": {
+      "fullyVisible": [
+        "Media",
+        "Audio",
+        "Text",
+        "Stickers"
+      ],
+      "tabWidths": [
+        80,
+        80,
+        80
+      ],
+      "canScrollRight": true
+    },
+    "previewHeader": "Player-Timeline 01",
+    "uploadOverlayGone": true,
+    "hiddenFileInputKept": true,
+    "cloudIconGone": true,
+    "moreMenuGone": true,
+    "keyboardButtonGone": true,
+    "playButton": {
+      "bg": "rgba(0, 0, 0, 0)",
+      "borderRadius": "6px",
+      "color": "rgb(168, 168, 168)"
+    },
+    "bottomBar": {
+      "previewRight": 922,
+      "ratioRight": 878,
+      "ratioInsidePreview": true,
+      "fullscreenRight": 910,
+      "fullscreenInsidePreview": true,
+      "orderX": [
+        422,
+        665,
+        763,
+        835
+      ],
+      "orderOk": true,
+      "timecodeSingleLine": true
+    },
+    "topBarOrder": [
+      {
+        "t": "Vidora",
+        "x": 12
+      },
+      {
+        "t": "Vidora",
+        "x": 52
+      },
+      {
+        "t": "Menu",
+        "x": 119
+      },
+      {
+        "t": "Untitled Project",
+        "x": 498
+      },
+      {
+        "t": "Pro",
+        "x": 1003
+      },
+      {
+        "t": "Share",
+        "x": 1076
+      },
+      {
+        "t": "Export",
+        "x": 1169
+      }
+    ],
+    "floatingToolbar": {
+      "found": true,
+      "left": 447,
+      "right": 885,
+      "previewLeft": 410,
+      "previewRight": 922,
+      "insidePreview": true,
+      "height": 38
+    },
+    "menuShortcutsOpens": true,
+    "menuFeatureUsageOpens": true,
+    "menuSettingsOpens": true,
+    "pageErrors": []
+  }
+]

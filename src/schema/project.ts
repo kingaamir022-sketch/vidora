@@ -14,7 +14,7 @@ export type AspectRatio = z.infer<typeof aspectRatioSchema>;
 export const clipTypeSchema = z.enum(['video', 'audio', 'image', 'text', 'sticker']);
 export type ClipType = z.infer<typeof clipTypeSchema>;
 
-export const trackKindSchema = z.enum(['video', 'audio', 'text']);
+export const trackKindSchema = z.enum(['video', 'audio', 'text', 'sticker']);
 export type TrackKind = z.infer<typeof trackKindSchema>;
 
 export const mediaKindSchema = z.enum(['video', 'image', 'audio', 'gif']);

@@ -1,0 +1,20 @@
+{
+  "inspector-mask": {
+    "ok": true,
+    "detail": "mask button now reads \"Maskcircle\"; feather=0.5"
+  },
+  "inspector-blend-opacity-transform": {
+    "ok": true,
+    "blendValue": "screen",
+    "detail": "blend=screen opacity=50 (reselect 50) scale=150 (reselect 150) posX=10 rotate=15",
+    "opacityValue": "50",
+    "posXValue": "10",
+    "rotValue": "15",
+    "scaleValue": "150"
+  },
+  "inspector-ratio": {
+    "ok": true,
+    "detail": "menu opened: true, 9:16 clicked: true, aspect now 9:16: true"
+  },
+  "pageErrors": []
+}

@@ -1,0 +1,37 @@
+{
+  "useTemplateFound": true,
+  "firstFrame300ms": {
+    "fraction": 1,
+    "h": 1080,
+    "w": 1920
+  },
+  "firstFrame1500ms": {
+    "fraction": 1,
+    "h": 1080,
+    "w": 1920
+  },
+  "timecodeAfterPlay": "00:00:01:16 / 00:00:05:00",
+  "pageErrors1920": [],
+  "importBox1920x1080": {
+    "colRight": 610,
+    "colWidth": 610,
+    "fitsInsideColumn": true,
+    "found": true,
+    "rect": {
+      "left": 197,
+      "right": 573,
+      "width": 376
+    }
+  },
+  "importBox1280x800": {
+    "colRight": 410,
+    "colWidth": 410,
+    "fitsInsideColumn": true,
+    "found": true,
+    "rect": {
+      "left": 197,
+      "right": 397,
+      "width": 200
+    }
+  }
+}

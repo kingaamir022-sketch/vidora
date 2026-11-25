@@ -1,0 +1,190 @@
+{
+  "filters": {
+    "found": true,
+    "tileCount": 12,
+    "rows": [
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "Vidora Warm+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "Vidora Cool Teal+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "Vidora Mono+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "Golden Hour+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "Amber Glow+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "Sunset Blush+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "Desert Sand+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "Honey Light+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "Frost Blue+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "Deep Ocean+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "Arctic Mist+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "Moonlit+★⭳"
+      }
+    ],
+    "allPhoto": true,
+    "anyLetterOnly": false,
+    "downloadButtons": 12,
+    "distinct": 11
+  },
+  "transitions": {
+    "found": true,
+    "tileCount": 12,
+    "rows": [
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "fade+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "dissolve+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "dip-black+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "dip-white+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "flash+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "slide+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "push+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "slide-blur+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "cube+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "flip+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "split+★⭳"
+      },
+      {
+        "hasImg": true,
+        "imgComplete": true,
+        "imgIsPhoto": true,
+        "letterOnly": false,
+        "text": "wipe+★⭳"
+      }
+    ],
+    "allPhoto": true,
+    "anyLetterOnly": false,
+    "downloadButtons": 12
+  },
+  "pageErrors": []
+}

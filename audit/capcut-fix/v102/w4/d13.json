@@ -1,0 +1,61 @@
+{
+  "edit-more-opens-editor": {
+    "detail": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('button').filter({ hasText: 'Templates' }).first()\n    - locator resolved to <button type=\"button\" class=\"flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-[15px] text-[#A8A8A8] hover:bg-[#1E1",
+    "ok": false
+  },
+  "open-sample": {
+    "ok": true,
+    "detail": "sample open, first clip selected"
+  },
+  "import-opens-picker": {
+    "detail": "TypeError: chooser.cancel is not a function",
+    "ok": false
+  },
+  "play-advances-timecode": {
+    "ok": true,
+    "before": "00:00:00:00 / 00:00:10:00",
+    "during": "00:00:01:17 / 00:00:10:00"
+  },
+  "transition-applies": {
+    "detail": "TimeoutError: locator.selectOption: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('select').last()\n    - locator resolved to <select class=\"rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1 text-xs\">…</select>\n  - attempting select option action\n    2 × waiting for element to be ",
+    "ok": false
+  },
+  "inspector-mask": {
+    "ok": true,
+    "detail": "feather slider: false value=null; mask button now reads: "
+  },
+  "inspector-color-adjustment": {
+    "ok": true,
+    "detail": "panel: true, first slider value after set: 0.3"
+  },
+  "inspector-ratio": {
+    "detail": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: '9:16', exact: true }).first()\n    - locator resolved to <button type=\"button\" class=\"block w-full px-3 py-1.5 text-left hover:bg-[#242424]\">9:16</button>\n  - attempting click action\n    2 × ",
+    "ok": false
+  },
+  "inspector-blend-opacity-transform": {
+    "detail": "TimeoutError: locator.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('section[aria-label=\"Properties\"] label').filter({ hasText: 'Position X' }).locator('input')\n",
+    "ok": false
+  },
+  "preview-changes-with-opacity": {
+    "ok": true,
+    "before": "aceb10d9ee0b",
+    "after": "919cb95c6939",
+    "detail": "canvas hash aceb10d9ee0b -> 919cb95c6939"
+  },
+  "timeline-split-undo-redo-delete-zoom": {
+    "ok": true,
+    "afterDelete": 2,
+    "afterRedo": 3,
+    "afterSplit": 3,
+    "afterUndo": 2,
+    "before": 2,
+    "detail": "clips 2 -> split 3 -> undo 2 -> redo 3 -> delete 2; zoom 24 -> 80",
+    "zoomAfter": "80",
+    "zoomBefore": "24"
+  },
+  "use-template-applies": {
+    "ok": true,
+    "detail": "track headers after Use template: Video 1, Text 1, Stickers 1"
+  },
+  "pageErrors": []
+}

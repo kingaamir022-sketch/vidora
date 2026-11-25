@@ -1,0 +1,121 @@
+{
+  "geometry": {
+    "left": {
+      "x": 0,
+      "w": 610
+    },
+    "details": {
+      "x": 1400,
+      "w": 520
+    },
+    "preview": {
+      "x": 610,
+      "w": 790
+    }
+  },
+  "D1 left=610": "PASS",
+  "D1 details=520": "PASS",
+  "D1 preview~790": "PASS",
+  "tabs": [
+    {
+      "t": "Media",
+      "vis": true
+    },
+    {
+      "t": "Audio",
+      "vis": true
+    },
+    {
+      "t": "Text",
+      "vis": true
+    },
+    {
+      "t": "Stickers",
+      "vis": true
+    },
+    {
+      "t": "Effects",
+      "vis": true
+    },
+    {
+      "t": "Transitions",
+      "vis": true
+    },
+    {
+      "t": "Captions",
+      "vis": true
+    },
+    {
+      "t": "Filters",
+      "vis": true
+    },
+    {
+      "t": "Adjustment",
+      "vis": false
+    },
+    {
+      "t": "Templates",
+      "vis": false
+    },
+    {
+      "t": "AI avatar",
+      "vis": false
+    }
+  ],
+  "D1/D10 rail ~7 visible + scroll": "PASS",
+  "D2 header Player-Timeline 01": "PASS",
+  "D2 no Click-to-upload": "PASS",
+  "D2 play plain (not teal circle)": "PASS",
+  "D3 import box small + inline": "PASS",
+  "D3 no Browse files button": "PASS",
+  "D5 no Color space in empty state": "PASS",
+  "D5 Arrange layers text": "PASS",
+  "D5 no Proxy note": "PASS",
+  "D5 Aspect Original": "PASS",
+  "D5 Resolution Adapted only": "PASS",
+  "D5 Modify gray": "PASS",
+  "D7 no cloud icon": "PASS",
+  "D7 no … menu": "PASS",
+  "D8 empty box text + left": "PASS",
+  "D9 no timecode in toolbar": "PASS",
+  "D9 no keyboard icon": "PASS",
+  "D4 card visible: Generate": "PASS",
+  "D4 card visible: AI avatars": "PASS",
+  "D4 card visible: Record": "PASS",
+  "g1280": {
+    "col": {
+      "right": 410,
+      "w": 410
+    },
+    "importBtn": {
+      "right": 397,
+      "w": 200
+    }
+  },
+  "D1 1280 left~410": "PASS",
+  "D1 1280 import inside column": "PASS",
+  "D10 all 11 tabs open": "PASS",
+  "templatesPanel": {
+    "imgs": 32,
+    "srcs": [
+      "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww",
+      "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww",
+      "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww",
+      "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww",
+      "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww",
+      "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww"
+    ]
+  },
+  "appliedCard": {
+    "text": "Applied effectsNone yet.",
+    "top": 166,
+    "bottom": 207
+  },
+  "D14 applied card visible w/o scroll": "PASS",
+  "filterThumbs": 12,
+  "D16 filter tiles are photos": "PASS",
+  "transThumbs": 12,
+  "D16 transition tiles are photos": "PASS",
+  "pageErrors": [],
+  "zero page errors": "PASS"
+}

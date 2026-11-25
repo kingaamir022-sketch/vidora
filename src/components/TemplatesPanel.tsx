@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { searchTemplates, type TemplateDef } from '../lib/templates';
+import TemplateThumb from './TemplateThumb';
 import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from './PanelShell';
 
 /** Templates panel (Phase 5, SPEC N — N-TEMPLATES; Phase 8 — L-TEMPLATES-SLOTS:
@@ -198,9 +199,6 @@ function TemplateCard({
   onPickSlot: (slotId: string, mediaId: string) => void;
   onImport: () => void;
 }) {
-  const W = 232;
-  const H = def.ratio === '9:16' ? 160 : 130;
-  const scaleX = W / def.duration;
   const allFilled = def.slots.every((s) => filled[s.id]);
   return (
     <div className="relative rounded-md border border-zinc-800 bg-zinc-900 p-2">
@@ -211,21 +209,7 @@ function TemplateCard({
         <button type="button" onClick={onToggleFavorite} aria-pressed={favorite} aria-label={`Favorite ${def.name}`} className={`absolute right-2 top-2 z-10 rounded bg-black/50 px-1 text-[13px] ${favorite ? 'text-[#FFD34D]' : 'text-zinc-300 hover:text-white'}`}>★</button>
       )}
       <button type="button" onClick={onToggleExpand} className="block w-full text-left" aria-expanded={expanded} aria-label={`${def.name} details`}>
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full rounded bg-zinc-950" role="img" aria-label={`${def.name} layout preview`}>
-          {def.slots.map((s) => (
-            <rect key={s.id} x={s.start * scaleX} y={8} width={Math.max(4, s.duration * scaleX)} height={H - 16} rx={4} fill="#7C3AED" opacity={0.55} />
-          ))}
-          {def.items
-            .filter((i) => i.kind === 'text')
-            .map((i, idx) => (
-              <rect key={idx} x={i.start * scaleX} y={H - 26} width={Math.max(4, i.duration * scaleX)} height={10} rx={2} fill="#F4F4F5" opacity={0.8} />
-            ))}
-          {def.items
-            .filter((i) => i.kind === 'background')
-            .map((i, idx) => (
-              <rect key={idx} x={i.start * scaleX} y={8} width={Math.max(4, i.duration * scaleX)} height={H - 16} rx={4} fill="none" stroke="#06B6D4" strokeWidth={1.5} />
-            ))}
-        </svg>
+        <TemplateThumb def={def} className={`w-full rounded ${def.ratio === '9:16' ? 'aspect-[232/160]' : 'aspect-[232/130]'}`} />
       </button>
       <div className="mt-1.5 flex items-start justify-between gap-2">
         <div>

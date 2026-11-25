@@ -4,9 +4,22 @@
  * Serves the production build with `vite preview`, drives it with
  * Playwright (chromium headless shell), performs each Phase 8 behaviour
  * card's steps (L-EXPORT, L-EXPORT-QUEUE, L-EXPORT-AUDIO,
- * L-TEMPLATES-SLOTS, L-CLOUD, L-COLLAB, L-SHARE), screenshots into
+ * L-TEMPLATES-SLOTS, L-COLLAB, L-SHARE), screenshots into
  * audit/phase8/<ID>/, and writes audit/phase8/AUDIT-REPORT.md.
  * Run: npm run audit:phase8   (builds first)
+ *
+ * CapCut-fix port (v1.0.1, 2026-11-25): entry is now the first-run
+ * Terms dialog ("Agree and continue") + Updates notice ("OK") + the
+ * dashboard "Create project" banner (the onboarding tour and the old
+ * "New Project" button are gone); the editor tab rail is
+ * div[role="tablist"][aria-label="Editor tools"] with role=tab buttons
+ * (see tabBtn); panels are PanelShell divs (no aside[aria-label=
+ * "Media library"]); Export is a menu (Download / Share for review /
+ * Share as presentation / Share on social) that opens the Export panel
+ * at one section — there is NO tab bar in the panel. L-CLOUD checks
+ * about a dashboard "Backups" section / backup picker were REMOVED:
+ * the dashboard Backups card was removed by design (backups live on
+ * the Spaces page now).
  *
  * Fixtures are regenerated here because /tmp is wiped on restarts:
  *  - test-av.mp4: 6 s testsrc video + 440 Hz sine (ffmpeg).
@@ -50,6 +63,11 @@ async function waitUp(tries = 40) {
   }
   throw new Error('preview server did not come up');
 }
+
+// Editor tab rail: div[role="tablist"][aria-label="Editor tools"] with
+// role=tab buttons; labels truncate ('Transiti…', 'Adjust…'), so
+// hasText substring matching is right.
+const tabBtn = (page, name) => page.locator('div[role="tablist"][aria-label="Editor tools"] button[role="tab"]', { hasText: name }).first();
 
 const clipCount = (page) => page.locator('section[aria-label="Timeline"] [role="button"]').count();
 const clipByName = (page, name) => page.locator('section[aria-label="Timeline"] [role="button"]', { hasText: name });
@@ -105,7 +123,21 @@ function ffprobe(file, args) {
   });
 }
 
-const L_CARDS = ['L-EXPORT', 'L-EXPORT-QUEUE', 'L-EXPORT-AUDIO', 'L-TEMPLATES-SLOTS', 'L-CLOUD', 'L-COLLAB', 'L-SHARE'];
+// L-CLOUD removed in the v1.0.1 port: the dashboard Backups card was
+// removed by design (backups live on the Spaces page now).
+const L_CARDS = ['L-EXPORT', 'L-EXPORT-QUEUE', 'L-EXPORT-AUDIO', 'L-TEMPLATES-SLOTS', 'L-COLLAB', 'L-SHARE'];
+
+/** Open the Export menu (top-bar Export button) and return its locator. */
+async function openExportMenu(page) {
+  await page.getByRole('button', { name: 'Export', exact: true }).click();
+  await page.waitForTimeout(400);
+  return page.locator('[role="menu"][aria-label="Export menu"]');
+}
+/** Close the Export panel (the ✕ button, aria-label "Close export"). */
+async function closeExportPanel(page, dialog) {
+  await dialog.getByRole('button', { name: 'Close export' }).click();
+  await pageWait(500);
+}
 
 async function main() {
   await fs.mkdir(AUDIT, { recursive: true });
@@ -165,63 +197,37 @@ async function main() {
 
     await page.goto(URL, { waitUntil: 'networkidle' });
     await page.waitForTimeout(800);
-    // Phase 9 (M-ONBOARD): a first-run tour covers the dashboard on a
-    // fresh profile — dismiss it before doing anything else.
-    const tour = page.locator('[role="dialog"][aria-labelledby="tour-heading"]');
-    if (await tour.isVisible().catch(() => false)) {
-      await tour.getByRole('button', { name: 'Skip tour' }).click();
-      await page.waitForTimeout(400);
-    }
-
-
-    // ================= L-CLOUD (dashboard, first — before any project) =================
-    const backups = page.locator('section[aria-label="Backups"]');
-    check('L-CLOUD', 'Dashboard Backups section renders', await backups.isVisible());
-    const backupSelect = backups.locator('select[aria-label="Project to back up"]');
-    const options = await backupSelect.locator('option').allTextContents();
-    check('L-CLOUD', 'backup project picker lists projects', options.length > 1, options.join(' | '));
-    await backupSelect.selectOption({ label: 'Sunset Coast — Sample Project' });
-    await backups.getByRole('button', { name: 'Back up this project' }).click();
-    await pageWait(1500);
-    const bundleFile = downloads.find((d) => d.name.endsWith('.vidora'));
-    check('L-CLOUD', 'backup downloads a .vidora file', Boolean(bundleFile), bundleFile?.name ?? 'no download');
-    let bundleOk = false;
-    if (bundleFile) {
-      try {
-        const bundle = JSON.parse(await fs.readFile(bundleFile.file, 'utf8'));
-        bundleOk = bundle.kind === 'vidora-bundle' && bundle.project?.name === 'Sunset Coast — Sample Project' && bundle.version === '0.9.0';
-      } catch { bundleOk = false; }
-    }
-    check('L-CLOUD', 'bundle is a valid Vidora bundle (kind, version 0.9.0, sample project)', bundleOk);
-    await shot(page, 'L-CLOUD', 'dashboard-backups.png');
-    // Import the same bundle back — it opens the restored project in the editor.
-    await backups.locator('input[type="file"]').setInputFiles([bundleFile.file]);
-    await page.waitForTimeout(1200);
-    const editorVisible = await page.locator('section[aria-label="Timeline"]').isVisible();
-    check('L-CLOUD', 'importing the bundle restores the project into the editor', editorVisible);
-    // Back to the dashboard for a clean test project.
-    await page.getByRole('button', { name: 'Back to dashboard' }).click();
-    await page.waitForTimeout(500);
+    // Entry (v1.0.1): first-run Terms dialog, then the Updates notice,
+    // then the dashboard "Create project" banner. (No onboarding tour,
+    // no "New Project" button any more.)
+    const agree = page.getByRole('button', { name: 'Agree and continue' });
+    if (await agree.count()) { await agree.first().click(); await page.waitForTimeout(500); }
+    const updOk = page.getByRole('button', { name: 'OK', exact: true });
+    if (await updOk.count()) { await updOk.first().click(); await page.waitForTimeout(500); }
+    await page.getByRole('button', { name: 'Create project' }).first().click();
+    await page.waitForTimeout(600);
 
     // ================= Test project: import + timeline =================
-    await page.getByRole('button', { name: 'New Project' }).click();
-    await page.waitForTimeout(600);
-    await page.locator('nav[aria-label="Editor tools"] button[title="Media"]').click();
+    await tabBtn(page, 'Media').click();
     await page.waitForTimeout(300);
-    const mediaInput = page.locator('aside[aria-label="Media library"] input[type="file"]').first();
+    const mediaInput = page.locator('input[type="file"]').first();
     await mediaInput.setInputFiles([path.join(MEDIA, 'test-av.mp4')]);
     await page.waitForTimeout(4000);
-    await page.locator('aside[aria-label="Media library"]').locator('li', { hasText: 'test-av.mp4' }).first().locator('button', { hasText: 'Add to timeline' }).click();
+    await page.getByRole('button', { name: 'Media', exact: true }).click();
+    await page.waitForTimeout(500);
+    await page.locator('button[title$="click to add to timeline"]').first().click();
     check('L-EXPORT', 'test video is on the timeline (1 clip)', await waitClipCount(page, 1), `clips: ${await clipCount(page)}`);
 
-    // ================= L-EXPORT: dialog, options, real video export =================
+    // ================= L-EXPORT: menu, panel, options, real video export =================
     const dialog = page.locator('[role="dialog"][aria-label="Export and share"]');
-    await page.getByRole('button', { name: 'Export', exact: true }).click();
-    await page.waitForTimeout(600);
-    check('L-EXPORT', 'Export dialog opens', await dialog.isVisible());
-    for (const tab of ['Download', 'Share for review', 'Share as presentation', 'Share on social']) {
-      check('L-EXPORT', `tab "${tab}" present`, (await dialog.getByRole('tab', { name: tab }).count()) === 1);
+    const exportMenu = await openExportMenu(page);
+    check('L-EXPORT', 'Export menu opens', await exportMenu.isVisible());
+    for (const item of ['Share for review', 'Share as presentation', 'Share on social', 'Download']) {
+      check('L-EXPORT', `menu item "${item}" present`, (await exportMenu.getByRole('menuitem', { name: item }).count()) === 1);
     }
+    await exportMenu.getByRole('menuitem', { name: 'Download' }).click();
+    await page.waitForTimeout(600);
+    check('L-EXPORT', 'Export panel opens at Download', await dialog.isVisible());
     const dialogText = (await dialog.textContent()) ?? '';
     check('L-EXPORT', 'resolution options include 480p and 4K', dialogText.includes('480p') && dialogText.includes('4K'));
     check('L-EXPORT', 'quality options include Fast / Recommended / High', dialogText.includes('Fast exporting') && dialogText.includes('High quality'));
@@ -338,17 +344,11 @@ async function main() {
     await shot(page, 'L-EXPORT-AUDIO', 'audio-kinds-done.png');
 
     // ================= L-COLLAB: comment at playhead, resolve, timeline marker =================
-    // Scroll the dialog to the top first: after long jobs the queue list
-    // is at the bottom and the tab row can be out of view mid-click.
-    await dialog.evaluate((el) => { el.scrollTop = 0; });
-    await pageWait(300);
-    try {
-      await dialog.getByRole('tab', { name: 'Share for review' }).click({ timeout: 10000 });
-    } catch {
-      await dialog.evaluate((el) => { el.scrollTop = 0; });
-      await dialog.getByRole('tab', { name: 'Share for review' }).click({ timeout: 10000 });
-    }
-    await page.waitForTimeout(400);
+    // The panel has no tab bar: close it and reopen at the review section.
+    await closeExportPanel(page, dialog);
+    const reviewMenu = await openExportMenu(page);
+    await reviewMenu.getByRole('menuitem', { name: 'Share for review' }).click();
+    await page.waitForTimeout(600);
     await dialog.locator('input[aria-label="Your name for comments"]').fill('Auditor');
     await dialog.locator('textarea[aria-label="Comment text"]').fill('Title is too slow here');
     await dialog.getByRole('button', { name: 'Add comment' }).click();
@@ -360,8 +360,7 @@ async function main() {
     const resolvedText = (await dialog.textContent()) ?? '';
     check('L-COLLAB', 'resolving the comment shows Reopen', resolvedText.includes('Reopen'));
     await shot(page, 'L-COLLAB', 'review-comments.png');
-    await dialog.getByRole('button', { name: 'Close export' }).click();
-    await pageWait(500);
+    await closeExportPanel(page, dialog);
     const marker = page.locator('button[aria-label^="Comment at"]');
     check('L-COLLAB', 'comment marker appears on the timeline ruler', (await marker.count()) === 1);
     // Move the playhead away (click the ruler at ~4 s, zoom is 24 px/s),
@@ -377,18 +376,14 @@ async function main() {
     check('L-COLLAB', 'clicking the marker seeks the playhead back to the comment (0:00)', backTo === 0, `timecode=${await readTimecode(page)}`);
 
     // ================= L-SHARE: social buttons, caption, presentation =================
-    await page.getByRole('button', { name: 'Export', exact: true }).click();
-    await page.waitForTimeout(600);
-    await dialog.getByRole('tab', { name: 'Share on social' }).click();
+    // Open the social section via the menu: "Share on social" expands
+    // the submenu; the YouTube entry opens the social panel AND the
+    // platform upload page.
+    const socialMenu = await openExportMenu(page);
+    await socialMenu.getByRole('menuitem', { name: 'Share on social' }).click();
     await pageWait(400);
-    const socialText = (await dialog.textContent()) ?? '';
-    for (const name of ['YouTube', 'TikTok', 'Facebook Page', 'Instagram Reels']) {
-      check('L-SHARE', `social button "${name}" present`, socialText.includes(name));
-    }
-    check('L-SHARE', 'caption textarea present', (await dialog.locator('textarea[aria-label="Share caption"]').count()) === 1);
-    check('L-SHARE', 'Free Schedule is disabled with a reason', await dialog.getByRole('button', { name: /Free Schedule/ }).isDisabled());
     const popupPromise = page.waitForEvent('popup', { timeout: 15000 }).catch(() => null);
-    await dialog.getByRole('button', { name: /YouTube/ }).first().click();
+    await socialMenu.getByRole('menuitem', { name: 'YouTube' }).first().click();
     const popup = await popupPromise;
     // The headless shell cannot load youtube.com (no external network
     // in this sandbox), so the popup lands on chrome-error:// — the
@@ -397,10 +392,19 @@ async function main() {
     const ytOk = popup !== null && (popup.url().includes('youtube.com/upload') || popup.url().startsWith('chrome-error://'));
     check('L-SHARE', 'YouTube button opens the upload page', ytOk, popup?.url() ?? 'no popup');
     if (popup) await popup.close();
+    await pageWait(600);
+    const socialText = (await dialog.textContent()) ?? '';
+    for (const name of ['YouTube', 'TikTok', 'Facebook Page', 'Instagram Reels']) {
+      check('L-SHARE', `social button "${name}" present`, socialText.includes(name));
+    }
+    check('L-SHARE', 'caption textarea present', (await dialog.locator('textarea[aria-label="Share caption"]').count()) === 1);
+    check('L-SHARE', 'Free Schedule is disabled with a reason', await dialog.getByRole('button', { name: /Free Schedule/ }).isDisabled());
     await shot(page, 'L-SHARE', 'social-tab.png');
-    // Presentation: Present now opens fullscreen watch-only mode.
-    await dialog.getByRole('tab', { name: 'Share as presentation' }).click();
-    await pageWait(300);
+    // Presentation: close the panel and reopen at the presentation section.
+    await closeExportPanel(page, dialog);
+    const presentMenu = await openExportMenu(page);
+    await presentMenu.getByRole('menuitem', { name: 'Share as presentation' }).click();
+    await pageWait(600);
     await dialog.getByRole('button', { name: 'Present now (fullscreen, watch only)' }).click();
     await pageWait(800);
     const presentBar = page.locator('text=Exit presentation');
@@ -412,12 +416,11 @@ async function main() {
     await shot(page, 'L-SHARE', 'after-presentation.png');
 
     // ================= L-TEMPLATES-SLOTS (last — opens a new project) =================
-    await page.locator('nav[aria-label="Editor tools"] button[title="Templates"]').click();
+    await tabBtn(page, 'Templates').click();
     await page.waitForTimeout(500);
-    const templates = page.locator('div[aria-label="Templates"]');
-    check('L-TEMPLATES-SLOTS', 'Templates panel opens', await templates.isVisible());
-    check('L-TEMPLATES-SLOTS', 'template "Sunrise Intro" is listed', (await templates.getByText('Sunrise Intro').count()) >= 1);
-    const card = templates.getByRole('button', { name: 'Sunrise Intro details' }).locator('xpath=ancestor::div[1]');
+    check('L-TEMPLATES-SLOTS', 'Templates panel opens', (await page.getByText('Sunrise Intro').count()) >= 1);
+    check('L-TEMPLATES-SLOTS', 'template "Sunrise Intro" is listed', (await page.getByText('Sunrise Intro').count()) >= 1);
+    const card = page.getByRole('button', { name: 'Sunrise Intro details' }).locator('xpath=ancestor::div[1]');
     await card.getByRole('button', { name: 'Choose media' }).click();
     await pageWait(400);
     const slotSelect = card.locator('select[aria-label="Media for Main clip"]');

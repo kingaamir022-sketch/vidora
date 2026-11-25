@@ -495,12 +495,9 @@ export async function renderTimelineFrame(
   const secondaryClips = visibleClips.filter((c) => c.id !== primaryClip?.id);
 
   if (!primaryClip) {
-    ctx.fillStyle = '#71717a';
-    ctx.font = '16px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(project.name, W / 2, H / 2 - 8);
-    ctx.font = '13px sans-serif';
-    ctx.fillText('Import media and add it to the timeline to preview it here.', W / 2, H / 2 + 16);
+    // v1.0.2 (D2): CapCut's empty preview is a plain dark canvas — no
+    // project-name / import-hint text drawn here. Files arrive via
+    // drag-drop or Media → Import; the canvas stays empty until then.
     drawCaptionOverlay(ctx, project.captions ?? [], time, project.captionStyleId, W, H);
     return { skippedClips: skipped };
   }

@@ -25,9 +25,11 @@ import { addKeyframe, removeKeyframe, updateKeyframe } from '../lib/keyframes';
 import { anyEffectDef, defaultEffectParams } from '../lib/effects';
 import { BUILTIN_LUTS, parseCube } from '../lib/lut';
 import { DEFAULT_SHORTCUTS, loadShortcuts, saveShortcuts, type ShortcutAction } from '../lib/shortcuts';
+import { canShowEffects } from '../lib/panelDrag';
 import {
   allClipIds,
   addClipToAudioTrack,
+  addClipToStickerTrack,
   addClipToTextTrack,
   addClipToVideoTrack,
   deleteClip,
@@ -293,12 +295,19 @@ interface ProjectState {
   removeKeyframe: (id: string) => void;
   setAnimation: (phase: 'in' | 'out', kind: AnimationKind, duration: number) => void;
   // Phase 2 — effects / transitions / LUT
-  addEffect: (name: string) => void;
+  /** v1.0.2 (W4, D15): returns what happened — effects/LUTs only show
+   * on video/image clips (the compositor's effect passes run there).
+   * Applying to a sticker/text/audio clip redirects to the topmost
+   * video/image clip under the playhead ('redirected'); with no such
+   * clip the apply is refused ('blocked') instead of stacking
+   * invisibly. An explicit clipId targets that clip ('blocked' when
+   * it cannot show the effect). */
+  addEffect: (name: string, clipId?: string) => { status: 'applied' | 'already' | 'blocked' | 'no-clip' | 'redirected'; targetName?: string };
   removeEffect: (id: string) => void;
   updateEffect: (id: string, patch: Partial<{ intensity: number; params: Record<string, number | string | boolean> }>) => void;
-  setTransition: (transition: ClipTransition | null) => void;
+  setTransition: (transition: ClipTransition | null, clipId?: string) => void;
   setLut: (lut: Lut | null) => void;
-  setBuiltinLut: (name: string) => void;
+  setBuiltinLut: (name: string, clipId?: string) => { status: 'applied' | 'blocked' | 'no-clip' | 'redirected'; targetName?: string };
   importLutFile: (file: File) => Promise<string | null>;
   // Phase 2 — colour & adjustment
   updateAdjustment: (patch: Partial<Adjustment>) => void;
@@ -312,13 +321,13 @@ interface ProjectState {
   addPenPoint: (x: number, y: number) => void;
   clearPenPoints: () => void;
   // Phase 3 — text & graphics
-  addTextClip: (presetId?: string) => void;
+  addTextClip: (presetId?: string, startTime?: number) => void;
   updateTextStyle: (patch: Partial<TextStyle>) => void;
   applyTextStyleToAll: () => void;
-  addStickerClip: (stickerId: string) => void;
-  addShapeClip: (shapeId: string, fill: string) => void;
+  addStickerClip: (stickerId: string, startTime?: number) => void;
+  addShapeClip: (shapeId: string, fill: string, startTime?: number) => void;
   // Phase 5 — procedural backgrounds + templates (Section N)
-  addBackgroundClip: (backgroundId: string) => void;
+  addBackgroundClip: (backgroundId: string, startTime?: number) => void;
   useTemplate: (templateId: string, slotMedia?: Record<string, string>) => void;
   // Phase 8 — collaboration + cloud (Section L)
   addComment: (author: string, text: string) => void;
@@ -418,6 +427,22 @@ function loadSettings(): PersistedSettings {
 }
 
 const savedSettings = loadSettings();
+
+/** v1.0.2 (W4, D15): the topmost video/image clip under the playhead —
+ * the clip the compositor draws as the base frame (same "last visible
+ * video/image clip wins" order as renderTimelineFrame). Effects and
+ * LUTs applied to a sticker/text/audio selection redirect here. */
+function topVideoClipUnderPlayhead(project: VidoraProject, playhead: number): Clip | null {
+  let found: Clip | null = null;
+  for (const track of project.tracks) {
+    if (track.hidden || track.kind === 'audio') continue;
+    for (const clip of track.clips) {
+      if (!canShowEffects(clip.type)) continue;
+      if (playhead >= clip.start && playhead < clip.start + clip.duration) found = clip;
+    }
+  }
+  return found;
+}
 
 export const useProjectStore = create<ProjectState>()((set, get) => {
   const persistSettings = () => {
@@ -679,7 +704,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const s = get();
       if (!s.project) return;
       const count = s.project.tracks.filter((t) => t.kind === kind).length + 1;
-      const track = { clips: [], hidden: false, id: newId('track'), kind, locked: false, muted: false, name: `${kind === 'video' ? 'Video' : kind === 'audio' ? 'Audio' : 'Text'} ${count}`, solo: false, volume: 1 };
+      const track = { clips: [], hidden: false, id: newId('track'), kind, locked: false, muted: false, name: `${kind === 'video' ? 'Video' : kind === 'audio' ? 'Audio' : kind === 'sticker' ? 'Stickers' : 'Text'} ${count}`, solo: false, volume: 1 };
       applyProject({ ...s.project, tracks: [...s.project.tracks, track] });
     },
     copySelected: () => {
@@ -847,16 +872,31 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     },
 
     // ---- Phase 2: effects / transitions / LUT ----
-    addEffect: (name) => {
+    addEffect: (name, clipId) => {
       const s = get();
-      if (!s.project || s.selectedClipIds.length === 0) return;
+      if (!s.project) return { status: 'no-clip' };
       const def = anyEffectDef(name);
-      if (!def) return;
-      const id = s.selectedClipIds[0];
-      const clip = findClip(s.project, id)?.clip;
-      if (!clip || clip.effects.some((e) => e.name === name)) return;
+      if (!def) return { status: 'no-clip' };
+      const explicit = clipId ? findClip(s.project, clipId)?.clip ?? null : null;
+      const selected = !clipId && s.selectedClipIds.length > 0 ? findClip(s.project, s.selectedClipIds[0])?.clip ?? null : null;
+      let target = explicit ?? selected;
+      let redirected = false;
+      if (!target) return { status: 'no-clip' };
+      if (!canShowEffects(target.type)) {
+        // Explicit drop on a sticker/text/audio clip: refuse, don't stack.
+        if (explicit) return { status: 'blocked' };
+        // Tile click with a non-video selection: redirect to the video
+        // under the playhead so the user sees the effect work.
+        const top = topVideoClipUnderPlayhead(s.project, s.playhead);
+        if (!top) return { status: 'blocked' };
+        target = top;
+        redirected = true;
+      }
+      if (target.effects.some((e) => e.name === name)) return { status: 'already', targetName: target.name };
       const effect = { id: newId('fx'), intensity: 1, name, params: defaultEffectParams(def) };
-      commit((p) => updateClip(p, id, { effects: [...clip.effects, effect] }));
+      const id = target.id;
+      commit((p) => updateClip(p, id, { effects: [...target.effects, effect] }));
+      return { status: redirected ? 'redirected' : 'applied', targetName: target.name };
     },
     removeEffect: (fxId) => {
       const s = get();
@@ -878,10 +918,11 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
         }),
       );
     },
-    setTransition: (transition) => {
+    setTransition: (transition, clipId) => {
       const s = get();
-      if (!s.project || s.selectedClipIds.length === 0) return;
-      const id = s.selectedClipIds[0];
+      if (!s.project) return;
+      const id = clipId ?? (s.selectedClipIds.length > 0 ? s.selectedClipIds[0] : undefined);
+      if (!id) return;
       commit((p) => updateClip(p, id, transition ? { transitionIn: transition } : { transitionIn: undefined }));
     },
     setLut: (lut) => {
@@ -890,13 +931,26 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       const id = s.selectedClipIds[0];
       commit((p) => updateClip(p, id, lut ? { lut } : { lut: undefined }));
     },
-    setBuiltinLut: (name) => {
+    setBuiltinLut: (name, clipId) => {
       const s = get();
-      if (!s.project || s.selectedClipIds.length === 0) return;
+      if (!s.project) return { status: 'no-clip' };
       const found = BUILTIN_LUTS.find((l) => l.name === name);
-      if (!found) return;
-      const id = s.selectedClipIds[0];
+      if (!found) return { status: 'no-clip' };
+      const explicit = clipId ? findClip(s.project, clipId)?.clip ?? null : null;
+      const selected = !clipId && s.selectedClipIds.length > 0 ? findClip(s.project, s.selectedClipIds[0])?.clip ?? null : null;
+      let target = explicit ?? selected;
+      let redirected = false;
+      if (!target) return { status: 'no-clip' };
+      if (!canShowEffects(target.type)) {
+        if (explicit) return { status: 'blocked' };
+        const top = topVideoClipUnderPlayhead(s.project, s.playhead);
+        if (!top) return { status: 'blocked' };
+        target = top;
+        redirected = true;
+      }
+      const id = target.id;
       commit((p) => updateClip(p, id, { lut: { data: found.data, intensity: 1, name: found.name, size: found.size, source: 'builtin' } }));
+      return { status: redirected ? 'redirected' : 'applied', targetName: target.name };
     },
     importLutFile: async (file) => {
       const s = get();
@@ -981,12 +1035,12 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     },
 
     // ---- Phase 3: text & graphics (all undo-covered via commit) ----
-    addTextClip: (presetId) => {
+    addTextClip: (presetId, startTime) => {
       const s = get();
       if (!s.project) return;
       const preset = presetId ? TEXT_STYLE_PRESETS.find((p) => p.id === presetId) : undefined;
       const style = preset ? { ...preset.style, content: preset.style.content } : defaultTextStyle('Heading');
-      const base = baseClip('text', preset?.name ?? 'Text', 3, s.playhead);
+      const base = baseClip('text', preset?.name ?? 'Text', 3, startTime ?? s.playhead);
       const clip: Clip = { ...base, text: { content: style.content, style, tts: null } };
       commit((p) => addClipToTextTrack(p, clip));
       set({ selectedClipIds: [clip.id] });
@@ -1017,33 +1071,35 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       }
       applyProject(next);
     },
-    addStickerClip: (stickerId) => {
+    addStickerClip: (stickerId, startTime) => {
       const s = get();
       if (!s.project) return;
       const def = stickerById(stickerId);
       if (!def) return;
-      const base = baseClip('sticker', def.name, 3, s.playhead);
+      const base = baseClip('sticker', def.name, 3, startTime ?? s.playhead);
       const clip: Clip = { ...base, sticker: { category: def.category, id: def.id, kind: 'sticker', svg: def.svg } };
-      commit((p) => addClipToTextTrack(p, clip));
+      // v1.0.2 (W4, D15): stickers land on a "Stickers N" track, never on
+      // a text track (templates already did this; manual adds did not).
+      commit((p) => addClipToStickerTrack(p, clip));
       set({ selectedClipIds: [clip.id] });
     },
-    addShapeClip: (shapeId, fill) => {
+    addShapeClip: (shapeId, fill, startTime) => {
       const s = get();
       if (!s.project) return;
-      const base = baseClip('sticker', shapeId, 3, s.playhead);
+      const base = baseClip('sticker', shapeId, 3, startTime ?? s.playhead);
       const clip: Clip = { ...base, sticker: { category: 'Shapes', id: `shape-${shapeId}`, kind: 'shape', svg: shapeSvg(shapeId, fill) } };
-      commit((p) => addClipToTextTrack(p, clip));
+      commit((p) => addClipToStickerTrack(p, clip));
       set({ selectedClipIds: [clip.id] });
     },
     // ---- Phase 5: procedural backgrounds + templates (Section N) ----
-    addBackgroundClip: (backgroundId) => {
+    addBackgroundClip: (backgroundId, startTime) => {
       const s = get();
       if (!s.project) return;
       const def = backgroundDef(backgroundId);
       if (!def) return;
-      const base = baseClip('sticker', def.name, 5, s.playhead);
+      const base = baseClip('sticker', def.name, 5, startTime ?? s.playhead);
       const clip: Clip = { ...base, sticker: { category: 'Backgrounds', id: `bg-${def.id}`, kind: 'sticker', svg: def.svg } };
-      commit((p) => addClipToTextTrack(p, clip));
+      commit((p) => addClipToStickerTrack(p, clip));
       set({ selectedClipIds: [clip.id] });
     },
     useTemplate: (templateId, slotMedia) => {
@@ -1118,7 +1174,7 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
       }
       const base = baseClip('sticker', 'Drawing', 5, s.playhead);
       const clip: Clip = { ...base, drawing: { strokes: [stroke] } };
-      commit((p) => addClipToTextTrack(p, clip));
+      commit((p) => addClipToStickerTrack(p, clip));
       set({ selectedClipIds: [clip.id] });
     },
     clearDrawing: () => {

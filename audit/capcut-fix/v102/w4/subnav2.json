@@ -1,0 +1,305 @@
+{
+  "Effects": {
+    "Favorites": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Trending": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Sale": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Classic": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Cutout": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "NEW": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Hits": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Pro": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Clone": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Glowing lines": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Stroke": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    }
+  },
+  "Filters": {
+    "Favorites": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Featured": {
+      "count": 12,
+      "first": [
+        "Apply filter Vidora Warm",
+        "Apply filter Vidora Cool Teal",
+        "Apply filter Vidora Mono"
+      ],
+      "empty": null
+    },
+    "NEW": {
+      "count": 11,
+      "first": [
+        "Apply filter Vidora Cool Teal",
+        "Apply filter Frost Blue",
+        "Apply filter Deep Ocean"
+      ],
+      "empty": null
+    },
+    "Hits": {
+      "count": 5,
+      "first": [
+        "Apply filter Neon Pop",
+        "Apply filter Candy Bright",
+        "Apply filter Electric Day"
+      ],
+      "empty": null
+    },
+    "Life": {
+      "count": 6,
+      "first": [
+        "Apply filter Vidora Warm",
+        "Apply filter Golden Hour",
+        "Apply filter Amber Glow"
+      ],
+      "empty": null
+    },
+    "Landscape": {
+      "count": 6,
+      "first": [
+        "Apply filter Retro 70s",
+        "Apply filter Vintage Fade",
+        "Apply filter Grainy Film"
+      ],
+      "empty": null
+    },
+    "Portrait": {
+      "count": 5,
+      "first": [
+        "Apply filter Soft Pastel",
+        "Apply filter Morning Haze",
+        "Apply filter Cotton Cloud"
+      ],
+      "empty": null
+    },
+    "Mono": {
+      "count": 4,
+      "first": [
+        "Apply filter Vidora Mono",
+        "Apply filter Graphite",
+        "Apply filter Silver Mono"
+      ],
+      "empty": null
+    },
+    "Enhance": {
+      "count": 4,
+      "first": [
+        "Apply filter Vidora Mono",
+        "Apply filter Graphite",
+        "Apply filter Silver Mono"
+      ],
+      "empty": null
+    },
+    "4K": {
+      "count": 4,
+      "first": [
+        "Apply filter Vidora Mono",
+        "Apply filter Graphite",
+        "Apply filter Silver Mono"
+      ],
+      "empty": null
+    },
+    "HD Upscale": {
+      "count": 4,
+      "first": [
+        "Apply filter Vidora Mono",
+        "Apply filter Graphite",
+        "Apply filter Silver Mono"
+      ],
+      "empty": null
+    },
+    "Quality Restoration": {
+      "count": 4,
+      "first": [
+        "Apply filter Vidora Mono",
+        "Apply filter Graphite",
+        "Apply filter Silver Mono"
+      ],
+      "empty": null
+    },
+    "Night-view Color": {
+      "count": 4,
+      "first": [
+        "Apply filter Vidora Mono",
+        "Apply filter Graphite",
+        "Apply filter Silver Mono"
+      ],
+      "empty": null
+    },
+    "HD Cam 2": {
+      "count": 4,
+      "first": [
+        "Apply filter Vidora Mono",
+        "Apply filter Graphite",
+        "Apply filter Silver Mono"
+      ],
+      "empty": null
+    },
+    "HD Pet": {
+      "count": 4,
+      "first": [
+        "Apply filter Vidora Mono",
+        "Apply filter Graphite",
+        "Apply filter Silver Mono"
+      ],
+      "empty": null
+    }
+  },
+  "Transitions": {
+    "Favorites": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Trending": {
+      "count": 12,
+      "first": [
+        "Apply transition fade",
+        "Apply transition dissolve",
+        "Apply transition dip-black"
+      ],
+      "empty": null
+    },
+    "Classic": {
+      "count": 5,
+      "first": [
+        "Apply transition fade",
+        "Apply transition dissolve",
+        "Apply transition dip-black"
+      ],
+      "empty": null
+    },
+    "NEW": {
+      "count": 7,
+      "first": [
+        "Apply transition zoom",
+        "Apply transition spin",
+        "Apply transition blur"
+      ],
+      "empty": null
+    },
+    "Hits": {
+      "count": 6,
+      "first": [
+        "Apply transition slide",
+        "Apply transition push",
+        "Apply transition slide-blur"
+      ],
+      "empty": null
+    },
+    "Pals": {
+      "count": 6,
+      "first": [
+        "Apply transition circle",
+        "Apply transition diamond",
+        "Apply transition clock"
+      ],
+      "empty": null
+    },
+    "Overlay": {
+      "count": 5,
+      "first": [
+        "Apply transition wipe",
+        "Apply transition diagonal",
+        "Apply transition venetian"
+      ],
+      "empty": null
+    },
+    "Light": {
+      "count": 3,
+      "first": [
+        "Apply transition checker",
+        "Apply transition pixel-dissolve",
+        "Apply transition blinds"
+      ],
+      "empty": null
+    }
+  },
+  "Stickers": {
+    "Favorites": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Trending": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Sale": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Classic": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "NEW": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Animal Meme": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Squad": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    },
+    "Shapes": {
+      "count": 0,
+      "first": [],
+      "empty": null
+    }
+  },
+  "pageErrors": []
+}

@@ -1,8 +1,8 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { findClip, projectDuration, snapTime, snapToFrame } from '../lib/timeline';
+import { canShowEffects, decodePanelDrag } from '../lib/panelDrag';
 import { formatCommentTime } from '../lib/collab';
-import { formatTimecode } from '../lib/renderFrame';
 import { importFile } from '../lib/media';
 import {
   IconAxis,
@@ -15,8 +15,6 @@ import {
   IconLayout,
   IconMagnet,
   IconMic,
-  IconPause,
-  IconPlay,
   IconRedo,
   IconReference,
   IconReverse,
@@ -50,7 +48,6 @@ export default function TimelineShell() {
   const project = useProjectStore((s) => s.project);
   const tracks = project?.tracks ?? [];
   const playhead = useProjectStore((s) => s.playhead);
-  const playing = useProjectStore((s) => s.playing);
   const zoom = useProjectStore((s) => s.zoom);
   const setZoom = useProjectStore((s) => s.setZoom);
   const magnetic = useProjectStore((s) => s.magnetic);
@@ -62,7 +59,6 @@ export default function TimelineShell() {
   const selectAllClips = useProjectStore((s) => s.selectAllClips);
   const selectTrack = useProjectStore((s) => s.selectTrack);
   const setPlayhead = useProjectStore((s) => s.setPlayhead);
-  const setPlaying = useProjectStore((s) => s.setPlaying);
   const undo = useProjectStore((s) => s.undo);
   const redo = useProjectStore((s) => s.redo);
   const undoCount = useProjectStore((s) => s.undoStack.length);
@@ -87,6 +83,60 @@ export default function TimelineShell() {
   const setExportOpen = useProjectStore((s) => s.setExportOpen);
   const addMediaItem = useProjectStore((s) => s.addMediaItem);
   const addMediaToTimeline = useProjectStore((s) => s.addMediaToTimeline);
+  const addEffect = useProjectStore((s) => s.addEffect);
+  const setBuiltinLut = useProjectStore((s) => s.setBuiltinLut);
+  const setTransition = useProjectStore((s) => s.setTransition);
+  const addStickerClip = useProjectStore((s) => s.addStickerClip);
+  const addShapeClip = useProjectStore((s) => s.addShapeClip);
+  const addTextClip = useProjectStore((s) => s.addTextClip);
+  // v1.0.2 (W4, D15): HTML5 drop targets on clips + a transient hint
+  // line (e.g. "can't apply here" when an effect is dropped on a
+  // sticker/text clip — never a silent stack).
+  const [dropHint, setDropHint] = useState<string | null>(null);
+  const [dragOverClipId, setDragOverClipId] = useState<string | null>(null);
+  useEffect(() => {
+    if (!dropHint) return;
+    const t = window.setTimeout(() => setDropHint(null), 4000);
+    return () => window.clearTimeout(t);
+  }, [dropHint]);
+
+  /** Handle a panel-tile drop on one timeline clip. Returns nothing;
+   * the outcome is reported in the hint line. */
+  const onClipDrop = (e: React.DragEvent, clipId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOverClipId(null);
+    const payload = decodePanelDrag(e.dataTransfer);
+    if (!payload || !project) return;
+    const target = findClip(project, clipId)?.clip;
+    if (!target) return;
+    if (payload.kind === 'effect') {
+      if (!canShowEffects(target.type)) {
+        setDropHint(`Effects can't apply to “${target.name}” (${target.type} clips don't show effects) — drop it on a video clip instead.`);
+        return;
+      }
+      const res = addEffect(payload.id, clipId);
+      setDropHint(res.status === 'applied' ? `Effect applied to “${target.name}”.` : 'That effect is already on this clip.');
+    } else if (payload.kind === 'filter') {
+      if (!canShowEffects(target.type)) {
+        setDropHint(`Filters can't apply to “${target.name}” (${target.type} clips don't show filters) — drop it on a video clip instead.`);
+        return;
+      }
+      setBuiltinLut(payload.id, clipId);
+      setDropHint(`Filter applied to “${target.name}”.`);
+    } else if (payload.kind === 'transition') {
+      setTransition({ direction: 'right', duration: 0.5, type: payload.id as never }, clipId);
+      setDropHint(`Transition applied at the start of “${target.name}”.`);
+    } else {
+      // sticker / shape / text: add at the drop position inside the clip.
+      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+      const at = Math.max(target.start, Math.min(target.start + target.duration, target.start + (e.clientX - rect.left) / zoom));
+      if (payload.kind === 'sticker') addStickerClip(payload.id, at);
+      else if (payload.kind === 'shape') addShapeClip(payload.id, payload.fill ?? '#7C3AED', at);
+      else addTextClip(payload.id, at);
+      setDropHint('Added at the drop position.');
+    }
+  };
 
   const [, setDrag] = useState<Drag | null>(null);
   const [menu, setMenu] = useState<{ x: number; y: number; clipId: string } | null>(null);
@@ -239,9 +289,18 @@ export default function TimelineShell() {
             <>
               <div className="fixed inset-0 z-40" onClick={() => setToolMenu(null)} />
               <div role="menu" className="absolute left-0 top-9 z-50 w-36 overflow-hidden rounded-lg border border-[#2E2E2E] bg-[#1E1E1E] py-1 text-xs shadow-2xl">
-                {(['video', 'audio', 'text'] as const).map((kind) => (
-                  <button key={kind} type="button" role="menuitem" className="block w-full px-3 py-1.5 text-left capitalize hover:bg-[#2E2E2E]" onClick={() => { addTrack(kind); setToolMenu(null); }}>
-                    {kind === 'video' ? 'Video' : kind === 'audio' ? 'Audio' : 'Text'}
+                {(['video', 'audio', 'text', 'sticker'] as const).map((kind) => (
+                  <button
+                    key={kind}
+                    type="button"
+                    role="menuitem"
+                    className="block w-full px-3 py-1.5 text-left capitalize hover:bg-[#2E2E2E]"
+                    onClick={() => {
+                      addTrack(kind);
+                      setToolMenu(null);
+                    }}
+                  >
+                    {kind === 'video' ? 'Video' : kind === 'audio' ? 'Audio' : kind === 'text' ? 'Text' : 'Stickers'}
                   </button>
                 ))}
               </div>
@@ -323,15 +382,8 @@ export default function TimelineShell() {
           <IconMic size={18} />
         </button>
 
-        {/* Center: play + current | total time (R7) */}
-        <div className="mx-auto flex items-center gap-2">
-          <button type="button" onClick={() => setPlaying(!playing)} className={iconBtn} title={playing ? 'Pause (Space)' : 'Play (Space)'} aria-label={playing ? 'Pause' : 'Play'}>
-            {playing ? <IconPause size={18} /> : <IconPlay size={18} />}
-          </button>
-          <span className="font-mono text-xs text-zinc-200">
-            {formatTimecode(playhead, fps)} | {formatTimecode(duration, fps)}
-          </span>
-        </div>
+        {/* Center: intentionally empty (v1.0.2 D9) — play + timecode live
+            ONLY in the preview bottom bar, never in the timeline toolbar. */}
 
         {/* Right group */}
         <div className="ml-auto flex items-center gap-0.5">
@@ -377,6 +429,12 @@ export default function TimelineShell() {
           </button>
         </div>
       </div>
+
+      {dropHint && (
+        <div className="shrink-0 border-b border-[#2E2E2E] bg-[#1E1E1E] px-3 py-1.5 text-[11px] text-[#A8A8A8]" role="status">
+          {dropHint}
+        </div>
+      )}
 
       <div className="flex min-h-0 flex-1">
         {hasClips && (
@@ -463,9 +521,15 @@ export default function TimelineShell() {
               <span className="pointer-events-none absolute top-0 h-2.5 w-2.5 -translate-x-1/2 rounded-b bg-red-500" style={{ left: playhead * zoom }} aria-hidden="true" />
             </div>
             {!hasClips ? (
-              <div className="flex items-center justify-center p-8">
-                <div className="flex h-28 w-full max-w-6xl items-center justify-center rounded-xl border border-dashed border-[#3A3A3A] text-sm text-zinc-400">
-                  Drag material here and start to create
+              <div className="flex p-8">
+                <div className="flex h-28 w-full items-center justify-start gap-3 rounded-xl border border-dashed border-[#3A3A3A] px-4 text-left text-sm text-zinc-400">
+                  {/* Filmstrip icon (v1.0.2 D8) — inline here; icons.tsx is
+                      outside this worker's file scope, move it there later. */}
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="M7 4v16M17 4v16M2 9h5M2 15h5M17 9h5M17 15h5" />
+                  </svg>
+                  <span>Drag material here and start to create</span>
                 </div>
               </div>
             ) : (
@@ -495,11 +559,14 @@ export default function TimelineShell() {
                           onPointerDown={(e) => onClipPointerDown(e, clip.id, clip.start, clip.duration)}
                           onPointerMove={onClipPointerMove}
                           onPointerUp={endDrag}
+                          onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); setDragOverClipId(clip.id); }}
+                          onDragLeave={() => setDragOverClipId((cur) => (cur === clip.id ? null : cur))}
+                          onDrop={(e) => onClipDrop(e, clip.id)}
                           onKeyDown={(e) => {
                             if (e.key === 'Delete') deleteSelected();
                           }}
                           className={`absolute top-2 bottom-2 flex cursor-grab items-center overflow-hidden rounded-md bg-[#262626] px-2 text-xs select-none ${
-                            selected ? 'ring-2 ring-[#00D9D9]' : 'ring-1 ring-[#3A3A3A]'
+                            dragOverClipId === clip.id ? 'ring-2 ring-[#00D9D9] brightness-125' : selected ? 'ring-2 ring-[#00D9D9]' : 'ring-1 ring-[#3A3A3A]'
                           }`}
                           style={{
                             left: clip.start * zoom,

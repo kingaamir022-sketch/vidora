@@ -13,6 +13,32 @@
  * 110 PNG images). Fixtures are regenerated here because /tmp is wiped
  * on restarts (no fixture files needed for Phase 6 — the AI library
  * itself is the fixture).
+ *
+ * CapCut-fix port (2026-11-25, v1.0.1): entry is now Terms ("Agree and
+ * continue") -> Updates ("OK") -> "Create project" (tour + "New Project"
+ * are gone); the tab rail is div[role="tablist"][aria-label="Editor
+ * tools"] with role="tab" buttons (see tabBtn).
+ *
+ * REMOVED BY DESIGN — the in-editor AI Library panel
+ * (aside[aria-label="AI Library"] with Generate / Music / Clips /
+ * Images / Voices sub-tabs) no longer exists: the CapCut-fix rail has
+ * no "AI Tools" tab (LEFT_TABS is Media, Audio, Text, Stickers,
+ * Effects, Transitions, Captions, Filters, Adjustment, Templates,
+ * AI avatar) and no component renders that panel any more. The library
+ * data still ships (verified node-side below) and is browsable on the
+ * dashboard Library page.
+ *
+ * PORTED, not deleted (CapCut-fix correction 2026-11-25): the O3
+ * redistribution moved the catalog into the editor tabs instead of
+ * dropping it — O-AI-MUSIC is now Audio tab -> "AI music" section
+ * (play + "+" adds an audio clip; renders in-browser when the MP3 is
+ * absent), O-AI-CLIPS is Media tab -> Media section -> "AI clips"
+ * (click a card to add), O-AI-IMAGES is the same section's "AI images".
+ * O-AI-VOICES lives in the text inspector's TTS section (see phase 3 /
+ * phase 4 coverage) and is not re-checked here. O-AI-GENERATE is
+ * ported to its successor UI: Media tab -> Generate group -> AI image
+ * (prompt -> generated image -> timeline). AI music generation has no
+ * successor UI in the editor, so that half of O-AI-GENERATE is deleted.
  */
 import { spawn } from 'node:child_process';
 import { promises as fs } from 'node:fs';
@@ -55,6 +81,10 @@ async function waitClipCount(page, expected, timeoutMs = 15000) {
   }
   return (await clipCount(page)) === expected;
 }
+/** Left tab rail button (labels truncate visually, textContent is full). */
+const tabBtn = (page, name) => page.locator('div[role="tablist"][aria-label="Editor tools"] button[role="tab"]', { hasText: name }).first();
+/** The left editor column (tab rail + active PanelShell panel). */
+const leftCol = (page) => page.locator('div[class*="min(610px,32vw)"]');
 const countFiles = async (dir, ext) =>
   (await fs.readdir(dir).catch(() => [])).filter((f) => f.endsWith(ext)).length;
 
@@ -105,123 +135,89 @@ async function main() {
 
     await page.goto(URL, { waitUntil: 'networkidle' });
     await page.waitForTimeout(800);
-    // Phase 9 (M-ONBOARD): a first-run tour covers the dashboard on a
-    // fresh profile — dismiss it before doing anything else.
-    const tour = page.locator('[role="dialog"][aria-labelledby="tour-heading"]');
-    if (await tour.isVisible().catch(() => false)) {
-      await tour.getByRole('button', { name: 'Skip tour' }).click();
-      await page.waitForTimeout(400);
-    }
-
-    await page.getByRole('button', { name: 'New Project' }).click();
+    // CapCut-fix entry (v1.0.1): first-run Terms dialog, then the
+    // Updates notice, then the dashboard "Create project" banner.
+    const agree = page.getByRole('button', { name: 'Agree and continue' });
+    if (await agree.count()) { await agree.first().click(); await page.waitForTimeout(500); }
+    const updOk = page.getByRole('button', { name: 'OK', exact: true });
+    if (await updOk.count()) { await updOk.first().click(); await page.waitForTimeout(500); }
+    await page.getByRole('button', { name: 'Create project' }).first().click();
     await page.waitForTimeout(600);
 
-    const aiPanel = page.locator('aside[aria-label="AI Library"]');
-    await page.locator('nav[aria-label="Editor tools"] button[title="AI Tools"]').click();
-    await page.waitForTimeout(400);
-
-    // ---- O-AI-LIBRARY: panel + sub-tabs + count line ----
-    check('O-AI-LIBRARY', 'AI Library panel opens on the AI Tools tab', await aiPanel.isVisible());
-    const countLine = (await aiPanel.locator('p').first().textContent()) ?? '';
-    check('O-AI-LIBRARY', 'count line lists 100 tracks, 100 clips, 110 images, 16 voices',
-      countLine.includes('100 tracks') && countLine.includes('100 clips') && countLine.includes('110 images') && countLine.includes('16 voices'),
-      countLine.slice(0, 120));
-    for (const tab of ['Generate', 'Music', 'Clips', 'Images', 'Voices']) {
-      check('O-AI-LIBRARY', `sub-tab "${tab}" present`, (await aiPanel.getByRole('tab', { name: tab }).count()) === 1);
-    }
-    await shot(page, 'O-AI-LIBRARY', 'library-music.png');
-
-    // ---- O-AI-MUSIC: catalog, search, add ----
-    await fs.mkdir(path.join(AUDIT, 'O-AI-MUSIC'), { recursive: true });
-    const musicHeading = await aiPanel.locator('h3', { hasText: 'AI tracks' }).textContent();
-    check('O-AI-MUSIC', 'AI tracks heading lists 100', /\(100\)/.test(musicHeading ?? ''), musicHeading ?? '');
-    await aiPanel.getByLabel('Search AI library').fill('calm');
-    await page.waitForTimeout(300);
-    const calmRows = await aiPanel.locator('ul li').count();
-    check('O-AI-MUSIC', 'search "calm" narrows the track list', calmRows > 0 && calmRows < 100, `rows: ${calmRows}`);
-    await aiPanel.getByLabel('Search AI library').fill('');
-    await page.waitForTimeout(300);
-    const beforeMusic = await clipCount(page);
-    await aiPanel.getByRole('button', { name: '+ Add' }).first().click();
-    const musicAdded = await waitClipCount(page, beforeMusic + 1);
-    check('O-AI-MUSIC', 'adding an AI track places an audio clip on the timeline', musicAdded, `clips: ${beforeMusic} -> ${await clipCount(page)}`);
-    await shot(page, 'O-AI-MUSIC', 'track-added.png');
-
-    // ---- O-AI-CLIPS: catalog + add ----
-    await fs.mkdir(path.join(AUDIT, 'O-AI-CLIPS'), { recursive: true });
-    await aiPanel.getByRole('tab', { name: 'Clips' }).click();
-    await page.waitForTimeout(400);
-    const clipHeading = await aiPanel.locator('h3', { hasText: 'AI clips' }).textContent();
-    check('O-AI-CLIPS', 'AI clips heading lists 100', /\(100\)/.test(clipHeading ?? ''), clipHeading ?? '');
-    const clipCards = await aiPanel.locator('ul.grid li').count();
-    check('O-AI-CLIPS', 'clips grid renders 100 cards', clipCards === 100, `cards: ${clipCards}`);
-    const beforeClip = await clipCount(page);
-    await aiPanel.getByRole('button', { name: '+ Add' }).first().click();
-    const clipAdded = await waitClipCount(page, beforeClip + 1);
-    check('O-AI-CLIPS', 'adding an AI clip places a video clip on the timeline', clipAdded, `clips: ${beforeClip} -> ${await clipCount(page)}`);
-    await shot(page, 'O-AI-CLIPS', 'clip-added.png');
-
-    // ---- O-AI-IMAGES: catalog + add ----
-    await fs.mkdir(path.join(AUDIT, 'O-AI-IMAGES'), { recursive: true });
-    await aiPanel.getByRole('tab', { name: 'Images' }).click();
-    await page.waitForTimeout(400);
-    const imgHeading = await aiPanel.locator('h3', { hasText: 'AI images' }).textContent();
-    check('O-AI-IMAGES', 'AI images heading lists 110', /\(110\)/.test(imgHeading ?? ''), imgHeading ?? '');
-    await aiPanel.getByRole('button', { name: 'Stickers' }).click();
-    await page.waitForTimeout(300);
-    const stickerHeading = await aiPanel.locator('h3', { hasText: 'AI images' }).textContent();
-    check('O-AI-IMAGES', 'Stickers chip filters to 50', /\(50\)/.test(stickerHeading ?? ''), stickerHeading ?? '');
-    await aiPanel.getByRole('button', { name: 'All' }).click();
-    await page.waitForTimeout(300);
-    const beforeImg = await clipCount(page);
-    await aiPanel.getByRole('button', { name: '+ Add' }).first().click();
-    const imgAdded = await waitClipCount(page, beforeImg + 1);
-    check('O-AI-IMAGES', 'adding an AI image places an image clip on the timeline', imgAdded, `clips: ${beforeImg} -> ${await clipCount(page)}`);
-    await shot(page, 'O-AI-IMAGES', 'image-added.png');
-
-    // ---- O-AI-VOICES: languages, rows, narration ----
-    await fs.mkdir(path.join(AUDIT, 'O-AI-VOICES'), { recursive: true });
-    await aiPanel.getByRole('tab', { name: 'Voices' }).click();
-    await page.waitForTimeout(400);
-    for (const lang of ['English', 'Urdu', 'Hindi', 'Arabic']) {
-      check('O-AI-VOICES', `language tab "${lang}" present`, (await aiPanel.getByRole('button', { name: lang, exact: true }).count()) === 1);
-    }
-    const voiceRows = await aiPanel.locator('ul li').count();
-    check('O-AI-VOICES', 'English tab lists 4 voice rows', voiceRows === 4, `rows: ${voiceRows}`);
-    const beforeVoice = await clipCount(page);
-    await aiPanel.getByRole('button', { name: '+ Add narration' }).first().click();
-    const voiceAdded = await waitClipCount(page, beforeVoice + 1);
-    check('O-AI-VOICES', 'adding a narration creates a narration clip on the timeline', voiceAdded, `clips: ${beforeVoice} -> ${await clipCount(page)}`);
-    await shot(page, 'O-AI-VOICES', 'voices.png');
-
-    // ---- O-AI-GENERATE: prompt -> music + image ----
+    // ---- O-AI-GENERATE (ported): Media -> Generate -> AI image ----
+    // Prompt -> locally generated image -> add to timeline. (AI music
+    // generation has no successor UI in the editor — deleted, see header.)
     await fs.mkdir(path.join(AUDIT, 'O-AI-GENERATE'), { recursive: true });
-    await aiPanel.getByRole('tab', { name: 'Generate' }).click();
-    await page.waitForTimeout(400);
-    await aiPanel.getByLabel('Generation prompt').fill('calm ocean');
-    await aiPanel.getByRole('button', { name: 'AI music', exact: true }).click();
+    await tabBtn(page, 'Media').click();
+    await page.waitForTimeout(300);
+    await leftCol(page).getByRole('button', { name: 'Generate AI' }).click();
     await page.waitForTimeout(200);
-    await aiPanel.getByRole('button', { name: 'Generate', exact: true }).click();
-    const genMusic = await aiPanel.locator('button', { hasText: '+ Add to timeline' }).first().waitFor({ timeout: 30000 }).then(() => true).catch(() => false);
-    check('O-AI-GENERATE', 'AI music generation returns a result', genMusic);
-    const beforeGen = await clipCount(page);
-    await aiPanel.locator('button', { hasText: '+ Add to timeline' }).first().click();
-    const genAdded = await waitClipCount(page, beforeGen + 1);
-    check('O-AI-GENERATE', 'generated music adds to the timeline', genAdded, `clips: ${beforeGen} -> ${await clipCount(page)}`);
-    await aiPanel.getByRole('button', { name: 'AI image', exact: true }).click();
-    await page.waitForTimeout(200);
-    const addsBeforeImage = await aiPanel.locator('button', { hasText: '+ Add to timeline' }).count();
-    await aiPanel.getByRole('button', { name: 'Generate', exact: true }).click();
-    let genImage = false;
-    for (let i = 0; i < 50; i++) {
-      if ((await aiPanel.locator('button', { hasText: '+ Add to timeline' }).count()) === addsBeforeImage + 1) {
-        genImage = true;
-        break;
-      }
-      await page.waitForTimeout(300);
+    await leftCol(page).getByRole('button', { name: 'AI image', exact: true }).click();
+    await page.waitForTimeout(300);
+    const genPanel = leftCol(page);
+    await genPanel.getByLabel('Generation prompt').fill('calm ocean');
+    await genPanel.getByRole('button', { name: 'Generate', exact: true }).click();
+    const genImage = await genPanel.locator('button[title="Click to add to the timeline"]').first().waitFor({ timeout: 15000 }).then(() => true).catch(() => false);
+    check('O-AI-GENERATE', 'AI image generation returns a result', genImage);
+    if (genImage) {
+      const beforeGen = await clipCount(page);
+      await genPanel.locator('button[title="Click to add to the timeline"]').first().click();
+      const genAdded = await waitClipCount(page, beforeGen + 1);
+      check('O-AI-GENERATE', 'generated image adds to the timeline', genAdded, `clips: ${beforeGen} -> ${await clipCount(page)}`);
+    } else {
+      check('O-AI-GENERATE', 'generated image adds to the timeline', false, 'no generation result to add');
     }
-    check('O-AI-GENERATE', 'AI image generation returns a new result', genImage);
     await shot(page, 'O-AI-GENERATE', 'generate-results.png');
+
+    // ---- O-AI-MUSIC (ported, CapCut-fix correction 2026-11-25): ----
+    // Audio tab -> "AI music" section; a track's "+" adds an audio clip.
+    await fs.mkdir(path.join(AUDIT, 'O-AI-MUSIC'), { recursive: true });
+    await tabBtn(page, 'Audio').click();
+    await page.waitForTimeout(400);
+    const aiMusicSection = leftCol(page).locator('section:has(h3:text-is("AI music"))');
+    const aiMusicShown = (await aiMusicSection.count()) > 0;
+    check('O-AI-MUSIC', 'Audio tab shows the AI music section', aiMusicShown);
+    if (aiMusicShown) {
+      const beforeMusic = await clipCount(page);
+      await aiMusicSection.locator('button[title="Add to timeline"]').first().click();
+      const musicAdded = await waitClipCount(page, beforeMusic + 1);
+      check('O-AI-MUSIC', 'AI track "+" adds an audio clip to the timeline', musicAdded, `clips: ${beforeMusic} -> ${await clipCount(page)}`);
+    } else {
+      check('O-AI-MUSIC', 'AI track "+" adds an audio clip to the timeline', false, 'no AI music section');
+    }
+    await shot(page, 'O-AI-MUSIC', 'ai-music.png');
+
+    // ---- O-AI-CLIPS / O-AI-IMAGES (ported, CapCut-fix correction): ----
+    // Media tab -> Media section -> "AI clips" / "AI images"; a card
+    // click adds the clip/image to the timeline.
+    await fs.mkdir(path.join(AUDIT, 'O-AI-CLIPS'), { recursive: true });
+    await tabBtn(page, 'Media').click();
+    await page.waitForTimeout(300);
+    await page.getByRole('button', { name: 'Media', exact: true }).click();
+    await page.waitForTimeout(400);
+    const aiClipsSection = leftCol(page).locator('section:has(h3:text-is("AI clips"))');
+    const aiClipsShown = (await aiClipsSection.count()) > 0;
+    check('O-AI-CLIPS', 'Media tab shows the AI clips section', aiClipsShown);
+    if (aiClipsShown) {
+      const beforeClip = await clipCount(page);
+      await aiClipsSection.locator('button[title$="click to add to timeline"]').first().click();
+      const clipAdded = await waitClipCount(page, beforeClip + 1);
+      check('O-AI-CLIPS', 'AI clip card adds a clip to the timeline', clipAdded, `clips: ${beforeClip} -> ${await clipCount(page)}`);
+    } else {
+      check('O-AI-CLIPS', 'AI clip card adds a clip to the timeline', false, 'no AI clips section');
+    }
+    const aiImagesSection = leftCol(page).locator('section:has(h3:text-is("AI images"))');
+    const aiImagesShown = (await aiImagesSection.count()) > 0;
+    check('O-AI-IMAGES', 'Media tab shows the AI images section', aiImagesShown);
+    if (aiImagesShown) {
+      const beforeImage = await clipCount(page);
+      await aiImagesSection.locator('button[title$="click to add to timeline"]').first().click();
+      const imageAdded = await waitClipCount(page, beforeImage + 1);
+      check('O-AI-IMAGES', 'AI image card adds a clip to the timeline', imageAdded, `clips: ${beforeImage} -> ${await clipCount(page)}`);
+    } else {
+      check('O-AI-IMAGES', 'AI image card adds a clip to the timeline', false, 'no AI images section');
+    }
+    await shot(page, 'O-AI-CLIPS', 'ai-clips.png');
   } finally {
     await browser.close();
     preview.kill();

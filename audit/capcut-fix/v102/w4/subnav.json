@@ -1,0 +1,233 @@
+{
+  "Effects": {
+    "Favorites": {
+      "tiles": 1,
+      "hint": null
+    },
+    "Trending": {
+      "tiles": 1,
+      "hint": null
+    },
+    "Sale": {
+      "tiles": 1,
+      "hint": null
+    },
+    "Classic": {
+      "tiles": 1,
+      "hint": null
+    },
+    "Cutout": {
+      "tiles": 1,
+      "hint": null
+    },
+    "NEW": {
+      "tiles": 1,
+      "hint": null
+    },
+    "Hits": {
+      "tiles": 1,
+      "hint": null
+    },
+    "Pro": {
+      "tiles": 1,
+      "hint": null
+    },
+    "Clone": {
+      "tiles": 1,
+      "hint": null
+    },
+    "Glowing lines": {
+      "tiles": 1,
+      "hint": null
+    },
+    "Stroke": {
+      "tiles": 1,
+      "hint": null
+    }
+  },
+  "Filters": {
+    "Favorites": {
+      "tiles": 1,
+      "hint": "No "
+    },
+    "Featured": {
+      "tiles": 49,
+      "hint": null
+    },
+    "NEW": {
+      "tiles": 45,
+      "hint": null
+    },
+    "Hits": {
+      "tiles": 21,
+      "hint": null
+    },
+    "Life": {
+      "tiles": 25,
+      "hint": null
+    },
+    "Landscape": {
+      "tiles": 25,
+      "hint": null
+    },
+    "Portrait": {
+      "tiles": 21,
+      "hint": null
+    },
+    "Mono": {
+      "tiles": 17,
+      "hint": null
+    },
+    "Enhance": {
+      "tiles": 17,
+      "hint": "No "
+    },
+    "4K": {
+      "tiles": 17,
+      "hint": "No "
+    },
+    "HD Upscale": {
+      "tiles": 17,
+      "hint": "No "
+    },
+    "Quality Restoration": {
+      "tiles": 17,
+      "hint": "No "
+    },
+    "Night-view Color": {
+      "tiles": 17,
+      "hint": "No "
+    },
+    "HD Cam 2": {
+      "tiles": 17,
+      "hint": "No "
+    },
+    "HD Pet": {
+      "tiles": 17,
+      "hint": "No "
+    }
+  },
+  "Transitions": {
+    "Favorites": {
+      "tiles": 2,
+      "hint": "No "
+    },
+    "Trending": {
+      "tiles": 50,
+      "hint": "No "
+    },
+    "Classic": {
+      "tiles": 22,
+      "hint": "No "
+    },
+    "NEW": {
+      "tiles": 30,
+      "hint": "No "
+    },
+    "Hits": {
+      "tiles": 26,
+      "hint": "No "
+    },
+    "Pals": {
+      "tiles": 26,
+      "hint": "No "
+    },
+    "Overlay": {
+      "tiles": 22,
+      "hint": "No "
+    },
+    "Light": {
+      "tiles": 14,
+      "hint": "No "
+    }
+  },
+  "Stickers": {
+    "Favorites": {
+      "tiles": 12,
+      "hint": "No "
+    },
+    "Trending": {
+      "tiles": 57,
+      "hint": "No "
+    },
+    "Sale": {
+      "tiles": 57,
+      "hint": "No "
+    },
+    "Classic": {
+      "tiles": 57,
+      "hint": "No "
+    },
+    "NEW": {
+      "tiles": 57,
+      "hint": "No "
+    },
+    "Animal Meme": {
+      "tiles": 57,
+      "hint": "No "
+    },
+    "Squad": {
+      "tiles": 57,
+      "hint": "No "
+    },
+    "Shapes": {
+      "tiles": 57,
+      "hint": "No "
+    }
+  },
+  "Audio": {
+    "Favorites": {
+      "tiles": 13,
+      "hint": "No "
+    },
+    "Music": {
+      "tiles": 38,
+      "hint": "No "
+    },
+    "Sound effects": {
+      "tiles": 38,
+      "hint": "No "
+    }
+  },
+  "Captions": {
+    "Auto captions": {
+      "tiles": 5,
+      "hint": "No "
+    },
+    "Favorites": {
+      "tiles": 3,
+      "hint": "No "
+    },
+    "Trending": {
+      "tiles": 18,
+      "hint": "No "
+    },
+    "Classic": {
+      "tiles": 18,
+      "hint": "No "
+    },
+    "NEW": {
+      "tiles": 18,
+      "hint": "No "
+    },
+    "Hits": {
+      "tiles": 18,
+      "hint": "No "
+    },
+    "Word": {
+      "tiles": 12,
+      "hint": "No "
+    },
+    "Auto lyrics": {
+      "tiles": 1,
+      "hint": "No "
+    }
+  },
+  "Text": {
+    "AI text FX": {
+      "tiles": 0,
+      "hint": "No "
+    }
+  },
+  "pageErrors": []
+}

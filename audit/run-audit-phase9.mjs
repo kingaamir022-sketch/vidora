@@ -3,11 +3,26 @@
  * Vidora Phase 9 self-audit (Rule 12.4).
  * Serves the production build with `vite preview`, drives it with
  * Playwright (chromium headless shell), performs each Phase 9 behaviour
- * card's steps (M-ONBOARD, M-LOCALE, M-SETTINGS, M-AUTH, M-SUBS,
- * M-ACCESS, M-PERF, M-LENS, M-ASS, M-TELEMETRY, M-CI, M-DOCKER),
- * screenshots into audit/phase9/<ID>/, and writes
+ * card's steps (M-LOCALE, M-SETTINGS, M-ACCESS, M-PERF, M-LENS, M-ASS,
+ * M-CI, M-DOCKER), screenshots into audit/phase9/<ID>/, and writes
  * audit/phase9/AUDIT-REPORT.md.
  * Run: npm run audit:phase9   (builds first)
+ *
+ * CapCut-fix port (v1.0.1, 2026-11-25): entry is now the first-run
+ * Terms dialog ("Agree and continue") + Updates notice ("OK") + the
+ * dashboard "Create project" banner (the onboarding tour and the old
+ * "New Project" button are gone); the editor tab rail is
+ * div[role="tablist"][aria-label="Editor tools"] with role=tab buttons
+ * (see tabBtn); panels are PanelShell divs (no aside[aria-label=
+ * "Media library"], no [aria-label="Captions panel"]); the Adjustment
+ * tab is now the presets library — the colour sliders (incl. Lens
+ * correction) live in the inspector, Basic → "Color adjustment".
+ * REMOVED as obsolete by design: M-ONBOARD (onboarding tour removed
+ * entirely, incl. "Show the tour again"), M-AUTH (local auth removed
+ * entirely — no sign-in, no OWNER/CUSTOMER roles, no read-only gate),
+ * M-SUBS (plans removed with auth), M-TELEMETRY (Diagnostics section
+ * removed). M-LOCALE now checks the translated Settings dialog title
+ * (the dashboard renders no localised h1 any more).
  *
  * Fixtures are regenerated here because /tmp is wiped on restarts:
  *  - test-av.mp4: 6 s testsrc video + 440 Hz sine (ffmpeg).
@@ -59,7 +74,15 @@ async function waitUp(tries = 40) {
   throw new Error('preview server did not come up');
 }
 
-const M_CARDS = ['M-ONBOARD', 'M-LOCALE', 'M-SETTINGS', 'M-AUTH', 'M-SUBS', 'M-ACCESS', 'M-PERF', 'M-LENS', 'M-ASS', 'M-TELEMETRY', 'M-CI', 'M-DOCKER'];
+// Editor tab rail: div[role="tablist"][aria-label="Editor tools"] with
+// role=tab buttons; labels truncate ('Transiti…', 'Adjust…'), so
+// hasText substring matching is right.
+const tabBtn = (page, name) => page.locator('div[role="tablist"][aria-label="Editor tools"] button[role="tab"]', { hasText: name }).first();
+
+// M-ONBOARD, M-AUTH, M-SUBS, M-TELEMETRY removed in the v1.0.1 port:
+// tour, local auth + plans, and the Diagnostics section were all
+// removed by design (see the header comment).
+const M_CARDS = ['M-LOCALE', 'M-SETTINGS', 'M-ACCESS', 'M-PERF', 'M-LENS', 'M-ASS', 'M-CI', 'M-DOCKER'];
 const clipCount = (page) => page.locator('section[aria-label="Timeline"] [role="button"]').count();
 
 async function main() {
@@ -76,7 +99,7 @@ async function main() {
     }
   }
   const pkg = JSON.parse(await fs.readFile(path.join(ROOT, 'package.json'), 'utf8'));
-  check('M-CI', 'package.json version is 1.0.0', pkg.version === '1.0.0', `version=${pkg.version}`);
+  check('M-CI', 'package.json version is 1.0.2', pkg.version === '1.0.2', `version=${pkg.version}`);
   check('M-CI', 'audit:phase9 script exists', typeof pkg.scripts?.['audit:phase9'] === 'string');
   try {
     const ci = await fs.readFile(path.join(ROOT, '.github', 'workflows', 'ci.yml'), 'utf8');
@@ -138,40 +161,43 @@ async function main() {
     await page.goto(URL, { waitUntil: 'networkidle' });
     await page.waitForTimeout(800);
 
-    // ================= M-ONBOARD (fresh profile → tour shows) =================
-    const tour = page.locator('[role="dialog"][aria-labelledby="tour-heading"]');
-    check('M-ONBOARD', 'onboarding tour appears on first launch', await tour.isVisible());
-    check('M-ONBOARD', 'first step is "Welcome to Vidora"', (await tour.textContent())?.includes('Welcome to Vidora') ?? false);
-    await shot(page, 'M-ONBOARD', 'tour-step-1.png');
-    await tour.getByRole('button', { name: 'Next' }).click();
-    await pageWait(300);
-    check('M-ONBOARD', 'Next advances to step 2 ("Import your media")', (await tour.textContent())?.includes('Import your media') ?? false);
-    await tour.getByRole('button', { name: 'Skip tour' }).click();
-    await pageWait(400);
-    check('M-ONBOARD', 'Skip tour hides the tour', !(await tour.isVisible()));
-    const onboardingFlag = await page.evaluate(() => localStorage.getItem('vidora.onboarding.v1'));
-    check('M-ONBOARD', 'dismissal is remembered (vidora.onboarding.v1 = 1)', onboardingFlag === '1', `flag=${onboardingFlag}`);
-    await page.reload({ waitUntil: 'networkidle' });
-    await pageWait(800);
-    check('M-ONBOARD', 'tour does not reappear on reload', !(await tour.isVisible()));
+    // Entry (v1.0.1): first-run Terms dialog, then the Updates notice,
+    // then the dashboard "Create project" banner. (No onboarding tour,
+    // no "New Project" button any more.)
+    const agree = page.getByRole('button', { name: 'Agree and continue' });
+    if (await agree.count()) { await agree.first().click(); await page.waitForTimeout(500); }
+    const updOk = page.getByRole('button', { name: 'OK', exact: true });
+    if (await updOk.count()) { await updOk.first().click(); await page.waitForTimeout(500); }
+    await page.getByRole('button', { name: 'Create project' }).first().click();
+    await pageWait(600);
 
-    // ================= M-LOCALE + M-SETTINGS (Settings dialog, dashboard) =================
+    // ================= M-LOCALE + M-SETTINGS (Settings dialog, editor) =================
+    // The dashboard has no Settings button any more: Settings opens
+    // from the editor's TopBar Menu (v1.0.2 D7: the "…" menu is gone).
     const settings = page.locator('[role="dialog"][aria-labelledby="settings-heading"]');
-    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.getByRole('button', { name: 'Menu' }).click();
+    await pageWait(300);
+    await page.getByRole('menuitem', { name: 'Settings' }).click();
     await pageWait(500);
-    check('M-SETTINGS', 'Settings dialog opens from the dashboard', await settings.isVisible());
+    check('M-SETTINGS', 'Settings dialog opens from the editor', await settings.isVisible());
     // Language: Urdu (selects are positional — their aria-labels localise
     // with the locale, so a text selector stops matching after a switch).
+    // The translated string checked is the Settings dialog title itself
+    // (the dashboard renders no localised h1 any more).
     await settings.locator('select').nth(0).selectOption('ur');
     await pageWait(500);
-    const dashboardTitle = await page.locator('h1').first().textContent();
-    check('M-LOCALE', 'switching to Urdu translates the dashboard title', dashboardTitle === 'آپ کے پروجیکٹس', `h1=${dashboardTitle}`);
+    const settingsTitleUr = await settings.locator('#settings-heading').textContent();
+    check('M-LOCALE', 'switching to Urdu translates the Settings title', settingsTitleUr === 'سیٹنگز', `title=${settingsTitleUr}`);
+    const langUr = await page.evaluate(() => document.documentElement.getAttribute('lang'));
+    check('M-LOCALE', 'switching to Urdu sets lang=ur', langUr === 'ur', `lang=${langUr}`);
     await shot(page, 'M-LOCALE', 'dashboard-urdu.png');
     // Language: Arabic → RTL
     await settings.locator('select').nth(0).selectOption('ar');
     await pageWait(500);
     const dir = await page.evaluate(() => document.documentElement.getAttribute('dir'));
     check('M-LOCALE', 'switching to Arabic sets dir=rtl', dir === 'rtl', `dir=${dir}`);
+    const settingsTitleAr = await settings.locator('#settings-heading').textContent();
+    check('M-LOCALE', 'switching to Arabic translates the Settings title', settingsTitleAr === 'الإعدادات', `title=${settingsTitleAr}`);
     await shot(page, 'M-LOCALE', 'dashboard-arabic-rtl.png');
     await settings.locator('select').nth(0).selectOption('en');
     await pageWait(400);
@@ -207,104 +233,41 @@ async function main() {
     const saved3 = await page.evaluate(() => JSON.parse(localStorage.getItem('vidora.settings.v1') ?? '{}'));
     check('M-SETTINGS', 'input preference is saved', saved3.inputPreference === 'left-handed', JSON.stringify(saved3));
     await settings.locator('select').nth(2).selectOption('default');
-    // Show the tour again from Settings
-    await settings.getByRole('button', { name: 'Show the tour again' }).click();
-    await pageWait(400);
-    check('M-SETTINGS', 'Show the tour again re-opens the onboarding tour', await tour.isVisible());
-    await tour.getByRole('button', { name: 'Skip tour' }).click();
-    await pageWait(300);
-
-    // ================= M-TELEMETRY (Diagnostics section) =================
-    await page.getByRole('button', { name: 'Settings', exact: true }).click();
-    await pageWait(400);
-    const diag = settings.locator('section[aria-label="Diagnostics"]');
-    check('M-TELEMETRY', 'Diagnostics section renders', await diag.isVisible());
-    check('M-TELEMETRY', 'no errors recorded yet on a fresh profile', (await diag.textContent())?.includes('No errors recorded.') ?? false);
-    await diag.locator('input[type="checkbox"]').check();
-    await pageWait(400);
-    check('M-TELEMETRY', 'opt-in is saved (vidora.telemetry.optin.v1 = 1)', (await page.evaluate(() => localStorage.getItem('vidora.telemetry.optin.v1'))) === '1');
-    check('M-TELEMETRY', 'feature usage counts the opt-in itself (analytics-opt-in)', (await diag.textContent())?.includes('analytics-opt-in') ?? false);
-    await shot(page, 'M-TELEMETRY', 'diagnostics.png');
     await settings.getByRole('button', { name: 'Close', exact: true }).click();
     await pageWait(300);
 
-    // ================= M-AUTH + M-SUBS (first account = OWNER) =================
-    const accountSection = page.locator('section[aria-label="Account"]');
-    check('M-AUTH', 'Account section renders on the dashboard', await accountSection.isVisible());
-    await accountSection.locator('input[aria-label="Your name"]').fill('Aamir');
-    await accountSection.locator('input[aria-label="Email"]').fill('aamir@example.com');
-    await accountSection.locator('input[aria-label="Password"]').fill('password123');
-    await accountSection.getByRole('button', { name: 'Create account' }).click();
-    await pageWait(1200);
-    const signedIn = (await accountSection.textContent()) ?? '';
-    check('M-AUTH', 'first account signs in as OWNER', signedIn.includes('role: OWNER'));
-    check('M-SUBS', 'signed-in account shows plan: Free', signedIn.includes('plan: Free'));
-    check('M-SUBS', 'Plans list shows Pro as not available', signedIn.includes('Pro — Not available in this build'));
-    await shot(page, 'M-AUTH', 'owner-signed-in.png');
-    // Second account = CUSTOMER, read-only
-    await accountSection.getByRole('button', { name: 'Sign out' }).click();
-    await pageWait(400);
-    await accountSection.locator('input[aria-label="Your name"]').fill('Kashif');
-    await accountSection.locator('input[aria-label="Email"]').fill('kashif@example.com');
-    await accountSection.locator('input[aria-label="Password"]').fill('password123');
-    await accountSection.getByRole('button', { name: 'Create account' }).click();
-    await pageWait(1200);
-    const signedIn2 = (await accountSection.textContent()) ?? '';
-    check('M-AUTH', 'second account signs in as CUSTOMER', signedIn2.includes('role: CUSTOMER'));
-    check('M-AUTH', 'customer sees the read-only warning', signedIn2.includes('read-only'));
-    const newProjectBtn = page.getByRole('button', { name: 'New Project' });
-    check('M-AUTH', 'New Project is disabled for a CUSTOMER', await newProjectBtn.isDisabled());
-    await shot(page, 'M-AUTH', 'customer-dashboard.png');
-    // Open the sample project as a CUSTOMER → read-only banner in the editor.
-    await page.locator('button[aria-label^="Open "]').first().click();
-    await pageWait(900);
-    const readOnlyBanner = page.locator('text=You are signed in as Customer — read-only');
-    check('M-AUTH', 'editor shows a read-only banner for a CUSTOMER', await readOnlyBanner.isVisible());
-    check('M-AUTH', 'Export is disabled for a CUSTOMER', await page.getByRole('button', { name: 'Export', exact: true }).isDisabled());
-    await shot(page, 'M-AUTH', 'customer-editor-readonly.png');
-    await page.getByRole('button', { name: 'Back to dashboard' }).click();
-    await pageWait(500);
-    await accountSection.getByRole('button', { name: 'Sign out' }).click();
-    await pageWait(400);
-    check('M-AUTH', 'signing out restores full access (New Project enabled)', !(await page.getByRole('button', { name: 'New Project' }).isDisabled()));
-
     // ================= Editor: test project (M-PERF, M-LENS, M-ASS, M-ACCESS) =================
-    await page.getByRole('button', { name: 'New Project' }).click();
-    await pageWait(600);
-    await page.locator('nav[aria-label="Editor tools"] button[title="Media"]').click();
+    await tabBtn(page, 'Media').click();
     await pageWait(300);
-    const mediaInput = page.locator('aside[aria-label="Media library"] input[type="file"]').first();
+    const mediaInput = page.locator('input[type="file"]').first();
     await mediaInput.setInputFiles([path.join(MEDIA, 'test-av.mp4')]);
     await pageWait(4000);
-    await page.locator('aside[aria-label="Media library"]').locator('li', { hasText: 'test-av.mp4' }).first().locator('button', { hasText: 'Add to timeline' }).click();
+    await page.getByRole('button', { name: 'Media', exact: true }).click();
+    await pageWait(500);
+    await page.locator('button[title$="click to add to timeline"]').first().click();
     await pageWait(1000);
     check('M-PERF', 'test video is on the timeline (1 clip)', (await clipCount(page)) === 1, `clips: ${await clipCount(page)}`);
     // Import the same file again — the cache reuses the probe result.
     await mediaInput.setInputFiles([path.join(MEDIA, 'test-av.mp4')]);
     await pageWait(4000);
-    const mediaItems = await page.locator('aside[aria-label="Media library"] li', { hasText: 'test-av.mp4' }).count();
-    check('M-PERF', 're-importing the same file works (2 items, thumbnails both present)', mediaItems === 2, `items: ${mediaItems}`);
-    const thumbs = await page.locator('aside[aria-label="Media library"] img').count();
+    const mediaCards = page.locator('button[title^="test-av.mp4"]');
+    check('M-PERF', 're-importing the same file works (2 items, thumbnails both present)', (await mediaCards.count()) === 2, `items: ${await mediaCards.count()}`);
+    const thumbs = await page.locator('button[title^="test-av.mp4"] img').count();
     check('M-PERF', 'thumbnails render for imported media', thumbs >= 2, `imgs: ${thumbs}`);
     await shot(page, 'M-PERF', 'media-imported-twice.png');
-    // M-TELEMETRY: creating the project counted a 'projects' event
-    // (opt-in was enabled earlier on the dashboard).
-    await page.locator('button[title="More options"]').click();
-    await pageWait(300);
-    await page.getByRole('menuitem', { name: 'Settings' }).click();
-    await pageWait(500);
-    const usageText = (await settings.locator('section[aria-label="Diagnostics"]').textContent()) ?? '';
-    check('M-TELEMETRY', 'feature usage counts the created project ("projects")', usageText.includes('projects'), usageText.slice(0, 200));
-    await settings.getByRole('button', { name: 'Close', exact: true }).click();
-    await pageWait(300);
 
-    // M-LENS: Adjustment tab → Lens correction slider
+    // M-LENS: colour sliders live in the inspector now — select the clip
+    // (video clips auto-open Basic), expand "Color adjustment", and use
+    // the Lens correction checkbox + Strength slider there.
     await page.locator('section[aria-label="Timeline"] [role="button"]').first().click();
     await pageWait(400);
-    await page.locator('nav[aria-label="Editor tools"] button[title="Adjustment"]').click();
+    const inspector = page.locator('aside[aria-label="Properties"]');
+    await inspector.locator('nav[aria-label="Inspector panels"]').getByRole('button', { name: 'Basic', exact: true }).click();
+    await pageWait(300);
+    await inspector.getByRole('button', { name: /Color adjustment/ }).click();
     await pageWait(400);
-    const adjPanel = page.locator('[aria-label="Colour and adjustment"]');
-    check('M-LENS', 'Adjustment panel opens for the clip', await adjPanel.isVisible());
+    const adjPanel = page.locator('div[aria-label="Color adjustment"]');
+    check('M-LENS', 'Color adjustment section opens in the inspector', await adjPanel.isVisible());
     const lensLabel = adjPanel.locator('label', { hasText: 'Lens correction' }).first();
     await lensLabel.locator('input[type="checkbox"]').check();
     await pageWait(400);
@@ -326,19 +289,18 @@ async function main() {
     await lensLabel.locator('input[type="checkbox"]').uncheck();
     await pageWait(300);
 
-    // M-ASS: Captions tab → import .ass
-    await page.locator('nav[aria-label="Editor tools"] button[title="Captions"]').click();
+    // M-ASS: Captions tab → import .ass (the panel is a PanelShell div;
+    // the import lives in the "Import / export" section).
+    await tabBtn(page, 'Captions').click();
     await pageWait(400);
-    const captionsPanel = page.locator('[aria-label="Captions panel"]');
-    check('M-ASS', 'Captions panel opens', await captionsPanel.isVisible());
-    const assInput = captionsPanel.locator('input[type="file"]').first();
+    check('M-ASS', 'Captions panel opens', (await page.getByText('Import / export').count()) >= 1);
+    const assInput = page.locator('input[accept=".srt,.vtt,.ass,.lrc"]');
     await assInput.setInputFiles([path.join(MEDIA, 'test.ass')]);
     await pageWait(1200);
-    const captionsText = (await captionsPanel.textContent()) ?? '';
-    check('M-ASS', 'import confirms the file ("Imported test.ass.")', captionsText.includes('Imported test.ass.'));
-    check('M-ASS', 'import creates 2 cues ("Manual captions (2)")', captionsText.includes('Manual captions (2)'));
+    check('M-ASS', 'import confirms the file ("Imported test.ass.")', (await page.getByText('Imported test.ass.').count()) >= 1);
+    check('M-ASS', 'import creates 2 cues ("Manual captions (2)")', (await page.getByText('Manual captions (2)').count()) >= 1);
     // Cue text lives in input values, not in textContent — read the values.
-    const cueTexts = await captionsPanel.locator('input[aria-label="Cue text"]').evaluateAll((els) => els.map((e) => e.value));
+    const cueTexts = await page.locator('input[aria-label="Cue text"]').evaluateAll((els) => els.map((e) => e.value));
     check('M-ASS', 'importing .ass creates the "Hello world" cue', cueTexts.includes('Hello world'), `cues=${JSON.stringify(cueTexts)}`);
     check('M-ASS', 'second .ass cue is "Second line"', cueTexts.includes('Second line'), `cues=${JSON.stringify(cueTexts)}`);
     await shot(page, 'M-ASS', 'ass-imported.png');
@@ -353,14 +315,20 @@ async function main() {
       return `${el.tagName} outline=${cs.outlineStyle} ${cs.outlineWidth}`;
     });
     check('M-ACCESS', 'keyboard focus shows a visible outline', focusStyle.includes('solid') && !focusStyle.includes('0px'), focusStyle);
+    // Export panel opens via the menu (Download section).
     await page.getByRole('button', { name: 'Export', exact: true }).click();
+    await pageWait(400);
+    await page.locator('[role="menu"][aria-label="Export menu"]').getByRole('menuitem', { name: 'Download' }).click();
     await pageWait(600);
     const exportDialog = page.locator('[role="dialog"][aria-label="Export and share"]');
     check('M-ACCESS', 'Export dialog has aria-modal="true"', (await exportDialog.getAttribute('aria-modal')) === 'true');
     await exportDialog.getByRole('button', { name: 'Close export' }).click();
     await pageWait(400);
     const shortcuts = page.locator('[role="dialog"][aria-label="Keyboard shortcuts"]');
-    await page.locator('button[title="Keyboard shortcuts"]').click();
+    // v1.0.2 D9: keyboard icon REMOVED — Menu → Shortcuts.
+    await page.getByRole('button', { name: 'Menu' }).click();
+    await pageWait(300);
+    await page.getByRole('menuitem', { name: 'Shortcuts' }).click();
     await pageWait(500);
     const shortcutsVisible = await shortcuts.isVisible().catch(() => false);
     if (shortcutsVisible) {
