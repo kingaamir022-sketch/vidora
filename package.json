@@ -28,6 +28,7 @@
   "private": true,
   "scripts": {
     "build": "tsc -b && vite build",
+    "prebuild": "node scripts/unzip-media.mjs",
     "build:assets": "node --import ./scripts/register-ts.mjs scripts/build-assets.mjs",
     "dev": "vite",
     "lint": "tsc -b --noEmit",
