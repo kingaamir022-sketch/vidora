@@ -1,6 +1,6 @@
 # Vidora Phase 4 — Self-Audit Report (Rule 12.4)
 
-- Run: 2026-11-25T15:55:36.977Z
+- Run: 2026-11-26T01:38:11.148Z
 - App: production build served with `vite preview` on http://127.0.0.1:4173/
 - Browser: Chromium headless shell (playwright-core 1.65.1), viewport 1440x900, fake media device for voiceover
 - Checks: 26/26 passed, 0 failed

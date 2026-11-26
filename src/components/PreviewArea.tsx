@@ -76,6 +76,11 @@ export default function PreviewArea() {
   // `width: 100%` + `max-height: 100%` caps the height for ratios
   // near square (1:1 rendered 756×622 instead of square) because the
   // width does not shrink when the height is clamped.
+  // v1.0.5: the observer below finally SETS this state — it never did
+  // in v1.0.4, so the wrapper fell back to the CSS sizing and the
+  // canvas shrank whenever height was the limiting dimension (at 150%
+  // zoom with a short window the empty canvas rendered ~206x115
+  // instead of the fitted ~265x149; S2).
   const [fitSize, setFitSize] = useState<{ w: number; h: number } | null>(null);
   // CapCut-fix (P1–P4): ≡ menu, Ratio menu, clip "…" menu, pan/zoom.
   const [topMenuOpen, setTopMenuOpen] = useState(false);
@@ -408,6 +413,46 @@ export default function PreviewArea() {
     window.addEventListener('vidora:preview-fullscreen', onFullscreenEvent);
     return () => window.removeEventListener('vidora:preview-fullscreen', onFullscreenEvent);
   }, []);
+
+  // v1.0.5 (BUG-CF-030, completed): actually compute the fit size.
+  // The state + comment landed in v1.0.4 but the observer that sets it
+  // never did — so the wrapper fell back to CSS `width: 100%` +
+  // `max-height: 100%`, which shrinks the canvas whenever height is
+  // the limiting dimension (at 150% zoom with a short window the empty
+  // canvas rendered ~206x115 instead of the fitted ~265x149, S2).
+  // A ResizeObserver on the container keeps an explicit contain-fit
+  // box at all times, for every ratio.
+  const ratioNumber = (): number => {
+    if (aspectRatio === 'custom') {
+      const w = customRatio?.width ?? 1920;
+      const h = customRatio?.height ?? 1080;
+      return w / h;
+    }
+    const [a, b] = aspectRatio.split(':').map(Number);
+    return a / b;
+  };
+  useEffect(() => {
+    const c = containerRef.current;
+    if (!c) return;
+    const compute = () => {
+      const availW = Math.max(1, c.clientWidth - 32);
+      const availH = Math.max(1, c.clientHeight - 32);
+      const r = ratioNumber();
+      let w = availW;
+      let h = w / r;
+      if (h > availH) {
+        h = availH;
+        w = h * r;
+      }
+      const nw = Math.max(1, Math.floor(w));
+      const nh = Math.max(1, Math.floor(h));
+      setFitSize((prev) => (prev && prev.w === nw && prev.h === nh ? prev : { w: nw, h: nh }));
+    };
+    compute();
+    const ro = new ResizeObserver(compute);
+    ro.observe(c);
+    return () => ro.disconnect();
+  }, [aspectRatio, customRatio]);
 
   const aspectClass =
     aspectRatio === '9:16'

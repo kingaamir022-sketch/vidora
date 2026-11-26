@@ -2,6 +2,28 @@
 
 All notable changes to Vidora. Format follows Keep a Changelog.
 
+## [1.0.5] — 2026-11-26 — User's own live screenshots S1/S2 checked side by side against CapCut desktop #04/#05/#06
+
+Evidence first: the user's two live screenshots (S1 Templates page, S2 editor empty project, both 1920×1080 in her Chrome) measured with PIL and re-checked locally at 1920×1080 / 100% zoom. Playwright verification `audit/capcut-fix/v105/verify.mjs`: **37 PASS, 0 FAIL, 0 page errors**, plus `audit/capcut-fix/v105/pixel-check.py` (every template card sampled for non-black pixels — all PASS).
+
+**Template cards were black — real bug, fixed (BUG-CF-033):** all 5 dashboard cards showed a black rectangle with no preview and no title. Root cause: `TemplateThumb`'s root div had BOTH `relative` (its own class) and `absolute inset-0` (passed by the dashboard callers) — Tailwind's `relative` won the cascade, so the div was `position: relative` with zero height (all children absolutely positioned) and `overflow-hidden` clipped everything. The background SVGs DID load (naturalWidth 320) and the title spans existed — they were just invisible. Fix: the component root no longer hard-codes `relative` (positioning comes from callers only); the editor `TemplatesPanel` usage now passes `relative` explicitly (it relies on the root's `relative` + aspect-ratio for height). Verified: every card's thumb is 300×534, `position: absolute`, bg img loaded, title span visible — pixel proof: Bold Opening 100% non-black, Minimal Intro 100%, Neon Intro 96.4%, Retro Intro 89.9%, Sunset Intro 5.2% (a dark slot template — the orange sun + "SUNSET" text are visible; see `verify-templates.png`).
+
+**Preview canvas "too small" — NOT a bug (BUG-CF-034):** S2's canvas measured 250×141 px. Re-checked honestly: her screenshots are at **150% browser zoom** (the tab rail shows ~4.5 tabs with "Effe" cut off, exactly as a 150% emulation shows) and her Chrome window's app area is 825 px tall — at 150% that leaves a 94 px-high fit area, so the correct contain-fit is 167×94 CSS = 250×141 physical, exactly what S2 shows. The canvas fills its container at both zooms (locally 756×424 at 100%, 206×115 at an emulated 150% short window against a 480×117 available area). At 100% zoom it matches CapCut #04's big preview. She should press **Ctrl+0** for 100% zoom when checking the live site. No canvas sizing change was needed for the 16:9 case — but the fit computation itself was incomplete (see below).
+
+**Preview fit computation completed (BUG-CF-030, v1.0.5):** v1.0.4 added the `fitSize` state and the style fallback, but `setFitSize` was NEVER called — the ResizeObserver that computes the contain-fit box was missing. Added it (`ratioNumber()` parses the ratio; observer on the container, available area = client size − 32 px padding). Verified: Ratio 1:1 now renders a true square (622×622); 16:9 is 756×424 at 100%; the 150% short-window canvas is the exact fit.
+
+**Tab rail shows 7 tabs + "Fi" like #04 (BUG-CF-035):** Vidora rendered an always-present disabled left chevron that wasted 24 px, so only ~7 tabs showed where CapCut shows ~7.5. Chevrons now render only when they can scroll. Verified: Media…Captions fully visible (80 px each) + Filters peeking 25 px, no left chevron until scrolled.
+
+**Top-bar Pro button restyled to CapCut #04 (BUG-CF-036):** CapCut DOES have a Pro button — sampled from #04: gray #4F4F4F fill, white "Pro" text, lavender ◆ diamond (~#997BFF). Vidora's was a purple-outline button with a STAR glyph. `IconPro` is now the diamond path (`M12 2 L22 12 L12 22 L2 12 Z`); the top-bar button is gray-filled with white text and a lavender diamond; the Pro badges on tiles now read "◆ Pro" (text added in `PanelShell` and `AIAvatarPanel`), like CapCut #25/#27.
+
+**Captions — no change needed:** the sub-nav already has all 9 items (Auto captions, Templates group + Favorites/Trending/Classic/NEW/Hits/Word, Auto lyrics); the Auto view has the Language dropdown + Transcript textarea; the Templates view has the "People are searching Basic" search, 5 style tiles with star + download, and the Delete current captions / Generate captions bottom bar. S2 showed the Auto captions sub-section while #26 shows the Trending templates view — different sub-sections, not a mismatch. Caption styles have no `pro` field, so no fake Pro badges were added.
+
+**Rest of the empty editor re-verified vs #04:** all 7 Details rows present (Name/Path/Imported media/Arrange layers/Proxy/Aspect ratio/Resolution), values not truncated (right edge 1904 inside the panel), Modify present and gray (#3D3D3D); bottom bar timecode + Full + Ratio; preview header "Player-Timeline 01", no "Click to upload"; empty timeline box left-aligned at x=0 with the film icon + "Drag material here and start to create".
+
+**Regression:** template hover shows BOTH "Use template" and "Edit more" in the viewport; Effects/Filters/Transitions tiles are 2-column ~130 px photo thumbnails; no "Pals", no "CC", no floating pill.
+
+**Tests & audits:** suite now 376 tests (was 370): new `src/test/v105-fixes.test.ts` (6) pinning BUG-CF-030 (completed), 033, 035, 036. `npx tsc --noEmit` clean, `npm run build` passes. Phase audits re-run green: P4 26/26, P5 39/39, P6 15/15, P7 60/60, P8 56/56, P9 42/42. HelpCenter "What's new" now says v1.0.5.
+
 ## [1.0.4] — 2026-11-25 — Carried-over follow-ups: preview tools end to end, Export end to end, Ratio menu, desktop-size tiles
 
 Evidence first: 30 desktop screenshots + 10 CapCut videos in `docs/reference/capcut/` (desktop wins every conflict), CapCut Web check `docs/reference/capcut/WEB-CHECK-2026-11-25.md` second. Playwright verification `audit/capcut-fix/v104/verify.mjs` at 1920×1080 / 100%: **61 PASS, 0 FAIL, 0 page errors.**

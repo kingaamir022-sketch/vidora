@@ -19,6 +19,14 @@ import { TEXT_STYLE_PRESETS } from '../lib/text';
  * title scales with the rendered width via cqw units — the same component
  * is used at ~230px (editor panel), ~300px (dashboard card) and ~360px
  * (dashboard hover popup).
+ *
+ * v1.0.5 (BUG-CF-033): the root div used to carry `relative` AND receive
+ * `absolute inset-0` from the dashboard callers — Tailwind's `relative`
+ * wins over `absolute` in the cascade, so the div was position:relative
+ * with zero height (all children are absolutely positioned) and
+ * `overflow-hidden` clipped everything: every dashboard card was black.
+ * The root no longer sets positioning; callers supply it (`absolute
+ * inset-0` on the dashboard, `relative` + aspect-ratio in the editor).
  */
 export default function TemplateThumb({ def, className = '' }: { def: TemplateDef; className?: string }) {
   const bgItem = def.items.find((i) => i.kind === 'background' && i.backgroundId);
@@ -42,7 +50,7 @@ export default function TemplateThumb({ def, className = '' }: { def: TemplateDe
     <div
       role="img"
       aria-label={`${def.name} preview`}
-      className={`relative overflow-hidden ${className}`}
+      className={`overflow-hidden ${className}`}
       style={{ background: '#141414', containerType: 'inline-size' }}
     >
       {bgUrl ? (

@@ -183,6 +183,60 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   with no floating pill and no CC, and none of the 30 desktop
   screenshots shows one. Fix: the CC button is removed; Captions stay
   in the left tab rail.
+- BUG-CF-033 | CapCut-fix v1.0.5 | Dashboard template cards are black/empty (no preview, no title) | FIXED
+  2026-11-26 — The user's own live screenshot S1 showed all 5 cards as
+  black rectangles (only the Featured badge + counts strip visible).
+  Root cause: `TemplateThumb`'s root div had BOTH `relative` (its own
+  className) and `absolute inset-0` (passed by the dashboard callers) —
+  Tailwind's `relative` wins the cascade, so the div was
+  `position: relative` with ZERO height (every child absolutely
+  positioned) and `overflow-hidden` clipped everything. The background
+  SVG data-URI imgs DID load (naturalWidth 320) and the title spans
+  existed — they were just invisible. Fix: the component root no
+  longer hard-codes `relative` (`overflow-hidden ${className}` —
+  positioning comes from callers only); `TemplatesPanel.tsx:212` now
+  passes `relative` explicitly. Verified by
+  `audit/capcut-fix/v105/verify.mjs` (thumbs 300×534, position
+  absolute, bg imgs loaded, titles visible) + `pixel-check.py` (PIL
+  sampling of each thumb: Bold Opening 100% non-black, Minimal Intro
+  100%, Neon Intro 96.4%, Retro Intro 89.9%, Sunset Intro 5.2% — a
+  dark slot template, orange sun + "SUNSET" text visible). Editor
+  Templates panel thumbs fixed by the same change (358×201).
+- BUG-CF-034 | CapCut-fix v1.0.5 | S2 preview canvas looks small (250×141) | PROBE ARTIFACT — NOT AN APP BUG
+  2026-11-26 — S2's canvas measured 250×141 px (PIL). Recomputed
+  honestly: the screenshot is at 150% browser zoom (tab rail shows
+  ~4.5 tabs with "Effe" cut off, exactly as a 150% emulation shows)
+  and her Chrome window's app area is ~825 physical px tall (top bar
+  y≈185 to timeline bottom y≈1010), i.e. 550 CSS at 150% — which
+  leaves a 94 px-high fit area, so the correct contain-fit is 167×94
+  CSS = 250×141 physical, exactly what S2 shows. Locally the canvas
+  fills its container at both zooms (756×424 at 100% against 758×624
+  available; 206×115 at an emulated 150% short window against 480×117
+  available). At 100% zoom it matches CapCut #04's big preview. The
+  user-facing fix is Ctrl+0 for 100% zoom — no 16:9 sizing change was
+  needed. (The fit computation itself WAS incomplete — see the
+  BUG-CF-030 v1.0.5 note below.)
+- BUG-CF-035 | CapCut-fix v1.0.5 | Tab rail shows fewer tabs than CapCut #04 | FIXED
+  2026-11-26 — Vidora always rendered a disabled left chevron,
+  wasting 24 px; CapCut #04 has NO left chevron until scrolled and
+  ~75 px spacing, showing ~7.5 tabs ("Fi" ~25–35 px visible). Fix:
+  chevrons in `LeftTabs.tsx` now render only when `canLeft` /
+  `canRight`. Verified: Media…Captions fully visible (80 px each) +
+  Filters peeking 25 px, no left chevron until scrolled, right
+  chevron present.
+- BUG-CF-036 | CapCut-fix v1.0.5 | Top-bar Pro button is a purple star button, CapCut's is gray with a lavender ◆ | FIXED
+  2026-11-26 — CapCut #04 DOES have a Pro button, sampled with PIL:
+  bg #4F4F4F (79,79,79), white "Pro" text, lavender ◆ diamond
+  (~#997BFF, e.g. rgb(153,123,255)). Vidora's was a purple-outline
+  button with a STAR glyph. Fix: `IconPro` in `icons.tsx` is now the
+  diamond path (`M12 2 L22 12 L12 22 L2 12 Z` — fixes the TopBar
+  button, the `PanelShell` PanelCard badge and the `AIAvatarPanel`
+  badge at once); the top-bar button is `bg-[#4F4F4F] text-white
+  hover:bg-[#5A5A5A]` with the icon in `text-[#A78BFA]`; the PanelCard
+  and AI-avatar badges now read "◆ Pro" (text added) like CapCut
+  #25/#27. Verified: computed bg rgb(79,79,79), white text, path
+  starts "M12 2"; the hover popup "Edit more" carries the ◆ Pro
+  badge.
 - BUG-CF-029 | CapCut-fix v1.0.4 | Ratio menu unclickable — clipped by the bottom bar's overflow-hidden group | FIXED
   2026-11-25 — The baseline probe (`audit/capcut-fix/v104/baseline.mjs`)
   crashed clicking a Ratio menu item (Playwright timeout — canvas
@@ -210,6 +264,15 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   `ratioValue()` parses 'W:H' or the custom ratio). Verified: 1:1
   canvas is square (622×622) and every ratio option lands within 0.06
   of its target aspect.
+  v1.0.5 COMPLETION (2026-11-26): the v1.0.4 fix was incomplete — the
+  `fitSize` state and the style fallback existed, but `setFitSize` was
+  NEVER called (grep finds only the state declaration + the fallback);
+  the ResizeObserver that computes the box was never wired, so the
+  wrapper still fell back to CSS sizing. Added `ratioNumber()` +
+  a `useEffect` with `ResizeObserver` on `containerRef` (available =
+  client size − 32 px padding, prev-compare guard). Verified in
+  `audit/capcut-fix/v105/verify.mjs`: 1:1 = 622×622 square, 16:9 =
+  756×424 at 100%, 150% short-window canvas is the exact fit.
 - BUG-CF-031 | CapCut-fix v1.0.4 | Change made <3 s before reload is lost (autosave gap) | FIXED
   2026-11-25 — `verify.mjs`: after picking 9:16 and reloading ~600 ms
   later, the project came back 16:9. Root cause: `applyProject` only

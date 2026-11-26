@@ -135,13 +135,18 @@ export default function TopBar({
         </button>
       </div>
 
+      {/* v1.0.5 (BUG-CF-036): CapCut #04's Pro button is a FILLED gray
+          (#4F4F4F) button, white "Pro" text, lavender ◆ diamond —
+          not a purple outline with a star. */}
       <button
         type="button"
         onClick={() => setProOpen(true)}
-        className="flex shrink-0 items-center gap-1.5 rounded-md border border-[#7C3AED] px-2.5 py-1.5 text-sm font-semibold text-[#C4B5FD] hover:bg-[#242424]"
+        className="flex shrink-0 items-center gap-1.5 rounded-md border border-[#4F4F4F] bg-[#4F4F4F] px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-[#5A5A5A]"
         title="Pro"
       >
-        <IconPro size={15} />
+        <span className="text-[#A78BFA]">
+          <IconPro size={15} />
+        </span>
         Pro
       </button>
       <button type="button" onClick={onShare} className="flex shrink-0 items-center gap-1.5 rounded-md border border-[#3D3D3D] px-3 py-1.5 text-sm hover:bg-[#242424]" title="Share">

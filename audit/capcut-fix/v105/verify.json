@@ -1,0 +1,378 @@
+{
+ "templateCards": [
+  {
+   "name": "Bold Opening",
+   "thumbRect": {
+    "x": 322,
+    "y": 192,
+    "w": 300,
+    "h": 534
+   },
+   "thumbPosition": "absolute",
+   "imgLoaded": true,
+   "titleText": "Your Title Here",
+   "titleRect": {
+    "x": 322,
+    "y": 444,
+    "w": 300,
+    "h": 30
+   }
+  },
+  {
+   "name": "Minimal Intro",
+   "thumbRect": {
+    "x": 638,
+    "y": 192,
+    "w": 300,
+    "h": 534
+   },
+   "thumbPosition": "absolute",
+   "imgLoaded": true,
+   "titleText": "Welcome",
+   "titleRect": {
+    "x": 638,
+    "y": 444,
+    "w": 300,
+    "h": 30
+   }
+  },
+  {
+   "name": "Neon Intro",
+   "thumbRect": {
+    "x": 955,
+    "y": 192,
+    "w": 300,
+    "h": 534
+   },
+   "thumbPosition": "absolute",
+   "imgLoaded": true,
+   "titleText": "NEON",
+   "titleRect": {
+    "x": 955,
+    "y": 444,
+    "w": 300,
+    "h": 30
+   }
+  },
+  {
+   "name": "Retro Intro",
+   "thumbRect": {
+    "x": 1271,
+    "y": 192,
+    "w": 300,
+    "h": 534
+   },
+   "thumbPosition": "absolute",
+   "imgLoaded": true,
+   "titleText": "RETRO",
+   "titleRect": {
+    "x": 1271,
+    "y": 444,
+    "w": 300,
+    "h": 30
+   }
+  },
+  {
+   "name": "Sunset Intro",
+   "thumbRect": {
+    "x": 1588,
+    "y": 192,
+    "w": 300,
+    "h": 534
+   },
+   "thumbPosition": "absolute",
+   "imgLoaded": null,
+   "titleText": "SUNSET",
+   "titleRect": {
+    "x": 1588,
+    "y": 444,
+    "w": 300,
+    "h": 30
+   }
+  }
+ ],
+ "template thumbs have non-zero height": "PASS",
+ "template thumbs are position:absolute": "PASS",
+ "template bg imgs loaded": "PASS",
+ "template title spans visible": "PASS",
+ "templateHover": {
+  "popupThumbRect": {
+   "x": 292,
+   "y": 192,
+   "w": 360,
+   "h": 640
+  },
+  "popupThumbPosition": "absolute",
+  "buttons": [
+   {
+    "text": "Use template",
+    "rect": {
+     "x": 292,
+     "y": 840,
+     "w": 127,
+     "h": 36
+    },
+    "inViewport": true
+   },
+   {
+    "text": "Edit more",
+    "rect": {
+     "x": 427,
+     "y": 840,
+     "w": 102,
+     "h": 36
+    },
+    "inViewport": true
+   }
+  ],
+  "proBadge": true
+ },
+ "hover popup thumb has non-zero height": "PASS",
+ "hover shows BOTH Use template and Edit more": "PASS",
+ "Edit more carries \u25c6 Pro badge": "PASS",
+ "canvasGeometry100": {
+  "canvas": {
+   "w": 756,
+   "h": 424
+  },
+  "avail": {
+   "w": 758,
+   "h": 624
+  },
+  "wrapOffset": {
+   "w": 758,
+   "h": 426
+  }
+ },
+ "empty canvas fills preview area (contain fit)": "PASS",
+ "tabRail": {
+  "scrollerRect": {
+   "x": 0,
+   "w": 585
+  },
+  "leftChevron": false,
+  "rightChevron": true,
+  "tabs": [
+   {
+    "t": "Media",
+    "x": 0,
+    "w": 80,
+    "visibleW": 80
+   },
+   {
+    "t": "Audio",
+    "x": 80,
+    "w": 80,
+    "visibleW": 80
+   },
+   {
+    "t": "Text",
+    "x": 160,
+    "w": 80,
+    "visibleW": 80
+   },
+   {
+    "t": "Stickers",
+    "x": 240,
+    "w": 80,
+    "visibleW": 80
+   },
+   {
+    "t": "Effects",
+    "x": 320,
+    "w": 80,
+    "visibleW": 80
+   },
+   {
+    "t": "Transitions",
+    "x": 400,
+    "w": 80,
+    "visibleW": 80
+   },
+   {
+    "t": "Captions",
+    "x": 480,
+    "w": 80,
+    "visibleW": 80
+   },
+   {
+    "t": "Filters",
+    "x": 560,
+    "w": 80,
+    "visibleW": 25
+   },
+   {
+    "t": "Adjustment",
+    "x": 640,
+    "w": 80,
+    "visibleW": 0
+   },
+   {
+    "t": "Templates",
+    "x": 720,
+    "w": 80,
+    "visibleW": 0
+   },
+   {
+    "t": "AI avatar",
+    "x": 800,
+    "w": 80,
+    "visibleW": 0
+   }
+  ]
+ },
+ "7 tabs fully visible + Filters peeking like #04": "PASS",
+ "no left chevron until scrolled": "PASS",
+ "right chevron present": "PASS",
+ "proButton": {
+  "bg": "rgb(79, 79, 79)",
+  "color": "rgb(255, 255, 255)",
+  "pathD": "M12 2 L22 12 L12 22 "
+ },
+ "Pro button is gray-filled like #04": "PASS",
+ "Pro button text is white": "PASS",
+ "Pro glyph is a diamond (M12 2...)": "PASS",
+ "emptyEditor": {
+  "detailsRows": [
+   "Name",
+   "Path",
+   "Imported media",
+   "Arrange layers \u24d8",
+   "Proxy \u24d8",
+   "Aspect ratio",
+   "Resolution"
+  ],
+  "detailsValuesTruncated": false,
+  "detailsAsideRight": 1920,
+  "ddRights": [
+   1904,
+   1904,
+   1904,
+   1904,
+   1904,
+   1904,
+   1904
+  ],
+  "modifyPresent": true,
+  "modifyBg": "rgb(61, 61, 61)",
+  "bottomBarHas": {
+   "timecode": true,
+   "Full": true,
+   "Ratio": true
+  },
+  "previewHeader": true,
+  "noClickToUpload": true,
+  "emptyBoxX": 0,
+  "emptyBoxText": true,
+  "timelineToolbar": true,
+  "noFloatingPill": true,
+  "noCC": true
+ },
+ "Details rows match #04": "PASS",
+ "Details values not truncated": "PASS",
+ "Modify button present and gray": "PASS",
+ "bottom bar: timecode + Full + Ratio": "PASS",
+ "preview header Player-Timeline 01, no Click to upload": "PASS",
+ "empty timeline box left-aligned": "PASS",
+ "no floating pill": "PASS",
+ "no CC button": "PASS",
+ "captionsAuto": {
+  "subNavItems": [
+   "Auto captions",
+   "Templates",
+   "Favorites",
+   "Trending",
+   "Classic",
+   "NEW",
+   "Hits",
+   "Word",
+   "Auto lyrics"
+  ],
+  "hasLanguage": true,
+  "hasTranscript": true
+ },
+ "Captions sub-nav has all 9 items": "PASS",
+ "Auto captions has Language + Transcript": "PASS",
+ "captionsTemplates": {
+  "searchPh": "People are searching Basic",
+  "tiles": 5,
+  "hasDelete": true,
+  "hasGenerate": true,
+  "hasStar": true,
+  "hasDownload": true
+ },
+ "Captions Templates view: search + tiles + bottom bar": "PASS",
+ "caption tiles have star + download": "PASS",
+ "ratio1to1": {
+  "w": 622,
+  "h": 622
+ },
+ "Ratio 1:1 renders square (BUG-CF-030)": "PASS",
+ "Effects tiles are 2 columns": "PASS",
+ "Effects tile width ~130px": "PASS",
+ "Filters tiles are 2 columns": "PASS",
+ "Filters tile width ~130px": "PASS",
+ "Transitions tiles are 2 columns": "PASS",
+ "Transitions tile width ~130px": "PASS",
+ "no \"Pals\" anywhere": "PASS",
+ "editorPanelThumbs": [
+  {
+   "w": 358,
+   "h": 201,
+   "pos": "relative"
+  },
+  {
+   "w": 358,
+   "h": 201,
+   "pos": "relative"
+  },
+  {
+   "w": 358,
+   "h": 201,
+   "pos": "relative"
+  }
+ ],
+ "editor Templates panel thumbs have non-zero height": "PASS",
+ "canvasGeometry150": {
+  "canvas": {
+   "w": 206,
+   "h": 115
+  },
+  "avail": {
+   "w": 480,
+   "h": 117
+  }
+ },
+ "canvas fills preview area at 150% short window (was 206x115)": "PASS",
+ "pageErrors": [],
+ "zero page errors": "PASS",
+ "ok": true,
+ "templateCardPixels": {
+  "Bold Opening": {
+   "nonBlackPct": 100.0,
+   "meanMaxChannel": 224.7,
+   "verdict": "PASS"
+  },
+  "Minimal Intro": {
+   "nonBlackPct": 100.0,
+   "meanMaxChannel": 239.7,
+   "verdict": "PASS"
+  },
+  "Neon Intro": {
+   "nonBlackPct": 96.4,
+   "meanMaxChannel": 77.1,
+   "verdict": "PASS"
+  },
+  "Retro Intro": {
+   "nonBlackPct": 89.9,
+   "meanMaxChannel": 47.6,
+   "verdict": "PASS"
+  },
+  "Sunset Intro": {
+   "nonBlackPct": 5.2,
+   "meanMaxChannel": 30.9,
+   "verdict": "PASS"
+  }
+ },
+ "templateCardPixelsOk": true
+}

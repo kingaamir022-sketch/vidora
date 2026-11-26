@@ -33,11 +33,12 @@ const TOPICS: { body: string; title: string }[] = [
 ];
 
 const WHATS_NEW: string[] = [
-  'The preview is now clean like CapCut’s — no floating toolbar above it. Crop lives in the Details panel (Basic tab) and in the right-click menu on a clip; Smart tools (Auto reframe, Retouch, Remove background…) live in the Details panel’s Smart tools tab.',
-  'The “Full” button now fills the whole preview area, and “Fit” brings it back. The Ratio menu lists every size (16:9, 9:16, 1:1, 4:3 and more) and your choice is saved, even if you reload right away.',
-  'Export really works end to end: an empty project tells you it cannot be exported, and a project with a clip exports to a real video file you can download.',
-  'Effect, filter and transition tiles are now big photo previews (two columns), like CapCut on desktop — with the effect actually applied to the photo, and a download button on every tile.',
-  'Every button now does its job — preview tools, Export, Ratio and the tiles were all checked end to end at normal 100% zoom.',
+  'Template cards now show a real preview — the background, the title and the sticker, like CapCut — instead of a black box.',
+  'The preview canvas now fills the preview area at every size, including square (1:1) videos. Tip: if the editor ever looks small, press Ctrl+0 for 100% zoom in your browser.',
+  'The tab rail now shows the same tabs as CapCut (Media through Captions, with Filters peeking) — the scroll arrows only appear when they can actually scroll.',
+  'The top-bar Pro button now looks like CapCut’s: gray button, white “Pro” text and a lavender diamond.',
+  'Captions were checked against CapCut and already match: Auto captions (language + transcript) and caption styles with search, favourites and Generate captions.',
+  'Every button was checked end to end at normal 100% zoom — template hover, tiles, Ratio and the preview all do their job.',
 ];
 
 export default function HelpCenter({ onClose }: { onClose: () => void }) {
@@ -49,7 +50,7 @@ export default function HelpCenter({ onClose }: { onClose: () => void }) {
           <h2 className="text-base font-semibold">Help Center</h2>
           <button type="button" onClick={onClose} aria-label="Close Help Center" className="rounded-md border border-[#3D3D3D] px-2 py-0.5 text-[#A8A8A8] hover:text-[#F2F2F2]">×</button>
         </div>
-        <h3 className="mt-4 text-xs font-semibold text-[#00D9D9]">What’s new in v1.0.4</h3>
+        <h3 className="mt-4 text-xs font-semibold text-[#00D9D9]">What’s new in v1.0.5</h3>
         <ul className="mt-1 list-disc space-y-1 pl-4 text-[13px] leading-relaxed text-[#A8A8A8]">
           {WHATS_NEW.map((item) => (
             <li key={item}>{item}</li>

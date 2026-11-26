@@ -132,8 +132,8 @@ export function PanelCard({
       <span className="relative block">
         {children}
         {pro && (
-          <span className="absolute left-1 top-1 flex items-center rounded bg-[#7C3AED] px-1 py-0.5 text-[10px] leading-none text-white" title="Included in this build — nothing is charged.">
-            <IconPro size={10} />
+          <span className="absolute left-1 top-1 flex items-center gap-0.5 rounded bg-[#7C3AED] px-1 py-0.5 text-[10px] leading-none text-white" title="Included in this build — nothing is charged.">
+            <IconPro size={10} /> Pro
           </span>
         )}
         {badge}

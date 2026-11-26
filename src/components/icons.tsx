@@ -242,7 +242,9 @@ export const IconShare = (p: IconProps) => (
 );
 export const IconPro = (p: IconProps) => (
   <Base {...p}>
-    <path d="M12 3l2.5 5.5L20 9.5l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-1L12 3z" fill="currentColor" stroke="none" />
+    {/* v1.0.5 (BUG-CF-036): a DIAMOND, not a star — CapCut's Pro mark
+        is ◆ (sampled #04: lavender #997BFF on a #4F4F4F button). */}
+    <path d="M12 2 L22 12 L12 22 L2 12 Z" fill="currentColor" stroke="none" />
   </Base>
 );
 export const IconKeyboard = (p: IconProps) => (

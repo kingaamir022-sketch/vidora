@@ -1,6 +1,6 @@
 # Vidora Phase 9 audit report
 
-Run: 2026-11-25T16:06:50.179Z
+Run: 2026-11-26T01:37:32.173Z
 Result: 42/42 checks passed, 0 failed.
 
 - PASS [M-LOCALE] behaviour card docs/behavior/M-LOCALE.md exists
@@ -11,7 +11,7 @@ Result: 42/42 checks passed, 0 failed.
 - PASS [M-ASS] behaviour card docs/behavior/M-ASS.md exists
 - PASS [M-CI] behaviour card docs/behavior/M-CI.md exists
 - PASS [M-DOCKER] behaviour card docs/behavior/M-DOCKER.md exists
-- PASS [M-CI] package.json version is 1.0.4 — version=1.0.4
+- PASS [M-CI] package.json version is 1.0.5 — version=1.0.5
 - PASS [M-CI] audit:phase9 script exists
 - PASS [M-CI] CI workflow runs build + test on Node 20
 - PASS [M-CI] CI workflow notes Playwright audits are NOT in CI

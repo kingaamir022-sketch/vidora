@@ -151,6 +151,30 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | CI (M-CI) | ~ | ~ | ~ | — | ~ | `.github/workflows/ci.yml` (Node 20, `npm ci`, build, test, lint) — no reference; Playwright audits are NOT in CI (documented in the workflow: they need the headless shell + ffmpeg) | ASSUMED |
 | Docker (M-DOCKER) | ~ | ~ | ~ | — | ~ | `Dockerfile` (node:20-alpine build → nginx:alpine serve) + `docker-compose.yml` (4173:80) + `.dockerignore` — no reference; the image was NOT built on this VM (docker not installed), honestly noted in the Dockerfile and the audit | ASSUMED |
 
+## Parity score (correction round v1.0.5, 2026-11-26)
+
+- **MATCH: 59 / 91** — unchanged. No ASSUMED row gained new CapCut
+  reference evidence in this round, so none moves to MATCH — but four
+  MATCH rows were re-verified against the user's own live screenshots
+  at 1920×1080 / 100% zoom with pixel/rect measurements (N-TEMPLATES:
+  thumbs 300×534 with non-black pixel proof; X-PREVIEW: canvas
+  756×424 filling the preview column, 1:1 square 622×622; P0-SHELL:
+  7 tabs + Filters peeking 25 px; B-TOPBAR: Pro button gray #4F4F4F
+  with lavender ◆). S2's small canvas was proven a 150%-zoom artifact,
+  not a parity gap (BUG-CF-034).
+- **ASSUMED: 32 / 91** — same 32 rows as v1.0.1.
+- **DIFF-FIXING: 0 / 91**
+- **INTENTIONAL-DIFF: 0 / 91** — the only deliberate difference left
+  is the app name and logo (Vidora, not CapCut), which is not a matrix
+  row; see `docs/INTENTIONAL_DIFFS.md`.
+- **Gate result: PASS** — every row is MATCH or ASSUMED, `npm run
+  build` is green, `npm test` is 376/376, and the Playwright
+  self-audits pass: Phase 4 26/26, Phase 5 39/39, Phase 6 15/15,
+  Phase 7 60/60, Phase 8 56/56, Phase 9 42/42 — 0 open bugs. The
+  v1.0.5 verification (`audit/capcut-fix/v105/verify.mjs` + 
+  `pixel-check.py`): 37 checks PASS, 0 page errors. The v1.0.2 score
+  paragraph below is kept for history.
+
 ## Parity score (correction round v1.0.2, 2026-11-25)
 
 - **MATCH: 59 / 91** — unchanged from v1.0.1. No ASSUMED row gained

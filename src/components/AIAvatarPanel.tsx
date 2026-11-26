@@ -169,8 +169,8 @@ export default function AIAvatarPanel() {
         <span className="block truncate px-2 py-1 text-[11px]">{card.name}</span>
       </button>
       {pro && (
-        <span className="absolute left-1 top-1 flex items-center rounded bg-[#7C3AED] px-1 py-0.5 text-[10px] leading-none text-white" title="Included in this build — nothing is charged.">
-          <IconPro size={10} />
+        <span className="absolute left-1 top-1 flex items-center gap-0.5 rounded bg-[#7C3AED] px-1 py-0.5 text-[10px] leading-none text-white" title="Included in this build — nothing is charged.">
+          <IconPro size={10} /> Pro
         </span>
       )}
       <a href={card.src} download={`${card.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}.${card.src.startsWith('data:') ? 'svg' : 'png'}`} aria-label={`Download ${card.name}`} title="Download" className="absolute bottom-1 right-1 rounded bg-black/50 px-1.5 py-0.5 text-[11px] text-zinc-200 hover:text-white">⭳</a>

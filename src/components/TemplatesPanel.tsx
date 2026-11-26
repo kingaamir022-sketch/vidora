@@ -209,7 +209,7 @@ function TemplateCard({
         <button type="button" onClick={onToggleFavorite} aria-pressed={favorite} aria-label={`Favorite ${def.name}`} className={`absolute right-2 top-2 z-10 rounded bg-black/50 px-1 text-[13px] ${favorite ? 'text-[#FFD34D]' : 'text-zinc-300 hover:text-white'}`}>★</button>
       )}
       <button type="button" onClick={onToggleExpand} className="block w-full text-left" aria-expanded={expanded} aria-label={`${def.name} details`}>
-        <TemplateThumb def={def} className={`w-full rounded ${def.ratio === '9:16' ? 'aspect-[232/160]' : 'aspect-[232/130]'}`} />
+        <TemplateThumb def={def} className={`relative w-full rounded ${def.ratio === '9:16' ? 'aspect-[232/160]' : 'aspect-[232/130]'}`} />
       </button>
       <div className="mt-1.5 flex items-start justify-between gap-2">
         <div>

@@ -42,15 +42,21 @@ export default function LeftTabs({
 
   return (
     <div className="flex h-16 shrink-0 items-stretch border-b border-[#2E2E2E] bg-[#141414]" role="tablist" aria-label="Editor tools">
-      <button
-        type="button"
-        onClick={() => scrollBy(-1)}
-        disabled={!canLeft}
-        aria-label="Scroll tabs left"
-        className="w-6 shrink-0 text-[#A8A8A8] hover:text-[#F2F2F2] disabled:opacity-30"
-      >
-        <IconChevronLeft size={16} />
-      </button>
+      {/* v1.0.5 (BUG-CF-035): the chevrons render ONLY when they can
+          scroll. The always-rendered (disabled) left chevron wasted
+          24px, so only ~6.5 tabs showed and Filters was invisible;
+          CapCut #04 shows 7 tabs + "Fi" + ">" with no left chevron
+          until scrolled. With it hidden, Filters peeks ~26px ("Fi"). */}
+      {canLeft && (
+        <button
+          type="button"
+          onClick={() => scrollBy(-1)}
+          aria-label="Scroll tabs left"
+          className="w-6 shrink-0 text-[#A8A8A8] hover:text-[#F2F2F2]"
+        >
+          <IconChevronLeft size={16} />
+        </button>
+      )}
       <div ref={scrollRef} onScroll={updateArrows} className="flex min-w-0 flex-1 items-stretch overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {LEFT_TABS.map((tab) => {
           const Icon = TAB_ICONS[tab];
@@ -72,15 +78,16 @@ export default function LeftTabs({
           );
         })}
       </div>
-      <button
-        type="button"
-        onClick={() => scrollBy(1)}
-        disabled={!canRight}
-        aria-label="Scroll tabs right"
-        className="w-6 shrink-0 text-[#A8A8A8] hover:text-[#F2F2F2] disabled:opacity-30"
-      >
-        <IconChevronRight size={16} />
-      </button>
+      {canRight && (
+        <button
+          type="button"
+          onClick={() => scrollBy(1)}
+          aria-label="Scroll tabs right"
+          className="w-6 shrink-0 text-[#A8A8A8] hover:text-[#F2F2F2]"
+        >
+          <IconChevronRight size={16} />
+        </button>
+      )}
     </div>
   );
 }
