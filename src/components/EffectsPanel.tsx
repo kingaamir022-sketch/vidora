@@ -1,11 +1,37 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { findClip } from '../lib/timeline';
-import { EFFECT_CATALOG, anyEffectDef } from '../lib/effects';
+import { EFFECT_CATALOG, anyEffectDef, type EffectDef } from '../lib/effects';
 import { GLSL_EFFECT_CATALOG, searchGlslEffects } from '../lib/glslEffects';
 import { glslThumbnail, isGlslSupported } from '../lib/glsl';
+import { FILTER_SAMPLE_SRC, downloadDataUrlFile, effectPhotoDataUrl, loadSampleImage, middleTruncate } from '../lib/tileThumbs';
 import { canShowEffects, encodePanelDrag, PANEL_DRAG_MIME } from '../lib/panelDrag';
 import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from './PanelShell';
+
+/** One tile's photo thumbnail: the sample photo with this classic
+ * effect actually applied (v1.0.4 — the gradient + name tile is gone;
+ * CapCut #23 shows real photos on effect tiles too). */
+function EffectPhotoThumb({ def, onStill }: { def: EffectDef; onStill: (url: string) => void }) {
+  const [src, setSrc] = useState<string | null>(null);
+  useEffect(() => {
+    let live = true;
+    void loadSampleImage(FILTER_SAMPLE_SRC).then((img) => {
+      if (live && img) {
+        const url = effectPhotoDataUrl(def, img);
+        setSrc(url);
+        onStill(url);
+      }
+    });
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [def.id]);
+  if (!src) {
+    return <span className="flex aspect-square w-full items-center justify-center bg-[#1A1A1A] text-[11px] text-zinc-500">Loading photo…</span>;
+  }
+  return <img src={src} alt={`${def.name} preview`} className="aspect-square w-full object-cover" />;
+}
 
 /**
  * Effects panel (Phase 2, SPEC E; Phase 5: 62 GLSL effects).
@@ -19,9 +45,16 @@ import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from
  * (L1). 2-col card grid (D3) with thumbnails + names below. Effect
  * names stay Vidora Originals.
  *
- * v1.0.3 (Web check 2026-11-25 §5): tiles are square ~70×70 photo
- * thumbnails — the grid is `repeat(auto-fill, minmax(68px, 1fr))` so
- * tiles stay ~70px at 1920 and drop to 2 columns on narrow panels.
+ * v1.0.4 (desktop wins): tiles are desktop's larger 2-column photo
+ * tiles — measured from CapCut #23/#25/#27: photo ~130×130, 2 columns,
+ * 24px gap, name below (middle-truncated like CapCut), ◆ Pro diamond
+ * top-left and download ↓ bottom-right on CapCut. Vidora has no paid
+ * tier, so no Pro diamond is shown (a badge would mislead); the ★
+ * favorite stays top-right and the download icon saves the tile's
+ * preview PNG (same pattern as Transitions). The grid is
+ * `repeat(2, minmax(0, 130px))` so tiles are exactly 130px at 1920
+ * and shrink gracefully on narrow panels. Classic effects now render
+ * a real photo thumb (effectPhotoDataUrl) instead of a gradient.
  *
  * v1.0.2 (W4, D14): the "Applied effects" card renders ABOVE the tile
  * grid (it used to sit below the fold — rect y 836–938 while the panel
@@ -58,6 +91,7 @@ export default function EffectsPanel() {
   const [effectNav, setEffectNav] = useState<EffectNav>({ category: 'Trending', group: 'video' });
   const [applyNote, setApplyNote] = useState<string | null>(null);
   const appliedRef = useRef<HTMLDivElement>(null);
+  const [stills, setStills] = useState<Record<string, string>>({});
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
       return JSON.parse(localStorage.getItem('vidora.effect-favorites.v1') ?? '[]') as string[];
@@ -279,7 +313,7 @@ export default function EffectsPanel() {
               <p className="mt-1 text-[11px] text-amber-400">WebGL2 is not available in this browser, so GLSL effects are disabled. The classic effects below still work.</p>
             )}
             <p className="mt-1 text-[11px] text-zinc-500">Click a tile or its + to apply it — or drag a tile onto a video clip on the timeline or onto the preview.</p>
-            <div className="mt-2 grid grid-cols-[repeat(auto-fill,minmax(68px,1fr))] gap-2">
+            <div className="mt-2 grid grid-cols-[repeat(2,minmax(0,130px))] gap-6">
               {results.classic.map((def) => {
                 const active = showsEffects && Boolean(clip?.effects.some((e) => e.name === def.id));
                 return (
@@ -296,14 +330,24 @@ export default function EffectsPanel() {
                       title={def.description}
                       className="block w-full text-left disabled:opacity-60"
                     >
-                      <span className="flex aspect-square w-full items-center justify-center bg-gradient-to-br from-[#3D3D3D] via-[#242424] to-[#141414] px-1 text-center text-[11px] font-bold leading-tight text-[#F2F2F2]">{def.name}</span>
-                      <span className="block truncate py-1 pl-7 pr-2 text-[11px]">
-                        {def.name}
+                      <EffectPhotoThumb def={def} onStill={(url) => setStills((prev) => (prev[def.id] === url ? prev : { ...prev, [def.id]: url }))} />
+                      <span className="block truncate py-1 pl-7 pr-2 text-[11px]" title={def.name}>
+                        {middleTruncate(def.name)}
                         {active && ' ✓'}
                       </span>
                     </button>
                     <button type="button" onClick={() => applyEffect(def.id)} disabled={active || !clip} aria-label={`Apply ${def.name}`} title={`Apply ${def.name}`} className="absolute bottom-1 left-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#00D9D9] text-sm font-bold leading-none text-[#062A2A] hover:bg-[#00E5E5] disabled:opacity-40">+</button>
                     <button type="button" onClick={() => toggleFavorite(def.id)} aria-pressed={favorites.includes(def.id)} aria-label={`Favorite ${def.name}`} className={`absolute right-1 top-1 rounded p-0.5 ${favorites.includes(def.id) ? 'text-[#FFD34D]' : 'text-[#A8A8A8] hover:text-[#F2F2F2]'}`}>★</button>
+                    <button
+                      type="button"
+                      onClick={() => { const still = stills[def.id]; if (still) downloadDataUrlFile(`${def.id}-effect.png`, still); }}
+                      disabled={!stills[def.id]}
+                      aria-label={`Download ${def.name} preview still as PNG`}
+                      title="Download preview still (PNG)"
+                      className="absolute bottom-1 right-1 rounded bg-black/50 px-1 py-0.5 text-[13px] text-zinc-300 hover:text-white disabled:opacity-40"
+                    >
+                      ⭳
+                    </button>
                   </div>
                 );
               })}
@@ -329,13 +373,23 @@ export default function EffectsPanel() {
                       ) : (
                         <span className="flex aspect-square w-full items-center justify-center bg-gradient-to-br from-[#3D3D3D] via-[#242424] to-[#141414] px-1 text-center text-[11px] font-bold leading-tight text-[#F2F2F2]">{def.name}</span>
                       )}
-                      <span className="block truncate py-1 pl-7 pr-2 text-[11px]">
-                        {def.name}
+                      <span className="block truncate py-1 pl-7 pr-2 text-[11px]" title={def.name}>
+                        {middleTruncate(def.name)}
                         {active && ' ✓'}
                       </span>
                     </button>
                     <button type="button" onClick={() => applyEffect(def.id)} disabled={active || !glslSupported || !clip} aria-label={`Apply ${def.name}`} title={`Apply ${def.name}`} className="absolute bottom-1 left-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#00D9D9] text-sm font-bold leading-none text-[#062A2A] hover:bg-[#00E5E5] disabled:opacity-40">+</button>
                     <button type="button" onClick={() => toggleFavorite(def.id)} aria-pressed={favorites.includes(def.id)} aria-label={`Favorite ${def.name}`} className={`absolute right-1 top-1 rounded p-0.5 ${favorites.includes(def.id) ? 'text-[#FFD34D]' : 'text-[#A8A8A8] hover:text-[#F2F2F2]'}`}>★</button>
+                    <button
+                      type="button"
+                      onClick={() => { if (thumb) downloadDataUrlFile(`${def.id}-effect.png`, thumb); }}
+                      disabled={!thumb}
+                      aria-label={`Download ${def.name} preview still as PNG`}
+                      title="Download preview still (PNG)"
+                      className="absolute bottom-1 right-1 rounded bg-black/50 px-1 py-0.5 text-[13px] text-zinc-300 hover:text-white disabled:opacity-40"
+                    >
+                      ⭳
+                    </button>
                   </div>
                 );
               })}

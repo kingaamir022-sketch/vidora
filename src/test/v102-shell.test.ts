@@ -52,10 +52,17 @@ describe('v1.0.2 editor shell (D1/D2/D7/D9)', () => {
     expect(preview).toContain('whitespace-nowrap');
   });
 
-  it('D2: floating clip toolbar is constrained to the preview width and may wrap', () => {
-    expect(preview).toContain('max-w-[calc(100%-16px)]');
-    expect(preview).toContain('w-max');
-    expect(preview).toContain('flex-wrap');
+  // v1.0.4: the floating clip toolbar (pill) was REMOVED — desktop
+  // evidence (v09 frame_010, #04/#19/#25/#27) shows no floating pill
+  // around the preview; its functions live in the inspector tabs and
+  // the timeline right-click menu instead (verified in Playwright).
+  it('D2 (v1.0.4): no floating clip toolbar above the preview', () => {
+    // ('Edit with AI' survives only in the header comment recording
+    // where the function moved to — the pill JSX itself is gone.)
+    expect(preview).not.toContain('max-w-[calc(100%-16px)]');
+    expect(preview).not.toContain('clipMenuOpen');
+    expect(preview).not.toContain('clipMenuItem');
+    expect(preview).toContain('Ratio menu');
   });
 
   it('D7: no teal cloud icon and no "…" more menu in the top bar', () => {

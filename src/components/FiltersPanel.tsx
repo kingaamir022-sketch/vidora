@@ -3,7 +3,7 @@ import { useProjectStore } from '../store/projectStore';
 import { findClip } from '../lib/timeline';
 import { BUILTIN_LUTS, lutToCubeText, type BuiltinLut } from '../lib/lut';
 import { toolEffectDef } from '../lib/effects';
-import { FILTER_SAMPLE_SRC, downloadTextFile, loadSampleImage, lutPhotoDataUrl } from '../lib/tileThumbs';
+import { FILTER_SAMPLE_SRC, downloadTextFile, loadSampleImage, lutPhotoDataUrl, middleTruncate } from '../lib/tileThumbs';
 import { encodePanelDrag, PANEL_DRAG_MIME } from '../lib/panelDrag';
 import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from './PanelShell';
 
@@ -22,7 +22,7 @@ import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from
  * the tool shows in the "Applied tools" card above the grid with ONLY
  * an Intensity slider (100), like CapCut Web's Basic panel. The full
  * Enhance/Upscale engines still live in the AI tools overlay
- * (preview toolbar → Edit with AI / Smart tools). One documented
+ * (inspector → Smart tools tab). One documented
  * divergence: CapCut Web puts a marker segment on a track above the
  * clip at the playhead; Vidora applies the tool to the whole clip
  * (clip-level effects, like everything else) — there are no segment
@@ -45,9 +45,11 @@ import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from
  * preset. There is NO Pro badge — Vidora has no paid tier and every
  * look is included, so a Pro diamond would be misleading.
  *
- * v1.0.3 (Web check §5): tiles are square ~70×70 photo thumbnails —
- * the grid is `repeat(auto-fill, minmax(68px, 1fr))` so tiles stay
- * ~70px at 1920 and drop to 2 columns on narrow panels.
+ * v1.0.4 (desktop wins): tiles are desktop's larger 2-column photo
+ * tiles — measured from CapCut #27: photo ~130×130, 2 columns, 24px
+ * gap, name below (middle-truncated like CapCut). The grid is
+ * `repeat(2, minmax(0, 130px))` so tiles are exactly 130px at 1920
+ * and shrink gracefully on narrow panels.
  */
 export const FILTER_NAV = ['Featured', 'NEW', 'Hits', 'Life', 'Landscape', 'Portrait', 'Mono'] as const;
 export const FILTER_TOOLS: { label: string; tool: string; note: string; effectId: string }[] = [
@@ -261,7 +263,7 @@ export default function FiltersPanel() {
       )}
       <SectionHeading>{query ? `Results for "${query}"` : category}</SectionHeading>
       <p className="mt-1 text-[11px] text-zinc-500">Click a tile or its + to apply it — or drag a tile onto a video clip on the timeline or onto the preview.</p>
-      <div className="mt-2 grid grid-cols-[repeat(auto-fill,minmax(68px,1fr))] gap-2">
+      <div className="mt-2 grid grid-cols-[repeat(2,minmax(0,130px))] gap-6">
         {results.map((lut) => {
           return (
             <div
@@ -277,7 +279,7 @@ export default function FiltersPanel() {
             >
               <button type="button" onClick={() => clip && applyFilter(lut.name)} disabled={!clip} title={lut.name} className="block w-full text-left disabled:opacity-60">
                 <FilterPhotoThumb lut={lut} />
-                <span className="block truncate py-1 pl-7 pr-2 text-[11px]">{lut.name}{clip?.lut?.name === lut.name ? ' ✓' : ''}</span>
+                <span className="block truncate py-1 pl-7 pr-2 text-[11px]" title={lut.name}>{middleTruncate(lut.name)}{clip?.lut?.name === lut.name ? ' ✓' : ''}</span>
               </button>
               <button type="button" onClick={() => clip && applyFilter(lut.name)} disabled={!clip} aria-label={`Apply filter ${lut.name}`} title={`Apply filter ${lut.name}`} className="absolute bottom-1 left-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#00D9D9] text-sm font-bold leading-none text-[#062A2A] hover:bg-[#00E5E5] disabled:opacity-40">+</button>
               <button type="button" onClick={() => toggleFavorite(lut.id)} aria-pressed={favorites.includes(lut.id)} aria-label={`Favorite ${lut.name}`} className={`absolute right-1 top-1 rounded bg-black/50 px-1 text-[13px] ${favorites.includes(lut.id) ? 'text-[#FFD34D]' : 'text-zinc-300 hover:text-white'}`}>★</button>
@@ -295,7 +297,7 @@ export default function FiltersPanel() {
         </label>
         {lutError && <p className="text-[11px] text-red-400">{lutError}</p>}
         <p className="text-[11px] leading-relaxed text-zinc-500">
-          All {BUILTIN_LUTS.length} looks are original Vidora designs. The Tools above apply directly to the selected video clip (Intensity only) — a local enhancement, no detail recovery. The full Enhance and Upscale engines live in the AI tools overlay (preview toolbar → Edit with AI).
+          All {BUILTIN_LUTS.length} looks are original Vidora designs. The Tools above apply directly to the selected video clip (Intensity only) — a local enhancement, no detail recovery. The full Enhance and Upscale engines live in the AI tools overlay (inspector → Smart tools).
         </p>
       </section>
     </PanelShell>

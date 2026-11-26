@@ -45,5 +45,5 @@
     "audit:phase9": "npm run build && node audit/run-audit-phase9.mjs"
   },
   "type": "module",
-  "version": "1.0.3"
+  "version": "1.0.4"
 }

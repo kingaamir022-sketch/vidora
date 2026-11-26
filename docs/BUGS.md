@@ -183,6 +183,55 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   with no floating pill and no CC, and none of the 30 desktop
   screenshots shows one. Fix: the CC button is removed; Captions stay
   in the left tab rail.
+- BUG-CF-029 | CapCut-fix v1.0.4 | Ratio menu unclickable — clipped by the bottom bar's overflow-hidden group | FIXED
+  2026-11-25 — The baseline probe (`audit/capcut-fix/v104/baseline.mjs`)
+  crashed clicking a Ratio menu item (Playwright timeout — canvas
+  intercepts pointer events). Dedicated probe
+  (`audit/capcut-fix/v104/probe-ratio-menu.mjs` + `ratio-menu-open.png`):
+  the "16:9" menu button exists in the DOM at (1213, 549) but
+  `elementFromPoint` at its centre returns the preview CANVAS; the
+  clipping ancestor is the bottom bar's right button group div
+  (`flex min-w-0 shrink-0 items-center gap-1 overflow-hidden
+  whitespace-nowrap`). Root cause: the Ratio menu sat inside the bottom
+  bar's `overflow-hidden` group, so it was clipped entirely — no ratio
+  option could ever be clicked. This is why Ratio was a "human
+  click-through" carry-over. Fix: the menu is a direct child of the
+  preview section (`absolute right-3 bottom-14 z-40` in
+  `PreviewArea.tsx`). Verified: every menu item clickable via
+  `elementFromPoint` (16:9, 4:3, 2:1, 9:16, 1:1, 3:4, Original).
+- BUG-CF-030 | CapCut-fix v1.0.4 | 1:1 ratio renders as a rectangle (756×622), not a square | FIXED
+  2026-11-25 — `verify.mjs` measured the 1:1 canvas at 756×622 (ratio
+  1.215, expected 1.000). Root cause: CSS alone cannot keep the ratio —
+  `width: 100%` + `max-height: 100%` caps the height for near-square
+  ratios without shrinking the width (any landscape ratio with R <
+  availW/availH breaks the same way; 16:9/4:3/2:1 fit by luck). Fix:
+  the fitted box is computed in JS from the container size + ratio
+  (`fitSize` state + `ResizeObserver` in `PreviewArea.tsx`,
+  `ratioValue()` parses 'W:H' or the custom ratio). Verified: 1:1
+  canvas is square (622×622) and every ratio option lands within 0.06
+  of its target aspect.
+- BUG-CF-031 | CapCut-fix v1.0.4 | Change made <3 s before reload is lost (autosave gap) | FIXED
+  2026-11-25 — `verify.mjs`: after picking 9:16 and reloading ~600 ms
+  later, the project came back 16:9. Root cause: `applyProject` only
+  sets `dirty: true` in memory; persistence runs on a 3 s interval
+  (`startAutosave`), and there was no flush on unload — so a change
+  made inside the 3 s window never reached `vidora.projects.v1` (the
+  per-option "stored" reads lagged exactly one step behind for the
+  same reason). Fix: `startAutosave` now also flushes on
+  `beforeunload` and `pagehide` (`src/store/projectStore.ts`).
+  Verified: 9:16 persists across an immediate reload; all ratio
+  options are stored.
+- BUG-CF-032 | CapCut-fix v1.0.4 | Full (cover) leaves a ~3 px gap | FIXED
+  2026-11-25 — `verify.mjs`: Full gave a 1107×621 canvas against a
+  758×624 available area (height 3 px short of covering). Root cause:
+  `applyFull` measured the WRAPPER's offset size, but the wrapper has
+  a 1 px border, so its offset size is 2 px larger than the canvas in
+  each dimension (border-box) and the computed zoom was ~0.5% too
+  small — 756×1.4648 = 1107 × 424×1.4648 = 621, exactly the measured
+  values. Fix: `applyFull` measures the CANVAS
+  (`canvasRef.current.offsetWidth/Height`, falling back to the
+  wrapper). Verified: Full canvas covers the available area on both
+  axes; Fit restores the fit geometry exactly.
 - BUG-CF-028 | CapCut-fix v1.0.3 | Verify probe: Tools preview hash unchanged on the sample project | PROBE ARTIFACT — NOT AN APP BUG
   2026-11-25 — `verify.mjs` asserted the preview canvas hash changes
   after applying HD Cam 2 to the sample project's first clip; the hash

@@ -24,14 +24,17 @@
  * PanelShell div (no aside[aria-label="Media library"]) with a hidden
  * file input and a card grid (button[title$="click to add to timeline"]).
  * The AI Tools panel is an overlay dialog ([role="dialog"][aria-label=
- * "AI tools"]) opened here via the floating preview toolbar's
- * "Edit with AI" button (a clip must be selected first). It used to
- * open via Filters tab -> Tools -> Enhance, but CapCut-fix v1.0.3 made
- * Tools clicks apply directly (CapCut Web behavior), so that route no
- * longer opens the overlay. There is no "AI Tools" rail tab and no
- * "Tools" sub-tab inside the overlay, so the old sub-tab check is
- * deleted. K-REFRAME waits on the current status string
- * ("Reframed to 9:16 …") instead of "window".
+ * "AI tools"]) opened here via the inspector's "Smart tools" tab
+ * (a clip must be selected first) -> "Retouch" row. It used to open
+ * via the floating preview toolbar's "Edit with AI" button, but
+ * CapCut-fix v1.0.4 removed that toolbar — CapCut desktop has no
+ * floating pill above the preview (v09 frame_010, #04/#19/#25/#27).
+ * Before that it opened via Filters tab -> Tools -> Enhance, but
+ * CapCut-fix v1.0.3 made Tools clicks apply directly (CapCut Web
+ * behavior), so that route no longer opens the overlay. There is no
+ * "AI Tools" rail tab and no "Tools" sub-tab inside the overlay, so
+ * the old sub-tab check is deleted. K-REFRAME waits on the current
+ * status string ("Reframed to 9:16 …") instead of "window".
  */
 import { spawn } from 'node:child_process';
 import { promises as fs } from 'node:fs';
@@ -219,14 +222,16 @@ async function main() {
     }
     check('K-SMARTCUT', 'video + audio + shaky fixtures on the timeline', (await clipCount(page)) === 3, `clips: ${await clipCount(page)}`);
 
-    // ---- Open the AI Tools overlay via the preview toolbar ----
-    // CapCut-fix v1.0.3: Filters -> Tools -> Enhance now APPLIES the tool
-    // directly (CapCut Web behavior), so it no longer opens the overlay.
-    // The overlay opens from the floating preview toolbar's "Edit with AI"
-    // button (needs a selected clip).
+    // ---- Open the AI Tools overlay via the inspector ----
+    // CapCut-fix v1.0.4: the floating preview toolbar is gone (CapCut
+    // desktop has no pill above the preview), so the overlay opens from
+    // the inspector's "Smart tools" tab -> "Retouch" row (a clip must
+    // be selected first).
     await timelineClip(page, 0).click();
     await page.waitForTimeout(500);
-    await page.locator('button[title="Edit with AI"]').first().click();
+    await page.locator('nav[aria-label="Inspector panels"] button[title="Smart tools"]').first().click();
+    await page.waitForTimeout(500);
+    await page.locator('button', { hasText: 'Retouch' }).first().click();
     await page.waitForTimeout(500);
     check('K-PROVIDERS', 'AI Tools overlay opens', (await aiPanel.count()) === 1);
     for (const title of [

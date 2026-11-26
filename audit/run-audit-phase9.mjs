@@ -99,7 +99,7 @@ async function main() {
     }
   }
   const pkg = JSON.parse(await fs.readFile(path.join(ROOT, 'package.json'), 'utf8'));
-  check('M-CI', 'package.json version is 1.0.3', pkg.version === '1.0.3', `version=${pkg.version}`);
+  check('M-CI', 'package.json version is 1.0.4', pkg.version === '1.0.4', `version=${pkg.version}`);
   check('M-CI', 'audit:phase9 script exists', typeof pkg.scripts?.['audit:phase9'] === 'string');
   try {
     const ci = await fs.readFile(path.join(ROOT, '.github', 'workflows', 'ci.yml'), 'utf8');

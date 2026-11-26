@@ -1,0 +1,229 @@
+{
+ "Export button present": "PASS",
+ "empty project: Export dialog shows empty message": "PASS",
+ "empty project: Export button disabled": "PASS",
+ "import real image": "PASS",
+ "timeline clip present": "PASS",
+ "no floating pill above preview (desktop has none)": "PASS",
+ "bottom bar has Full": "PASS",
+ "bottom bar has Fit preview": "PASS",
+ "bottom bar has Ratio": "PASS",
+ "bottom bar has Fullscreen preview": "PASS",
+ "Full fills preview area (cover)": "PASS",
+ "Fit restores fit geometry": "PASS",
+ "inspector Basic has Crop section": "PASS",
+ "inspector Smart tools has all 7 rows": "PASS",
+ "Smart tools Retouch opens AI tools overlay": "PASS",
+ "Smart tools Auto reframe opens overlay": "PASS",
+ "context menu has Split": "PASS",
+ "context menu has Copy": "PASS",
+ "context menu has Duplicate": "PASS",
+ "context menu has Delete": "PASS",
+ "context menu has Download clip": "PASS",
+ "context menu has Flip": "PASS",
+ "context menu has Crop": "PASS",
+ "Ratio menu item 16:9 clickable": "PASS",
+ "Ratio 16:9 changes preview": "PASS",
+ "Ratio 16:9 stored": "PASS",
+ "Ratio menu item 4:3 clickable": "PASS",
+ "Ratio 4:3 changes preview": "PASS",
+ "Ratio 4:3 stored": "PASS",
+ "Ratio menu item 2:1 clickable": "PASS",
+ "Ratio 2:1 changes preview": "PASS",
+ "Ratio 2:1 stored": "PASS",
+ "Ratio menu item 9:16 clickable": "PASS",
+ "Ratio 9:16 changes preview": "PASS",
+ "Ratio 9:16 stored": "PASS",
+ "Ratio menu item 1:1 clickable": "PASS",
+ "Ratio 1:1 changes preview": "PASS",
+ "Ratio 1:1 stored": "PASS",
+ "Ratio menu item 3:4 clickable": "PASS",
+ "Ratio 3:4 changes preview": "PASS",
+ "Ratio 3:4 stored": "PASS",
+ "Ratio Original applies": "PASS",
+ "Ratio 9:16 persists across reload": "PASS",
+ "export dialog opens": "PASS",
+ "exportJobAfterStart": [
+  "video export · Untitled ProjectrunningMuxing file — 100%Cancel"
+ ],
+ "exportDownload": {
+  "file": "Untitled-Project.mp4",
+  "bytes": 13668,
+  "isMp4": true,
+  "isWebm": false
+ },
+ "export produced a real video file": "PASS",
+ "tiles Effects": {
+  "columns": 2,
+  "colWidths": [
+   130,
+   130
+  ],
+  "tileWidths": [
+   130,
+   130,
+   130,
+   130,
+   130,
+   130
+  ],
+  "tileHeights": [
+   155,
+   155,
+   155,
+   155,
+   155,
+   155
+  ],
+  "imgs": 6,
+  "gradients": 0,
+  "names": [
+   "Warm Glow",
+   "Cool Dusk",
+   "Mono Ink",
+   "Sepia Deep",
+   "Duotone Violet",
+   "Duotone Ember"
+  ],
+  "plus": 6,
+  "download": 6
+ },
+ "Effects tiles are 2 columns": "PASS",
+ "Effects tile width ~130px": "PASS",
+ "Effects tiles show photo thumbnails": "PASS",
+ "Effects tiles have + buttons": "PASS",
+ "Effects tiles have download icons": "PASS",
+ "tiles Filters": {
+  "columns": 2,
+  "colWidths": [
+   130,
+   130
+  ],
+  "tileWidths": [
+   130,
+   130,
+   130,
+   130,
+   130,
+   130
+  ],
+  "tileHeights": [
+   155,
+   155,
+   155,
+   155,
+   155,
+   155
+  ],
+  "imgs": 6,
+  "gradients": 0,
+  "names": [
+   "Vidora Warm",
+   "Vidora… Teal",
+   "Vidora Mono",
+   "Golden Hour",
+   "Amber Glow",
+   "Sunset Blush"
+  ],
+  "plus": 6,
+  "download": 6
+ },
+ "Filters tiles are 2 columns": "PASS",
+ "Filters tile width ~130px": "PASS",
+ "Filters tiles show photo thumbnails": "PASS",
+ "Filters tiles have + buttons": "PASS",
+ "Filters tiles have download icons": "PASS",
+ "tiles Transitions": {
+  "columns": 2,
+  "colWidths": [
+   130,
+   130
+  ],
+  "tileWidths": [
+   130,
+   130,
+   130,
+   130,
+   130,
+   130
+  ],
+  "tileHeights": [
+   155,
+   155,
+   155,
+   155,
+   155,
+   155
+  ],
+  "imgs": 6,
+  "gradients": 0,
+  "names": [
+   "fade",
+   "dissolve",
+   "dip-black",
+   "dip-white",
+   "flash",
+   "slide"
+  ],
+  "plus": 6,
+  "download": 6
+ },
+ "Transitions tiles are 2 columns": "PASS",
+ "Transitions tile width ~130px": "PASS",
+ "Transitions tiles show photo thumbnails": "PASS",
+ "Transitions tiles have + buttons": "PASS",
+ "Transitions tiles have download icons": "PASS",
+ "templateHoverProbe": [
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  },
+  {
+   "text": "Use template"
+  }
+ ],
+ "pageErrors": [],
+ "zero page errors": "PASS",
+ "ok": true
+}

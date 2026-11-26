@@ -8,6 +8,7 @@ import {
   TRANSITION_TO_SRC,
   downloadDataUrlFile,
   loadSampleImage,
+  middleTruncate,
   transitionStillDataUrl,
 } from '../lib/tileThumbs';
 import { encodePanelDrag, PANEL_DRAG_MIME } from '../lib/panelDrag';
@@ -29,9 +30,11 @@ import PanelShell, { PanelSearch, SectionHeading, SubNavGroup, SubNavItem } from
  * when a transition is applied to the selected clip. Transition names
  * stay Vidora Originals.
  *
- * v1.0.3 (Web check 2026-11-25 §5): tiles are square ~70×70 photo
- * thumbnails — the grid is `repeat(auto-fill, minmax(68px, 1fr))` so
- * tiles stay ~70px at 1920 and drop to 2 columns on narrow panels.
+ * v1.0.4 (desktop wins): tiles are desktop's larger 2-column photo
+ * tiles — measured from CapCut #25: photo ~130×130, 2 columns, 24px
+ * gap, name below (middle-truncated like CapCut). The grid is
+ * `repeat(2, minmax(0, 130px))` so tiles are exactly 130px at 1920
+ * and shrink gracefully on narrow panels.
  *
  * v1.0.2 (W4, D15): every tile is draggable onto a timeline clip
  * (applies the transition at that clip's start) or the preview, and
@@ -142,7 +145,7 @@ export default function TransitionsPanel() {
         <PanelSearch value={query} onChange={setQuery} placeholder="People are searching transitions" />
         <SectionHeading>{query ? `Results for "${query}"` : category}</SectionHeading>
         <p className="text-[11px] text-zinc-500">Click a tile or its + to apply it to the selected clip — or drag a tile onto a clip on the timeline to put the transition at its start.</p>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(68px,1fr))] gap-2">
+        <div className="grid grid-cols-[repeat(2,minmax(0,130px))] gap-6">
           {results.map((t) => (
             <div
               key={t.id}
@@ -162,7 +165,7 @@ export default function TransitionsPanel() {
                 className="block w-full text-left"
               >
                 <TransitionThumb type={t.id as TransitionType} onStill={(url) => setStills((prev) => (prev[t.id] === url ? prev : { ...prev, [t.id]: url }))} />
-                <span className="block truncate py-1 pl-7 pr-2 text-[11px] capitalize">{t.id}</span>
+                <span className="block truncate py-1 pl-7 pr-2 text-[11px] capitalize" title={t.id}>{middleTruncate(t.id)}</span>
               </button>
               <button type="button" onClick={() => applyTransition(t.id)} aria-label={`Apply transition ${t.id}`} title={`Apply transition ${t.id}`} className="absolute bottom-1 left-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#00D9D9] text-sm font-bold leading-none text-[#062A2A] hover:bg-[#00E5E5]">+</button>
               <button type="button" onClick={() => toggleFavorite(t.id)} aria-pressed={favorites.includes(t.id)} aria-label={`Favorite ${t.id}`} className={`absolute right-1 top-1 rounded bg-black/50 p-0.5 ${favorites.includes(t.id) ? 'text-[#FFD34D]' : 'text-[#A8A8A8] hover:text-[#F2F2F2]'}`}>★</button>

@@ -2,16 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
 import { findClip, projectDuration } from '../lib/timeline';
 import {
-  IconChevronDown,
-  IconCrop,
-  IconDots,
-  IconDownload,
   IconFit,
   IconFullscreen,
   IconMenu,
   IconPause,
   IconPlay,
-  IconSparkles,
 } from './icons';
 import type { Clip, Track } from '../schema/project';
 import { shouldSpeak } from '../lib/tts';
@@ -32,20 +27,29 @@ import { decodePanelDrag } from '../lib/panelDrag';
  * CapCut-fix (P1–P4, v1.0.1; v1.0.2 D2): title is ALWAYS the
  * constant "Player-Timeline 01" (never the project name) + ≡ menu,
  * bottom bar (timecode / plain play icon / Full / fit / Ratio /
- * fullscreen), floating clip toolbar, preview axis, hand/move tools.
+ * fullscreen), preview axis, hand/move tools.
+ * v1.0.4: NO floating toolbar above the preview — CapCut desktop has
+ * none (v09 frame_010 with a clip selected, #04/#19/#25/#27 empty:
+ * clean preview, tools only in the bottom bar + right inspector).
+ * The pill's jobs live where desktop puts them: Crop in the inspector
+ * Basic tab + timeline right-click menu; Edit with AI / Auto reframe /
+ * Smart tools in the inspector Smart tools tab; the "…" clip actions in
+ * the timeline toolbar + right-click menu. Ratio menu lives as a
+ * direct child of this section (BUG-CF-029: inside the bottom bar's
+ * overflow-hidden group it was clipped and unclickable).
  * No "Click to upload" overlay — CapCut #19 has none; drag-drop
  * still works on the section and the hidden file input stays. */
 export default function PreviewArea() {
   const project = useProjectStore((s) => s.project);
   const aspectRatio = useProjectStore((s) => s.aspectRatio);
   const setAspectRatio = useProjectStore((s) => s.setAspectRatio);
+  const customRatio = useProjectStore((s) => s.customRatio);
   const playhead = useProjectStore((s) => s.playhead);
   const playing = useProjectStore((s) => s.playing);
   const setPlaying = useProjectStore((s) => s.setPlaying);
   const setPlayhead = useProjectStore((s) => s.setPlayhead);
   const previewAxis = useProjectStore((s) => s.previewAxis);
   const previewTool = useProjectStore((s) => s.previewTool);
-  const setAiToolsOverlay = useProjectStore((s) => s.setAiToolsOverlay);
   const addMediaFiles = useProjectStore((s) => s.addMediaFiles);
   const addEffect = useProjectStore((s) => s.addEffect);
   const setBuiltinLut = useProjectStore((s) => s.setBuiltinLut);
@@ -53,15 +57,6 @@ export default function PreviewArea() {
   const addStickerClip = useProjectStore((s) => s.addStickerClip);
   const addShapeClip = useProjectStore((s) => s.addShapeClip);
   const addTextClip = useProjectStore((s) => s.addTextClip);
-  const splitAtPlayhead = useProjectStore((s) => s.splitAtPlayhead);
-  const copySelected = useProjectStore((s) => s.copySelected);
-  const pasteClipboard = useProjectStore((s) => s.pasteClipboard);
-  const deleteSelected = useProjectStore((s) => s.deleteSelected);
-  const duplicateSelected = useProjectStore((s) => s.duplicateSelected);
-  const detachAudio = useProjectStore((s) => s.detachAudio);
-  const freezeSelected = useProjectStore((s) => s.freezeSelected);
-  const reverseSelected = useProjectStore((s) => s.reverseSelected);
-  const updateSelectedClip = useProjectStore((s) => s.updateSelectedClip);
   const maskEditing = useProjectStore((s) => s.maskEditing);
   const addPenPoint = useProjectStore((s) => s.addPenPoint);
   const selectedClipIds = useProjectStore((s) => s.selectedClipIds);
@@ -71,13 +66,20 @@ export default function PreviewArea() {
   const addTrackPoint = useProjectStore((s) => s.addTrackPoint);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const [loop, setLoop] = useState(false);
   const [showSafe, setShowSafe] = useState(false);
   const [showGrid, setShowGrid] = useState(false);
+  // v1.0.4 (BUG-CF-030): the fitted preview box, computed from the
+  // container size + aspect ratio. CSS alone cannot keep the ratio:
+  // `width: 100%` + `max-height: 100%` caps the height for ratios
+  // near square (1:1 rendered 756×622 instead of square) because the
+  // width does not shrink when the height is clamped.
+  const [fitSize, setFitSize] = useState<{ w: number; h: number } | null>(null);
   // CapCut-fix (P1–P4): ≡ menu, Ratio menu, clip "…" menu, pan/zoom.
   const [topMenuOpen, setTopMenuOpen] = useState(false);
   const [ratioOpen, setRatioOpen] = useState(false);
-  const [clipMenuOpen, setClipMenuOpen] = useState(false);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [viewZoom, setViewZoom] = useState(1);
   const panDragRef = useRef<{ startX: number; startY: number; panX: number; panY: number } | null>(null);
@@ -431,6 +433,36 @@ export default function PreviewArea() {
   };
   void stepFrame;
 
+  /** v1.0.4: "Full" fills the preview area (cover) instead of a fixed
+   * 1.5× zoom — the zoom that covers the container is computed from
+   * the wrapper's untransformed size (offsetWidth/Height ignore the
+   * transform). Clicking again returns to fit (zoom 1). */
+  const applyFull = () => {
+    if (viewZoom !== 1) {
+      setViewZoom(1);
+      setPan({ x: 0, y: 0 });
+      return;
+    }
+    const c = containerRef.current;
+    const w = wrapperRef.current;
+    if (!c || !w) {
+      setViewZoom(1.5);
+      setPan({ x: 0, y: 0 });
+      return;
+    }
+    const availW = Math.max(1, c.clientWidth - 32);
+    const availH = Math.max(1, c.clientHeight - 32);
+    // v1.0.4 (BUG-CF-032): measure the CANVAS, not the wrapper — the
+    // wrapper has a 1px border, so its offset size is 2px larger than
+    // the canvas in each dimension and the old zoom left a ~3px gap.
+    const cv = canvasRef.current;
+    const baseW = Math.max(1, cv ? cv.offsetWidth : w.offsetWidth);
+    const baseH = Math.max(1, cv ? cv.offsetHeight : w.offsetHeight);
+    const z = Math.max(availW / baseW, availH / baseH);
+    setViewZoom(Math.min(Math.max(z, 1), 4));
+    setPan({ x: 0, y: 0 });
+  };
+
   /** "Original" ratio = the project's own resolution, snapped to the nearest known ratio. */
   const originalRatio = (): '9:16' | '16:9' | '1:1' | '4:5' | '21:9' | '4:3' | '2:1' | '3:4' | 'custom' => {
     const w = project?.resolution.width ?? 1920;
@@ -451,19 +483,40 @@ export default function PreviewArea() {
     return Math.abs(best.ratio - r) < 0.02 ? best.value : 'custom';
   };
 
-  const selectedClip = selectedClipIds.length > 0 && project ? findClip(project, selectedClipIds[0])?.clip ?? null : null;
+  /** Numeric aspect ratio (width / height) for the current setting. */
+  const ratioValue = (): number => {
+    if (aspectRatio === 'custom') {
+      const w = customRatio?.width ?? 1920;
+      const h = customRatio?.height ?? 1080;
+      return Math.max(0.05, w / Math.max(1, h));
+    }
+    const [w, h] = aspectRatio.split(':').map(Number);
+    return w > 0 && h > 0 ? w / h : 16 / 9;
+  };
 
-  const clipMenuItem = (label: string, shortcut: string, onClick: () => void) => (
-    <button type="button" onClick={() => { setClipMenuOpen(false); onClick(); }} className="flex w-full items-center justify-between px-3 py-1.5 text-left text-[13px] hover:bg-[#242424]">
-      <span>{label}</span>
-      <span className="text-[11px] text-[#6E6E6E]">{shortcut}</span>
-    </button>
-  );
+  // v1.0.4 (BUG-CF-030): keep the fitted box at the true ratio on
+  // every container resize / ratio change.
+  useEffect(() => {
+    const c = containerRef.current;
+    if (!c) return;
+    const compute = () => {
+      const availW = Math.max(1, c.clientWidth - 32);
+      const availH = Math.max(1, c.clientHeight - 32);
+      const r = ratioValue();
+      const w = Math.min(availW, availH * r);
+      setFitSize({ w: Math.floor(w), h: Math.floor(w / r) });
+    };
+    compute();
+    const ro = new ResizeObserver(compute);
+    ro.observe(c);
+    return () => ro.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [aspectRatio, customRatio, project?.resolution]);
 
   return (
     <section
       ref={sectionRef}
-      className="flex min-w-0 flex-1 flex-col bg-[#141414]"
+      className="relative flex min-w-0 flex-1 flex-col bg-[#141414]"
       aria-label="Preview"
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => {
@@ -541,13 +594,14 @@ export default function PreviewArea() {
         </div>
       </div>
 
-      <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden p-4">
+      <div ref={containerRef} className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden p-4">
         <div
+          ref={wrapperRef}
           className={`${aspectClass} relative max-h-full max-w-full overflow-hidden rounded-lg border border-[#2E2E2E] bg-black shadow-2xl`}
           style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${viewZoom})`,
-            width: aspectRatio === '9:16' || aspectRatio === '4:5' || aspectRatio === '3:4' ? 'auto' : '100%',
-            height: aspectRatio === '9:16' || aspectRatio === '4:5' || aspectRatio === '3:4' ? '100%' : 'auto',
+            width: fitSize ? fitSize.w : aspectRatio === '9:16' || aspectRatio === '4:5' || aspectRatio === '3:4' ? 'auto' : '100%',
+            height: fitSize ? fitSize.h : aspectRatio === '9:16' || aspectRatio === '4:5' || aspectRatio === '3:4' ? '100%' : 'auto',
           }}
         >
           <canvas
@@ -582,53 +636,6 @@ export default function PreviewArea() {
               canvas here; files arrive via drag-drop or Media → Import.
               The hidden file input above stays for drag-drop. */}
         </div>
-
-        {/* CapCut-fix (P3): floating toolbar when a clip is selected.
-            v1.0.2 D2: constrained to the preview width — it wraps to a
-            second row on narrow previews instead of overflowing.
-            `w-max` is load-bearing: an abs-pos box with left-1/2 would
-            otherwise shrink-to-fit at half the preview width and wrap
-            even at 1920; max-content lets it stay one row until the
-            max-w cap actually bites. */}
-        {selectedClip && (
-          <div className="absolute top-2 left-1/2 z-30 flex w-max max-w-[calc(100%-16px)] -translate-x-1/2 flex-wrap items-center justify-center gap-1 rounded-lg border border-[#3D3D3D] bg-[#1E1E1E]/95 px-1 py-1 shadow-xl">
-            <button type="button" onClick={() => setAiToolsOverlay('enhance')} className="flex items-center gap-1 rounded-md px-2 py-1 text-xs hover:bg-[#242424]" title="Edit with AI">
-              <IconSparkles size={14} /> Edit with AI
-            </button>
-            <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('vidora:open-inspector-basic'))} className="flex items-center gap-1 rounded-md px-2 py-1 text-xs hover:bg-[#242424]" title="Crop">
-              <IconCrop size={14} /> Crop
-            </button>
-            <button type="button" onClick={() => setAiToolsOverlay('auto-reframe')} className="rounded-md px-2 py-1 text-xs hover:bg-[#242424]" title="Auto reframe">
-              Auto reframe
-            </button>
-            <button type="button" onClick={() => setAiToolsOverlay('enhance')} className="flex items-center gap-1 rounded-md px-2 py-1 text-xs hover:bg-[#242424]" title="Smart tools">
-              Smart tools <IconChevronDown size={12} />
-            </button>
-            <div className="relative">
-              <button type="button" onClick={() => setClipMenuOpen((v) => !v)} aria-label="More clip actions" aria-expanded={clipMenuOpen} className="rounded-md p-1.5 hover:bg-[#242424]">
-                <IconDots size={16} />
-              </button>
-              {clipMenuOpen && (
-                <div className="absolute right-0 top-8 z-40 w-56 rounded-lg border border-[#3D3D3D] bg-[#1E1E1E] py-1 shadow-xl">
-                  {clipMenuItem('Split', 'Ctrl B', () => splitAtPlayhead())}
-                  {clipMenuItem('Copy', 'Ctrl C', () => copySelected())}
-                  {clipMenuItem('Cut', 'Ctrl X', () => { copySelected(); deleteSelected(); })}
-                  {clipMenuItem('Paste', 'Ctrl V', () => pasteClipboard())}
-                  {clipMenuItem('Duplicate', 'Ctrl D', () => duplicateSelected())}
-                  {clipMenuItem('Delete', 'Backspace', () => deleteSelected())}
-                  {clipMenuItem('Separate audio', 'Ctrl Shift S', () => detachAudio())}
-                  {clipMenuItem('Freeze', '', () => freezeSelected())}
-                  {clipMenuItem('Reverse', '', () => reverseSelected())}
-                  {clipMenuItem('Flip horizontal', '', () => updateSelectedClip({ flipH: !selectedClip.flipH }))}
-                  {clipMenuItem('Crop', '', () => window.dispatchEvent(new CustomEvent('vidora:open-inspector-basic')))}
-                  <button type="button" onClick={() => { setClipMenuOpen(false); window.dispatchEvent(new CustomEvent('vidora:download-clip')); }} className="flex w-full items-center gap-1.5 px-3 py-1.5 text-left text-[13px] hover:bg-[#242424]">
-                    <IconDownload size={14} /> Download clip
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* CapCut-fix (P2): bottom bar — timecode left, play center, Full / fit / Ratio / fullscreen right. Seek stays on the timeline ruler.
@@ -646,7 +653,8 @@ export default function PreviewArea() {
         <div className="flex min-w-0 shrink-0 items-center gap-1 overflow-hidden whitespace-nowrap">
           <button
             type="button"
-            onClick={() => { setViewZoom((z) => (z === 1 ? 1.5 : 1)); setPan({ x: 0, y: 0 }); }}
+            onClick={applyFull}
+            aria-pressed={viewZoom !== 1}
             className="rounded-md px-2 py-1 text-[11px] text-[#A8A8A8] hover:bg-[#242424] hover:text-[#F2F2F2]"
             title="Fill the preview area"
           >
@@ -661,36 +669,39 @@ export default function PreviewArea() {
           >
             <IconFit size={16} />
           </button>
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setRatioOpen((v) => !v)}
-              aria-expanded={ratioOpen}
-              className="rounded-md px-2 py-1 text-[11px] text-[#A8A8A8] hover:bg-[#242424] hover:text-[#F2F2F2]"
-              title="Aspect ratio"
-            >
-              Ratio
-            </button>
-            {ratioOpen && (
-              <div className="absolute right-0 bottom-9 z-40 w-36 rounded-lg border border-[#3D3D3D] bg-[#1E1E1E] py-1 text-sm shadow-xl">
-                {(['Original', '16:9', '4:3', '2:1', '9:16', '1:1', '3:4'] as const).map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => { setAspectRatio(r === 'Original' ? originalRatio() : r); setRatioOpen(false); }}
-                    className="block w-full px-3 py-1.5 text-left hover:bg-[#242424]"
-                  >
-                    {r}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          <button
+            type="button"
+            onClick={() => setRatioOpen((v) => !v)}
+            aria-expanded={ratioOpen}
+            className="rounded-md px-2 py-1 text-[11px] text-[#A8A8A8] hover:bg-[#242424] hover:text-[#F2F2F2]"
+            title="Aspect ratio"
+          >
+            Ratio
+          </button>
           <button type="button" onClick={toggleFullscreen} aria-label="Fullscreen preview" title="Fullscreen preview" className="rounded-md p-1.5 text-[#A8A8A8] hover:bg-[#242424] hover:text-[#F2F2F2]">
             <IconFullscreen size={16} />
           </button>
         </div>
       </div>
+      {/* v1.0.4 (BUG-CF-029): the Ratio menu MUST live here, as a direct
+          child of the section — it used to sit inside the bottom bar's
+          `overflow-hidden` button group, which clipped it entirely, so
+          no ratio option could ever be clicked. Anchored above the
+          bottom bar (bottom-14), right-aligned with the bar's padding. */}
+      {ratioOpen && (
+        <div className="absolute right-3 bottom-14 z-40 w-36 rounded-lg border border-[#3D3D3D] bg-[#1E1E1E] py-1 text-sm shadow-xl">
+          {(['Original', '16:9', '4:3', '2:1', '9:16', '1:1', '3:4'] as const).map((r) => (
+            <button
+              key={r}
+              type="button"
+              onClick={() => { setAspectRatio(r === 'Original' ? originalRatio() : r); setRatioOpen(false); }}
+              className="block w-full px-3 py-1.5 text-left hover:bg-[#242424]"
+            >
+              {r}
+            </button>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

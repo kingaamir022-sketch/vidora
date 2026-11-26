@@ -1632,13 +1632,26 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
   };
 });
 
-/** Autosave loop: call once from App. Saves every 3 s while dirty. */
+/** Autosave loop: call once from App. Saves every 3 s while dirty.
+ * v1.0.4 (BUG-CF-031): also flush on beforeunload/pagehide — without
+ * it, a change made less than 3 s before a reload or close was lost
+ * (e.g. picking a Ratio then reloading at once came back 16:9). */
 export function startAutosave(): () => void {
+  const flush = () => {
+    const s = useProjectStore.getState();
+    if (s.dirty && s.project) s.saveNow();
+  };
   const timer = window.setInterval(() => {
     const s = useProjectStore.getState();
     if (s.dirty && s.project) s.saveNow();
   }, 3000);
-  return () => window.clearInterval(timer);
+  window.addEventListener('beforeunload', flush);
+  window.addEventListener('pagehide', flush);
+  return () => {
+    window.clearInterval(timer);
+    window.removeEventListener('beforeunload', flush);
+    window.removeEventListener('pagehide', flush);
+  };
 }
 
 export function projectDurationNow(): number {

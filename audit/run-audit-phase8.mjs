@@ -157,15 +157,14 @@ async function main() {
   check('L-TEMPLATES-SLOTS', 'build-assets templates floor is 35', buildAssets.includes('templates: 35'));
 
   // ---- Fixture (regenerated every run) ----
-  try {
-    await fs.stat(path.join(MEDIA, 'test-av.mp4'));
-  } catch {
-    await new Promise((resolve) => {
-      const ff = spawn('ffmpeg', ['-f', 'lavfi', '-i', 'testsrc=duration=6:size=320x180:rate=30', '-f', 'lavfi', '-i', 'sine=frequency=440:duration=6', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', '-y', path.join(MEDIA, 'test-av.mp4')], { stdio: 'ignore' });
-      ff.on('close', resolve);
-      ff.on('error', resolve);
-    });
-  }
+  // v1.0.4: ALWAYS regenerate — the old generate-if-missing guard let
+  // a stale 4 s test-av.mp4 (from an interrupted earlier run) poison
+  // the L-EXPORT duration checks (56/56 only after deleting it).
+  await new Promise((resolve) => {
+    const ff = spawn('ffmpeg', ['-f', 'lavfi', '-i', 'testsrc=duration=6:size=320x180:rate=30', '-f', 'lavfi', '-i', 'sine=frequency=440:duration=6', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', '-y', path.join(MEDIA, 'test-av.mp4')], { stdio: 'ignore' });
+    ff.on('close', resolve);
+    ff.on('error', resolve);
+  });
 
   const preview = spawn('npx', ['vite', 'preview', '--port', '4173', '--strictPort', '--host', '127.0.0.1'], {
     cwd: ROOT, stdio: 'ignore',
