@@ -1,6 +1,6 @@
 # Vidora Phase 7 audit report
 
-Run: 2026-11-26T03:31:52.207Z
+Run: 2026-11-26T04:26:52.092Z
 Result: 60/60 checks passed, 0 failed.
 
 - PASS [K-STT] behaviour card docs/behavior/K-STT.md exists

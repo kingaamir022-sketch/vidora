@@ -151,6 +151,38 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | CI (M-CI) | ~ | ~ | ~ | — | ~ | `.github/workflows/ci.yml` (Node 20, `npm ci`, build, test, lint) — no reference; Playwright audits are NOT in CI (documented in the workflow: they need the headless shell + ffmpeg) | ASSUMED |
 | Docker (M-DOCKER) | ~ | ~ | ~ | — | ~ | `Dockerfile` (node:20-alpine build → nginx:alpine serve) + `docker-compose.yml` (4173:80) + `.dockerignore` — no reference; the image was NOT built on this VM (docker not installed), honestly noted in the Dockerfile and the audit | ASSUMED |
 
+## Parity score (correction round v1.0.8, 2026-11-26)
+
+- **MATCH: 59 / 91** — unchanged. No ASSUMED row gained new CapCut
+  reference evidence in this round, so none moves to MATCH. This round
+  fixed one live-site-only rail defect without touching any CapCut-facing
+  behaviour: BUG-CF-043 — after one ">" click the last tab read
+  "Template" (final "s" clipped) because the 220 px step and the raw
+  max scroll (295 px) are not multiples of the 80 px tab width; every
+  rest position is now tab-aligned (scroll-snap, 3-tab steps, measured
+  end spacer, aligned active-tab reveal). Full-right is clean at all
+  5 sizes and the 1920 regression block is unchanged (canvas 756×424,
+  7 tabs + Filters peeking 25 px).
+- **ASSUMED: 32 / 91** — same 32 rows as v1.0.1.
+- **DIFF-FIXING: 0 / 91**
+- **INTENTIONAL-DIFF: 0 / 91** — the only deliberate difference left
+  is the app name and logo (Vidora, not CapCut), which is not a matrix
+  row; see `docs/INTENTIONAL_DIFFS.md`.
+- **Gate result: PASS** — every row is MATCH or ASSUMED, `npm run
+  build` is green, `npm test` is 419/419, and the Playwright
+  self-audits pass: Phase 4 26/26, Phase 5 39/39, Phase 6 15/15,
+  Phase 7 60/60, Phase 8 56/56, Phase 9 42/42 — 0 open bugs. The
+  v1.0.8 verification (`audit/capcut-fix/v108/verify.mjs`): 37 checks
+  PASS, 0 page errors; the completion verification
+  (`audit/capcut-fix/v108/verify-paged.mjs`): 183 checks PASS,
+  0 page errors — every rest position walked at all 5 sizes, zero
+  clipped labels, zero truncated label text. The first-pass residual
+  (one label clipping after the first ">" click at 150%/1366/1280/
+  1024, viewport remainder 40–47 px) is CLOSED on the same version
+  by the paged rail + viewport-dividing tab widths; nothing is
+  carried as a known residual. The v1.0.7 score paragraph below is
+  kept for history.
+
 ## Parity score (correction round v1.0.7, 2026-11-26)
 
 - **MATCH: 59 / 91** — unchanged. No ASSUMED row gained new CapCut

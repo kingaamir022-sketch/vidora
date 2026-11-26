@@ -1,0 +1,3046 @@
+{
+ "railPositions-1920x1080": {
+  "initial": {
+   "scrollLeft": 0,
+   "scrollWidth": 905,
+   "clientWidth": 585,
+   "maxScroll": 320,
+   "leftChevron": false,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 32,
+     "labelVisibleW": 32,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 32,
+     "labelVisibleW": 32,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 22,
+     "labelVisibleW": 22,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 42,
+     "labelVisibleW": 42,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 59,
+     "labelVisibleW": 59,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 80,
+     "btnVisibleW": 25,
+     "labelW": 33,
+     "labelVisibleW": 2,
+     "labelClipped": true
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 62,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 54,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 46,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterClick1": {
+   "scrollLeft": 240,
+   "scrollWidth": 905,
+   "clientWidth": 561,
+   "maxScroll": 344,
+   "leftChevron": true,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 32,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 32,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 22,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 42,
+     "labelVisibleW": 42,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 59,
+     "labelVisibleW": 59,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 33,
+     "labelVisibleW": 33,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 62,
+     "labelVisibleW": 62,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 54,
+     "labelVisibleW": 54,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 80,
+     "btnVisibleW": 1,
+     "labelW": 46,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterClick2": {
+   "scrollLeft": 320,
+   "scrollWidth": 905,
+   "clientWidth": 585,
+   "maxScroll": 320,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 32,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 32,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 22,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 42,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 59,
+     "labelVisibleW": 59,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 33,
+     "labelVisibleW": 33,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 62,
+     "labelVisibleW": 62,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 54,
+     "labelVisibleW": 54,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 46,
+     "labelVisibleW": 46,
+     "labelClipped": false
+    }
+   ]
+  },
+  "fullRight": {
+   "scrollLeft": 320,
+   "scrollWidth": 905,
+   "clientWidth": 585,
+   "maxScroll": 320,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 32,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 32,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 22,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 42,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 59,
+     "labelVisibleW": 59,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 33,
+     "labelVisibleW": 33,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 62,
+     "labelVisibleW": 62,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 54,
+     "labelVisibleW": 54,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 46,
+     "labelVisibleW": 46,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterAvatar": {
+   "scrollLeft": 320,
+   "scrollWidth": 905,
+   "clientWidth": 585,
+   "maxScroll": 320,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 32,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 32,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 22,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 42,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 59,
+     "labelVisibleW": 59,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 33,
+     "labelVisibleW": 33,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 62,
+     "labelVisibleW": 62,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 54,
+     "labelVisibleW": 54,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 46,
+     "labelVisibleW": 46,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterMedia": {
+   "scrollLeft": 0,
+   "scrollWidth": 905,
+   "clientWidth": 585,
+   "maxScroll": 320,
+   "leftChevron": false,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 32,
+     "labelVisibleW": 32,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 32,
+     "labelVisibleW": 32,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 22,
+     "labelVisibleW": 22,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 42,
+     "labelVisibleW": 42,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 59,
+     "labelVisibleW": 59,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 80,
+     "btnVisibleW": 80,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 80,
+     "btnVisibleW": 25,
+     "labelW": 33,
+     "labelVisibleW": 2,
+     "labelClipped": true
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 62,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 54,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 80,
+     "btnVisibleW": 0,
+     "labelW": 46,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  }
+ },
+ "[1920x1080] full-right: no clipped labels": "PASS",
+ "[1920x1080] full-right: AI avatar fully visible with complete label": "PASS",
+ "[1920x1080] full-right: right chevron gone (nowhere further to go)": "PASS",
+ "[1920x1080] initial: 7 tabs fully visible (tab ~80px)": "PASS",
+ "[1920x1080] one \">\" click: no clipped labels (the reported defect)": "PASS",
+ "[1920x1080] one \">\" click: Templates fully visible": "PASS",
+ "[1920x1080] active AI avatar scrolls fully into view": "PASS",
+ "railIntermediates-1920x1080": [
+  "afterClick1: scrollLeft=240 clipped=[]",
+  "afterClick2: scrollLeft=320 clipped=[]"
+ ],
+ "errors-1920x1080": [],
+ "[1920x1080] zero page errors": "PASS",
+ "railPositions-1920x1080-dsf1.5": {
+  "initial": {
+   "scrollLeft": 0,
+   "scrollWidth": 705,
+   "clientWidth": 385,
+   "maxScroll": 320,
+   "leftChevron": false,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 29,
+     "labelVisibleW": 29,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 27,
+     "labelVisibleW": 27,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 19,
+     "labelVisibleW": 19,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 34,
+     "labelVisibleW": 34,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 64,
+     "btnVisibleW": 1,
+     "labelW": 41,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 28,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 53,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 48,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 44,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterClick1": {
+   "scrollLeft": 192,
+   "scrollWidth": 705,
+   "clientWidth": 361,
+   "maxScroll": 344,
+   "leftChevron": true,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 34,
+     "labelVisibleW": 34,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 64,
+     "btnVisibleW": 41,
+     "labelW": 53,
+     "labelVisibleW": 35,
+     "labelClipped": true
+    },
+    {
+     "t": "Templates",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 48,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 44,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterClick2": {
+   "scrollLeft": 320,
+   "scrollWidth": 705,
+   "clientWidth": 385,
+   "maxScroll": 320,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 37,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 34,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 53,
+     "labelVisibleW": 53,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 44,
+     "labelVisibleW": 44,
+     "labelClipped": false
+    }
+   ]
+  },
+  "fullRight": {
+   "scrollLeft": 320,
+   "scrollWidth": 705,
+   "clientWidth": 385,
+   "maxScroll": 320,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 37,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 34,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 53,
+     "labelVisibleW": 53,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 44,
+     "labelVisibleW": 44,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterAvatar": {
+   "scrollLeft": 320,
+   "scrollWidth": 705,
+   "clientWidth": 385,
+   "maxScroll": 320,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 37,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 34,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 53,
+     "labelVisibleW": 53,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 44,
+     "labelVisibleW": 44,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterMedia": {
+   "scrollLeft": 0,
+   "scrollWidth": 705,
+   "clientWidth": 385,
+   "maxScroll": 320,
+   "leftChevron": false,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 29,
+     "labelVisibleW": 29,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 27,
+     "labelVisibleW": 27,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 19,
+     "labelVisibleW": 19,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 34,
+     "labelVisibleW": 34,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 64,
+     "btnVisibleW": 1,
+     "labelW": 41,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 28,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 53,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 48,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 44,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  }
+ },
+ "[1920x1080-dsf1.5] full-right: no clipped labels": "PASS",
+ "[1920x1080-dsf1.5] full-right: AI avatar fully visible with complete label": "PASS",
+ "[1920x1080-dsf1.5] full-right: right chevron gone (nowhere further to go)": "PASS",
+ "[1920x1080-dsf1.5] initial: 6 tabs fully visible (tab ~64px)": "PASS",
+ "[1920x1080-dsf1.5] active AI avatar scrolls fully into view": "PASS",
+ "railIntermediates-1920x1080-dsf1.5": [
+  "afterClick1: scrollLeft=192 clipped=[\"Adjustment(35/53)\"]",
+  "afterClick2: scrollLeft=320 clipped=[]"
+ ],
+ "errors-1920x1080-dsf1.5": [],
+ "[1920x1080-dsf1.5] zero page errors": "PASS",
+ "railPositions-1366x768": {
+  "initial": {
+   "scrollLeft": 0,
+   "scrollWidth": 753,
+   "clientWidth": 412,
+   "maxScroll": 341,
+   "leftChevron": false,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 29,
+     "labelVisibleW": 29,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 27,
+     "labelVisibleW": 27,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 19,
+     "labelVisibleW": 19,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 34,
+     "labelVisibleW": 34,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 68,
+     "btnVisibleW": 2,
+     "labelW": 41,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 28,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 53,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 48,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 44,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterClick1": {
+   "scrollLeft": 205,
+   "scrollWidth": 753,
+   "clientWidth": 388,
+   "maxScroll": 365,
+   "leftChevron": true,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 34,
+     "labelVisibleW": 34,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 68,
+     "btnVisibleW": 47,
+     "labelW": 53,
+     "labelVisibleW": 39,
+     "labelClipped": true
+    },
+    {
+     "t": "Templates",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 48,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 44,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterClick2": {
+   "scrollLeft": 341,
+   "scrollWidth": 753,
+   "clientWidth": 412,
+   "maxScroll": 341,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 37,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 34,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 53,
+     "labelVisibleW": 53,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 44,
+     "labelVisibleW": 44,
+     "labelClipped": false
+    }
+   ]
+  },
+  "fullRight": {
+   "scrollLeft": 341,
+   "scrollWidth": 753,
+   "clientWidth": 412,
+   "maxScroll": 341,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 37,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 34,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 53,
+     "labelVisibleW": 53,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 44,
+     "labelVisibleW": 44,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterAvatar": {
+   "scrollLeft": 341,
+   "scrollWidth": 753,
+   "clientWidth": 412,
+   "maxScroll": 341,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 37,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 34,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 53,
+     "labelVisibleW": 53,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 44,
+     "labelVisibleW": 44,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterMedia": {
+   "scrollLeft": 0,
+   "scrollWidth": 753,
+   "clientWidth": 412,
+   "maxScroll": 341,
+   "leftChevron": false,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 29,
+     "labelVisibleW": 29,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 27,
+     "labelVisibleW": 27,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 19,
+     "labelVisibleW": 19,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 34,
+     "labelVisibleW": 34,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 68,
+     "btnVisibleW": 68,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 68,
+     "btnVisibleW": 2,
+     "labelW": 41,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 28,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 53,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 48,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 68,
+     "btnVisibleW": 0,
+     "labelW": 44,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  }
+ },
+ "[1366x768] full-right: no clipped labels": "PASS",
+ "[1366x768] full-right: AI avatar fully visible with complete label": "PASS",
+ "[1366x768] full-right: right chevron gone (nowhere further to go)": "PASS",
+ "[1366x768] initial: 6 tabs fully visible (tab ~68px)": "PASS",
+ "[1366x768] active AI avatar scrolls fully into view": "PASS",
+ "railIntermediates-1366x768": [
+  "afterClick1: scrollLeft=205 clipped=[\"Adjustment(39/53)\"]",
+  "afterClick2: scrollLeft=341 clipped=[]"
+ ],
+ "errors-1366x768": [],
+ "[1366x768] zero page errors": "PASS",
+ "railPositions-1280x720": {
+  "initial": {
+   "scrollLeft": 0,
+   "scrollWidth": 705,
+   "clientWidth": 385,
+   "maxScroll": 320,
+   "leftChevron": false,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 29,
+     "labelVisibleW": 29,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 27,
+     "labelVisibleW": 27,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 19,
+     "labelVisibleW": 19,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 34,
+     "labelVisibleW": 34,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 64,
+     "btnVisibleW": 1,
+     "labelW": 41,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 28,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 53,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 48,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 44,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterClick1": {
+   "scrollLeft": 192,
+   "scrollWidth": 705,
+   "clientWidth": 361,
+   "maxScroll": 344,
+   "leftChevron": true,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 34,
+     "labelVisibleW": 34,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 64,
+     "btnVisibleW": 41,
+     "labelW": 53,
+     "labelVisibleW": 35,
+     "labelClipped": true
+    },
+    {
+     "t": "Templates",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 48,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 44,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterClick2": {
+   "scrollLeft": 320,
+   "scrollWidth": 705,
+   "clientWidth": 385,
+   "maxScroll": 320,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 37,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 34,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 53,
+     "labelVisibleW": 53,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 44,
+     "labelVisibleW": 44,
+     "labelClipped": false
+    }
+   ]
+  },
+  "fullRight": {
+   "scrollLeft": 320,
+   "scrollWidth": 705,
+   "clientWidth": 385,
+   "maxScroll": 320,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 37,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 34,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 53,
+     "labelVisibleW": 53,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 44,
+     "labelVisibleW": 44,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterAvatar": {
+   "scrollLeft": 320,
+   "scrollWidth": 705,
+   "clientWidth": 385,
+   "maxScroll": 320,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 37,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 34,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 53,
+     "labelVisibleW": 53,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 44,
+     "labelVisibleW": 44,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterMedia": {
+   "scrollLeft": 0,
+   "scrollWidth": 705,
+   "clientWidth": 385,
+   "maxScroll": 320,
+   "leftChevron": false,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 29,
+     "labelVisibleW": 29,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 27,
+     "labelVisibleW": 27,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 19,
+     "labelVisibleW": 19,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 34,
+     "labelVisibleW": 34,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 64,
+     "btnVisibleW": 64,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 64,
+     "btnVisibleW": 1,
+     "labelW": 41,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 28,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 53,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 48,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 64,
+     "btnVisibleW": 0,
+     "labelW": 44,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  }
+ },
+ "[1280x720] full-right: no clipped labels": "PASS",
+ "[1280x720] full-right: AI avatar fully visible with complete label": "PASS",
+ "[1280x720] full-right: right chevron gone (nowhere further to go)": "PASS",
+ "[1280x720] initial: 6 tabs fully visible (tab ~64px)": "PASS",
+ "[1280x720] active AI avatar scrolls fully into view": "PASS",
+ "railIntermediates-1280x720": [
+  "afterClick1: scrollLeft=192 clipped=[\"Adjustment(35/53)\"]",
+  "afterClick2: scrollLeft=320 clipped=[]"
+ ],
+ "errors-1280x720": [],
+ "[1280x720] zero page errors": "PASS",
+ "railPositions-1024x768": {
+  "initial": {
+   "scrollLeft": 0,
+   "scrollWidth": 663,
+   "clientWidth": 303,
+   "maxScroll": 360,
+   "leftChevron": false,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 29,
+     "labelVisibleW": 29,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 27,
+     "labelVisibleW": 27,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 19,
+     "labelVisibleW": 19,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 34,
+     "labelVisibleW": 34,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 60,
+     "btnVisibleW": 3,
+     "labelW": 50,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 41,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 28,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 52,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 48,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 44,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterClick1": {
+   "scrollLeft": 180,
+   "scrollWidth": 663,
+   "clientWidth": 279,
+   "maxScroll": 384,
+   "leftChevron": true,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 34,
+     "labelVisibleW": 34,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 50,
+     "labelVisibleW": 50,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 60,
+     "btnVisibleW": 39,
+     "labelW": 28,
+     "labelVisibleW": 23,
+     "labelClipped": true
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 52,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 48,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 44,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterClick2": {
+   "scrollLeft": 360,
+   "scrollWidth": 663,
+   "clientWidth": 303,
+   "maxScroll": 360,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 37,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 34,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 50,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 52,
+     "labelVisibleW": 52,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 44,
+     "labelVisibleW": 44,
+     "labelClipped": false
+    }
+   ]
+  },
+  "fullRight": {
+   "scrollLeft": 360,
+   "scrollWidth": 663,
+   "clientWidth": 303,
+   "maxScroll": 360,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 37,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 34,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 50,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 52,
+     "labelVisibleW": 52,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 44,
+     "labelVisibleW": 44,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterAvatar": {
+   "scrollLeft": 360,
+   "scrollWidth": 663,
+   "clientWidth": 303,
+   "maxScroll": 360,
+   "leftChevron": true,
+   "rightChevron": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 29,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 27,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 19,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 37,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 34,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 50,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 41,
+     "labelVisibleW": 41,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 28,
+     "labelVisibleW": 28,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 52,
+     "labelVisibleW": 52,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 48,
+     "labelVisibleW": 48,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 44,
+     "labelVisibleW": 44,
+     "labelClipped": false
+    }
+   ]
+  },
+  "afterMedia": {
+   "scrollLeft": 0,
+   "scrollWidth": 663,
+   "clientWidth": 303,
+   "maxScroll": 360,
+   "leftChevron": false,
+   "rightChevron": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 29,
+     "labelVisibleW": 29,
+     "labelClipped": false
+    },
+    {
+     "t": "Audio",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 27,
+     "labelVisibleW": 27,
+     "labelClipped": false
+    },
+    {
+     "t": "Text",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 19,
+     "labelVisibleW": 19,
+     "labelClipped": false
+    },
+    {
+     "t": "Stickers",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 37,
+     "labelVisibleW": 37,
+     "labelClipped": false
+    },
+    {
+     "t": "Effects",
+     "btnW": 60,
+     "btnVisibleW": 60,
+     "labelW": 34,
+     "labelVisibleW": 34,
+     "labelClipped": false
+    },
+    {
+     "t": "Transitions",
+     "btnW": 60,
+     "btnVisibleW": 3,
+     "labelW": 50,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Captions",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 41,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Filters",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 28,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Adjustment",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 52,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "Templates",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 48,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    },
+    {
+     "t": "AI avatar",
+     "btnW": 60,
+     "btnVisibleW": 0,
+     "labelW": 44,
+     "labelVisibleW": 0,
+     "labelClipped": false
+    }
+   ]
+  }
+ },
+ "[1024x768] full-right: no clipped labels": "PASS",
+ "[1024x768] full-right: AI avatar fully visible with complete label": "PASS",
+ "[1024x768] full-right: right chevron gone (nowhere further to go)": "PASS",
+ "[1024x768] initial: 5 tabs fully visible (tab ~60px)": "PASS",
+ "[1024x768] active AI avatar scrolls fully into view": "PASS",
+ "railIntermediates-1024x768": [
+  "afterClick1: scrollLeft=180 clipped=[\"Filters(23/28)\"]",
+  "afterClick2: scrollLeft=360 clipped=[]"
+ ],
+ "errors-1024x768": [],
+ "[1024x768] zero page errors": "PASS",
+ "regression1920": {
+  "canvas": {
+   "w": 756,
+   "h": 424
+  },
+  "fullTabs": [
+   "Media",
+   "Audio",
+   "Text",
+   "Stickers",
+   "Effects",
+   "Transitions",
+   "Captions"
+  ],
+  "filtersPeek": 25,
+  "header": true,
+  "noClickToUpload": true,
+  "noPals": true,
+  "noCC": true
+ },
+ "1920 regression: canvas 756x424": "PASS",
+ "1920 regression: 7 tabs + Filters peeking": "PASS",
+ "1920 regression: Player-Timeline 01, no Click to upload, no Pals, no CC": "PASS",
+ "hover1920": [
+  {
+   "text": "Use template",
+   "inViewport": true
+  },
+  {
+   "text": "Edit more",
+   "inViewport": true
+  }
+ ],
+ "1920 regression: hover shows BOTH Use template and Edit more": "PASS",
+ "pageErrors1920": [],
+ "1920 regression: zero page errors": "PASS",
+ "ok": true
+}

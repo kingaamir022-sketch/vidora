@@ -39,8 +39,16 @@ describe('v1.0.7 auto-fit: tab rail fits more tabs on narrow screens', () => {
 
   it('the active tab scrolls itself into view so it is never hidden off-screen', () => {
     const tabs = read('src/components/LeftTabs.tsx');
-    expect(tabs).toContain('scrollIntoView');
+    // v1.0.8 (BUG-CF-043): the old nearest-scroll could land mid-tab
+    // and clip the neighbour's label (the 1366 Templates case: it
+    // stopped 21px short once the left chevron shrank the viewport),
+    // so the active tab is now revealed with a tab-aligned scrollTo
+    // (revealTargetRight) instead. The rule is unchanged — the active
+    // tab must always be fully visible — only the mechanism changed.
     expect(tabs).toContain('activeTab');
+    expect(tabs).toContain('revealTargetRight');
+    expect(tabs).toContain('scrollTo');
+    expect(tabs).not.toContain('scrollIntoView');
   });
 
   it('tab labels shrink below 1440px viewports so they fit the narrower buttons', () => {

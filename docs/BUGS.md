@@ -333,6 +333,62 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   responsive (sm/lg/xl breakpoints: 5 cols → 4 at 1024). Verified in
   `verify.mjs`: no horizontal overflow on the dashboard or Templates
   page at any size, cards never cut off at the right edge.
+- BUG-CF-043 | CapCut-fix v1.0.8 | Tab rail clips a label mid-word after scrolling right ("Template") | FIXED
+  2026-11-26 — Live check of v1.0.7: after one ">" click the last tab
+  read "Template" (final "s" cut off). Reproduced locally
+  (`audit/capcut-fix/v108/repro.mjs`, 1920×1080/100%): the ">" step
+  was a fixed 220 px (2.75 tabs), so one click landed at scrollLeft
+  220 and "Templates" showed 48/54 px of its label; the raw max
+  scroll (295) is not tab-aligned either, so at full-right "Stickers"
+  showed a 6 px fragment; and the chevrons' 24 px of layout space
+  flips clientWidth 585↔561 mid-scroll. Fix (`LeftTabs.tsx`, new
+  `src/lib/tabRail.ts`): CSS scroll-snap (mandatory, align start) so
+  any scroll settles on a tab boundary; chevron steps of exactly 3
+  tabs; a measured end spacer (25 px at 1920, 4 px at 1024) so max
+  scroll IS a tab boundary; chevron visibility judged against that
+  aligned max; active tab revealed with a tab-aligned scrollTo
+  instead of the old nearest-scroll (which stopped 21 px short at
+  1366 once the left chevron shrank the viewport). Verified in
+  `audit/capcut-fix/v108/verify.mjs` (37/37 PASS, 0 page errors):
+  full-right clean at all 5 sizes (AI avatar fully visible, right
+  chevron gone), one-click clean at 1920 (scrollLeft 240, Templates
+  54/54), initial tab counts unchanged (7/6/6/6/5). Known residual,
+  measured: after the FIRST ">" click at 150%/1366/1280/1024 one
+  label still clips ("Adjustment" 35–39/53 px, "Filters" 23/28 px at
+  1024) — the viewport remainder (40–47 px with both chevrons) lands
+  inside a label there; the 2nd click (full-right) is clean
+  everywhere. Needs a geometry change (viewport-dividing tab widths
+  or a paged rail) — follow-up, not silently redesigned here.
+  v1.0.8 COMPLETION (same version — residual CLOSED): stepping alone
+  cannot fix the remainder (at any tab-aligned scrollLeft the right
+  edge shows exactly (railWidth − 48) mod tabWidth of the next tab,
+  whatever the step), so the geometry changed — the tab width is now
+  measured so it divides the viewport, tabWidth = (railWidth − 48) /
+  pageTabs (80.14 / 64.69 / 60.10 / 55.73 px at 1920/1366/1280/1024;
+  pageTabs = the v1.0.7 counts 7/6/6/6/5, unchanged), and the
+  chevrons step exactly one page per click (`src/lib/tabRail.ts`:
+  `clampTabWidth`, `initialFullTabs`, `dividingTabWidth`;
+  `LeftTabs.tsx` measures in `useLayoutEffect`, clamp class stays as
+  the pre-measure fallback). The both-chevrons viewport now holds
+  exactly pageTabs whole tabs (remainder 0) at every rest position;
+  the initial peek is exactly 24 px (Filters 0.6 px of label at
+  1920, Captions 12–14 px at 1366/1280/150%, Transitions ~21 px at
+  1024 — each a prefix of its label, the CapCut #04 hint). The
+  completion also fixed a pre-existing truncation the first-pass
+  verify missed: at 1024 "Adjustment" rendered as "Adjustmen…"
+  (span scrollWidth 53 > clientWidth 52) even when fully visible —
+  the button padding is now responsive (px-0 < 1100 px, px-0.5 <
+  1440 px, px-1 above). Verified in
+  `audit/capcut-fix/v108/verify-paged.mjs`: 183/183 PASS, 0 page
+  errors — every rest position walked at all 5 sizes (initial, each
+  ">" to the end, each "<" back to 0, AI avatar, back to Media,
+  explicit full-right): zero clipped labels, zero truncated label
+  text, zero partial tabs at any non-initial position, every rest
+  scrollLeft a multiple of the tab width (1920: 0 → 320 → 0; 1024:
+  0 → 279 → 335 → 56 → 0), full-right clean everywhere, 1920
+  regression unchanged. Tests: `v108-rail.test.ts` +12 (419 suite).
+  `verify.mjs` is superseded (its width expectations encode the old
+  clamp widths) and stays as the first-pass record.
 - BUG-CF-029 | CapCut-fix v1.0.4 | Ratio menu unclickable — clipped by the bottom bar's overflow-hidden group | FIXED
   2026-11-25 — The baseline probe (`audit/capcut-fix/v104/baseline.mjs`)
   crashed clicking a Ratio menu item (Playwright timeout — canvas
