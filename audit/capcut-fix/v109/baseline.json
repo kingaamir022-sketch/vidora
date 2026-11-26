@@ -1,0 +1,436 @@
+{
+  "1920x1080": [
+    {
+      "name": "Bold Opening",
+      "cardRect": {
+        "x": 322,
+        "y": 192,
+        "w": 300,
+        "h": 534
+      },
+      "popupRect": {
+        "x": 292,
+        "y": 192,
+        "w": 360,
+        "h": 684
+      },
+      "popupImgRect": {
+        "x": 292,
+        "y": 192,
+        "w": 360,
+        "h": 640
+      },
+      "useRect": {
+        "x": 292,
+        "y": 840,
+        "w": 127,
+        "h": 36
+      },
+      "editRect": {
+        "x": 427,
+        "y": 840,
+        "w": 102,
+        "h": 36
+      },
+      "vh": 1080,
+      "vw": 1920,
+      "ratioW": 1.2,
+      "ratioImgW": 1.2,
+      "popupBottom": 876,
+      "buttonsInView": true,
+      "popupInView": true,
+      "popupTop": 192,
+      "cardCenterY": 459,
+      "popupCenterY": 534
+    },
+    {
+      "name": "Minimal Intro",
+      "cardRect": {
+        "x": 638,
+        "y": 192,
+        "w": 300,
+        "h": 534
+      },
+      "popupRect": {
+        "x": 609,
+        "y": 192,
+        "w": 360,
+        "h": 684
+      },
+      "popupImgRect": {
+        "x": 609,
+        "y": 192,
+        "w": 360,
+        "h": 640
+      },
+      "useRect": {
+        "x": 609,
+        "y": 840,
+        "w": 127,
+        "h": 36
+      },
+      "editRect": {
+        "x": 744,
+        "y": 840,
+        "w": 102,
+        "h": 36
+      },
+      "vh": 1080,
+      "vw": 1920,
+      "ratioW": 1.2,
+      "ratioImgW": 1.2,
+      "popupBottom": 876,
+      "buttonsInView": true,
+      "popupInView": true,
+      "popupTop": 192,
+      "cardCenterY": 459,
+      "popupCenterY": 534
+    },
+    {
+      "name": "Neon Intro",
+      "cardRect": {
+        "x": 955,
+        "y": 192,
+        "w": 300,
+        "h": 534
+      },
+      "popupRect": {
+        "x": 925,
+        "y": 192,
+        "w": 360,
+        "h": 684
+      },
+      "popupImgRect": {
+        "x": 925,
+        "y": 192,
+        "w": 360,
+        "h": 640
+      },
+      "useRect": {
+        "x": 925,
+        "y": 840,
+        "w": 127,
+        "h": 36
+      },
+      "editRect": {
+        "x": 1060,
+        "y": 840,
+        "w": 102,
+        "h": 36
+      },
+      "vh": 1080,
+      "vw": 1920,
+      "ratioW": 1.2,
+      "ratioImgW": 1.2,
+      "popupBottom": 876,
+      "buttonsInView": true,
+      "popupInView": true,
+      "popupTop": 192,
+      "cardCenterY": 459,
+      "popupCenterY": 534
+    },
+    {
+      "name": "Retro Intro",
+      "cardRect": {
+        "x": 1271,
+        "y": 192,
+        "w": 300,
+        "h": 534
+      },
+      "popupRect": {
+        "x": 1241,
+        "y": 192,
+        "w": 360,
+        "h": 684
+      },
+      "popupImgRect": {
+        "x": 1241,
+        "y": 192,
+        "w": 360,
+        "h": 640
+      },
+      "useRect": {
+        "x": 1241,
+        "y": 840,
+        "w": 127,
+        "h": 36
+      },
+      "editRect": {
+        "x": 1376,
+        "y": 840,
+        "w": 102,
+        "h": 36
+      },
+      "vh": 1080,
+      "vw": 1920,
+      "ratioW": 1.2,
+      "ratioImgW": 1.2,
+      "popupBottom": 876,
+      "buttonsInView": true,
+      "popupInView": true,
+      "popupTop": 192,
+      "cardCenterY": 459,
+      "popupCenterY": 534
+    },
+    {
+      "name": "Sunset Intro",
+      "cardRect": {
+        "x": 1588,
+        "y": 192,
+        "w": 300,
+        "h": 534
+      },
+      "popupRect": {
+        "x": 1558,
+        "y": 192,
+        "w": 360,
+        "h": 684
+      },
+      "popupImgRect": {
+        "x": 1558,
+        "y": 192,
+        "w": 360,
+        "h": 640
+      },
+      "useRect": {
+        "x": 1558,
+        "y": 840,
+        "w": 127,
+        "h": 36
+      },
+      "editRect": {
+        "x": 1693,
+        "y": 840,
+        "w": 102,
+        "h": 36
+      },
+      "vh": 1080,
+      "vw": 1920,
+      "ratioW": 1.2,
+      "ratioImgW": 1.2,
+      "popupBottom": 876,
+      "buttonsInView": true,
+      "popupInView": true,
+      "popupTop": 192,
+      "cardCenterY": 459,
+      "popupCenterY": 534
+    }
+  ],
+  "1280x720-css": [
+    {
+      "name": "Bold Opening",
+      "cardRect": {
+        "x": 314,
+        "y": 234,
+        "w": 174,
+        "h": 309
+      },
+      "popupRect": {
+        "x": 221,
+        "y": 234,
+        "w": 360,
+        "h": 684
+      },
+      "popupImgRect": {
+        "x": 221,
+        "y": 234,
+        "w": 360,
+        "h": 640
+      },
+      "useRect": {
+        "x": 221,
+        "y": 882,
+        "w": 127,
+        "h": 36
+      },
+      "editRect": {
+        "x": 356,
+        "y": 882,
+        "w": 102,
+        "h": 36
+      },
+      "vh": 720,
+      "vw": 1280,
+      "ratioW": 2.07,
+      "ratioImgW": 2.07,
+      "popupBottom": 918,
+      "buttonsInView": false,
+      "popupInView": false,
+      "popupTop": 234,
+      "cardCenterY": 389,
+      "popupCenterY": 576
+    },
+    {
+      "name": "Minimal Intro",
+      "cardRect": {
+        "x": 504,
+        "y": 234,
+        "w": 174,
+        "h": 309
+      },
+      "popupRect": {
+        "x": 411,
+        "y": 234,
+        "w": 360,
+        "h": 684
+      },
+      "popupImgRect": {
+        "x": 411,
+        "y": 234,
+        "w": 360,
+        "h": 640
+      },
+      "useRect": {
+        "x": 411,
+        "y": 882,
+        "w": 127,
+        "h": 36
+      },
+      "editRect": {
+        "x": 546,
+        "y": 882,
+        "w": 102,
+        "h": 36
+      },
+      "vh": 720,
+      "vw": 1280,
+      "ratioW": 2.07,
+      "ratioImgW": 2.07,
+      "popupBottom": 918,
+      "buttonsInView": false,
+      "popupInView": false,
+      "popupTop": 234,
+      "cardCenterY": 389,
+      "popupCenterY": 576
+    },
+    {
+      "name": "Neon Intro",
+      "cardRect": {
+        "x": 694,
+        "y": 234,
+        "w": 174,
+        "h": 309
+      },
+      "popupRect": {
+        "x": 601,
+        "y": 234,
+        "w": 360,
+        "h": 684
+      },
+      "popupImgRect": {
+        "x": 601,
+        "y": 234,
+        "w": 360,
+        "h": 640
+      },
+      "useRect": {
+        "x": 601,
+        "y": 882,
+        "w": 127,
+        "h": 36
+      },
+      "editRect": {
+        "x": 736,
+        "y": 882,
+        "w": 102,
+        "h": 36
+      },
+      "vh": 720,
+      "vw": 1280,
+      "ratioW": 2.07,
+      "ratioImgW": 2.07,
+      "popupBottom": 918,
+      "buttonsInView": false,
+      "popupInView": false,
+      "popupTop": 234,
+      "cardCenterY": 389,
+      "popupCenterY": 576
+    },
+    {
+      "name": "Retro Intro",
+      "cardRect": {
+        "x": 884,
+        "y": 234,
+        "w": 174,
+        "h": 309
+      },
+      "popupRect": {
+        "x": 791,
+        "y": 234,
+        "w": 360,
+        "h": 684
+      },
+      "popupImgRect": {
+        "x": 791,
+        "y": 234,
+        "w": 360,
+        "h": 640
+      },
+      "useRect": {
+        "x": 791,
+        "y": 882,
+        "w": 127,
+        "h": 36
+      },
+      "editRect": {
+        "x": 926,
+        "y": 882,
+        "w": 102,
+        "h": 36
+      },
+      "vh": 720,
+      "vw": 1280,
+      "ratioW": 2.07,
+      "ratioImgW": 2.07,
+      "popupBottom": 918,
+      "buttonsInView": false,
+      "popupInView": false,
+      "popupTop": 234,
+      "cardCenterY": 389,
+      "popupCenterY": 576
+    },
+    {
+      "name": "Sunset Intro",
+      "cardRect": {
+        "x": 1074,
+        "y": 234,
+        "w": 174,
+        "h": 310
+      },
+      "popupRect": {
+        "x": 981,
+        "y": 234,
+        "w": 360,
+        "h": 684
+      },
+      "popupImgRect": {
+        "x": 981,
+        "y": 234,
+        "w": 360,
+        "h": 640
+      },
+      "useRect": {
+        "x": 981,
+        "y": 882,
+        "w": 127,
+        "h": 36
+      },
+      "editRect": {
+        "x": 1116,
+        "y": 882,
+        "w": 102,
+        "h": 36
+      },
+      "vh": 720,
+      "vw": 1280,
+      "ratioW": 2.07,
+      "ratioImgW": 2.07,
+      "popupBottom": 918,
+      "buttonsInView": false,
+      "popupInView": false,
+      "popupTop": 234,
+      "cardCenterY": 389,
+      "popupCenterY": 576
+    }
+  ]
+}

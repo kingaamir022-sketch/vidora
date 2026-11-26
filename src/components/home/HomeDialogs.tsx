@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useState, type CSSProperties, type ReactNode } from 'react';
 
 /**
  * Home dialogs (CapCut desktop shots 02/03) — Terms of Service, Manage
@@ -31,17 +31,20 @@ export function TealButton({
   children,
   onClick,
   className = '',
+  style,
 }: {
   children: ReactNode;
   className?: string;
   onClick: () => void;
+  /** v1.0.9: lets one call site shrink the button (narrow template popup). */
+  style?: CSSProperties;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       className={`rounded-lg px-5 py-2 text-sm font-semibold ${className}`}
-      style={{ background: TEAL, color: DARK_TEXT }}
+      style={{ background: TEAL, color: DARK_TEXT, ...style }}
     >
       {children}
     </button>
@@ -52,16 +55,20 @@ export function GrayButton({
   children,
   onClick,
   className = '',
+  style,
 }: {
   children: ReactNode;
   className?: string;
   onClick: () => void;
+  /** v1.0.9: lets one call site shrink the button (narrow template popup). */
+  style?: CSSProperties;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       className={`rounded-lg bg-[#3A3A3A] px-5 py-2 text-sm font-medium text-[#F2F2F2] hover:bg-[#454545] ${className}`}
+      style={style}
     >
       {children}
     </button>

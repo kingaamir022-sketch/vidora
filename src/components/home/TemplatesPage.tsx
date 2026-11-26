@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useProjectStore } from '../../store/projectStore';
 import { searchTemplates, type TemplateDef } from '../../lib/templates';
+import { hoverPopupGeometry } from '../../lib/templateHover';
 import TemplateThumb from '../TemplateThumb';
 import { GrayButton, TealButton } from './HomeDialogs';
 
@@ -13,6 +14,10 @@ import { GrayButton, TealButton } from './HomeDialogs';
  * anchored to that card (bigger visual + title + duration + clip count +
  * star, then "Use template" + "Edit more" beneath it); the card + popup
  * are one hover region, mouseleave hides it. Card click does nothing.
+ * v1.0.9 (BUG-CF-044): the popup is 125% of the card width (CapCut #06
+ * measures ~1.27x), centred on the card both ways and clamped inside the
+ * viewport — the old fixed 360px top-aligned popup was 2.07x the card at
+ * the user's 150% zoom and its buttons ran off the bottom of the screen.
  * Cards show views + clip count on the image and the title below — no
  * "Category · duration" sub-line (CapCut cards show none).
  */
@@ -110,6 +115,40 @@ export default function TemplatesPage() {
   const [duration, setDuration] = useState('No limit');
   const [chip, setChip] = useState<string>('For you');
   const [hovered, setHovered] = useState<TemplateDef | null>(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
+  const [compactBtns, setCompactBtns] = useState(false);
+  // v1.0.9 (BUG-CF-044): place the popup imperatively once it mounts (and on
+  // every scroll/resize while it is open) so it stays centred on the card
+  // and clamped inside the viewport. The vertical clamp uses the MEASURED
+  // popup height — buttons can wrap to two lines at narrow widths, so the
+  // arithmetic height is only a fallback. Runs in a layout effect, before
+  // paint, so the fallback position never flashes. Narrow popups
+  // (< 280px) get compact single-line buttons (see below).
+  useLayoutEffect(() => {
+    if (!hovered) return;
+    const place = () => {
+      const popup = popupRef.current;
+      const article = document.querySelector(`article[data-tpl="${hovered.id}"]`);
+      const cardImg = article?.querySelector(':scope > div.relative');
+      if (!popup || !article || !cardImg) return;
+      const a = article.getBoundingClientRect();
+      const c = cardImg.getBoundingClientRect();
+      const rect = (r: DOMRect) => ({ x: r.x, y: r.y, width: r.width, height: r.height });
+      const g = hoverPopupGeometry(rect(a), rect(c), window.innerWidth, window.innerHeight);
+      setCompactBtns(g.width < 280);
+      popup.style.width = `${g.width}px`;
+      popup.style.left = `${g.left}px`;
+      const placed = hoverPopupGeometry(rect(a), rect(c), window.innerWidth, window.innerHeight, popup.offsetHeight);
+      popup.style.top = `${placed.top}px`;
+    };
+    place();
+    window.addEventListener('scroll', place, true);
+    window.addEventListener('resize', place);
+    return () => {
+      window.removeEventListener('scroll', place, true);
+      window.removeEventListener('resize', place);
+    };
+  }, [hovered, compactBtns]);
   const [uses, setUses] = useState<Record<string, number>>(readUses);
   const [favs, setFavs] = useState<string[]>(readFavs);
   const useTemplate = useProjectStore((s) => s.useTemplate);
@@ -267,6 +306,7 @@ export default function TemplatesPage() {
           {shown.map((t) => (
             <article
               key={t.id}
+              data-tpl={t.id}
               className={`relative ${hovered?.id === t.id ? 'z-30' : ''}`}
               onMouseEnter={() => setHovered(t)}
               onMouseLeave={() => setHovered(null)}
@@ -284,8 +324,7 @@ export default function TemplatesPage() {
               </div>
               <p className="mt-2 truncate text-sm text-[#F2F2F2]">{t.name}</p>
               {hovered?.id === t.id && (
-                <div className="absolute left-1/2 top-0 z-30 w-[360px] max-w-[90vw] -translate-x-1/2">
-                  <div className="relative aspect-[9/16] w-full overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/20">
+                <div ref={popupRef} className="absolute left-1/2 top-0 z-30 w-[125%]">  <div className="relative aspect-[9/16] w-full overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/20">
                     <TemplateThumb def={t} className="absolute inset-0" />
                     <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-3 pb-3 pt-8">
                       <span className="block text-base font-semibold text-white">{t.name}</span>
@@ -305,9 +344,19 @@ export default function TemplatesPage() {
                     </span>
                   </div>
                   <div className="mt-2 flex items-center gap-2">
-                    <TealButton onClick={() => openInEditor(t)}>Use template</TealButton>
+                    <TealButton
+                      onClick={() => openInEditor(t)}
+                      style={compactBtns ? { whiteSpace: 'nowrap', padding: '8px 12px', fontSize: 13 } : undefined}
+                    >
+                      Use template
+                    </TealButton>
                     <span className="relative">
-                      <GrayButton onClick={() => openInEditor(t)}>Edit more</GrayButton>
+                      <GrayButton
+                        onClick={() => openInEditor(t)}
+                        style={compactBtns ? { whiteSpace: 'nowrap', padding: '8px 12px', fontSize: 13 } : undefined}
+                      >
+                        Edit more
+                      </GrayButton>
                       <span
                         className="absolute -right-2 -top-2 rounded px-1 text-[10px] font-bold"
                         style={{ background: '#A78BFA', color: '#1E1B4B' }}

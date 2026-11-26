@@ -389,6 +389,35 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   regression unchanged. Tests: `v108-rail.test.ts` +12 (419 suite).
   `verify.mjs` is superseded (its width expectations encode the old
   clamp widths) and stays as the first-pass record.
+- BUG-CF-044 | CapCut-fix v1.0.9 | Template hover preview is ~2x the card and its buttons run off the viewport | FIXED
+  2026-11-26 — User report (live site, hovering "Retro Intro"): in
+  CapCut the card does NOT get this big on hover. Her screenshot:
+  popup ~510×830 px over a ~250×420 px card, neighbours' titles cut
+  to "NEO" / "NSET", buttons invisible below the fold. CapCut truth,
+  measured on #06 (visual grounding): card image ~253 px, popup image
+  ~321 px (ratio ~1.27x), popup vertically CENTRED on the card
+  (centres y 559 vs 562), buttons ~12 px beneath the image, ending at
+  y 891 inside the viewport. Vidora baseline
+  (`audit/capcut-fix/v109/baseline.mjs`): FIXED 360 px popup, aligned
+  to the card top — ratio 1.20x at 1920 (buttons visible) but 2.07x
+  at the user's 150% zoom (card 174 px), popup bottom 918 vs viewport
+  720, buttons 198 px off-screen. Fix (`TemplatesPage.tsx`, new
+  `src/lib/templateHover.ts`): popup = 125% of the card width,
+  centred on the card both ways, whole unit clamped inside the
+  viewport (8 px margin), re-measured on scroll/resize while open.
+  Second-pass fix inside the fix: the vertical clamp first used an
+  arithmetic 44 px buttons row and missed by 12 px at 1024 (row-2
+  popup bottom 780 > 768) because the buttons wrap to two lines at
+  narrow widths (56 px tall) — the clamp now reads the MEASURED
+  `offsetHeight`, and narrow popups (< 280 px) get compact
+  single-line buttons (13 px, 8×12 px padding; new optional `style`
+  prop on `TealButton`/`GrayButton`). Verified in
+  `audit/capcut-fix/v109/verify.mjs`: 157/157 PASS, 0 page errors —
+  all 5 sizes, all 5 first-row templates + one row-2 template per
+  size: ratio 1.25x everywhere, popup + both buttons fully inside the
+  viewport, buttons single-line, neighbour titles ≥ 88% visible,
+  1920 regression unchanged. Tests: `v109-hover.test.ts` (8); suite
+  427.
 - BUG-CF-029 | CapCut-fix v1.0.4 | Ratio menu unclickable — clipped by the bottom bar's overflow-hidden group | FIXED
   2026-11-25 — The baseline probe (`audit/capcut-fix/v104/baseline.mjs`)
   crashed clicking a Ratio menu item (Playwright timeout — canvas

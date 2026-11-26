@@ -1,6 +1,6 @@
 # Vidora Phase 5 audit report
 
-Run: 2026-11-26T04:25:53.240Z
+Run: 2026-11-26T05:54:40.843Z
 Result: 39/39 checks passed, 0 failed.
 
 - PASS [N-ASSETS] assets/manifest.json has 1102 entries (676 Phase 5/8 + 426 Phase 6 AI rows) — entries: 1102

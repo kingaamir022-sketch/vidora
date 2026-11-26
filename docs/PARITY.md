@@ -151,6 +151,31 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | CI (M-CI) | ~ | ~ | ~ | — | ~ | `.github/workflows/ci.yml` (Node 20, `npm ci`, build, test, lint) — no reference; Playwright audits are NOT in CI (documented in the workflow: they need the headless shell + ffmpeg) | ASSUMED |
 | Docker (M-DOCKER) | ~ | ~ | ~ | — | ~ | `Dockerfile` (node:20-alpine build → nginx:alpine serve) + `docker-compose.yml` (4173:80) + `.dockerignore` — no reference; the image was NOT built on this VM (docker not installed), honestly noted in the Dockerfile and the audit | ASSUMED |
 
+## Parity score (correction round v1.0.9, 2026-11-26)
+
+- **MATCH: 59 / 91** — unchanged. No ASSUMED row gained new CapCut
+  reference evidence in this round, so none moves to MATCH. This round
+  fixed one live-site-only hover defect without touching any CapCut-facing
+  behaviour: BUG-CF-044 — the template hover popup was a fixed 360 px
+  top-aligned box, 2.07x the card at the user's 150% zoom with its
+  buttons off the bottom of the viewport; it is now 125% of the card
+  (CapCut #06 measures ~1.27x), centred on the card both ways and
+  clamped inside the viewport, with compact single-line buttons on
+  narrow popups. Verified 157/157 at all 5 sizes, 0 page errors.
+- **ASSUMED: 32 / 91** — same 32 rows as v1.0.1.
+- **DIFF-FIXING: 0 / 91**
+- **INTENTIONAL-DIFF: 0 / 91** — the only deliberate difference left
+  is the app name and logo (Vidora, not CapCut), which is not a matrix
+  row; see `docs/INTENTIONAL_DIFFS.md`.
+- **Gate result: PASS** — every row is MATCH or ASSUMED, `npm run
+  build` is green, `npm test` is 427/427, and the Playwright
+  self-audits pass: Phase 4 26/26, Phase 5 39/39, Phase 6 15/15,
+  Phase 7 60/60, Phase 8 56/56, Phase 9 42/42 — 0 open bugs. The
+  v1.0.9 verification (`audit/capcut-fix/v109/verify.mjs`): 157 checks
+  PASS, 0 page errors — every hover at all 5 sizes, ratio 1.25x,
+  popup + both buttons fully inside the viewport, buttons single-line.
+  The v1.0.8 score paragraph below is kept for history.
+
 ## Parity score (correction round v1.0.8, 2026-11-26)
 
 - **MATCH: 59 / 91** — unchanged. No ASSUMED row gained new CapCut

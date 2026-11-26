@@ -7,7 +7,7 @@
     "zod": "^3.25.0",
     "zustand": "^5.0.3"
   },
-  "description": "Vidora \u2014 Create. Cut. Shine. A professional video editor. Phase 3 (text, stickers, captions).",
+  "description": "Vidora — Create. Cut. Shine. A professional video editor. Phase 3 (text, stickers, captions).",
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.11",
     "@types/node": "^26.6.6",
@@ -45,5 +45,5 @@
     "audit:phase9": "npm run build && node audit/run-audit-phase9.mjs"
   },
   "type": "module",
-  "version": "1.0.8"
+  "version": "1.0.9"
 }
