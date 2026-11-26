@@ -276,7 +276,10 @@ export default function TimelineShell() {
   }
 
   return (
-    <section className="flex h-72 shrink-0 flex-col border-t border-[#2E2E2E] bg-[#141414] text-zinc-100" aria-label="Timeline" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <section className="flex h-[clamp(200px,26.7vh,288px)] shrink-0 flex-col border-t border-[#2E2E2E] bg-[#141414] text-zinc-100" aria-label="Timeline" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+      {/* v1.0.7 (BUG-CF-040, auto-fit): the timeline is fluid — 288px at
+          1080px viewport height (exactly CapCut), 200px on short
+          screens (720px tall) so the preview column keeps room. */}
       {/* Toolbar ~50px, icon-only, CapCut order (R1) */}
       <div className="flex h-[50px] shrink-0 items-center gap-0.5 border-b border-[#2E2E2E] bg-[#1E1E1E] px-2 text-xs">
         {/* Left group */}

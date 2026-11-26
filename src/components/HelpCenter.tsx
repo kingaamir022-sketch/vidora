@@ -33,8 +33,8 @@ const TOPICS: { body: string; title: string }[] = [
 ];
 
 const WHATS_NEW: string[] = [
-  'The three Video Studio hero images now load on the live site — they were broken by a doubled web address (/vidora/vidora/…), now fixed.',
-  'Every AI studio and Library picture was checked on the live-site address too — Inspiration, Design, Explore, Canvas, Marketing and Library all load with no broken images.',
+  'The app now fits every screen by itself — no zoom needed. Tabs, panels, preview and timeline shrink and reflow automatically, so it looks right at 100% zoom and at 150% zoom alike.',
+  'On narrow screens more tabs fit in the rail, the selected tab always scrolls into view, and panel tiles go full-width instead of shrinking to slivers.',
 ];
 
 export default function HelpCenter({ onClose }: { onClose: () => void }) {
@@ -46,7 +46,7 @@ export default function HelpCenter({ onClose }: { onClose: () => void }) {
           <h2 className="text-base font-semibold">Help Center</h2>
           <button type="button" onClick={onClose} aria-label="Close Help Center" className="rounded-md border border-[#3D3D3D] px-2 py-0.5 text-[#A8A8A8] hover:text-[#F2F2F2]">×</button>
         </div>
-        <h3 className="mt-4 text-xs font-semibold text-[#00D9D9]">What’s new in v1.0.6</h3>
+        <h3 className="mt-4 text-xs font-semibold text-[#00D9D9]">What’s new in v1.0.7</h3>
         <ul className="mt-1 list-disc space-y-1 pl-4 text-[13px] leading-relaxed text-[#A8A8A8]">
           {WHATS_NEW.map((item) => (
             <li key={item}>{item}</li>

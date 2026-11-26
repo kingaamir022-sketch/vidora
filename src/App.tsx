@@ -226,8 +226,12 @@ export default function App() {
       <SettingsDialog />
       {helpOpen && <HelpCenter onClose={() => setHelpOpen(false)} />}
       {featureUsageOpen && <FeatureUsageDialog onClose={() => setFeatureUsageOpen(false)} />}
+      {/* v1.0.7 (BUG-CF-041, auto-fit): the AI tools overlay is fluid —
+          right edge clamp(16px,28vw,540px) (540px at 1920, hugging the
+          Details panel) and width capped at the viewport, so it can
+          never run past the left edge on narrow screens. */}
       {aiToolsOverlay && (
-        <div role="dialog" aria-modal="false" aria-label="AI tools" className="absolute bottom-[300px] right-[540px] z-40 max-h-[calc(100vh-420px)] w-[480px] overflow-y-auto rounded-lg border border-[#3D3D3D] bg-[#1E1E1E] shadow-2xl">
+        <div role="dialog" aria-modal="false" aria-label="AI tools" className="absolute bottom-[300px] right-[clamp(16px,28vw,540px)] z-40 max-h-[calc(100vh-420px)] w-[min(480px,calc(100vw-32px))] overflow-y-auto rounded-lg border border-[#3D3D3D] bg-[#1E1E1E] shadow-2xl">
           <div className="sticky top-0 flex items-center justify-between border-b border-[#2E2E2E] bg-[#1E1E1E] px-4 py-2">
             <span className="text-sm font-semibold">AI tools</span>
             <button type="button" onClick={() => setAiToolsOverlay(null)} aria-label="Close AI tools" className="rounded-md border border-[#3D3D3D] px-2 py-0.5 text-[#A8A8A8] hover:text-[#F2F2F2]">×</button>

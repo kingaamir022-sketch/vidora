@@ -12,11 +12,13 @@ import { IconFilter, IconPro, IconSearch } from './icons';
  *   badge top-left; download icon bottom-right.
  * - D4: a section heading above the grid ("Trending", "Featured",
  *   "For you").
- * - v1.0.2 (W4, D1d): the content column is FLUID — flex-1 capped at
- *   400px, not a fixed 400px. The left column is min(610px, 32vw), so
- *   at 1280px wide it is only ~410px; a fixed 400px content + 185px
- *   sub-nav (585px) stuck 175px past the column into the preview.
- *   At 1920 the cap keeps the exact 400px geometry.
+ * - v1.0.7 (BUG-CF-039, auto-fit): the sub-nav is fluid —
+ *   clamp(120px,10vw,185px) — exactly 185px at 1920, 128px at 1280
+ *   CSS px and 120px at 1024, so the content column keeps room
+ *   (at 1024 the content was 143px; now 208px). The content column
+ *   is a CSS container (class "panel-content", see index.css): when
+ *   it gets narrow, its two-column card grids collapse to one
+ *   column so tiles stay big and usable instead of ~55px slivers.
  */
 
 export function SubNavItem({
@@ -153,11 +155,11 @@ export default function PanelShell({
   return (
     <div className="flex h-full min-h-0 w-full min-w-0 shrink-0 bg-[#1E1E1E]">
       {subNav && (
-        <nav aria-label="Panel sections" className="w-[185px] shrink-0 overflow-y-auto border-r border-[#2E2E2E] px-1.5 py-2">
+        <nav aria-label="Panel sections" className="w-[clamp(120px,10vw,185px)] shrink-0 overflow-y-auto border-r border-[#2E2E2E] px-1.5 py-2">
           {subNav}
         </nav>
       )}
-      <div className="h-full min-w-0 w-full flex-1 max-w-[400px] overflow-y-auto p-3 text-[#F2F2F2]">{children}</div>
+      <div className="panel-content h-full min-w-0 w-full flex-1 max-w-[400px] overflow-y-auto p-3 text-[#F2F2F2]">{children}</div>
     </div>
   );
 }

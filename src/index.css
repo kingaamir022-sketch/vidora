@@ -52,6 +52,34 @@ body,
   height: 100%;
 }
 
+/* v1.0.7 (BUG-CF-039, auto-fit): the panel content column is a CSS
+   container. When it gets narrow (small screens / high zoom), the
+   two-column card grids inside it collapse to one column so tiles
+   stay big and usable instead of shrinking to ~55px slivers. At
+   1920 the content is 400px wide, so the query never matches and
+   the CapCut 2-column layout is untouched. */
+.panel-content {
+  container-type: inline-size;
+}
+@container (max-width: 240px) {
+  /* Threshold note: container queries measure the CONTENT-BOX width,
+     and this container has p-3 (24px) padding — so 240px here means
+     ~264px clientWidth, i.e. viewports narrower than ~1200 CSS px.
+     At 1280 the content-box is 257px, so tiles stay 2-column there;
+     at 1024 it is 184px, so they collapse to one wide column. */
+  /* Only TWO-column card grids collapse to one column — the selector
+     must cover both spellings (grid-cols-2 and the arbitrary
+     grid-cols-[repeat(2,minmax(0,130px))] used by Effects/Filters/
+     Transitions). Icon/button grids (Stickers grid-cols-5 shape
+     picker, Audio grid-cols-3 categories) keep their columns.
+     Tiles stay big and usable instead of shrinking to ~55-80px
+     slivers on narrow screens. */
+  .panel-content [class*="grid-cols-2"],
+  .panel-content [class*="grid-cols-[repeat(2"] {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
+
 body {
   margin: 0;
   background: #141414;

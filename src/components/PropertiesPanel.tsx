@@ -317,7 +317,7 @@ export default function PropertiesPanel() {
         </div>
         {modifyOpen && project && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" role="dialog" aria-label="Project settings">
-            <div className="w-80 space-y-3 rounded-lg p-4" style={{ backgroundColor: PANEL, border: `1px solid ${BORDER}` }}>
+            <div className="w-80 max-w-[calc(100vw-32px)] space-y-3 rounded-lg p-4" style={{ backgroundColor: PANEL, border: `1px solid ${BORDER}` }}>
               <h3 className="text-sm font-semibold">Project settings</h3>
               <label className="flex items-center justify-between gap-2 text-xs">
                 Aspect ratio

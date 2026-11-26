@@ -36,6 +36,15 @@ export default function LeftTabs({
     return () => window.removeEventListener('resize', updateArrows);
   }, []);
 
+  // v1.0.7 (BUG-CF-038): keep the active tab visible — when the user
+  // picks a tab that sits past the scroll edge (Captions, Templates,
+  // AI avatar on a narrow screen), scroll it into view so the teal
+  // highlight is always on screen, like CapCut.
+  const activeTabRef = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => {
+    activeTabRef.current?.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+  }, [activeTab]);
+
   const scrollBy = (dir: 1 | -1) => {
     scrollRef.current?.scrollBy({ behavior: 'smooth', left: dir * 220 });
   };
@@ -46,7 +55,12 @@ export default function LeftTabs({
           scroll. The always-rendered (disabled) left chevron wasted
           24px, so only ~6.5 tabs showed and Filters was invisible;
           CapCut #04 shows 7 tabs + "Fi" + ">" with no left chevron
-          until scrolled. With it hidden, Filters peeks ~26px ("Fi"). */}
+          until scrolled. With it hidden, Filters peeks ~26px ("Fi").
+          v1.0.7 (BUG-CF-038, auto-fit): tab buttons are fluid —
+          clamp(60px,5vw,80px) — exactly 80px at 1920 but 64px at
+          1280 CSS px (6 tabs fully visible instead of 4 + a cut-off
+          "Effe") and 60px at 1024 (5 tabs). Labels are 10px below
+          1440px viewports so they still fit the narrower buttons. */}
       {canLeft && (
         <button
           type="button"
@@ -67,8 +81,10 @@ export default function LeftTabs({
               type="button"
               role="tab"
               aria-selected={active}
+              title={tab}
+              ref={active ? activeTabRef : undefined}
               onClick={() => onSelect(tab)}
-              className={`flex w-[80px] shrink-0 flex-col items-center justify-center gap-1 border-b-2 px-1 text-[11px] leading-none ${
+              className={`flex w-[clamp(60px,5vw,80px)] shrink-0 flex-col items-center justify-center gap-1 border-b-2 px-1 text-[10px] leading-none min-[1440px]:text-[11px] ${
                 active ? 'border-[#00D9D9] text-[#00D9D9]' : 'border-transparent text-[#A8A8A8] hover:text-[#F2F2F2]'
               }`}
             >

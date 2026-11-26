@@ -1,0 +1,950 @@
+{
+ "dash-1920x1080": {
+  "overflow": 0,
+  "cards": [
+   {
+    "x": 322,
+    "y": 192,
+    "w": 300,
+    "h": 562,
+    "right": 622
+   },
+   {
+    "x": 638,
+    "y": 192,
+    "w": 300,
+    "h": 562,
+    "right": 939
+   },
+   {
+    "x": 955,
+    "y": 192,
+    "w": 300,
+    "h": 562,
+    "right": 1255
+   },
+   {
+    "x": 1271,
+    "y": 192,
+    "w": 300,
+    "h": 562,
+    "right": 1572
+   },
+   {
+    "x": 1588,
+    "y": 192,
+    "w": 300,
+    "h": 562,
+    "right": 1888
+   }
+  ],
+  "cols": 5,
+  "maxCardRight": 1888,
+  "vw": 1920
+ },
+ "[1920x1080] dashboard: no horizontal overflow": "PASS",
+ "[1920x1080] template cards visible, none cut off at right edge": "PASS",
+ "editor-1920x1080": {
+  "overflow": 0,
+  "leftW": 610,
+  "previewW": 790,
+  "detailsW": 520,
+  "subNavW": 185,
+  "contentW": 400,
+  "canvas": {
+   "w": 756,
+   "h": 424
+  },
+  "avail": {
+   "w": 758,
+   "h": 624
+  },
+  "tabs": [
+   {
+    "t": "Media",
+    "w": 80,
+    "visibleW": 80
+   },
+   {
+    "t": "Audio",
+    "w": 80,
+    "visibleW": 80
+   },
+   {
+    "t": "Text",
+    "w": 80,
+    "visibleW": 80
+   },
+   {
+    "t": "Stickers",
+    "w": 80,
+    "visibleW": 80
+   },
+   {
+    "t": "Effects",
+    "w": 80,
+    "visibleW": 80
+   },
+   {
+    "t": "Transitions",
+    "w": 80,
+    "visibleW": 80
+   },
+   {
+    "t": "Captions",
+    "w": 80,
+    "visibleW": 80
+   },
+   {
+    "t": "Filters",
+    "w": 80,
+    "visibleW": 25
+   },
+   {
+    "t": "Adjustment",
+    "w": 80,
+    "visibleW": 0
+   },
+   {
+    "t": "Templates",
+    "w": 80,
+    "visibleW": 0
+   },
+   {
+    "t": "AI avatar",
+    "w": 80,
+    "visibleW": 0
+   }
+  ],
+  "leftChevron": false,
+  "rightChevron": true,
+  "topBarRight": 1908,
+  "vw": 1920,
+  "detailsScroll": {
+   "sh": 744,
+   "ch": 744
+  },
+  "modifyVisible": true,
+  "timelineH": 288,
+  "timelineToolbar": true,
+  "emptyBoxVisible": true,
+  "importBtn": {
+   "x": 197,
+   "y": 124,
+   "w": 376,
+   "h": 80,
+   "right": 573
+  },
+  "detailsRows": [
+   "Name",
+   "Path",
+   "Imported media",
+   "Arrange layers ⓘ",
+   "Proxy ⓘ",
+   "Aspect ratio",
+   "Resolution"
+  ]
+ },
+ "[1920x1080] editor: no horizontal overflow": "PASS",
+ "[1920x1080] left column 610px": "PASS",
+ "[1920x1080] sub-nav 185px, content 400px": "PASS",
+ "[1920x1080] canvas contain-fits preview area": "PASS",
+ "[1920x1080] 7 tabs fully visible (tab 80px)": "PASS",
+ "[1920x1080] top bar not clipped": "PASS",
+ "[1920x1080] Details rows present, Modify reachable": "PASS",
+ "[1920x1080] timeline 288px, toolbar + empty box visible": "PASS",
+ "[1920x1080] Media Import box visible": "PASS",
+ "activeTab-1920x1080": {
+  "label": "AI avatar",
+  "visibleW": 80,
+  "w": 80,
+  "scrollLeft": 295
+ },
+ "[1920x1080] active tab (AI avatar) scrolls into view": "PASS",
+ "tiles-1920x1080": {
+  "columns": 2,
+  "tileW": [
+   130,
+   130,
+   130,
+   130
+  ]
+ },
+ "[1920x1080] tiles are 2 columns": "PASS",
+ "[1920x1080] 1920 tiles ~130px (CapCut parity)": "PASS",
+ "errors-1920x1080": [],
+ "[1920x1080] zero page errors": "PASS",
+ "dash-1920x1080-dsf1.5": {
+  "overflow": 0,
+  "cards": [
+   {
+    "x": 314,
+    "y": 234,
+    "w": 174,
+    "h": 338,
+    "right": 488
+   },
+   {
+    "x": 504,
+    "y": 234,
+    "w": 174,
+    "h": 338,
+    "right": 678
+   },
+   {
+    "x": 694,
+    "y": 234,
+    "w": 174,
+    "h": 338,
+    "right": 868
+   },
+   {
+    "x": 884,
+    "y": 234,
+    "w": 174,
+    "h": 338,
+    "right": 1058
+   },
+   {
+    "x": 1074,
+    "y": 234,
+    "w": 174,
+    "h": 338,
+    "right": 1248
+   }
+  ],
+  "cols": 5,
+  "maxCardRight": 1248,
+  "vw": 1280
+ },
+ "[1920x1080-dsf1.5] dashboard: no horizontal overflow": "PASS",
+ "[1920x1080-dsf1.5] template cards visible, none cut off at right edge": "PASS",
+ "editor-1920x1080-dsf1.5": {
+  "overflow": 0,
+  "leftW": 410,
+  "previewW": 512,
+  "detailsW": 358,
+  "subNavW": 128,
+  "contentW": 281,
+  "canvas": {
+   "w": 478,
+   "h": 268
+  },
+  "avail": {
+   "w": 480,
+   "h": 352
+  },
+  "tabs": [
+   {
+    "t": "Media",
+    "w": 64,
+    "visibleW": 64
+   },
+   {
+    "t": "Audio",
+    "w": 64,
+    "visibleW": 64
+   },
+   {
+    "t": "Text",
+    "w": 64,
+    "visibleW": 64
+   },
+   {
+    "t": "Stickers",
+    "w": 64,
+    "visibleW": 64
+   },
+   {
+    "t": "Effects",
+    "w": 64,
+    "visibleW": 64
+   },
+   {
+    "t": "Transitions",
+    "w": 64,
+    "visibleW": 64
+   },
+   {
+    "t": "Captions",
+    "w": 64,
+    "visibleW": 1
+   },
+   {
+    "t": "Filters",
+    "w": 64,
+    "visibleW": 0
+   },
+   {
+    "t": "Adjustment",
+    "w": 64,
+    "visibleW": 0
+   },
+   {
+    "t": "Templates",
+    "w": 64,
+    "visibleW": 0
+   },
+   {
+    "t": "AI avatar",
+    "w": 64,
+    "visibleW": 0
+   }
+  ],
+  "leftChevron": false,
+  "rightChevron": true,
+  "topBarRight": 1268,
+  "vw": 1280,
+  "detailsScroll": {
+   "sh": 472,
+   "ch": 472
+  },
+  "modifyVisible": true,
+  "timelineH": 200,
+  "timelineToolbar": true,
+  "emptyBoxVisible": true,
+  "importBtn": {
+   "x": 140,
+   "y": 124,
+   "w": 257,
+   "h": 98,
+   "right": 397
+  },
+  "detailsRows": [
+   "Name",
+   "Path",
+   "Imported media",
+   "Arrange layers ⓘ",
+   "Proxy ⓘ",
+   "Aspect ratio",
+   "Resolution"
+  ]
+ },
+ "[1920x1080-dsf1.5] editor: no horizontal overflow": "PASS",
+ "[1920x1080-dsf1.5] left column 410px": "PASS",
+ "[1920x1080-dsf1.5] sub-nav 128px, content 282px": "PASS",
+ "[1920x1080-dsf1.5] canvas contain-fits preview area": "PASS",
+ "[1920x1080-dsf1.5] 6 tabs fully visible (tab 64px)": "PASS",
+ "[1920x1080-dsf1.5] top bar not clipped": "PASS",
+ "[1920x1080-dsf1.5] Details rows present, Modify reachable": "PASS",
+ "[1920x1080-dsf1.5] timeline 200px, toolbar + empty box visible": "PASS",
+ "[1920x1080-dsf1.5] Media Import box visible": "PASS",
+ "activeTab-1920x1080-dsf1.5": {
+  "label": "AI avatar",
+  "visibleW": 64,
+  "w": 64,
+  "scrollLeft": 319
+ },
+ "[1920x1080-dsf1.5] active tab (AI avatar) scrolls into view": "PASS",
+ "tiles-1920x1080-dsf1.5": {
+  "columns": 2,
+  "tileW": [
+   116,
+   116,
+   116,
+   116
+  ]
+ },
+ "[1920x1080-dsf1.5] tiles are 2 columns": "PASS",
+ "shortcuts-1920x1080-dsf1.5": {
+  "opened": true,
+  "dlg": {
+   "h": 612,
+   "bottom": 666,
+   "vh": 720,
+   "scrollable": true
+  }
+ },
+ "[1920x1080-dsf1.5] Shortcuts dialog opens and fits the viewport (scrolls inside if tall)": "PASS",
+ "errors-1920x1080-dsf1.5": [],
+ "[1920x1080-dsf1.5] zero page errors": "PASS",
+ "dash-1366x768": {
+  "overflow": 0,
+  "cards": [
+   {
+    "x": 322,
+    "y": 234,
+    "w": 190,
+    "h": 365,
+    "right": 512
+   },
+   {
+    "x": 528,
+    "y": 234,
+    "w": 190,
+    "h": 365,
+    "right": 717
+   },
+   {
+    "x": 733,
+    "y": 234,
+    "w": 190,
+    "h": 365,
+    "right": 923
+   },
+   {
+    "x": 939,
+    "y": 234,
+    "w": 190,
+    "h": 365,
+    "right": 1128
+   },
+   {
+    "x": 1144,
+    "y": 234,
+    "w": 190,
+    "h": 365,
+    "right": 1334
+   }
+  ],
+  "cols": 5,
+  "maxCardRight": 1334,
+  "vw": 1366
+ },
+ "[1366x768] dashboard: no horizontal overflow": "PASS",
+ "[1366x768] template cards visible, none cut off at right edge": "PASS",
+ "editor-1366x768": {
+  "overflow": 0,
+  "leftW": 437,
+  "previewW": 546,
+  "detailsW": 382,
+  "subNavW": 137,
+  "contentW": 300,
+  "canvas": {
+   "w": 512,
+   "h": 287
+  },
+  "avail": {
+   "w": 514,
+   "h": 395
+  },
+  "tabs": [
+   {
+    "t": "Media",
+    "w": 68,
+    "visibleW": 68
+   },
+   {
+    "t": "Audio",
+    "w": 68,
+    "visibleW": 68
+   },
+   {
+    "t": "Text",
+    "w": 68,
+    "visibleW": 68
+   },
+   {
+    "t": "Stickers",
+    "w": 68,
+    "visibleW": 68
+   },
+   {
+    "t": "Effects",
+    "w": 68,
+    "visibleW": 68
+   },
+   {
+    "t": "Transitions",
+    "w": 68,
+    "visibleW": 68
+   },
+   {
+    "t": "Captions",
+    "w": 68,
+    "visibleW": 2
+   },
+   {
+    "t": "Filters",
+    "w": 68,
+    "visibleW": 0
+   },
+   {
+    "t": "Adjustment",
+    "w": 68,
+    "visibleW": 0
+   },
+   {
+    "t": "Templates",
+    "w": 68,
+    "visibleW": 0
+   },
+   {
+    "t": "AI avatar",
+    "w": 68,
+    "visibleW": 0
+   }
+  ],
+  "leftChevron": false,
+  "rightChevron": true,
+  "topBarRight": 1354,
+  "vw": 1366,
+  "detailsScroll": {
+   "sh": 515,
+   "ch": 515
+  },
+  "modifyVisible": true,
+  "timelineH": 205,
+  "timelineToolbar": true,
+  "emptyBoxVisible": true,
+  "importBtn": {
+   "x": 149,
+   "y": 124,
+   "w": 276,
+   "h": 98,
+   "right": 424
+  },
+  "detailsRows": [
+   "Name",
+   "Path",
+   "Imported media",
+   "Arrange layers ⓘ",
+   "Proxy ⓘ",
+   "Aspect ratio",
+   "Resolution"
+  ]
+ },
+ "[1366x768] editor: no horizontal overflow": "PASS",
+ "[1366x768] left column 437px": "PASS",
+ "[1366x768] sub-nav 137px, content 300px": "PASS",
+ "[1366x768] canvas contain-fits preview area": "PASS",
+ "[1366x768] 6 tabs fully visible (tab 68px)": "PASS",
+ "[1366x768] top bar not clipped": "PASS",
+ "[1366x768] Details rows present, Modify reachable": "PASS",
+ "[1366x768] timeline 205px, toolbar + empty box visible": "PASS",
+ "[1366x768] Media Import box visible": "PASS",
+ "activeTab-1366x768": {
+  "label": "AI avatar",
+  "visibleW": 68,
+  "w": 68,
+  "scrollLeft": 339
+ },
+ "[1366x768] active tab (AI avatar) scrolls into view": "PASS",
+ "tiles-1366x768": {
+  "columns": 2,
+  "tileW": [
+   126,
+   126,
+   126,
+   126
+  ]
+ },
+ "[1366x768] tiles are 2 columns": "PASS",
+ "shortcuts-1366x768": {
+  "opened": true,
+  "dlg": {
+   "h": 653,
+   "bottom": 710,
+   "vh": 768,
+   "scrollable": true
+  }
+ },
+ "[1366x768] Shortcuts dialog opens and fits the viewport (scrolls inside if tall)": "PASS",
+ "errors-1366x768": [],
+ "[1366x768] zero page errors": "PASS",
+ "dash-1280x720": {
+  "overflow": 0,
+  "cards": [
+   {
+    "x": 314,
+    "y": 234,
+    "w": 174,
+    "h": 338,
+    "right": 488
+   },
+   {
+    "x": 504,
+    "y": 234,
+    "w": 174,
+    "h": 338,
+    "right": 678
+   },
+   {
+    "x": 694,
+    "y": 234,
+    "w": 174,
+    "h": 338,
+    "right": 868
+   },
+   {
+    "x": 884,
+    "y": 234,
+    "w": 174,
+    "h": 338,
+    "right": 1058
+   },
+   {
+    "x": 1074,
+    "y": 234,
+    "w": 174,
+    "h": 338,
+    "right": 1248
+   }
+  ],
+  "cols": 5,
+  "maxCardRight": 1248,
+  "vw": 1280
+ },
+ "[1280x720] dashboard: no horizontal overflow": "PASS",
+ "[1280x720] template cards visible, none cut off at right edge": "PASS",
+ "editor-1280x720": {
+  "overflow": 0,
+  "leftW": 410,
+  "previewW": 512,
+  "detailsW": 358,
+  "subNavW": 128,
+  "contentW": 281,
+  "canvas": {
+   "w": 478,
+   "h": 268
+  },
+  "avail": {
+   "w": 480,
+   "h": 352
+  },
+  "tabs": [
+   {
+    "t": "Media",
+    "w": 64,
+    "visibleW": 64
+   },
+   {
+    "t": "Audio",
+    "w": 64,
+    "visibleW": 64
+   },
+   {
+    "t": "Text",
+    "w": 64,
+    "visibleW": 64
+   },
+   {
+    "t": "Stickers",
+    "w": 64,
+    "visibleW": 64
+   },
+   {
+    "t": "Effects",
+    "w": 64,
+    "visibleW": 64
+   },
+   {
+    "t": "Transitions",
+    "w": 64,
+    "visibleW": 64
+   },
+   {
+    "t": "Captions",
+    "w": 64,
+    "visibleW": 1
+   },
+   {
+    "t": "Filters",
+    "w": 64,
+    "visibleW": 0
+   },
+   {
+    "t": "Adjustment",
+    "w": 64,
+    "visibleW": 0
+   },
+   {
+    "t": "Templates",
+    "w": 64,
+    "visibleW": 0
+   },
+   {
+    "t": "AI avatar",
+    "w": 64,
+    "visibleW": 0
+   }
+  ],
+  "leftChevron": false,
+  "rightChevron": true,
+  "topBarRight": 1268,
+  "vw": 1280,
+  "detailsScroll": {
+   "sh": 472,
+   "ch": 472
+  },
+  "modifyVisible": true,
+  "timelineH": 200,
+  "timelineToolbar": true,
+  "emptyBoxVisible": true,
+  "importBtn": {
+   "x": 140,
+   "y": 124,
+   "w": 257,
+   "h": 98,
+   "right": 397
+  },
+  "detailsRows": [
+   "Name",
+   "Path",
+   "Imported media",
+   "Arrange layers ⓘ",
+   "Proxy ⓘ",
+   "Aspect ratio",
+   "Resolution"
+  ]
+ },
+ "[1280x720] editor: no horizontal overflow": "PASS",
+ "[1280x720] left column 410px": "PASS",
+ "[1280x720] sub-nav 128px, content 282px": "PASS",
+ "[1280x720] canvas contain-fits preview area": "PASS",
+ "[1280x720] 6 tabs fully visible (tab 64px)": "PASS",
+ "[1280x720] top bar not clipped": "PASS",
+ "[1280x720] Details rows present, Modify reachable": "PASS",
+ "[1280x720] timeline 200px, toolbar + empty box visible": "PASS",
+ "[1280x720] Media Import box visible": "PASS",
+ "activeTab-1280x720": {
+  "label": "AI avatar",
+  "visibleW": 64,
+  "w": 64,
+  "scrollLeft": 319
+ },
+ "[1280x720] active tab (AI avatar) scrolls into view": "PASS",
+ "tiles-1280x720": {
+  "columns": 2,
+  "tileW": [
+   116,
+   116,
+   116,
+   116
+  ]
+ },
+ "[1280x720] tiles are 2 columns": "PASS",
+ "shortcuts-1280x720": {
+  "opened": true,
+  "dlg": {
+   "h": 612,
+   "bottom": 666,
+   "vh": 720,
+   "scrollable": true
+  }
+ },
+ "[1280x720] Shortcuts dialog opens and fits the viewport (scrolls inside if tall)": "PASS",
+ "errors-1280x720": [],
+ "[1280x720] zero page errors": "PASS",
+ "dash-1024x768": {
+  "overflow": 0,
+  "cards": [
+   {
+    "x": 248,
+    "y": 276,
+    "w": 178,
+    "h": 344,
+    "right": 426
+   },
+   {
+    "x": 442,
+    "y": 276,
+    "w": 178,
+    "h": 344,
+    "right": 620
+   },
+   {
+    "x": 636,
+    "y": 276,
+    "w": 178,
+    "h": 344,
+    "right": 814
+   },
+   {
+    "x": 830,
+    "y": 276,
+    "w": 178,
+    "h": 344,
+    "right": 1008
+   },
+   {
+    "x": 248,
+    "y": 644,
+    "w": 178,
+    "h": 344,
+    "right": 426
+   }
+  ],
+  "cols": 4,
+  "maxCardRight": 1008,
+  "vw": 1024
+ },
+ "[1024x768] dashboard: no horizontal overflow": "PASS",
+ "[1024x768] template cards visible, none cut off at right edge": "PASS",
+ "editor-1024x768": {
+  "overflow": 0,
+  "leftW": 328,
+  "previewW": 410,
+  "detailsW": 287,
+  "subNavW": 120,
+  "contentW": 207,
+  "canvas": {
+   "w": 376,
+   "h": 210
+  },
+  "avail": {
+   "w": 378,
+   "h": 395
+  },
+  "tabs": [
+   {
+    "t": "Media",
+    "w": 60,
+    "visibleW": 60
+   },
+   {
+    "t": "Audio",
+    "w": 60,
+    "visibleW": 60
+   },
+   {
+    "t": "Text",
+    "w": 60,
+    "visibleW": 60
+   },
+   {
+    "t": "Stickers",
+    "w": 60,
+    "visibleW": 60
+   },
+   {
+    "t": "Effects",
+    "w": 60,
+    "visibleW": 60
+   },
+   {
+    "t": "Transitions",
+    "w": 60,
+    "visibleW": 3
+   },
+   {
+    "t": "Captions",
+    "w": 60,
+    "visibleW": 0
+   },
+   {
+    "t": "Filters",
+    "w": 60,
+    "visibleW": 0
+   },
+   {
+    "t": "Adjustment",
+    "w": 60,
+    "visibleW": 0
+   },
+   {
+    "t": "Templates",
+    "w": 60,
+    "visibleW": 0
+   },
+   {
+    "t": "AI avatar",
+    "w": 60,
+    "visibleW": 0
+   }
+  ],
+  "leftChevron": false,
+  "rightChevron": true,
+  "topBarRight": 1012,
+  "vw": 1024,
+  "detailsScroll": {
+   "sh": 515,
+   "ch": 515
+  },
+  "modifyVisible": true,
+  "timelineH": 205,
+  "timelineToolbar": true,
+  "emptyBoxVisible": true,
+  "importBtn": {
+   "x": 132,
+   "y": 124,
+   "w": 183,
+   "h": 98,
+   "right": 315
+  },
+  "detailsRows": [
+   "Name",
+   "Path",
+   "Imported media",
+   "Arrange layers ⓘ",
+   "Proxy ⓘ",
+   "Aspect ratio",
+   "Resolution"
+  ]
+ },
+ "[1024x768] editor: no horizontal overflow": "PASS",
+ "[1024x768] left column 328px": "PASS",
+ "[1024x768] sub-nav 120px, content 208px": "PASS",
+ "[1024x768] canvas contain-fits preview area": "PASS",
+ "[1024x768] 5 tabs fully visible (tab 60px)": "PASS",
+ "[1024x768] top bar not clipped": "PASS",
+ "[1024x768] Details rows present, Modify reachable": "PASS",
+ "[1024x768] timeline 205px, toolbar + empty box visible": "PASS",
+ "[1024x768] Media Import box visible": "PASS",
+ "activeTab-1024x768": {
+  "label": "AI avatar",
+  "visibleW": 60,
+  "w": 60,
+  "scrollLeft": 357
+ },
+ "[1024x768] active tab (AI avatar) scrolls into view": "PASS",
+ "tiles-1024x768": {
+  "columns": 1,
+  "tileW": [
+   183,
+   183,
+   183,
+   183
+  ]
+ },
+ "[1024x768] narrow panel: tiles collapse to 1 wide column": "PASS",
+ "shortcuts-1024x768": {
+  "opened": true,
+  "dlg": {
+   "h": 653,
+   "bottom": 710,
+   "vh": 768,
+   "scrollable": true
+  }
+ },
+ "[1024x768] Shortcuts dialog opens and fits the viewport (scrolls inside if tall)": "PASS",
+ "errors-1024x768": [],
+ "[1024x768] zero page errors": "PASS",
+ "regression1920": {
+  "canvas": {
+   "w": 756,
+   "h": 424
+  },
+  "fullTabs": [
+   "Media",
+   "Audio",
+   "Text",
+   "Stickers",
+   "Effects",
+   "Transitions",
+   "Captions"
+  ],
+  "filtersPeek": 25,
+  "header": true,
+  "noClickToUpload": true,
+  "noPals": true,
+  "noCC": true
+ },
+ "1920 regression: canvas 756x424": "PASS",
+ "1920 regression: 7 tabs + Filters peeking": "PASS",
+ "1920 regression: Player-Timeline 01, no Click to upload, no Pals, no CC": "PASS",
+ "hover1920": [
+  {
+   "text": "Use template",
+   "inViewport": true
+  },
+  {
+   "text": "Edit more",
+   "inViewport": true
+  }
+ ],
+ "1920 regression: hover shows BOTH Use template and Edit more": "PASS",
+ "pageErrors1920": [],
+ "1920 regression: zero page errors": "PASS",
+ "ok": true
+}

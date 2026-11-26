@@ -50,7 +50,7 @@ export default function FeatureUsageDialog({ onClose }: { onClose: () => void })
 
   return (
     <div role="dialog" aria-modal="true" aria-label="Feature usage" className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
-      <div className="w-full max-w-md rounded-lg border border-[#3D3D3D] bg-[#1E1E1E] p-4 text-sm shadow-xl" onClick={(e) => e.stopPropagation()}>
+      <div className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-lg border border-[#3D3D3D] bg-[#1E1E1E] p-4 text-sm shadow-xl" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold">Feature usage</h2>
           <button type="button" onClick={onClose} aria-label="Close feature usage" className="rounded-md border border-[#3D3D3D] px-2 py-0.5 text-[#A8A8A8] hover:text-[#F2F2F2]">×</button>

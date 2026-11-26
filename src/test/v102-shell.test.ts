@@ -23,8 +23,8 @@ describe('v1.0.2 editor shell (D1/D2/D7/D9)', () => {
     expect(app).not.toContain('w-[610px]');
   });
 
-  it('D1: tab buttons are CapCut-width (~80px) with horizontal scroll arrows', () => {
-    expect(leftTabs).toContain('w-[80px]');
+  it('D1: tab buttons are CapCut-width (~80px at 1920) with horizontal scroll arrows — v1.0.7 (BUG-CF-038, auto-fit): fluid clamp(60px,5vw,80px) so more tabs fit on narrow screens', () => {
+    expect(leftTabs).toContain('clamp(60px,5vw,80px)');
     expect(leftTabs).toContain('Scroll tabs left');
     expect(leftTabs).toContain('Scroll tabs right');
     expect(leftTabs).toContain('overflow-x-auto');

@@ -231,8 +231,9 @@ export default function Dashboard() {
 
   return (
     <div className="flex min-h-screen bg-[#0A0A0A] text-[#F2F2F2]">
-      {/* ---- Left sidebar (~290px) ---- */}
-      <aside className="flex w-[290px] shrink-0 flex-col gap-1 overflow-y-auto border-r border-[#2E2E2E] bg-[#141414] px-3 py-4">
+      {/* ---- Left sidebar: v1.0.7 (BUG-CF-042, auto-fit) fluid —
+          clamp(232px,22vw,290px): exactly 290px at 1920, 232px at 1024. ---- */}
+      <aside className="flex w-[clamp(232px,22vw,290px)] shrink-0 flex-col gap-1 overflow-y-auto border-r border-[#2E2E2E] bg-[#141414] px-3 py-4">
         <div className="mb-2 flex items-center gap-2 px-2">
           <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Vidora logo" className="h-8 w-8" />
           <span className="bg-gradient-to-r from-violet-500 to-cyan-400 bg-clip-text text-xl font-bold text-transparent">
@@ -327,8 +328,8 @@ export default function Dashboard() {
         </button>
       </aside>
 
-      {/* ---- Main content ---- */}
-      <main className={isStudioView ? 'min-w-0 flex-1 overflow-hidden' : 'min-w-0 flex-1 overflow-y-auto px-8 py-6'}>
+      {/* ---- Main content: v1.0.7 (BUG-CF-042) padding is px-4 below xl, px-8 at 1280+ (exactly as before at 1920). ---- */}
+      <main className={isStudioView ? 'min-w-0 flex-1 overflow-hidden' : 'min-w-0 flex-1 overflow-y-auto px-4 py-6 xl:px-8'}>
         {recoveredNotice && (
           <div className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-[#00D9D9]/50 bg-[#00D9D9]/10 px-4 py-3 text-sm" role="status">
             <span>{recoveredNotice}</span>

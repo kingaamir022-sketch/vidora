@@ -263,6 +263,76 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   1920×1080. Regression test in `src/test/pages.test.ts` pins the
   idempotency (fails on the old code with '/vidora/vidora/...',
   passes on the fix).
+- BUG-CF-038 | CapCut-fix v1.0.7 | Tab rail shows too few tabs on narrow screens / active tab hidden off-screen | FIXED
+  2026-11-26 — User request: the app must look right on every screen
+  automatically (her screenshots were at 150% zoom = CSS 1280×720).
+  Baseline (`audit/capcut-fix/v107/baseline/baseline.mjs`): at 1280
+  CSS px the rail showed 4 tabs + a cut-off "Effe" (80 px buttons in
+  a 410 px column); at 1024, 3 tabs + a peeking "Stickers". Worse,
+  the ACTIVE tab could sit hidden off-screen with no visible
+  highlight — her S2 screenshot showed Captions active while the
+  rail showed Media..Effects. Fix: tab buttons are fluid —
+  `clamp(60px,5vw,80px)` in `LeftTabs.tsx` — exactly 80 px at 1920
+  (CapCut #04: 7 tabs + "Fi" + ">"), 64 px at 1280 (6 tabs fully
+  visible), 60 px at 1024 (5 tabs); labels are 10 px below 1440 px
+  viewports; and the active tab scrolls itself into view on every
+  change (`scrollIntoView`, `inline: 'nearest'`). Verified in
+  `audit/capcut-fix/v107/verify.mjs` (80/80 PASS): 7 / 6 / 6 / 6 / 5
+  fully visible tabs at 1920 / 150% / 1366 / 1280 / 1024, and the
+  AI-avatar tab scrolls fully into view at every size.
+- BUG-CF-039 | CapCut-fix v1.0.7 | Panel content squeezes card tiles to ~55–80 px slivers on narrow screens | FIXED
+  2026-11-26 — Baseline: at 1280 CSS px the panel content column was
+  225 px (143 px at 1024) because the sub-nav was a fixed 185 px, so
+  2-column card grids squeezed tiles to ~55–80 px. Fix: the sub-nav
+  is fluid — `clamp(120px,10vw,185px)` in `PanelShell.tsx` — exactly
+  185 px at 1920, 128 px at 1280, 120 px at 1024 (content 208 px at
+  1024, was 143 px); and the content column is a CSS container
+  (`.panel-content`, `container-type: inline-size` in
+  `src/index.css`) whose two-column card grids collapse to one wide
+  column when narrow — Effects/Filters/Transitions tiles are 183 px
+  wide at 1024 instead of ~79 px. Only two-column card grids
+  collapse (selector covers both `grid-cols-2` and the arbitrary
+  `grid-cols-[repeat(2,minmax(0,130px))]`); the Stickers 5-column
+  shape picker and Audio 3-column category buttons keep their
+  columns. Threshold lesson: container queries measure the
+  CONTENT-BOX width (clientWidth minus the 24 px p-3 padding), so the
+  first threshold (260 px) wrongly collapsed the 1280 tiles
+  (content-box 257 px); the threshold is now 240 px (≈264 px
+  clientWidth, viewports narrower than ~1200 CSS px). Verified in
+  `verify.mjs`: tiles 130 px 2-col at 1920, 116 px 2-col at 1280,
+  183 px 1-col at 1024.
+- BUG-CF-040 | CapCut-fix v1.0.7 | Fixed 288 px timeline eats the preview on short screens | FIXED
+  2026-11-26 — The timeline was a fixed `h-72` (288 px) at every
+  viewport height, so on a 720 px-tall screen the middle row had only
+  384 px left. Fix: `h-[clamp(200px,26.7vh,288px)]` in
+  `TimelineShell.tsx` — exactly 288 px at 1080 px viewport height
+  (CapCut), 200 px on 720 px-tall screens. Verified in `verify.mjs`:
+  timeline 288 / 200 / 205 / 200 / 205 px at 1920 / 150% / 1366 /
+  1280 / 1024, toolbar + empty box visible at every size. Side
+  benefit: the Details panel no longer needs its 3 px of internal
+  scroll at 1280×720 (baseline showed scrollHeight 387 vs
+  clientHeight 384).
+- BUG-CF-041 | CapCut-fix v1.0.7 | AI tools overlay + Shortcuts dialog can run off-screen on narrow/short screens | FIXED
+  2026-11-26 — The AI tools overlay was fixed at `right-[540px]
+  w-[480px]` (left edge at 4 px on a 1024 px-wide screen), and the
+  Shortcuts dialog (~900 px tall list) had no scroll container, so it
+  overflowed viewports shorter than itself. Fix: the overlay is fluid
+  — `right-[clamp(16px,28vw,540px)] w-[min(480px,calc(100vw-32px))]`
+  in `App.tsx` (540 px at 1920, hugging the Details panel); the
+  Shortcuts and Feature-usage dialogs now cap at `max-h-[85vh]` with
+  their own scroll. Export already scrolled in its overlay; Help
+  Center and Settings already capped at 85vh. Verified in
+  `verify.mjs`: the Shortcuts dialog opens and fits (scrolling
+  inside) at 720 px height.
+- BUG-CF-042 | CapCut-fix v1.0.7 | Dashboard sidebar fixed 290 px + px-8 padding squeeze narrow screens | FIXED
+  2026-11-26 — The dashboard sidebar was a fixed 290 px and the main
+  content had px-8 padding at every width. Fix: sidebar
+  `clamp(232px,22vw,290px)` in `Dashboard.tsx` — exactly 290 px at
+  1920, 232 px at 1024; main padding px-4 below xl, px-8 at 1280+
+  (exactly as before at 1920). Templates/projects grids were already
+  responsive (sm/lg/xl breakpoints: 5 cols → 4 at 1024). Verified in
+  `verify.mjs`: no horizontal overflow on the dashboard or Templates
+  page at any size, cards never cut off at the right edge.
 - BUG-CF-029 | CapCut-fix v1.0.4 | Ratio menu unclickable — clipped by the bottom bar's overflow-hidden group | FIXED
   2026-11-25 — The baseline probe (`audit/capcut-fix/v104/baseline.mjs`)
   crashed clicking a Ratio menu item (Playwright timeout — canvas

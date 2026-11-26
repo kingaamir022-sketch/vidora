@@ -16,7 +16,7 @@ export default function ShortcutsPanel() {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">
-      <div className="w-full max-w-md rounded-xl border border-zinc-700 bg-zinc-950 p-5 text-zinc-100">
+      <div className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-xl border border-zinc-700 bg-zinc-950 p-5 text-zinc-100">
         <h2 className="text-lg font-semibold">Keyboard shortcuts</h2>
         <p className="mt-1 text-xs text-zinc-400">Click a shortcut, then press the new key combination. Esc cancels.</p>
         <ul className="mt-4 space-y-2">

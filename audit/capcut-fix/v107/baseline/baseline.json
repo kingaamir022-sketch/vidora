@@ -1,0 +1,2197 @@
+{
+ "1920x1080-dsf1": {
+  "size": "1920x1080-dsf1",
+  "viewport": {
+   "width": 1920,
+   "height": 1080
+  },
+  "deviceScaleFactor": 1,
+  "innerSize": {
+   "innerWidth": 1920,
+   "innerHeight": 1080,
+   "devicePixelRatio": 1
+  },
+  "dashboardOverflow": {
+   "scrollWidth": 1920,
+   "clientWidth": 1920,
+   "scrollHeight": 1083,
+   "clientHeight": 1080,
+   "bodyScrollWidth": 1920,
+   "overflowX": false
+  },
+  "templates": {
+   "cardCount": 35,
+   "first5": [
+    {
+     "name": "Bold Opening",
+     "rect": {
+      "x": 322,
+      "y": 192,
+      "w": 300,
+      "h": 562,
+      "right": 622,
+      "bottom": 754
+     }
+    },
+    {
+     "name": "Minimal Intro",
+     "rect": {
+      "x": 638,
+      "y": 192,
+      "w": 300,
+      "h": 562,
+      "right": 939,
+      "bottom": 754
+     }
+    },
+    {
+     "name": "Neon Intro",
+     "rect": {
+      "x": 955,
+      "y": 192,
+      "w": 300,
+      "h": 562,
+      "right": 1255,
+      "bottom": 754
+     }
+    },
+    {
+     "name": "Retro Intro",
+     "rect": {
+      "x": 1271,
+      "y": 192,
+      "w": 300,
+      "h": 562,
+      "right": 1572,
+      "bottom": 754
+     }
+    },
+    {
+     "name": "Sunset Intro",
+     "rect": {
+      "x": 1588,
+      "y": 192,
+      "w": 300,
+      "h": 562,
+      "right": 1888,
+      "bottom": 754
+     }
+    }
+   ],
+   "gridColumnsComputed": 5,
+   "gridColumnsByX": 5,
+   "gridDisplay": "grid",
+   "anyCardCutRight": false,
+   "maxCardRight": 1888,
+   "viewportWidth": 1920
+  },
+  "dashboardOverflowAfterTemplates": {
+   "scrollWidth": 1920,
+   "clientWidth": 1920,
+   "scrollHeight": 4294,
+   "clientHeight": 1080,
+   "bodyScrollWidth": 1920,
+   "overflowX": false
+  },
+  "editorOverflow": {
+   "scrollWidth": 1920,
+   "clientWidth": 1920,
+   "scrollHeight": 1080,
+   "clientHeight": 1080,
+   "bodyScrollWidth": 1920,
+   "overflowX": false
+  },
+  "editor": {
+   "leftColumnRect": {
+    "x": 0,
+    "y": 48,
+    "w": 609,
+    "h": 64,
+    "right": 609,
+    "bottom": 112
+   },
+   "leftPanelRect": {
+    "x": 0,
+    "y": 48,
+    "w": 610,
+    "h": 744,
+    "right": 610,
+    "bottom": 792
+   },
+   "tablistRect": {
+    "x": 0,
+    "y": 48,
+    "w": 609,
+    "h": 64,
+    "right": 609,
+    "bottom": 112
+   },
+   "previewSectionRect": {
+    "x": 610,
+    "y": 48,
+    "w": 790,
+    "h": 744,
+    "right": 1400,
+    "bottom": 792
+   },
+   "timelineSectionRect": {
+    "x": 0,
+    "y": 792,
+    "w": 1920,
+    "h": 288,
+    "right": 1920,
+    "bottom": 1080
+   },
+   "detailsAsideRect": {
+    "x": 1400,
+    "y": 48,
+    "w": 520,
+    "h": 744,
+    "right": 1920,
+    "bottom": 792
+   },
+   "canvasRect": {
+    "x": 627,
+    "y": 204,
+    "w": 756,
+    "h": 424
+   },
+   "canvasAvail": {
+    "w": 758,
+    "h": 624,
+    "containerClientW": 790,
+    "containerClientH": 656
+   },
+   "canvasTouchesAvailW": true,
+   "canvasTouchesAvailH": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "x": 0,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Audio",
+     "x": 80,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Text",
+     "x": 160,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Stickers",
+     "x": 240,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Effects",
+     "x": 320,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Transitions",
+     "x": 400,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Captions",
+     "x": 480,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Filters",
+     "x": 560,
+     "w": 80,
+     "visibleW": 25,
+     "status": "peeking"
+    },
+    {
+     "t": "Adjustment",
+     "x": 640,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Templates",
+     "x": 720,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "AI avatar",
+     "x": 800,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    }
+   ],
+   "leftChevron": false,
+   "rightChevron": true,
+   "topBarRightmost": {
+    "text": "Export",
+    "right": 1908
+   },
+   "topBarClipped": false,
+   "topBarButtons": [
+    {
+     "text": "Vidora",
+     "right": 111
+    },
+    {
+     "text": "Menu",
+     "right": 190
+    },
+    {
+     "text": "Untitled Project",
+     "right": 935
+    },
+    {
+     "text": "Hide sidebar",
+     "right": 1597
+    },
+    {
+     "text": "Hide timeline",
+     "right": 1635
+    },
+    {
+     "text": "Pro",
+     "right": 1708
+    },
+    {
+     "text": "Share",
+     "right": 1801
+    },
+    {
+     "text": "Export",
+     "right": 1908
+    },
+    {
+     "text": "Media",
+     "right": 80
+    },
+    {
+     "text": "Audio",
+     "right": 160
+    },
+    {
+     "text": "Text",
+     "right": 240
+    },
+    {
+     "text": "Stickers",
+     "right": 320
+    },
+    {
+     "text": "Effects",
+     "right": 400
+    },
+    {
+     "text": "Transitions",
+     "right": 480
+    },
+    {
+     "text": "Captions",
+     "right": 560
+    },
+    {
+     "text": "Filters",
+     "right": 640
+    },
+    {
+     "text": "Adjustment",
+     "right": 720
+    },
+    {
+     "text": "Templates",
+     "right": 800
+    },
+    {
+     "text": "AI avatar",
+     "right": 880
+    },
+    {
+     "text": "Scroll tabs right",
+     "right": 609
+    },
+    {
+     "text": "Preview options",
+     "right": 1388
+    }
+   ],
+   "details": {
+    "scrollHeight": 744,
+    "clientHeight": 744,
+    "scrollTop": 0,
+    "modifyRect": {
+     "x": 1833,
+     "y": 391,
+     "w": 71,
+     "h": 28,
+     "right": 1904,
+     "bottom": 419
+    },
+    "resolutionRect": {
+     "x": 1417,
+     "y": 346,
+     "w": 59,
+     "h": 16,
+     "right": 1476,
+     "bottom": 362
+    },
+    "afterScrollTop": 0,
+    "modifyRectAfterScroll": {
+     "x": 1833,
+     "y": 391,
+     "w": 71,
+     "h": 28,
+     "right": 1904,
+     "bottom": 419
+    },
+    "modifyReachableByScrollingAside": true,
+    "asideRect": {
+     "x": 1400,
+     "y": 48,
+     "w": 520,
+     "h": 744,
+     "right": 1920,
+     "bottom": 792
+    },
+    "rows": [
+     "Name",
+     "Path",
+     "Imported media",
+     "Arrange layers \u24d8",
+     "Proxy \u24d8",
+     "Aspect ratio",
+     "Resolution"
+    ]
+   },
+   "timelineToolbarVisible": true,
+   "timelineToolbarButtons": [
+    "Add track",
+    "Select",
+    "Undo",
+    "Redo",
+    "Split at playhead",
+    "Delete selected clip",
+    "Reverse clip",
+    "Crop selected clip",
+    "Flip horizontal",
+    "Freeze frame",
+    "Transcript-based editing",
+    "Split scene",
+    "Create from reference",
+    "Download clip",
+    "Voiceover",
+    "Attach",
+    "Preview axis",
+    "\u2212",
+    "+",
+    "Fullscreen preview"
+   ],
+   "emptyTimelineBoxVisible": true,
+   "emptyTimelineBoxRect": {
+    "x": 0,
+    "y": 843,
+    "w": 1920,
+    "h": 237,
+    "right": 1920,
+    "bottom": 1080
+   },
+   "viewport": {
+    "w": 1920,
+    "h": 1080
+   }
+  },
+  "mediaImport": {
+   "importBoxVisible": true,
+   "importBoxRect": {
+    "x": 6,
+    "y": 120,
+    "w": 172,
+    "h": 28,
+    "right": 178,
+    "bottom": 148
+   },
+   "importBoxText": "Import",
+   "hasClickToUpload": false,
+   "importBoxSelector": "Media panel button with exact text Import (smallest-area BUTTON match; see import-probe.json)",
+   "note": "baseline.mjs first pass matched a full-page ancestor; rect corrected by import-probe.mjs (BUTTON, exact text Import)"
+  },
+  "errors": []
+ },
+ "1920x1080-dsf1.5-css1280x720": {
+  "size": "1920x1080-dsf1.5-css1280x720",
+  "viewport": {
+   "width": 1280,
+   "height": 720
+  },
+  "deviceScaleFactor": 1.5,
+  "innerSize": {
+   "innerWidth": 1280,
+   "innerHeight": 720,
+   "devicePixelRatio": 1.5
+  },
+  "dashboardOverflow": {
+   "scrollWidth": 1280,
+   "clientWidth": 1280,
+   "scrollHeight": 1071,
+   "clientHeight": 720,
+   "bodyScrollWidth": 1280,
+   "overflowX": false
+  },
+  "templates": {
+   "cardCount": 35,
+   "first5": [
+    {
+     "name": "Bold Opening",
+     "rect": {
+      "x": 322,
+      "y": 234,
+      "w": 172,
+      "h": 335,
+      "right": 494,
+      "bottom": 569
+     }
+    },
+    {
+     "name": "Minimal Intro",
+     "rect": {
+      "x": 510,
+      "y": 234,
+      "w": 172,
+      "h": 335,
+      "right": 683,
+      "bottom": 569
+     }
+    },
+    {
+     "name": "Neon Intro",
+     "rect": {
+      "x": 699,
+      "y": 234,
+      "w": 172,
+      "h": 335,
+      "right": 871,
+      "bottom": 569
+     }
+    },
+    {
+     "name": "Retro Intro",
+     "rect": {
+      "x": 887,
+      "y": 234,
+      "w": 172,
+      "h": 335,
+      "right": 1060,
+      "bottom": 569
+     }
+    },
+    {
+     "name": "Sunset Intro",
+     "rect": {
+      "x": 1076,
+      "y": 234,
+      "w": 172,
+      "h": 335,
+      "right": 1248,
+      "bottom": 569
+     }
+    }
+   ],
+   "gridColumnsComputed": 5,
+   "gridColumnsByX": 5,
+   "gridDisplay": "grid",
+   "anyCardCutRight": false,
+   "maxCardRight": 1248,
+   "viewportWidth": 1280
+  },
+  "dashboardOverflowAfterTemplates": {
+   "scrollWidth": 1280,
+   "clientWidth": 1280,
+   "scrollHeight": 2744,
+   "clientHeight": 720,
+   "bodyScrollWidth": 1280,
+   "overflowX": false
+  },
+  "editorOverflow": {
+   "scrollWidth": 1280,
+   "clientWidth": 1280,
+   "scrollHeight": 720,
+   "clientHeight": 720,
+   "bodyScrollWidth": 1280,
+   "overflowX": false
+  },
+  "editor": {
+   "leftColumnRect": {
+    "x": 0,
+    "y": 48,
+    "w": 409,
+    "h": 64,
+    "right": 409,
+    "bottom": 112
+   },
+   "leftPanelRect": {
+    "x": 0,
+    "y": 48,
+    "w": 410,
+    "h": 384,
+    "right": 410,
+    "bottom": 432
+   },
+   "tablistRect": {
+    "x": 0,
+    "y": 48,
+    "w": 409,
+    "h": 64,
+    "right": 409,
+    "bottom": 112
+   },
+   "previewSectionRect": {
+    "x": 410,
+    "y": 48,
+    "w": 512,
+    "h": 384,
+    "right": 922,
+    "bottom": 432
+   },
+   "timelineSectionRect": {
+    "x": 0,
+    "y": 432,
+    "w": 1280,
+    "h": 288,
+    "right": 1280,
+    "bottom": 720
+   },
+   "detailsAsideRect": {
+    "x": 922,
+    "y": 48,
+    "w": 358,
+    "h": 384,
+    "right": 1280,
+    "bottom": 432
+   },
+   "canvasRect": {
+    "x": 432,
+    "y": 105,
+    "w": 467,
+    "h": 262
+   },
+   "canvasAvail": {
+    "w": 480,
+    "h": 264,
+    "containerClientW": 512,
+    "containerClientH": 296
+   },
+   "canvasTouchesAvailW": false,
+   "canvasTouchesAvailH": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "x": 0,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Audio",
+     "x": 80,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Text",
+     "x": 160,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Stickers",
+     "x": 240,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Effects",
+     "x": 320,
+     "w": 80,
+     "visibleW": 65,
+     "status": "peeking"
+    },
+    {
+     "t": "Transitions",
+     "x": 400,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Captions",
+     "x": 480,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Filters",
+     "x": 560,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Adjustment",
+     "x": 640,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Templates",
+     "x": 720,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "AI avatar",
+     "x": 800,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    }
+   ],
+   "leftChevron": false,
+   "rightChevron": true,
+   "topBarRightmost": {
+    "text": "Export",
+    "right": 1268
+   },
+   "topBarClipped": false,
+   "topBarButtons": [
+    {
+     "text": "Vidora",
+     "right": 111
+    },
+    {
+     "text": "Menu",
+     "right": 190
+    },
+    {
+     "text": "Untitled Project",
+     "right": 615
+    },
+    {
+     "text": "Hide sidebar",
+     "right": 957
+    },
+    {
+     "text": "Hide timeline",
+     "right": 995
+    },
+    {
+     "text": "Pro",
+     "right": 1068
+    },
+    {
+     "text": "Share",
+     "right": 1161
+    },
+    {
+     "text": "Export",
+     "right": 1268
+    },
+    {
+     "text": "Media",
+     "right": 80
+    },
+    {
+     "text": "Audio",
+     "right": 160
+    },
+    {
+     "text": "Text",
+     "right": 240
+    },
+    {
+     "text": "Stickers",
+     "right": 320
+    },
+    {
+     "text": "Effects",
+     "right": 400
+    },
+    {
+     "text": "Transitions",
+     "right": 480
+    },
+    {
+     "text": "Captions",
+     "right": 560
+    },
+    {
+     "text": "Filters",
+     "right": 640
+    },
+    {
+     "text": "Adjustment",
+     "right": 720
+    },
+    {
+     "text": "Templates",
+     "right": 800
+    },
+    {
+     "text": "AI avatar",
+     "right": 880
+    },
+    {
+     "text": "Scroll tabs right",
+     "right": 409
+    },
+    {
+     "text": "Preview options",
+     "right": 910
+    }
+   ],
+   "details": {
+    "scrollHeight": 387,
+    "clientHeight": 384,
+    "scrollTop": 0,
+    "modifyRect": {
+     "x": 1193,
+     "y": 391,
+     "w": 71,
+     "h": 28,
+     "right": 1264,
+     "bottom": 419
+    },
+    "resolutionRect": {
+     "x": 939,
+     "y": 346,
+     "w": 59,
+     "h": 16,
+     "right": 998,
+     "bottom": 362
+    },
+    "afterScrollTop": 3,
+    "modifyRectAfterScroll": {
+     "x": 1193,
+     "y": 388,
+     "w": 71,
+     "h": 28,
+     "right": 1264,
+     "bottom": 416
+    },
+    "modifyReachableByScrollingAside": true,
+    "asideRect": {
+     "x": 922,
+     "y": 48,
+     "w": 358,
+     "h": 384,
+     "right": 1280,
+     "bottom": 432
+    },
+    "rows": [
+     "Name",
+     "Path",
+     "Imported media",
+     "Arrange layers \u24d8",
+     "Proxy \u24d8",
+     "Aspect ratio",
+     "Resolution"
+    ]
+   },
+   "timelineToolbarVisible": true,
+   "timelineToolbarButtons": [
+    "Add track",
+    "Select",
+    "Undo",
+    "Redo",
+    "Split at playhead",
+    "Delete selected clip",
+    "Reverse clip",
+    "Crop selected clip",
+    "Flip horizontal",
+    "Freeze frame",
+    "Transcript-based editing",
+    "Split scene",
+    "Create from reference",
+    "Download clip",
+    "Voiceover",
+    "Attach",
+    "Preview axis",
+    "\u2212",
+    "+",
+    "Fullscreen preview"
+   ],
+   "emptyTimelineBoxVisible": true,
+   "emptyTimelineBoxRect": {
+    "x": 0,
+    "y": 483,
+    "w": 1280,
+    "h": 237,
+    "right": 1280,
+    "bottom": 720
+   },
+   "viewport": {
+    "w": 1280,
+    "h": 720
+   }
+  },
+  "mediaImport": {
+   "importBoxVisible": true,
+   "importBoxRect": {
+    "x": 6,
+    "y": 120,
+    "w": 172,
+    "h": 28,
+    "right": 178,
+    "bottom": 148
+   },
+   "importBoxText": "Import",
+   "hasClickToUpload": false,
+   "importBoxSelector": "Media panel button with exact text Import (smallest-area BUTTON match; see import-probe.json)",
+   "note": "baseline.mjs first pass matched a full-page ancestor; rect corrected by import-probe.mjs (BUTTON, exact text Import)"
+  },
+  "errors": []
+ },
+ "1366x768-dsf1": {
+  "size": "1366x768-dsf1",
+  "viewport": {
+   "width": 1366,
+   "height": 768
+  },
+  "deviceScaleFactor": 1,
+  "innerSize": {
+   "innerWidth": 1366,
+   "innerHeight": 768,
+   "devicePixelRatio": 1
+  },
+  "dashboardOverflow": {
+   "scrollWidth": 1366,
+   "clientWidth": 1366,
+   "scrollHeight": 1061,
+   "clientHeight": 768,
+   "bodyScrollWidth": 1366,
+   "overflowX": false
+  },
+  "templates": {
+   "cardCount": 35,
+   "first5": [
+    {
+     "name": "Bold Opening",
+     "rect": {
+      "x": 322,
+      "y": 234,
+      "w": 190,
+      "h": 365,
+      "right": 512,
+      "bottom": 599
+     }
+    },
+    {
+     "name": "Minimal Intro",
+     "rect": {
+      "x": 528,
+      "y": 234,
+      "w": 190,
+      "h": 365,
+      "right": 717,
+      "bottom": 599
+     }
+    },
+    {
+     "name": "Neon Intro",
+     "rect": {
+      "x": 733,
+      "y": 234,
+      "w": 190,
+      "h": 365,
+      "right": 923,
+      "bottom": 599
+     }
+    },
+    {
+     "name": "Retro Intro",
+     "rect": {
+      "x": 939,
+      "y": 234,
+      "w": 190,
+      "h": 365,
+      "right": 1128,
+      "bottom": 599
+     }
+    },
+    {
+     "name": "Sunset Intro",
+     "rect": {
+      "x": 1144,
+      "y": 234,
+      "w": 190,
+      "h": 365,
+      "right": 1334,
+      "bottom": 599
+     }
+    }
+   ],
+   "gridColumnsComputed": 5,
+   "gridColumnsByX": 5,
+   "gridDisplay": "grid",
+   "anyCardCutRight": false,
+   "maxCardRight": 1334,
+   "viewportWidth": 1366
+  },
+  "dashboardOverflowAfterTemplates": {
+   "scrollWidth": 1366,
+   "clientWidth": 1366,
+   "scrollHeight": 2958,
+   "clientHeight": 768,
+   "bodyScrollWidth": 1366,
+   "overflowX": false
+  },
+  "editorOverflow": {
+   "scrollWidth": 1366,
+   "clientWidth": 1366,
+   "scrollHeight": 768,
+   "clientHeight": 768,
+   "bodyScrollWidth": 1366,
+   "overflowX": false
+  },
+  "editor": {
+   "leftColumnRect": {
+    "x": 0,
+    "y": 48,
+    "w": 436,
+    "h": 64,
+    "right": 436,
+    "bottom": 112
+   },
+   "leftPanelRect": {
+    "x": 0,
+    "y": 48,
+    "w": 437,
+    "h": 432,
+    "right": 437,
+    "bottom": 480
+   },
+   "tablistRect": {
+    "x": 0,
+    "y": 48,
+    "w": 436,
+    "h": 64,
+    "right": 436,
+    "bottom": 112
+   },
+   "previewSectionRect": {
+    "x": 437,
+    "y": 48,
+    "w": 546,
+    "h": 432,
+    "right": 984,
+    "bottom": 480
+   },
+   "timelineSectionRect": {
+    "x": 0,
+    "y": 480,
+    "w": 1366,
+    "h": 288,
+    "right": 1366,
+    "bottom": 768
+   },
+   "detailsAsideRect": {
+    "x": 984,
+    "y": 48,
+    "w": 382,
+    "h": 432,
+    "right": 1366,
+    "bottom": 480
+   },
+   "canvasRect": {
+    "x": 454,
+    "y": 117,
+    "w": 512,
+    "h": 287
+   },
+   "canvasAvail": {
+    "w": 514,
+    "h": 312,
+    "containerClientW": 546,
+    "containerClientH": 344
+   },
+   "canvasTouchesAvailW": true,
+   "canvasTouchesAvailH": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "x": 0,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Audio",
+     "x": 80,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Text",
+     "x": 160,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Stickers",
+     "x": 240,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Effects",
+     "x": 320,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Transitions",
+     "x": 400,
+     "w": 80,
+     "visibleW": 12,
+     "status": "peeking"
+    },
+    {
+     "t": "Captions",
+     "x": 480,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Filters",
+     "x": 560,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Adjustment",
+     "x": 640,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Templates",
+     "x": 720,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "AI avatar",
+     "x": 800,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    }
+   ],
+   "leftChevron": false,
+   "rightChevron": true,
+   "topBarRightmost": {
+    "text": "Export",
+    "right": 1354
+   },
+   "topBarClipped": false,
+   "topBarButtons": [
+    {
+     "text": "Vidora",
+     "right": 111
+    },
+    {
+     "text": "Menu",
+     "right": 190
+    },
+    {
+     "text": "Untitled Project",
+     "right": 658
+    },
+    {
+     "text": "Hide sidebar",
+     "right": 1043
+    },
+    {
+     "text": "Hide timeline",
+     "right": 1081
+    },
+    {
+     "text": "Pro",
+     "right": 1154
+    },
+    {
+     "text": "Share",
+     "right": 1247
+    },
+    {
+     "text": "Export",
+     "right": 1354
+    },
+    {
+     "text": "Media",
+     "right": 80
+    },
+    {
+     "text": "Audio",
+     "right": 160
+    },
+    {
+     "text": "Text",
+     "right": 240
+    },
+    {
+     "text": "Stickers",
+     "right": 320
+    },
+    {
+     "text": "Effects",
+     "right": 400
+    },
+    {
+     "text": "Transitions",
+     "right": 480
+    },
+    {
+     "text": "Captions",
+     "right": 560
+    },
+    {
+     "text": "Filters",
+     "right": 640
+    },
+    {
+     "text": "Adjustment",
+     "right": 720
+    },
+    {
+     "text": "Templates",
+     "right": 800
+    },
+    {
+     "text": "AI avatar",
+     "right": 880
+    },
+    {
+     "text": "Scroll tabs right",
+     "right": 436
+    },
+    {
+     "text": "Preview options",
+     "right": 972
+    }
+   ],
+   "details": {
+    "scrollHeight": 432,
+    "clientHeight": 432,
+    "scrollTop": 0,
+    "modifyRect": {
+     "x": 1279,
+     "y": 391,
+     "w": 71,
+     "h": 28,
+     "right": 1350,
+     "bottom": 419
+    },
+    "resolutionRect": {
+     "x": 1001,
+     "y": 346,
+     "w": 59,
+     "h": 16,
+     "right": 1060,
+     "bottom": 362
+    },
+    "afterScrollTop": 0,
+    "modifyRectAfterScroll": {
+     "x": 1279,
+     "y": 391,
+     "w": 71,
+     "h": 28,
+     "right": 1350,
+     "bottom": 419
+    },
+    "modifyReachableByScrollingAside": true,
+    "asideRect": {
+     "x": 984,
+     "y": 48,
+     "w": 382,
+     "h": 432,
+     "right": 1366,
+     "bottom": 480
+    },
+    "rows": [
+     "Name",
+     "Path",
+     "Imported media",
+     "Arrange layers \u24d8",
+     "Proxy \u24d8",
+     "Aspect ratio",
+     "Resolution"
+    ]
+   },
+   "timelineToolbarVisible": true,
+   "timelineToolbarButtons": [
+    "Add track",
+    "Select",
+    "Undo",
+    "Redo",
+    "Split at playhead",
+    "Delete selected clip",
+    "Reverse clip",
+    "Crop selected clip",
+    "Flip horizontal",
+    "Freeze frame",
+    "Transcript-based editing",
+    "Split scene",
+    "Create from reference",
+    "Download clip",
+    "Voiceover",
+    "Attach",
+    "Preview axis",
+    "\u2212",
+    "+",
+    "Fullscreen preview"
+   ],
+   "emptyTimelineBoxVisible": true,
+   "emptyTimelineBoxRect": {
+    "x": 0,
+    "y": 531,
+    "w": 1366,
+    "h": 237,
+    "right": 1366,
+    "bottom": 768
+   },
+   "viewport": {
+    "w": 1366,
+    "h": 768
+   }
+  },
+  "mediaImport": {
+   "importBoxVisible": true,
+   "importBoxRect": {
+    "x": 6,
+    "y": 120,
+    "w": 172,
+    "h": 28,
+    "right": 178,
+    "bottom": 148
+   },
+   "importBoxText": "Import",
+   "hasClickToUpload": false,
+   "importBoxSelector": "Media panel button with exact text Import (smallest-area BUTTON match; see import-probe.json)",
+   "note": "baseline.mjs first pass matched a full-page ancestor; rect corrected by import-probe.mjs (BUTTON, exact text Import)"
+  },
+  "errors": []
+ },
+ "1280x720-dsf1": {
+  "size": "1280x720-dsf1",
+  "viewport": {
+   "width": 1280,
+   "height": 720
+  },
+  "deviceScaleFactor": 1,
+  "innerSize": {
+   "innerWidth": 1280,
+   "innerHeight": 720,
+   "devicePixelRatio": 1
+  },
+  "dashboardOverflow": {
+   "scrollWidth": 1280,
+   "clientWidth": 1280,
+   "scrollHeight": 1071,
+   "clientHeight": 720,
+   "bodyScrollWidth": 1280,
+   "overflowX": false
+  },
+  "templates": {
+   "cardCount": 35,
+   "first5": [
+    {
+     "name": "Bold Opening",
+     "rect": {
+      "x": 322,
+      "y": 234,
+      "w": 172,
+      "h": 335,
+      "right": 494,
+      "bottom": 569
+     }
+    },
+    {
+     "name": "Minimal Intro",
+     "rect": {
+      "x": 510,
+      "y": 234,
+      "w": 172,
+      "h": 335,
+      "right": 683,
+      "bottom": 569
+     }
+    },
+    {
+     "name": "Neon Intro",
+     "rect": {
+      "x": 699,
+      "y": 234,
+      "w": 172,
+      "h": 335,
+      "right": 871,
+      "bottom": 569
+     }
+    },
+    {
+     "name": "Retro Intro",
+     "rect": {
+      "x": 887,
+      "y": 234,
+      "w": 172,
+      "h": 335,
+      "right": 1060,
+      "bottom": 569
+     }
+    },
+    {
+     "name": "Sunset Intro",
+     "rect": {
+      "x": 1076,
+      "y": 234,
+      "w": 172,
+      "h": 335,
+      "right": 1248,
+      "bottom": 569
+     }
+    }
+   ],
+   "gridColumnsComputed": 5,
+   "gridColumnsByX": 5,
+   "gridDisplay": "grid",
+   "anyCardCutRight": false,
+   "maxCardRight": 1248,
+   "viewportWidth": 1280
+  },
+  "dashboardOverflowAfterTemplates": {
+   "scrollWidth": 1280,
+   "clientWidth": 1280,
+   "scrollHeight": 2744,
+   "clientHeight": 720,
+   "bodyScrollWidth": 1280,
+   "overflowX": false
+  },
+  "editorOverflow": {
+   "scrollWidth": 1280,
+   "clientWidth": 1280,
+   "scrollHeight": 720,
+   "clientHeight": 720,
+   "bodyScrollWidth": 1280,
+   "overflowX": false
+  },
+  "editor": {
+   "leftColumnRect": {
+    "x": 0,
+    "y": 48,
+    "w": 409,
+    "h": 64,
+    "right": 409,
+    "bottom": 112
+   },
+   "leftPanelRect": {
+    "x": 0,
+    "y": 48,
+    "w": 410,
+    "h": 384,
+    "right": 410,
+    "bottom": 432
+   },
+   "tablistRect": {
+    "x": 0,
+    "y": 48,
+    "w": 409,
+    "h": 64,
+    "right": 409,
+    "bottom": 112
+   },
+   "previewSectionRect": {
+    "x": 410,
+    "y": 48,
+    "w": 512,
+    "h": 384,
+    "right": 922,
+    "bottom": 432
+   },
+   "timelineSectionRect": {
+    "x": 0,
+    "y": 432,
+    "w": 1280,
+    "h": 288,
+    "right": 1280,
+    "bottom": 720
+   },
+   "detailsAsideRect": {
+    "x": 922,
+    "y": 48,
+    "w": 358,
+    "h": 384,
+    "right": 1280,
+    "bottom": 432
+   },
+   "canvasRect": {
+    "x": 432,
+    "y": 105,
+    "w": 467,
+    "h": 262
+   },
+   "canvasAvail": {
+    "w": 480,
+    "h": 264,
+    "containerClientW": 512,
+    "containerClientH": 296
+   },
+   "canvasTouchesAvailW": false,
+   "canvasTouchesAvailH": true,
+   "tabs": [
+    {
+     "t": "Media",
+     "x": 0,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Audio",
+     "x": 80,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Text",
+     "x": 160,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Stickers",
+     "x": 240,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Effects",
+     "x": 320,
+     "w": 80,
+     "visibleW": 65,
+     "status": "peeking"
+    },
+    {
+     "t": "Transitions",
+     "x": 400,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Captions",
+     "x": 480,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Filters",
+     "x": 560,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Adjustment",
+     "x": 640,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Templates",
+     "x": 720,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "AI avatar",
+     "x": 800,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    }
+   ],
+   "leftChevron": false,
+   "rightChevron": true,
+   "topBarRightmost": {
+    "text": "Export",
+    "right": 1268
+   },
+   "topBarClipped": false,
+   "topBarButtons": [
+    {
+     "text": "Vidora",
+     "right": 111
+    },
+    {
+     "text": "Menu",
+     "right": 190
+    },
+    {
+     "text": "Untitled Project",
+     "right": 615
+    },
+    {
+     "text": "Hide sidebar",
+     "right": 957
+    },
+    {
+     "text": "Hide timeline",
+     "right": 995
+    },
+    {
+     "text": "Pro",
+     "right": 1068
+    },
+    {
+     "text": "Share",
+     "right": 1161
+    },
+    {
+     "text": "Export",
+     "right": 1268
+    },
+    {
+     "text": "Media",
+     "right": 80
+    },
+    {
+     "text": "Audio",
+     "right": 160
+    },
+    {
+     "text": "Text",
+     "right": 240
+    },
+    {
+     "text": "Stickers",
+     "right": 320
+    },
+    {
+     "text": "Effects",
+     "right": 400
+    },
+    {
+     "text": "Transitions",
+     "right": 480
+    },
+    {
+     "text": "Captions",
+     "right": 560
+    },
+    {
+     "text": "Filters",
+     "right": 640
+    },
+    {
+     "text": "Adjustment",
+     "right": 720
+    },
+    {
+     "text": "Templates",
+     "right": 800
+    },
+    {
+     "text": "AI avatar",
+     "right": 880
+    },
+    {
+     "text": "Scroll tabs right",
+     "right": 409
+    },
+    {
+     "text": "Preview options",
+     "right": 910
+    }
+   ],
+   "details": {
+    "scrollHeight": 387,
+    "clientHeight": 384,
+    "scrollTop": 0,
+    "modifyRect": {
+     "x": 1193,
+     "y": 391,
+     "w": 71,
+     "h": 28,
+     "right": 1264,
+     "bottom": 419
+    },
+    "resolutionRect": {
+     "x": 939,
+     "y": 346,
+     "w": 59,
+     "h": 16,
+     "right": 998,
+     "bottom": 362
+    },
+    "afterScrollTop": 3,
+    "modifyRectAfterScroll": {
+     "x": 1193,
+     "y": 388,
+     "w": 71,
+     "h": 28,
+     "right": 1264,
+     "bottom": 416
+    },
+    "modifyReachableByScrollingAside": true,
+    "asideRect": {
+     "x": 922,
+     "y": 48,
+     "w": 358,
+     "h": 384,
+     "right": 1280,
+     "bottom": 432
+    },
+    "rows": [
+     "Name",
+     "Path",
+     "Imported media",
+     "Arrange layers \u24d8",
+     "Proxy \u24d8",
+     "Aspect ratio",
+     "Resolution"
+    ]
+   },
+   "timelineToolbarVisible": true,
+   "timelineToolbarButtons": [
+    "Add track",
+    "Select",
+    "Undo",
+    "Redo",
+    "Split at playhead",
+    "Delete selected clip",
+    "Reverse clip",
+    "Crop selected clip",
+    "Flip horizontal",
+    "Freeze frame",
+    "Transcript-based editing",
+    "Split scene",
+    "Create from reference",
+    "Download clip",
+    "Voiceover",
+    "Attach",
+    "Preview axis",
+    "\u2212",
+    "+",
+    "Fullscreen preview"
+   ],
+   "emptyTimelineBoxVisible": true,
+   "emptyTimelineBoxRect": {
+    "x": 0,
+    "y": 483,
+    "w": 1280,
+    "h": 237,
+    "right": 1280,
+    "bottom": 720
+   },
+   "viewport": {
+    "w": 1280,
+    "h": 720
+   }
+  },
+  "mediaImport": {
+   "importBoxVisible": true,
+   "importBoxRect": {
+    "x": 6,
+    "y": 120,
+    "w": 172,
+    "h": 28,
+    "right": 178,
+    "bottom": 148
+   },
+   "importBoxText": "Import",
+   "hasClickToUpload": false,
+   "importBoxSelector": "Media panel button with exact text Import (smallest-area BUTTON match; see import-probe.json)",
+   "note": "baseline.mjs first pass matched a full-page ancestor; rect corrected by import-probe.mjs (BUTTON, exact text Import)"
+  },
+  "errors": []
+ },
+ "1024x768-dsf1": {
+  "size": "1024x768-dsf1",
+  "viewport": {
+   "width": 1024,
+   "height": 768
+  },
+  "deviceScaleFactor": 1,
+  "innerSize": {
+   "innerWidth": 1024,
+   "innerHeight": 768,
+   "devicePixelRatio": 1
+  },
+  "dashboardOverflow": {
+   "scrollWidth": 1024,
+   "clientWidth": 1024,
+   "scrollHeight": 1126,
+   "clientHeight": 768,
+   "bodyScrollWidth": 1024,
+   "overflowX": false
+  },
+  "templates": {
+   "cardCount": 35,
+   "first5": [
+    {
+     "name": "Bold Opening",
+     "rect": {
+      "x": 322,
+      "y": 276,
+      "w": 156,
+      "h": 304,
+      "right": 478,
+      "bottom": 580
+     }
+    },
+    {
+     "name": "Minimal Intro",
+     "rect": {
+      "x": 494,
+      "y": 276,
+      "w": 156,
+      "h": 304,
+      "right": 649,
+      "bottom": 580
+     }
+    },
+    {
+     "name": "Neon Intro",
+     "rect": {
+      "x": 665,
+      "y": 276,
+      "w": 156,
+      "h": 304,
+      "right": 821,
+      "bottom": 580
+     }
+    },
+    {
+     "name": "Retro Intro",
+     "rect": {
+      "x": 837,
+      "y": 276,
+      "w": 156,
+      "h": 304,
+      "right": 992,
+      "bottom": 580
+     }
+    },
+    {
+     "name": "Sunset Intro",
+     "rect": {
+      "x": 322,
+      "y": 604,
+      "w": 156,
+      "h": 304,
+      "right": 478,
+      "bottom": 909
+     }
+    }
+   ],
+   "gridColumnsComputed": 4,
+   "gridColumnsByX": 4,
+   "gridDisplay": "grid",
+   "anyCardCutRight": false,
+   "maxCardRight": 992,
+   "viewportWidth": 1024
+  },
+  "dashboardOverflowAfterTemplates": {
+   "scrollWidth": 1024,
+   "clientWidth": 1024,
+   "scrollHeight": 3232,
+   "clientHeight": 768,
+   "bodyScrollWidth": 1024,
+   "overflowX": false
+  },
+  "editorOverflow": {
+   "scrollWidth": 1024,
+   "clientWidth": 1024,
+   "scrollHeight": 768,
+   "clientHeight": 768,
+   "bodyScrollWidth": 1024,
+   "overflowX": false
+  },
+  "editor": {
+   "leftColumnRect": {
+    "x": 0,
+    "y": 48,
+    "w": 327,
+    "h": 64,
+    "right": 327,
+    "bottom": 112
+   },
+   "leftPanelRect": {
+    "x": 0,
+    "y": 48,
+    "w": 328,
+    "h": 432,
+    "right": 328,
+    "bottom": 480
+   },
+   "tablistRect": {
+    "x": 0,
+    "y": 48,
+    "w": 327,
+    "h": 64,
+    "right": 327,
+    "bottom": 112
+   },
+   "previewSectionRect": {
+    "x": 328,
+    "y": 48,
+    "w": 410,
+    "h": 432,
+    "right": 737,
+    "bottom": 480
+   },
+   "timelineSectionRect": {
+    "x": 0,
+    "y": 480,
+    "w": 1024,
+    "h": 288,
+    "right": 1024,
+    "bottom": 768
+   },
+   "detailsAsideRect": {
+    "x": 737,
+    "y": 48,
+    "w": 287,
+    "h": 432,
+    "right": 1024,
+    "bottom": 480
+   },
+   "canvasRect": {
+    "x": 345,
+    "y": 155,
+    "w": 376,
+    "h": 210
+   },
+   "canvasAvail": {
+    "w": 378,
+    "h": 312,
+    "containerClientW": 410,
+    "containerClientH": 344
+   },
+   "canvasTouchesAvailW": true,
+   "canvasTouchesAvailH": false,
+   "tabs": [
+    {
+     "t": "Media",
+     "x": 0,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Audio",
+     "x": 80,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Text",
+     "x": 160,
+     "w": 80,
+     "visibleW": 80,
+     "status": "fully visible"
+    },
+    {
+     "t": "Stickers",
+     "x": 240,
+     "w": 80,
+     "visibleW": 63,
+     "status": "peeking"
+    },
+    {
+     "t": "Effects",
+     "x": 320,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Transitions",
+     "x": 400,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Captions",
+     "x": 480,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Filters",
+     "x": 560,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Adjustment",
+     "x": 640,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "Templates",
+     "x": 720,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    },
+    {
+     "t": "AI avatar",
+     "x": 800,
+     "w": 80,
+     "visibleW": 0,
+     "status": "hidden"
+    }
+   ],
+   "leftChevron": false,
+   "rightChevron": true,
+   "topBarRightmost": {
+    "text": "Export",
+    "right": 1012
+   },
+   "topBarClipped": false,
+   "topBarButtons": [
+    {
+     "text": "Vidora",
+     "right": 111
+    },
+    {
+     "text": "Menu",
+     "right": 190
+    },
+    {
+     "text": "Untitled Project",
+     "right": 487
+    },
+    {
+     "text": "Hide sidebar",
+     "right": 701
+    },
+    {
+     "text": "Hide timeline",
+     "right": 739
+    },
+    {
+     "text": "Pro",
+     "right": 812
+    },
+    {
+     "text": "Share",
+     "right": 905
+    },
+    {
+     "text": "Export",
+     "right": 1012
+    },
+    {
+     "text": "Media",
+     "right": 80
+    },
+    {
+     "text": "Audio",
+     "right": 160
+    },
+    {
+     "text": "Text",
+     "right": 240
+    },
+    {
+     "text": "Stickers",
+     "right": 320
+    },
+    {
+     "text": "Effects",
+     "right": 400
+    },
+    {
+     "text": "Transitions",
+     "right": 480
+    },
+    {
+     "text": "Captions",
+     "right": 560
+    },
+    {
+     "text": "Filters",
+     "right": 640
+    },
+    {
+     "text": "Adjustment",
+     "right": 720
+    },
+    {
+     "text": "Templates",
+     "right": 800
+    },
+    {
+     "text": "AI avatar",
+     "right": 880
+    },
+    {
+     "text": "Scroll tabs right",
+     "right": 327
+    },
+    {
+     "text": "Preview options",
+     "right": 725
+    }
+   ],
+   "details": {
+    "scrollHeight": 432,
+    "clientHeight": 432,
+    "scrollTop": 0,
+    "modifyRect": {
+     "x": 937,
+     "y": 391,
+     "w": 71,
+     "h": 28,
+     "right": 1008,
+     "bottom": 419
+    },
+    "resolutionRect": {
+     "x": 754,
+     "y": 346,
+     "w": 59,
+     "h": 16,
+     "right": 813,
+     "bottom": 362
+    },
+    "afterScrollTop": 0,
+    "modifyRectAfterScroll": {
+     "x": 937,
+     "y": 391,
+     "w": 71,
+     "h": 28,
+     "right": 1008,
+     "bottom": 419
+    },
+    "modifyReachableByScrollingAside": true,
+    "asideRect": {
+     "x": 737,
+     "y": 48,
+     "w": 287,
+     "h": 432,
+     "right": 1024,
+     "bottom": 480
+    },
+    "rows": [
+     "Name",
+     "Path",
+     "Imported media",
+     "Arrange layers \u24d8",
+     "Proxy \u24d8",
+     "Aspect ratio",
+     "Resolution"
+    ]
+   },
+   "timelineToolbarVisible": true,
+   "timelineToolbarButtons": [
+    "Add track",
+    "Select",
+    "Undo",
+    "Redo",
+    "Split at playhead",
+    "Delete selected clip",
+    "Reverse clip",
+    "Crop selected clip",
+    "Flip horizontal",
+    "Freeze frame",
+    "Transcript-based editing",
+    "Split scene",
+    "Create from reference",
+    "Download clip",
+    "Voiceover",
+    "Attach",
+    "Preview axis",
+    "\u2212",
+    "+",
+    "Fullscreen preview"
+   ],
+   "emptyTimelineBoxVisible": true,
+   "emptyTimelineBoxRect": {
+    "x": 0,
+    "y": 531,
+    "w": 1024,
+    "h": 237,
+    "right": 1024,
+    "bottom": 768
+   },
+   "viewport": {
+    "w": 1024,
+    "h": 768
+   }
+  },
+  "mediaImport": {
+   "importBoxVisible": true,
+   "importBoxRect": {
+    "x": 6,
+    "y": 120,
+    "w": 172,
+    "h": 28,
+    "right": 178,
+    "bottom": 148
+   },
+   "importBoxText": "Import",
+   "hasClickToUpload": false,
+   "importBoxSelector": "Media panel button with exact text Import (smallest-area BUTTON match; see import-probe.json)",
+   "note": "baseline.mjs first pass matched a full-page ancestor; rect corrected by import-probe.mjs (BUTTON, exact text Import)"
+  },
+  "errors": []
+ }
+}

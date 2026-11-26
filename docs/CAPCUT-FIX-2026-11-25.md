@@ -681,3 +681,46 @@ Trigger: during the v1.0.5 live check, the three hero images behind "VIDORA VIDE
 ### Why local checks missed it
 
 Every local check runs with base `/`, where double-applying `withBase` is invisible. Lesson recorded: any base-dependent URL logic must be verified against a Pages-base build served under `/vidora/` — the v1.0.6 verify script does exactly that, and the regression test stubs the subpath base.
+
+## v1.0.7 — Auto-fit every screen, no manual zoom (2026-11-26)
+
+Trigger: user request in Roman Urdu — "isko asy set karo ky har scren par thek nazer ay auto" (set it up so it looks right automatically on every screen). Her own screenshots were at 150% browser zoom (CSS viewport 1280×720 on a 1920×1080 screen) and showed a cut-off tab rail, a small preview canvas and squeezed panels. The v1.0.5 answer was "press Ctrl+0" — she now wants the app itself to adapt, so no manual zoom or setting is ever needed.
+
+### Baseline first (measured, not guessed)
+
+`audit/capcut-fix/v107/baseline/baseline.mjs` measured all 5 sizes before any change. Nothing overflowed or clipped at any size (scrollWidth == clientWidth on dashboard, Templates page and editor; canvas contain-fit held; top bar intact; Details reachable; 0 page errors) — the layout was not broken, it was too rigid. The real gaps:
+
+| Size | Tabs visible | Panel content | Tiles | Timeline |
+|---|---|---|---|---|
+| 1920×1080 | 7 + Filters peeking 25 px | 400 px | 130 px, 2-col | 288 px |
+| 1280×720 (her 150%) | 4 + "Effe" cut off | 225 px | ~116 px, 2-col | 288 px |
+| 1024×768 | 3 + "Stickers" peeking | 143 px | ~55–80 px, 2-col | 288 px |
+
+Plus: the ACTIVE tab could sit hidden off-screen with no visible highlight (her S2 showed Captions active while the rail showed Media..Effects), the AI tools overlay sat at a fixed `right-[540px]` (left edge at 4 px on a 1024 px screen), and the Shortcuts dialog (~900 px tall) had no scroll container.
+
+### What changed
+
+- **BUG-CF-038 — tab rail auto-fit** (`src/components/LeftTabs.tsx`): tab buttons are fluid — `clamp(60px,5vw,80px)` — exactly 80 px at 1920, 64 px at 1280 CSS px (6 tabs fully visible), 60 px at 1024 (5 tabs); labels are 10 px below 1440 px viewports so they still fit. The active tab scrolls itself into view on every change (`scrollIntoView`, `inline: 'nearest'`).
+- **BUG-CF-039 — panel columns fluid + grids collapse** (`src/components/PanelShell.tsx`, `src/index.css`): sub-nav is `clamp(120px,10vw,185px)` — exactly 185 px at 1920, 128 px at 1280, 120 px at 1024 (content 208 px at 1024, was 143 px). The content column is a CSS container (`.panel-content`, `container-type: inline-size`); when its content-box gets narrow, two-column card grids collapse to one wide column (Effects tiles 183 px at 1024 instead of ~79 px). Only two-column card grids collapse — the selector covers both `grid-cols-2` and the arbitrary `grid-cols-[repeat(2,minmax(0,130px))]`; the Stickers 5-column shape picker and Audio 3-column category buttons keep their columns. Threshold lesson, found by probe: container queries measure the CONTENT-BOX width (clientWidth minus the 24 px p-3 padding), so the first threshold (260 px) wrongly collapsed the 1280 tiles (content-box 257 px); the threshold is now 240 px (≈264 px clientWidth, viewports narrower than ~1200 CSS px).
+- **BUG-CF-040 — timeline fluid height** (`src/components/TimelineShell.tsx`): `h-[clamp(200px,26.7vh,288px)]` — exactly 288 px at 1080 px viewport height, 200 px on 720 px-tall screens. Side benefit: the Details panel no longer needs its 3 px of internal scroll at 1280×720.
+- **BUG-CF-041 — overlay + dialogs capped** (`src/App.tsx`, `src/components/ShortcutsPanel.tsx`, `src/components/FeatureUsageDialog.tsx`): AI tools overlay is fluid — `right-[clamp(16px,28vw,540px)] w-[min(480px,calc(100vw-32px))]` (540 px at 1920, hugging the Details panel). Shortcuts and Feature-usage dialogs now cap at `max-h-[85vh]` with their own scroll. Export already scrolled in its overlay; Help Center and Settings already capped at 85vh. The Project-settings (Modify) dialog also caps at `max-w-[calc(100vw-32px)]`.
+- **BUG-CF-042 — dashboard fluid** (`src/components/Dashboard.tsx`): sidebar `clamp(232px,22vw,290px)` — exactly 290 px at 1920, 232 px at 1024; main padding px-4 below xl, px-8 at 1280+ (exactly as before at 1920). Templates/projects grids were already responsive (sm/lg/xl breakpoints: 5 cols → 4 at 1024).
+- **Unchanged on purpose — 1920×1080 / 100% stays exactly CapCut:** left column `min(610px,32vw)`, Details `min(520px,28vw)`, preview fit via ResizeObserver, dialogs' viewport caps — all kept byte-identical at 1920.
+
+### Verification (`audit/capcut-fix/v107/verify.mjs`, 80/80 PASS, 0 page errors)
+
+Five sizes — 1920×1080 @100%, 1920×1080 @150% (CSS 1280×720, her real case), 1366×768, 1280×720, 1024×768 — dashboard (no overflow, cards never cut off), empty editor (column widths, canvas contain-fit, tab counts, Details reachable, timeline, top bar, Media Import box), Effects tiles, active-tab scroll, Shortcuts dialog at 720 px height, plus a 1920-only regression block. Per-size results:
+
+| Size | Left / Preview / Details | Canvas (avail) | Tabs | Tiles | Timeline |
+|---|---|---|---|---|---|
+| 1920×1080 | 610 / 790 / 520 | 756×424 (758×624) | 7 @80 px | 130 px, 2-col | 288 |
+| 150% (CSS 1280×720) | 410 / 512 / 358 | 478×268 (480×352) | 6 @64 px | 116 px, 2-col | 200 |
+| 1366×768 | 437 / 546 / 382 | 512×287 (514×395) | 6 @68 px | 126 px, 2-col | 205 |
+| 1280×720 | 410 / 512 / 358 | 478×268 (480×352) | 6 @64 px | 116 px, 2-col | 200 |
+| 1024×768 | 328 / 410 / 287 | 376×210 (378×395) | 5 @60 px | 183 px, 1-col | 205 |
+
+Active tab (AI avatar) scrolls fully into view at every size. 1920 regression unchanged: canvas 756×424, 7 tabs + Filters peeking 25 px, hover shows BOTH "Use template" and "Edit more", no Pals / CC / "Click to upload". Screenshots under `audit/capcut-fix/v107/` (`verify-dashboard-<size>.png`, `verify-editor-<size>.png`, `verify-effects-<size>.png`, `verify-1920-regression.png`). New tests `src/test/v107-responsive.test.ts` (12) pin every fluid rule; suite 389/389. `npx tsc --noEmit` clean, `npm run build` passes. Phase audits: P4 26/26, P5 39/39, P6 15/15, P7 60/60, P8 56/56, P9 42/42. HelpCenter "What's new" now says v1.0.7.
+
+### Undetermined
+
+- Nothing. Every size in the task was measured with rects, and the 1920 regression block re-verified the v1.0.5 state exactly.
