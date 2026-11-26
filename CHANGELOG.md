@@ -2,6 +2,18 @@
 
 All notable changes to Vidora. Format follows Keep a Changelog.
 
+## [1.0.6] — 2026-11-26 — Video Studio hero images broken on the live site
+
+Found during the v1.0.5 live check: on the live Pages site the three hero images behind "VIDORA VIDEO 2.5" on the Video Studio page all failed to load — empty white frames with broken-image icons, confirmed on two separate visits. The Templates page and the editor were fine.
+
+**Root cause — `withBase` applied twice (BUG-CF-037):** the hero images are `AI_CLIPS[0..2].poster` (`/ai-library/clips/posters/ai-clip-001.jpg` etc.). `baseEntries` in `src/lib/aiLibrary.ts` already prefixes every manifest entry's `file`/`poster` with the deploy base at module load, and the call sites apply `withBase` again (AIStudios.tsx ×9, LibraryPage.tsx ×2). Locally the base is `/`, so the second call is a no-op — local dev, local builds and every local Playwright check passed. On GitHub Pages the build base is `/vidora/` (pages.yml sets VITE_BASE), so the rendered src became `/vidora/vidora/ai-library/clips/posters/ai-clip-001.jpg` — 404; the server answers a missing asset with its HTML error page, which an `<img>` cannot decode, hence the broken-image icon. The poster files themselves are fine (valid JPEGs, 1920×1080, present in `public/` and `dist/`). Reproduced exactly before fixing with a Pages-base build served from a static server with dist/ mounted under `/vidora/`: all three hero imgs had src `/vidora/vidora/...`, `complete: true, naturalWidth: 0`, and 8 console 404s.
+
+**Fix:** `withBase` is now idempotent — a path that already starts with the deploy base passes through untouched (`src/lib/aiLibrary.ts`). One-line fix, no call-site churn, and it repairs every AI-studio/library image on the live site at once — the same double application hit Inspiration, Design Studio, Create, Explore, Canvas, Marketing Studio and the Library page, not just the hero.
+
+**Tests & audits:** new regression test in `src/test/pages.test.ts` pins the idempotency (fails on the old code with `/vidora/vidora/...`, passes on the fix). Suite now 377 tests (was 376). `npx tsc --noEmit` clean, `npm run build` passes. Phase audits re-run green: P4 26/26, P5 39/39, P6 15/15, P7 60/60, P8 56/56, P9 42/42. Playwright verification `audit/capcut-fix/v106/verify.mjs`: **12 PASS, 0 FAIL, 0 page errors** against the Pages-faithful server (hero 3/3 loaded, naturalWidth 1920, srcs single-based; Inspiration 25 / Design 26 / Create 5 / Explore 19 / Canvas 9 / Marketing 6 / Library 211 imgs, 0 broken, 0 double-based URLs) plus a dev-server hero check 3/3 at 1920×1080/100%. Screenshot `verify-hero.png` shows the three aurora images rendering in the curved frames. HelpCenter "What's new" now says v1.0.6.
+
+**Lesson recorded:** any base-dependent URL logic must be verified against a Pages-base build served under `/vidora/` — local checks run with base `/`, where double-applying `withBase` is invisible.
+
 ## [1.0.5] — 2026-11-26 — User's own live screenshots S1/S2 checked side by side against CapCut desktop #04/#05/#06
 
 Evidence first: the user's two live screenshots (S1 Templates page, S2 editor empty project, both 1920×1080 in her Chrome) measured with PIL and re-checked locally at 1920×1080 / 100% zoom. Playwright verification `audit/capcut-fix/v105/verify.mjs`: **37 PASS, 0 FAIL, 0 page errors**, plus `audit/capcut-fix/v105/pixel-check.py` (every template card sampled for non-black pixels — all PASS).

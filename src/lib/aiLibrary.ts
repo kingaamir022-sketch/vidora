@@ -95,6 +95,11 @@ const manifest = aiManifest as unknown as AiManifest;
  * The ai-manifest stores root-absolute paths ('/ai-library/...'); without
  * this the library media 404s under a subpath deploy. Already-relative
  * paths pass through untouched.
+ *
+ * Idempotent (v1.0.6, BUG-CF-037): library entries are already based by
+ * baseEntries, and call sites apply withBase again — a path that already
+ * starts with the deploy base passes through untouched, otherwise the
+ * live site requests /vidora/vidora/... and the file 404s.
  */
 export function withBase(path: string): string {
   // import.meta.env exists under Vite/Vitest but is undefined under plain
@@ -102,6 +107,7 @@ export function withBase(path: string): string {
   // module loads in both environments; base '/' is correct for node.
   const base = import.meta.env?.BASE_URL ?? '/';
   if (!path.startsWith('/')) return path;
+  if (base !== '/' && path.startsWith(base)) return path;
   return `${base}${path.slice(1)}`;
 }
 

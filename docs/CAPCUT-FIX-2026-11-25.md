@@ -626,7 +626,7 @@ Evidence order (fixed): 30 desktop screenshots + 10 CapCut videos FIRST, Web che
 
 ### Follow-ups (not fixed in this round)
 
-- **Tools marker segment:** unchanged — documented divergence (Web puts a marker segment on a track above the clip; Vidora applies to the whole clip; no segment tracks). Not in this round's scope, left as is.
+- **Tools marker segment:** unchanged — documented divergence (Web puts a marker segment on a track above the clip; Vidora applies to the whole clip; no segment tracks).
 - **Tile Pro diamond:** desktop shows a ◆ Pro diamond top-left on some tiles; Vidora adds none (no paid tier — a badge would mislead). Recorded, not a bug.
 - **Crop dialog shape:** Vidora's Crop opens the inspector Basic tab; Web's Crop opens a centred dialog (Manual crop / Auto reframe modes, Rotate slider, Reset/Apply). The function works; the dialog shape is a future polish item, not a parity failure (no desktop evidence for a Crop dialog exists).
 
@@ -659,3 +659,25 @@ Trigger: the user opened the live v1.0.4 site in her Chrome and sent two 1920×1
 - **Sunset Intro's orange sun renders as an ellipse** (the circle shape is sized 24% of width × 24% of height on a 9:16 card, so 72×128 px). It reads as a sun and the template is original content by design — a polish item, not a parity failure.
 - **Tools marker segment:** unchanged — documented divergence (Web puts a marker segment on a track above the clip; Vidora applies to the whole clip; no segment tracks).
 - **Crop dialog shape:** unchanged — Vidora's Crop opens the inspector Basic tab; Web's Crop opens a centred dialog. The function works; the dialog shape is a future polish item (no desktop evidence for a Crop dialog exists).
+
+## v1.0.6 — Video Studio hero images broken on the live site (2026-11-26)
+
+Trigger: during the v1.0.5 live check, the three hero images behind "VIDORA VIDEO 2.5" on the Video Studio page failed to load on the live site — empty white frames with broken-image icons, confirmed on two separate visits. The Templates page and the editor were fine.
+
+### Root cause (measured, not guessed)
+
+- The hero images are `AI_CLIPS[0..2].poster` — `/ai-library/clips/posters/ai-clip-001.jpg` etc. — rendered by `VideoStudioPage` in `src/components/home/AIStudios.tsx` via `withBase(c.poster)`.
+- The poster files are NOT missing or corrupt: valid JPEGs, 1920×1080, present in `public/ai-library/clips/posters/` and in the built `dist/`.
+- The real cause: `withBase` was applied TWICE. `baseEntries` in `src/lib/aiLibrary.ts` already prefixes every manifest entry's `file`/`poster` with the deploy base at module load, and the call sites apply `withBase` again (AIStudios.tsx ×9, LibraryPage.tsx ×2). Locally the base is `/`, so the second call is a no-op — local dev, local builds and every local Playwright check passed. On GitHub Pages the build base is `/vidora/` (pages.yml sets VITE_BASE), so the rendered src became `/vidora/vidora/ai-library/clips/posters/ai-clip-001.jpg` — 404. The server answers a missing asset with its HTML error page, which an `<img>` cannot decode, hence "loading or decoding failed" + broken-image icon.
+- Reproduced exactly before fixing: a Pages-base build (`VITE_BASE=/vidora/`) served from a static server with dist/ mounted under `/vidora/` showed all three hero imgs with src `/vidora/vidora/...`, `complete: true, naturalWidth: 0`, and 8 console 404s (`audit/capcut-fix/v106/hero-probe.mjs` → `hero-repro.png`).
+
+### What changed
+
+- **BUG-CF-037: `withBase` is now idempotent** (`src/lib/aiLibrary.ts`): a path that already starts with the deploy base passes through untouched. One-line fix, no call-site churn, and it repairs every AI-studio/library image on the live site at once — the same double application hit Inspiration, Design Studio, Create, Explore, Canvas, Marketing Studio and the Library page, not just the hero.
+- **Regression test** (`src/test/pages.test.ts`): `withBase` applied twice under a stubbed `/vidora/` base returns the single-based path. The test FAILS on the old code (received `/vidora/vidora/ai-library/...`) and passes on the fix.
+- **Verification** (`audit/capcut-fix/v106/verify.mjs`, 12/12 PASS, 0 page errors): against the Pages-faithful server — hero 3/3 loaded (naturalWidth 1920, srcs `/vidora/ai-library/...`), Inspiration 25 imgs / Design 26 / Create 5 / Explore 19 / Canvas 9 / Marketing 6 / Library 211 — 0 broken, 0 double-based URLs; dev-server hero check 3/3 at 1920×1080/100% (`verify-hero-dev.png`). Screenshot `verify-hero.png` shows the three aurora images rendering in the curved frames.
+- **HelpCenter:** "What's new" now says v1.0.6.
+
+### Why local checks missed it
+
+Every local check runs with base `/`, where double-applying `withBase` is invisible. Lesson recorded: any base-dependent URL logic must be verified against a Pages-base build served under `/vidora/` — the v1.0.6 verify script does exactly that, and the regression test stubs the subpath base.

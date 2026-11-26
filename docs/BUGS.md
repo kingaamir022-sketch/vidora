@@ -237,6 +237,32 @@ Format: `BUG-<n> | <phase> | <area> | status | summary`.
   #25/#27. Verified: computed bg rgb(79,79,79), white text, path
   starts "M12 2"; the hover popup "Edit more" carries the ◆ Pro
   badge.
+- BUG-CF-037 | CapCut-fix v1.0.6 | Video Studio hero images broken on the live site (3 empty frames + broken-image icons) | FIXED
+  2026-11-26 — Found during the v1.0.5 live check: on the live Pages
+  site the three hero images behind "VIDORA VIDEO 2.5" all failed to
+  load. Root cause: `withBase` was applied TWICE — once in
+  `baseEntries` (`src/lib/aiLibrary.ts`, which bases every manifest
+  entry's file/poster at module load) and again at the call sites
+  (`AIStudios.tsx` ×9, `LibraryPage.tsx` ×2). Locally the deploy base
+  is '/', so the second application is a no-op and nothing looks
+  wrong; on GitHub Pages the base is '/vidora/', so the second
+  application produced '/vidora/vidora/ai-library/...' — a 404 (the
+  server answers with its HTML error page, which an <img> cannot
+  decode, hence the broken-image icon). The poster files themselves
+  are fine (valid JPEGs, 1920×1080, present in `public/` and
+  `dist/`). Fix: `withBase` is now idempotent — a path that already
+  starts with the deploy base passes through untouched. The same
+  one-line fix repairs every AI-studio/library image on the live
+  site (Inspiration, Design, Explore, Create, Canvas, Marketing,
+  Library), all of which double-applied it. Verified by
+  `audit/capcut-fix/v106/verify.mjs` (12/12 PASS) against a
+  Pages-faithful static server (dist/ mounted under /vidora/, built
+  with VITE_BASE=/vidora/): hero 3/3 loaded (naturalWidth 1920),
+  srcs single-based, 0 broken imgs across all studio views + Library
+  (304 imgs total), 0 page errors; dev-server hero check 3/3 at
+  1920×1080. Regression test in `src/test/pages.test.ts` pins the
+  idempotency (fails on the old code with '/vidora/vidora/...',
+  passes on the fix).
 - BUG-CF-029 | CapCut-fix v1.0.4 | Ratio menu unclickable — clipped by the bottom bar's overflow-hidden group | FIXED
   2026-11-25 — The baseline probe (`audit/capcut-fix/v104/baseline.mjs`)
   crashed clicking a Ratio menu item (Playwright timeout — canvas

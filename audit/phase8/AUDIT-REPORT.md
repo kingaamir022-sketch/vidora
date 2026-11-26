@@ -1,6 +1,6 @@
 # Vidora Phase 8 audit report
 
-Run: 2026-11-26T01:40:51.610Z
+Run: 2026-11-26T02:54:28.954Z
 Result: 56/56 checks passed, 0 failed.
 
 - PASS [L-EXPORT] behaviour card docs/behavior/L-EXPORT.md exists
@@ -22,7 +22,7 @@ Result: 56/56 checks passed, 0 failed.
 - PASS [L-EXPORT] format options include MP4 / WebM / MOV
 - PASS [L-EXPORT] H.265 honestly not offered
 - PASS [L-EXPORT] browser can encode at least one video codec — {"aac":false,"h264":true,"opus":true,"vp9":true,"vp8":true,"videoEncoder":true}
-- PASS [L-EXPORT] video export job completes (mp4 480p/30fps) — Untitled-Project.mp4 · Untitled ProjectdoneDone · 514 KB⚠ AAC is not available — this file will have no audio track.Download again
+- PASS [L-EXPORT] video export job completes (mp4 480p/30fps) — Untitled-Project.mp4 · Untitled ProjectdoneDone · 516 KB⚠ AAC is not available — this file will have no audio track.Download again
 - PASS [L-EXPORT] exported file downloads (.mp4) — Untitled-Project.mp4
 - PASS [L-EXPORT] video track is h264 (got h264) — video=h264 audio=none duration=6.000000
 - PASS [L-EXPORT] audio track is none (codec unavailable, honestly video-only) (got none) — video=h264 audio=none

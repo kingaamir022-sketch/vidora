@@ -1,0 +1,18 @@
+{
+  "checks": {
+    "Pages-base: hero 3/3 loaded (naturalWidth 1920)": "PASS",
+    "Pages-base: hero srcs single-based": "PASS",
+    "Pages-base: Inspiration — 25 imgs, 0 broken": "PASS",
+    "Pages-base: Design Studio — 26 imgs, 0 broken": "PASS",
+    "Pages-base: Create — 5 imgs, 0 broken": "PASS",
+    "Pages-base: Explore — 19 imgs, 0 broken": "PASS",
+    "Pages-base: Canvas — 9 imgs, 0 broken": "PASS",
+    "Pages-base: Marketing Studio — 6 imgs, 0 broken": "PASS",
+    "Pages-base: Library — 211 imgs, 0 broken": "PASS",
+    "Pages-base: 0 page/console errors across studio views": "PASS",
+    "Dev server: hero 3/3 loaded at 1920x1080": "PASS",
+    "Dev server: 0 page/console errors": "PASS"
+  },
+  "fail": [],
+  "ok": true
+}

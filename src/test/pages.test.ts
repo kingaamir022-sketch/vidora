@@ -5,7 +5,7 @@
  * base so the media loads both locally ('/') and under the project
  * Pages subpath ('/vidora/'). Under Vitest the base is the default '/'.
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   AI_CLIPS,
   AI_IMAGES,
@@ -23,6 +23,22 @@ describe('withBase', () => {
   it('passes already-relative paths through untouched', () => {
     expect(withBase('ai-library/music/x.mp3')).toBe('ai-library/music/x.mp3');
     expect(withBase('logo.svg')).toBe('logo.svg');
+  });
+
+  it('is idempotent under a subpath base (v1.0.6, BUG-CF-037)', () => {
+    // The library entries are already based by baseEntries, and call
+    // sites (AIStudios, LibraryPage) apply withBase again. The second
+    // application must be a no-op — otherwise the live site requests
+    // /vidora/vidora/ai-library/... and every image 404s.
+    vi.stubEnv('BASE_URL', '/vidora/');
+    try {
+      const once = withBase('/ai-library/clips/posters/ai-clip-001.jpg');
+      expect(once).toBe('/vidora/ai-library/clips/posters/ai-clip-001.jpg');
+      expect(withBase(once)).toBe(once);
+      expect(withBase('/ai-library/music/ai-track-001.mp3')).toBe('/vidora/ai-library/music/ai-track-001.mp3');
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 });
 

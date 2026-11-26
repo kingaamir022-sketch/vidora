@@ -151,6 +151,30 @@ Layout / Controls / Behavior / Shortcut / Workflow-steps columns use:
 | CI (M-CI) | ~ | ~ | ~ | — | ~ | `.github/workflows/ci.yml` (Node 20, `npm ci`, build, test, lint) — no reference; Playwright audits are NOT in CI (documented in the workflow: they need the headless shell + ffmpeg) | ASSUMED |
 | Docker (M-DOCKER) | ~ | ~ | ~ | — | ~ | `Dockerfile` (node:20-alpine build → nginx:alpine serve) + `docker-compose.yml` (4173:80) + `.dockerignore` — no reference; the image was NOT built on this VM (docker not installed), honestly noted in the Dockerfile and the audit | ASSUMED |
 
+## Parity score (correction round v1.0.6, 2026-11-26)
+
+- **MATCH: 59 / 91** — unchanged. No ASSUMED row gained new CapCut
+  reference evidence in this round, so none moves to MATCH. One
+  live-site-only defect was fixed without touching any CapCut-facing
+  behaviour: BUG-CF-037 — the Video Studio hero images (and every
+  other AI-studio/Library image) 404'd on the live site because
+  `withBase` was applied twice (`/vidora/vidora/...`); `withBase` is
+  now idempotent. Verified against a Pages-base build served under
+  `/vidora/`: hero 3/3 loaded (naturalWidth 1920), 304 imgs across
+  all studio views + Library with 0 broken.
+- **ASSUMED: 32 / 91** — same 32 rows as v1.0.1.
+- **DIFF-FIXING: 0 / 91**
+- **INTENTIONAL-DIFF: 0 / 91** — the only deliberate difference left
+  is the app name and logo (Vidora, not CapCut), which is not a matrix
+  row; see `docs/INTENTIONAL_DIFFS.md`.
+- **Gate result: PASS** — every row is MATCH or ASSUMED, `npm run
+  build` is green, `npm test` is 377/377, and the Playwright
+  self-audits pass: Phase 4 26/26, Phase 5 39/39, Phase 6 15/15,
+  Phase 7 60/60, Phase 8 56/56, Phase 9 42/42 — 0 open bugs. The
+  v1.0.6 verification (`audit/capcut-fix/v106/verify.mjs`): 12 checks
+  PASS, 0 page errors. The v1.0.5 score paragraph below is kept for
+  history.
+
 ## Parity score (correction round v1.0.5, 2026-11-26)
 
 - **MATCH: 59 / 91** — unchanged. No ASSUMED row gained new CapCut
